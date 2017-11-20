@@ -54,6 +54,23 @@ The credentials for each service contain either a `username`, `password` and end
 
 **WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
+## Watson Services
+To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
+* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
+* [Conversation](/Scripts/Services/Conversation/v1)
+* [Discovery](/Scripts/Services/Discovery/v1)
+* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
+* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
+* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
+* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
+* [Speech to Text](/Scripts/Services/SpeechToText/v1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
+* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
+* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
+* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+
 ## Authentication
 Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
 
@@ -81,22 +98,87 @@ void Start()
 }
 ```
 
-## Watson Services
-To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
-* [Conversation](/Scripts/Services/Conversation/v1)
-* [Discovery](/Scripts/Services/Discovery/v1)
-* [Document Conversion](/Scripts/Services/DocumentConversion/v1)
-* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
-* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
-* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
-* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1)
-* [Speech to Text](/Scripts/Services/SpeechToText/v1)
-* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
-* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
-* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
-* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+## Callbacks
+Success and failure callbacks are required. You can specify the return type in the callback.  
+```cs
+private void Example()
+{
+    //  Call with sepcific callbacks
+    conversation.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
+    discovery.GetEnvironments(OnGetEnvironments, OnFail);
+}
+
+//  OnMessage callback
+private void OnMessage(object resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  OnGetEnvironments callback
+private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  OnMessageFail callback
+private void OnMessageFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnMessageFail()", "Error received: {0}", error.ToString());
+}
+
+//  OnGetEnvironmentsFail callback
+private void OnGetEnvironmentsFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnGetEnvironmentsFail()", "Error received: {0}", error.ToString());
+}
+```
+
+Since the success callback signature is generic and the failure callback always has the same signature, you can use a single set of callbacks to handle multiple calls.
+```cs
+private void Example()
+{
+    //  Call with generic callbacks
+    conversation.Message(OnSuccess, OnMessageFail, "<workspace-id>", "");
+    discovery.GetEnvironments(OnSuccess, OnFail);
+}
+
+//  Generic success callback
+private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnSuccess()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  Generic fail callback
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
+## Custom data
+Custom data can be passed through a `Dictionary<string, object> customData` in each call. In most cases, the raw json response is returned in the customData under `"json"` entry. In cases where there is no returned json, the entry will contain the success and http response code of the call.
+
+```cs
+void Example()
+{
+    Dictionary<string, object> customData = new Dictionary<string, object>();
+    customData.Add("foo", "bar");
+    conversation.Message(OnSuccess, OnFail, "<workspace-id>", "", customData);
+}
+
+//  Generic success callback
+private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCustomData.OnSuccess()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
+}
+
+//  Generic fail callback
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCustomData.OnFail()", "Error received: {0}", error.ToString());  // returns error string
+    Log.Debug("ExampleCustomData.OnFail()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
+}
+```
 
 ## Authentication Tokens
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
@@ -127,13 +209,13 @@ AuthenticationToken _authenticationToken;
 void Start()
 {
     if (!Utility.GetToken(OnGetToken, <service-url>, <service-username>, <service-password>))
-        Log.Debug("ExampleGetToken", "Failed to get token.");
+        Log.Debug("ExampleGetToken.Start()", "Failed to get token.");
 }
 
 private void OnGetToken(AuthenticationToken authenticationToken, string customData)
 {
     _authenticationToken = authenticationToken;
-    Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+    Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
 }
 ```
 
@@ -161,33 +243,33 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 
-[speech_to_text]: http://www.ibm.com/watson/developercloud/doc/speech-to-text/
-[text_to_speech]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/
-[language_translator]: http://www.ibm.com/watson/developercloud/doc/language-translator/index.html
-[dialog]: https://console.bluemix.net/docs/services/conversation/index.html#about
-[natural_language_classifier]: http://www.ibm.com/watson/developercloud/doc/natural-language-classifier/index.html
+[speech_to_text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
+[text_to_speech]: https://console.bluemix.net/docs/services/text-to-speech/index.html
+[language_translator]: https://console.bluemix.net/docs/services/language-translator/index.html
+[dialog]: https://console.bluemix.net/docs/services/dialog/index.html
+[natural_language_classifier]: https://console.bluemix.net/docs/services/natural-language-classifier/natural-language-classifier-overview.html
 
 [alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
 [alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html
 [sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
-[tone_analyzer]: http://www.ibm.com/watson/developercloud/doc/tone-analyzer/
-[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
-[conversation]:https://console.bluemix.net/docs/services/conversation/index.html#about
-[visual_recognition]: http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/
-[personality_insights]: http://www.ibm.com/watson/developercloud/personality-insights/api/v2/
+[tone_analyzer]: https://console.bluemix.net/docs/services/tone-analyzer/index.html
+[tradeoff_analytics]: https://console.bluemix.net/docs/services/tradeoff-analytics/index.html
+[conversation]: https://console.bluemix.net/docs/services/conversation/index.html
+[visual_recognition]: https://console.bluemix.net/docs/services/visual-recognition/index.html
+[personality_insights]: https://console.bluemix.net/docs/services/personality-insights/index.html
 [conversation_tooling]: https://www.ibmwatsonconversation.com
-[retrieve_and_rank]: http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/
-[discovery]: http://www.ibm.com/watson/developercloud/discovery/api/v1/
-[document_conversion]: http://www.ibm.com/watson/developercloud/document-conversion/api/v1/
-[expressive_ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/http.shtml#expressive
-[ssml]: http://www.ibm.com/watson/developercloud/doc/text-to-speech/SSML.shtml
-[discovery-query]: http://www.ibm.com/watson/developercloud/doc/discovery/using.shtml
+[retrieve_and_rank]: https://console.bluemix.net/docs/services/retrieve-and-rank/index.html
+[discovery]: https://console.bluemix.net/docs/services/discovery/index.html
+[document_conversion]: https://console.bluemix.net/docs/services/document-conversion/index.html
+[expressive_ssml]: https://console.bluemix.net/docs/services/text-to-speech/http.html#expressive
+[ssml]: https://console.bluemix.net/docs/services/text-to-speech/SSML.html
+[discovery-query]: https://console.bluemix.net/docs/services/discovery/using.html
 [natural_language_understanding]: https://www.ibm.com/watson/developercloud/natural-language-understanding.html
-[nlu_models]: https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html
-[nlu_entities]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#entities
-[nlu_relations]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#relations
+[nlu_models]: https://console.bluemix.net/docs/services/natural-language-understanding/customizing.html
+[nlu_entities]: https://console.bluemix.net/docs/services/natural-language-understanding/entity-types.html
+[nlu_relations]: https://console.bluemix.net/docs/services/natural-language-understanding/relations.html
 
-[dialog_service]: http://www.ibm.com/watson/developercloud/doc/dialog/
-[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html#about
-[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html#about
+[dialog_service]: https://console.bluemix.net/docs/services/dialog/index.html
+[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html
+[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/

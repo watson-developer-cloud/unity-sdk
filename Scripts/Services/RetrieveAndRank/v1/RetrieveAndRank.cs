@@ -91,20 +91,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         }
         #endregion
 
-        #region Constructor
-        public RetrieveAndRank(Credentials credentials)
-        {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
-            {
-                Credentials = credentials;
-            }
-            else
-            {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Retrieve and Rank service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
-            }
-        }
-        #endregion
-
         #region Public Types
         /// <summary>
         /// The delegate for loading a file, used by TrainClassifier().
@@ -129,29 +115,59 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public SaveFileDelegate SaveFile { get; set; }
         #endregion
 
-        #region GetClusters
+        #region Constructor
         /// <summary>
-        /// OnGetClusters delegate.
+        /// Retrieve and Rank constructor
         /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetClusters(SolrClusterListResponse resp, string data);
+        /// <param name="credentials">The service credentials</param>
+        public RetrieveAndRank(Credentials credentials)
+        {
+            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            {
+                Credentials = credentials;
+            }
+            else
+            {
+                throw new WatsonException("Please provide a username and password or authorization token to use the Retrieve and Rank service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+            }
+        }
+        #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
+        #region GetClusters
         /// <summary>
         /// Retrieves the list of Solr clusters for the service instance.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetClusters(OnGetClusters callback, string customData = default(string))
+        public bool GetClusters(SuccessCallback<SolrClusterListResponse> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             GetClustersRequest req = new GetClustersRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClustersEndpoint);
             if (connector == null)
@@ -167,19 +183,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class GetClustersRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SolrClusterListResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetClusters Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetClustersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SolrClusterListResponse clustersData = new SolrClusterListResponse();
+            SolrClusterListResponse result = new SolrClusterListResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetClustersRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -189,49 +210,54 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = clustersData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClustersResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClustersResponse()", "OnGetClustersResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetClustersRequest)req).Data;
-            if (((GetClustersRequest)req).Callback != null)
-                ((GetClustersRequest)req).Callback(resp.Success ? clustersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetClustersRequest)req).SuccessCallback != null)
+                    ((GetClustersRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClustersRequest)req).FailCallback != null)
+                    ((GetClustersRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region CreateCluster
         /// <summary>
-        /// OnCreateCluster callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnCreateCluster(SolrClusterResponse resp, string data);
-
-        /// <summary>
         /// Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster. For information about cluster sizing see http://www.ibm.com/watson/developercloud/doc/retrieve-rank/solr_ops.shtml#sizing.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterName">Name to identify the cluster.</param>
         /// <param name="clusterSize">Size of the cluster to create. Ranges from 1 to 7. Send an empty value to create a small free cluster for testing. You can create only one free cluster.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool CreateCluster(OnCreateCluster callback, string clusterName = default(string), string clusterSize = default(string), string customData = default(string))
+        public bool CreateCluster(SuccessCallback<SolrClusterResponse> successCallback, FailCallback failCallback, string clusterName = default(string), string clusterSize = default(string), Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             CreateClusterRequest req = new CreateClusterRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClustersEndpoint);
             if (connector == null)
@@ -254,24 +280,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class CreateClusterRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SolrClusterResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnCreateCluster Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The Create Cluster response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnCreateClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SolrClusterResponse clusterResponseData = new SolrClusterResponse();
+            SolrClusterResponse result = new SolrClusterResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((CreateClusterRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -281,52 +312,56 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = clusterResponseData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnCreateClusterResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnCreateClusterResponse()", "OnCreateClusterResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((CreateClusterRequest)req).Data;
-            if (((CreateClusterRequest)req).Callback != null)
-                ((CreateClusterRequest)req).Callback(resp.Success ? clusterResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((CreateClusterRequest)req).SuccessCallback != null)
+                    ((CreateClusterRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateClusterRequest)req).FailCallback != null)
+                    ((CreateClusterRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region DeleteClusters
         /// <summary>
-        /// Delete cluster callback delegate.
-        /// </summary>
-        /// <param name="deleteSuccess"></param>
-        /// <param name="data"></param>
-        public delegate void OnDeleteCluster(bool success, string data);
-
-        /// <summary>
         /// Delete a Solr cluster.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID"></param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool DeleteCluster(OnDeleteCluster callback, string clusterID, string customData = default(string))
+        public bool DeleteCluster(SuccessCallback<bool> successCallback, FailCallback failCallback, string clusterID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("ClusterID to be deleted is required!");
 
             DeleteClusterRequest req = new DeleteClusterRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.ClusterID = clusterID;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Delete = true;
-            req.Timeout = RequestTimeout;
             req.OnResponse = OnDeleteClusterResponse;
             string service = string.Format(ClusterEndpoint, clusterID);
             RESTConnector connector = RESTConnector.GetConnector(Credentials, service);
@@ -342,59 +377,65 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class DeleteClusterRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<bool> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnDeleteCluster Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The Delete Cluster response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnDeleteClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string customData = ((DeleteClusterRequest)req).Data;
-            if (((DeleteClusterRequest)req).Callback != null)
-                ((DeleteClusterRequest)req).Callback(resp.Success, customData);
+            Dictionary<string, object> customData = ((DeleteClusterRequest)req).CustomData;
+
+            if (resp.Success)
+            {
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+
+                if (((DeleteClusterRequest)req).SuccessCallback != null)
+                    ((DeleteClusterRequest)req).SuccessCallback(resp.Success, customData);
+            }
+            else
+            {
+                if (((DeleteClusterRequest)req).FailCallback != null)
+                    ((DeleteClusterRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region GetCluster
         /// <summary>
-        /// Get cluster info callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetCluster(SolrClusterResponse resp, string data);
-
-        /// <summary>
         /// Returns status and other information about a cluster.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">Unique identifier for this cluster.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetCluster(OnGetCluster callback, string clusterID, string customData = default(string))
+        public bool GetCluster(SuccessCallback<SolrClusterResponse> successCallback, FailCallback failCallback, string clusterID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("ClusterID to get is required!");
 
             GetClusterRequest req = new GetClusterRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.ClusterID = clusterID;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ClusterEndpoint, clusterID));
             if (connector == null)
@@ -410,28 +451,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class GetClusterRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SolrClusterResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetCluster Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The Get Cluster response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnGetClusterResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SolrClusterResponse clusterData = new SolrClusterResponse();
+            SolrClusterResponse result = new SolrClusterResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetClusterRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -441,51 +483,55 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = clusterData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClusterResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClusterResponse()", "OnGetClusterResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetClusterRequest)req).Data;
-            if (((GetClusterRequest)req).Callback != null)
-                ((GetClusterRequest)req).Callback(resp.Success ? clusterData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetClusterRequest)req).SuccessCallback != null)
+                    ((GetClusterRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClusterRequest)req).FailCallback != null)
+                    ((GetClusterRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region ListClusterConfigs
         /// <summary>
-        /// Get Cluster Configs callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetClusterConfigs(SolrConfigList resp, string data);
-
-        /// <summary>
         /// Returns a configuration .zip file for a cluster.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID"></param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetClusterConfigs(OnGetClusterConfigs callback, string clusterID, string customData = default(string))
+        public bool GetClusterConfigs(SuccessCallback<SolrConfigList> successCallback, FailCallback failCallback, string clusterID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("ClusterID to get is required!");
 
             GetClusterConfigsRequest req = new GetClusterConfigsRequest();
-            req.Callback = callback;
-            req.ClusterID = clusterID;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnGetClusterConfigsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigsEndpoint, clusterID));
@@ -501,87 +547,90 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class GetClusterConfigsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SolrConfigList> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetClusterConfigs Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The OnGetClusterConfigs response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnGetClusterConfigsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SolrConfigList configData = new SolrConfigList();
+            SolrConfigList result = new SolrConfigList();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetClusterConfigsRequest)req).CustomData;
 
             if (resp.Success)
             {
                 try
                 {
-                    string json = Encoding.UTF8.GetString(resp.Data);
-                    fsResult r = fsJsonParser.Parse(json, out data);
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = configData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetClusterConfigsResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetClusterConfigsResponse()", "OnGetClusterConfigsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetClusterConfigsRequest)req).Data;
-            if (((GetClusterConfigsRequest)req).Callback != null)
-                ((GetClusterConfigsRequest)req).Callback(resp.Success ? configData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetClusterConfigsRequest)req).SuccessCallback != null)
+                    ((GetClusterConfigsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClusterConfigsRequest)req).FailCallback != null)
+                    ((GetClusterConfigsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region DeleteClusterConfig
         /// <summary>
-        /// Delete cluster config callback delegate.
-        /// </summary>
-        /// <param name="deleteSuccess"></param>
-        /// <param name="data"></param>
-        public delegate void OnDeleteClusterConfig(bool success, string data);
-
-        /// <summary>
         /// Deletes the configuration for a cluster. Before you delete the configuration, delete any collections that point to it.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">The name of the configuration to delete.</param>
         /// <param name="configID">Cluster ID for the configuration.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool DeleteClusterConfig(OnDeleteClusterConfig callback, string clusterID, string configID, string customData = default(string))
+        public bool DeleteClusterConfig(SuccessCallback<bool> successCallback, FailCallback failCallback, string clusterID, string configID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("clusterID to is required!");
             if (string.IsNullOrEmpty(configID))
                 throw new ArgumentNullException("configID to be deleted is required!");
 
             DeleteClusterConfigRequest req = new DeleteClusterConfigRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.ClusterID = clusterID;
-            req.ConfigID = configID;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigEndpoint, clusterID, configID));
@@ -598,63 +647,64 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class DeleteClusterConfigRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<bool> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The config identifier.
-            /// </summary>
-            public string ConfigID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnDeleteClusterConfig Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnDeleteClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string customData = ((DeleteClusterConfigRequest)req).Data;
-            if (((DeleteClusterConfigRequest)req).Callback != null)
-                ((DeleteClusterConfigRequest)req).Callback(resp.Success, customData);
+            Dictionary<string, object> customData = ((DeleteClusterConfigRequest)req).CustomData;
+
+            if (resp.Success)
+            {
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+
+                if (((DeleteClusterConfigRequest)req).SuccessCallback != null)
+                    ((DeleteClusterConfigRequest)req).SuccessCallback(resp.Success, customData);
+            }
+            else
+            {
+                if (((DeleteClusterConfigRequest)req).FailCallback != null)
+                    ((DeleteClusterConfigRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region GetClusterConfig
         /// <summary>
-        /// The GetClusterConfig delegate.
-        /// </summary>
-        /// <param name="getSuccess"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetClusterConfig(byte[] resp, string data);
-
-        /// <summary>
         /// Retrieves the configuration for a cluster by its name.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">Cluster ID for the configuration.</param>
         /// <param name="configName">The name of the configuration to retrieve.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetClusterConfig(OnGetClusterConfig callback, string clusterID, string configName, string customData = default(string))
+        public bool GetClusterConfig(SuccessCallback<byte[]> successCallback, FailCallback failCallback, string clusterID, string configName, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("A clusterID is required for GetClusterConfig!");
             if (string.IsNullOrEmpty(configName))
                 throw new ArgumentNullException("A configName is required for GetClusterConfig!");
 
             GetClusterConfigRequest req = new GetClusterConfigRequest();
-            req.Data = customData;
-            req.Callback = callback;
-            req.ClusterID = clusterID;
-            req.ConfigName = configName;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetClusterConfigResponse;
-            req.Timeout = RequestTimeout;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ConfigEndpoint, clusterID, configName));
             if (connector == null)
@@ -666,35 +716,36 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         private class GetClusterConfigRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<byte[]> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The confguration name.
-            /// </summary>
-            public string ConfigName { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetClusterConfig Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void GetClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            byte[] respData = null;
+            Dictionary<string, object> customData = ((GetClusterConfigRequest)req).CustomData;
 
             if (resp.Success)
             {
-                respData = resp.Data;
-            }
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+                byte[] result = resp.Data;
 
-            string customData = ((GetClusterConfigRequest)req).Data;
-            if (((GetClusterConfigRequest)req).Callback != null)
-                ((GetClusterConfigRequest)req).Callback(respData, customData);
+                if (((GetClusterConfigRequest)req).SuccessCallback != null)
+                    ((GetClusterConfigRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetClusterConfigRequest)req).FailCallback != null)
+                    ((GetClusterConfigRequest)req).FailCallback(resp.Error, customData);
+            }
         }
 
         /// <summary>
@@ -707,7 +758,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <summary>
         /// Saves the config zip to the file system.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="callback">The success callback.</param>
         /// <param name="configData">Byte array of the config data.</param>
         /// <param name="configFileName">Where to save the zip file in the file system.</param>
         /// <param name="customData"></param>
@@ -730,7 +781,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 catch (Exception e)
                 {
                     success = false;
-                    Log.Error("RetrieveAndRank", "Caught exception: {0}", e.ToString());
+                    Log.Error("RetrieveAndRank.SaveConfig()", "Caught exception: {0}", e.ToString());
                 }
             }
 
@@ -741,25 +792,21 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         #region UploadClusterConfig
         /// <summary>
-        /// UploadClusterConfig callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnUploadClusterConfig(UploadResponse resp, string data);
-
-        /// <summary>
         /// Uploads a zip file containing the configuration files for your Solr collection. The zip file must include schema.xml, solrconfig.xml, and other files you need for your configuration. Configuration files on the zip file's path are not uploaded. The request fails if a configuration with the same name exists. To update an existing config, use the Solr configuration API (https://cwiki.apache.org/confluence/display/solr/Config+API).
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">Cluster ID for the configuration.</param>
         /// <param name="configName">The name of the configuration to create.</param>
         /// <param name="configPath">The path to the compressed configuration files.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool UploadClusterConfig(OnUploadClusterConfig callback, string clusterID, string configName, string configPath, string customData = default(string))
+        public bool UploadClusterConfig(SuccessCallback<UploadResponse> successCallback, FailCallback failCallback, string clusterID, string configName, string configPath, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("A clusterID is required for UploadClusterConfig!");
             if (string.IsNullOrEmpty(configName))
@@ -768,12 +815,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("A configPath is required for UploadClusterConfig!");
 
             UploadClusterConfigRequest req = new UploadClusterConfigRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.ClusterID = clusterID;
-            req.ConfigName = configName;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = UploadClusterConfigResponse;
-            req.Timeout = RequestTimeout;
 
             byte[] configData = null;
             if (LoadFile != null)
@@ -788,7 +833,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (configData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", configPath);
+                Log.Error("RetrieveAndRank.UploadClusterConfig()", "Failed to upload {0}!", configPath);
 
             req.Headers["Content-Type"] = "application/zip";
             req.Send = configData;
@@ -802,27 +847,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         private class UploadClusterConfigRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<UploadResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The configuration name.
-            /// </summary>
-            public string ConfigName { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnUploadClusterConfig Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void UploadClusterConfigResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            UploadResponse uploadResponse = new UploadResponse();
+            UploadResponse result = new UploadResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((UploadClusterConfigRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -832,61 +874,62 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = uploadResponse;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "UploadClusterConfigResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.UploadClusterConfigResponse()", "UploadClusterConfigResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((UploadClusterConfigRequest)req).Data;
-            if (((UploadClusterConfigRequest)req).Callback != null)
-                ((UploadClusterConfigRequest)req).Callback(resp.Success ? uploadResponse : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((UploadClusterConfigRequest)req).SuccessCallback != null)
+                    ((UploadClusterConfigRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((UploadClusterConfigRequest)req).FailCallback != null)
+                    ((UploadClusterConfigRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region ForwardCollectionRequest
         /// <summary>
-        /// The OnGetCollections delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnCollections(CollectionsResponse resp, string data);
-
-        /// <summary>
         /// An example of a method that forwards to the Solr Collections API (https://cwiki.apache.org/confluence/display/solr/Collections+API). This Retrieve and Rank resource improves error handling and resiliency of the Solr Collections API.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">Cluster ID for the collection.</param>
         /// <param name="action">Operation to carry out. Either "CREATE", "LIST", or "DELETE"</param>
         /// <param name="collectionName">The collectionName required for "CREATE" or "DELETE".</param>
         /// <param name="configName">The cluster configuration name to use for "CREATE".</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool ForwardCollectionRequest(OnCollections callback, string clusterID, string action, string collectionName = default(string), string configName = default(string), string customData = default(string))
+        public bool ForwardCollectionRequest(SuccessCallback<CollectionsResponse> successCallback, FailCallback failCallback, string clusterID, string action, string collectionName = default(string), string configName = default(string), Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(action))
                 throw new ArgumentNullException("An Action is required for ForwardCollectionRequest (CREATE, DELETE or LIST)");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("A clusterID is required for ForwardCollectionRequest!");
 
             CollectionRequest req = new CollectionRequest();
-            req.Callback = callback;
-            req.ClusterID = clusterID;
-            req.Data = customData;
-            req.Action = action;
-            req.CollectionName = collectionName;
-            req.ConfigName = configName;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["action"] = action;
             req.Parameters["wt"] = "json";
-            req.Timeout = RequestTimeout;
 
             switch (action)
             {
@@ -923,35 +966,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class CollectionRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<CollectionsResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnCollections Callback { get; set; }
-            /// <summary>
-            /// Cluster ID required for all actions.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// Action for the call. Either "CREATE", "LIST", or "DELETE"
-            /// </summary>
-            public string Action { get; set; }
-            /// <summary>
-            /// The collectionName required for "CREATE" or "DELETE".
-            /// </summary>
-            public string CollectionName { get; set; }
-            /// <summary>
-            /// The cluster configuration name to use for "CREATE".
-            /// </summary>
-            public string ConfigName { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnForwardCollectionRequestResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CollectionsResponse collectionsData = new CollectionsResponse();
+            CollectionsResponse result = new CollectionsResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((CollectionRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -961,45 +993,50 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = collectionsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnForwardCollectionRequestResponse exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnForwardCollectionRequestResponse()", "OnForwardCollectionRequestResponse exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((CollectionRequest)req).Data;
-            if (((CollectionRequest)req).Callback != null)
-                ((CollectionRequest)req).Callback(resp.Success ? collectionsData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((CollectionRequest)req).SuccessCallback != null)
+                    ((CollectionRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CollectionRequest)req).FailCallback != null)
+                    ((CollectionRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region IndexDocuments
         /// <summary>
-        /// OnIndexDocuments callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnIndexDocuments(IndexResponse resp, string data);
-
-        /// <summary>
         /// Adds content to a Solr index so you can search it. An example of a method that forwards to Solr. For more information about indexing, see Indexing and Basic Data Operations in the Apache Solr Reference (https://cwiki.apache.org/confluence/display/solr/Indexing+and+Basic+Data+Operations). You must commit your documents to the index to search for them. For more information about when to commit, see UpdateHandlers in SolrConfig in the Solr Reference (https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig).
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="indexdataPath">Path to the file that defines the content.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="indexDataPath">Path to the file that defines the content.</param>
         /// <param name="clusterID">Cluster ID.</param>
         /// <param name="collectionName">Collection.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool IndexDocuments(OnIndexDocuments callback, string indexDataPath, string clusterID, string collectionName, string customData = default(string))
+        public bool IndexDocuments(SuccessCallback<IndexResponse> successCallback, FailCallback failCallback, string indexDataPath, string clusterID, string collectionName, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(indexDataPath))
                 throw new ArgumentNullException("A index data json path is required to index documents!");
             if (string.IsNullOrEmpty(clusterID))
@@ -1008,12 +1045,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("A collectionName is required to index documents!");
 
             IndexDocumentsRequest req = new IndexDocumentsRequest();
-            req.Callback = callback;
-            req.IndexDataPath = indexDataPath;
-            req.ClusterID = clusterID;
-            req.CollectionName = collectionName;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             byte[] indexData;
             if (LoadFile != null)
@@ -1028,7 +1062,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (indexData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", indexDataPath);
+                Log.Error("RetrieveAndRank.IndexDocuments()", "Failed to upload {0}!", indexDataPath);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CollectionUpdateEndpoint, clusterID, collectionName));
             if (connector == null)
@@ -1047,71 +1081,66 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class IndexDocumentsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<IndexResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The index data path.
-            /// </summary>
-            public string IndexDataPath { get; set; }
-            /// <summary>
-            /// The cluster identifier to use.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The collection name to use.
-            /// </summary>
-            public string CollectionName { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnIndexDocuments Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnIndexDocumentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            IndexResponse indexResponseData = new IndexResponse();
+            IndexResponse result = new IndexResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((IndexDocumentsRequest)req).CustomData;
 
             if (resp.Success)
             {
                 try
                 {
-                    string json = Encoding.UTF8.GetString(resp.Data);
-                    Log.Debug("RetriveAndRank", "json: {0}", json);
-                    fsResult r = fsJsonParser.Parse(json, out data);
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-                    object obj = indexResponseData;
+
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnIndexDocumentsResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnIndexDocumentsResponse()", "OnIndexDocumentsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((IndexDocumentsRequest)req).Data;
-            if (((IndexDocumentsRequest)req).Callback != null)
-                ((IndexDocumentsRequest)req).Callback(resp.Success ? indexResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((IndexDocumentsRequest)req).SuccessCallback != null)
+                    ((IndexDocumentsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((IndexDocumentsRequest)req).FailCallback != null)
+                    ((IndexDocumentsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region Search
         /// <summary>
-        /// The OnSearch callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnSearch(SearchResponse resp, string data);
-
-        /// <summary>
         /// Return reranked results for your query. The request is similar to the Search Solr standard query parser method, but includes the ranker_id and, in the default configuration, fcselect replaces the select request handler. (https://cwiki.apache.org/confluence/display/solr/The+Standard+Query+Parser).
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="clusterID">Cluster ID.</param>
         /// <param name="collectionName">The name of the collection to use.</param>
         /// <param name="query">The query. Uses Solr standard query syntax.</param>
@@ -1120,10 +1149,12 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <param name="rankerID">The trained ranker to query.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool Search(OnSearch callback, string clusterID, string collectionName, string query, string[] fl, bool isRankedSearch = false, string rankerID = default(string), string customData = default(string))
+        public bool Search(SuccessCallback<SearchResponse> successCallback, FailCallback failCallback, string clusterID, string collectionName, string query, string[] fl, bool isRankedSearch = false, string rankerID = default(string), Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(clusterID))
                 throw new ArgumentNullException("A clusterID is required to search!");
             if (string.IsNullOrEmpty(collectionName))
@@ -1134,13 +1165,9 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                 throw new ArgumentNullException("An array of filters are required to search!");
 
             SearchRequest req = new SearchRequest();
-            req.Callback = callback;
-            req.ClusterID = clusterID;
-            req.CollectionName = collectionName;
-            req.Query = query;
-            req.Fl = fl;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["wt"] = "json";
             req.Parameters["q"] = query;
@@ -1169,35 +1196,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class SearchRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SearchResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The cluster identifier to use.
-            /// </summary>
-            public string ClusterID { get; set; }
-            /// <summary>
-            /// The collectionName to use.
-            /// </summary>
-            public string CollectionName { get; set; }
-            /// <summary>
-            /// The query.
-            /// </summary>
-            public string Query { get; set; }
-            /// <summary>
-            /// The query fields to use.
-            /// </summary>
-            public string[] Fl { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnSearch Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnSearchResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SearchResponse searchData = new SearchResponse();
+            SearchResponse result = new SearchResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((SearchRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1207,47 +1223,52 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = searchData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnSearchResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnSearchResponse()", "OnSearchResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((SearchRequest)req).Data;
-            if (((SearchRequest)req).Callback != null)
-                ((SearchRequest)req).Callback(resp.Success ? searchData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((SearchRequest)req).SuccessCallback != null)
+                    ((SearchRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((SearchRequest)req).FailCallback != null)
+                    ((SearchRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region GetRankers
         /// <summary>
-        /// OnGetRankers delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetRankers(ListRankersPayload resp, string data);
-
-        /// <summary>
         /// Retrieves the list of rankers for the service instance.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetRankers(OnGetRankers callback, string customData = default(string))
+        public bool GetRankers(SuccessCallback<ListRankersPayload> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             GetRankersRequest req = new GetRankersRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, RankersEndpoint);
             if (connector == null)
@@ -1263,19 +1284,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class GetRankersRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<ListRankersPayload> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetRankers Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetRankersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ListRankersPayload rankersData = new ListRankersPayload();
+            ListRankersPayload result = new ListRankersPayload();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetRankersRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1285,55 +1311,58 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = rankersData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetRankersResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetRankersResponse()", "OnGetRankersResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetRankersRequest)req).Data;
-            if (((GetRankersRequest)req).Callback != null)
-                ((GetRankersRequest)req).Callback(resp.Success ? rankersData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetRankersRequest)req).SuccessCallback != null)
+                    ((GetRankersRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetRankersRequest)req).FailCallback != null)
+                    ((GetRankersRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region CreateRanker
         /// <summary>
-        /// OnCreateCluster callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnCreateRanker(RankerStatusPayload resp, string data);
-
-        /// <summary>
         /// Sends data to create and train a ranker and returns information about the new ranker. When the operation is successful, the status of the ranker is set to Training. The status must be Available before you can use the ranker.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="trainingDataPath">Training data in CSV format. The first header must be question_id and the last header must be the relevance label. The other headers are alphanumeric feature names. For details, see Using your own data (http://www.ibm.com/watson/developercloud/doc/retrieve-rank/data_format.shtml).</param>
         /// <param name="name">Metadata in JSON format. The metadata identifies an optional name to identify the ranker.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool CreateRanker(OnCreateRanker callback, string trainingDataPath, string name = default(string), string customData = default(string))
+        public bool CreateRanker(SuccessCallback<RankerStatusPayload> successCallback, FailCallback failCallback, string trainingDataPath, string name = default(string), Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("A ranker name is required to create a ranker!");
             if (string.IsNullOrEmpty(trainingDataPath))
                 throw new ArgumentNullException("Training data is required to create a ranker!");
 
             CreateRankerRequest req = new CreateRankerRequest();
-            req.Callback = callback;
-            req.Name = name;
-            req.TrainingDataPath = trainingDataPath;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             byte[] trainingData;
             if (LoadFile != null)
@@ -1348,7 +1377,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (trainingData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", trainingDataPath);
+                Log.Error("RetrieveAndRank.CreateRanker()", "Failed to upload {0}!", trainingDataPath);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, RankersEndpoint);
             if (connector == null)
@@ -1371,27 +1400,24 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class CreateRankerRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<RankerStatusPayload> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The ranker name.
-            /// </summary>
-            public string Name { get; set; }
-            /// <summary>
-            /// The ranker training data path.
-            /// </summary>
-            public string TrainingDataPath { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnCreateRanker Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnCreateRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RankerStatusPayload rankerResponseData = new RankerStatusPayload();
+            RankerStatusPayload result = new RankerStatusPayload();
             fsData data = null;
+            Dictionary<string, object> customData = ((CreateRankerRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1401,55 +1427,58 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = rankerResponseData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnCreateRankerResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnCreateRankerResponse()", "OnCreateRankerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((CreateRankerRequest)req).Data;
-            if (((CreateRankerRequest)req).Callback != null)
-                ((CreateRankerRequest)req).Callback(resp.Success ? rankerResponseData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((CreateRankerRequest)req).SuccessCallback != null)
+                    ((CreateRankerRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateRankerRequest)req).FailCallback != null)
+                    ((CreateRankerRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region Rank
         /// <summary>
-        /// OnRank callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnRank(RankerOutputPayload resp, string data);
-
-        /// <summary>
         /// Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the Get information about a ranker method to retrieve the status (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status). Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the Search and rank method (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#query_ranker).
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="rankerID">ID of the ranker to use.</param>
         /// <param name="searchResultPath">The path to the CSV file that contains the search results that you want to rank. The first column header of the CSV must be labeled answer_id. The remaining column headers must match the names of the features in the training data that was used when this ranker was created.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool Rank(OnRank callback, string rankerID, string searchResultPath = default(string), string customData = default(string))
+        public bool Rank(SuccessCallback<RankerOutputPayload> successCallback, FailCallback failCallback, string rankerID, string searchResultPath = default(string), Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(rankerID))
                 throw new ArgumentNullException("A rankerID is required rank!");
             if (string.IsNullOrEmpty(searchResultPath))
                 throw new ArgumentNullException("Search results are required to rank!");
 
             RankRequest req = new RankRequest();
-            req.Callback = callback;
-            req.RankerID = rankerID;
-            req.SearchResultsPath = searchResultPath;
-            req.Data = customData;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             byte[] searchResultData;
             if (LoadFile != null)
@@ -1464,7 +1493,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
             }
 
             if (searchResultData == null)
-                Log.Error("RetrieveAndRank", "Failed to upload {0}!", searchResultData);
+                Log.Error("RetrieveAndRank.Rank()", "Failed to upload {0}!", searchResultData);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankEndpoint, rankerID));
             if (connector == null)
@@ -1486,32 +1515,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class RankRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<RankerOutputPayload> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The ranker identifier.
-            /// </summary>
-            public string RankerID { get; set; }
-            /// <summary>
-            /// The search results path.
-            /// </summary>
-            public string SearchResultsPath { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnRank Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// Rank response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnRankResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RankerOutputPayload rankData = new RankerOutputPayload();
+            RankerOutputPayload result = new RankerOutputPayload();
             fsData data = null;
+            Dictionary<string, object> customData = ((RankRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1521,52 +1547,55 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = rankData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnRankResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnRankResponse()", "OnRankResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((RankRequest)req).Data;
-            if (((RankRequest)req).Callback != null)
-                ((RankRequest)req).Callback(resp.Success ? rankData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((RankRequest)req).SuccessCallback != null)
+                    ((RankRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((RankRequest)req).FailCallback != null)
+                    ((RankRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region DeleteRanker
         /// <summary>
-        /// Delete Ranker callback delegate.
-        /// </summary>
-        /// <param name="deleteSuccess"></param>
-        /// <param name="data"></param>
-        public delegate void OnDeleteRanker(bool success, string data);
-
-        /// <summary>
         /// Deletes a ranker.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="rankerID">ID of the ranker to delete.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool DeleteRanker(OnDeleteRanker callback, string rankerID, string customData = default(string))
+        public bool DeleteRanker(SuccessCallback<bool> successCallback, FailCallback failCallback, string rankerID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(rankerID))
                 throw new ArgumentNullException("RankerID to be deleted is required!");
 
             DeleteRankerRequest req = new DeleteRankerRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.RankerID = rankerID;
-            req.Timeout = RequestTimeout;
-            req.Delete = true;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankerEndpoint, rankerID));
             if (connector == null)
@@ -1582,59 +1611,65 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class DeleteRankerRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<bool> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The ranker identifier.
-            /// </summary>
-            public string RankerID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnDeleteRanker Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The Delete Cluster response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnDeleteRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string customData = ((DeleteRankerRequest)req).Data;
-            if (((DeleteRankerRequest)req).Callback != null)
-                ((DeleteRankerRequest)req).Callback(resp.Success, customData);
+            Dictionary<string, object> customData = ((DeleteRankerRequest)req).CustomData;
+
+            if (resp.Success)
+            {
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+
+                if (((DeleteRankerRequest)req).SuccessCallback != null)
+                    ((DeleteRankerRequest)req).SuccessCallback(resp.Success, customData);
+            }
+            else
+            {
+                if (((DeleteRankerRequest)req).FailCallback != null)
+                    ((DeleteRankerRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region GetRankerInfo
         /// <summary>
-        /// Get ranker info callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetRanker(RankerStatusPayload resp, string data);
-
-        /// <summary>
         /// Returns status and other information about a ranker.
         /// </summary>
-        /// <param name="callback"></param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="rankerID">ID of the ranker to query.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
-        public bool GetRanker(OnGetRanker callback, string rankerID, string customData = default(string))
+        public bool GetRanker(SuccessCallback<RankerStatusPayload> successCallback, FailCallback failCallback, string rankerID, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(rankerID))
                 throw new ArgumentNullException("RankerID to get is required!");
 
             GetRankerRequest req = new GetRankerRequest();
-            req.Callback = callback;
-            req.Data = customData;
-            req.RankerID = rankerID;
-            req.Timeout = RequestTimeout;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(RankerEndpoint, rankerID));
             if (connector == null)
@@ -1650,28 +1685,29 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         public class GetRankerRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<RankerStatusPayload> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The ranker identifier.
-            /// </summary>
-            public string RankerID { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetRanker Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         /// <summary>
         /// The Get Ranker response.
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="resp"></param>
+        /// <param name="req">The RESTConnnector request.</param>
+        /// <param name="resp">The RESTConnector response.</param>
         private void OnGetRankerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RankerStatusPayload rankerData = new RankerStatusPayload();
+            RankerStatusPayload result = new RankerStatusPayload();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetRankerRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1681,21 +1717,30 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = rankerData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("RetriveAndRank", "OnGetRankerResponse Exception: {0}", e.ToString());
+                    Log.Error("RetriveAndRank.OnGetRankerResponse()", "OnGetRankerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetRankerRequest)req).Data;
-            if (((GetRankerRequest)req).Callback != null)
-                ((GetRankerRequest)req).Callback(resp.Success ? rankerData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetRankerRequest)req).SuccessCallback != null)
+                    ((GetRankerRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetRankerRequest)req).FailCallback != null)
+                    ((GetRankerRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 

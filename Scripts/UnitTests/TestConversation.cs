@@ -24,6 +24,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using FullSerializer;
 using System.IO;
 using System;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -79,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestConversation", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestConversation.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -88,8 +89,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _conversation = new Conversation(credentials);
             _conversation.VersionDate = _conversationVersionDate;
 
-            if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
-                Log.Debug("ExampleConversation", "Failed to message!");
+            //  Test initate with empty string
+            if (!_conversation.Message(OnSuccess, OnFail, _workspaceId, ""))
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
+
+            //  Test initiate with empty string message object
+            MessageRequest messageRequest = new MessageRequest()
+            {
+                input = new Dictionary<string, object>()
+            {
+                { "text", "" }
+            },
+                context = _context
+            };
+
+            if (!_conversation.Message(OnSuccess, OnFail, _workspaceId, messageRequest))
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
+
+            if (!_conversation.Message(OnSuccess, OnFail, _workspaceId, "hello"))
+                Log.Debug("TestConversation.RunTest()", "Failed to message!");
 
             while (_waitingForResponse)
                 yield return null;
@@ -123,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (_waitingForResponse)
                 yield return null;
 
-            Log.Debug("ExampleConversation", "Conversation examples complete.");
+            Log.Debug("TestConversation.RunTest()", "Conversation examples complete.");
 
             yield break;
         }
@@ -139,13 +157,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 context = _context
             };
 
-            if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
-                Log.Debug("ExampleConversation", "Failed to message!");
+            if (!_conversation.Message(OnSuccess, OnFail, _workspaceId, messageRequest))
+                Log.Debug("TestConversation.AskQuestion()", "Failed to message!");
         }
 
-        private void OnMessage(object resp, string data)
+        private void OnSuccess(object resp, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+            Log.Debug("TestConversation.OnMessage()", "Conversation: Message Response: {0}", customData["json"].ToString());
 
             //  Convert resp to fsdata
             fsData fsdata = null;
@@ -167,10 +185,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (_tempContext != null)
                 _context = _tempContext as Dictionary<string, object>;
             else
-                Log.Debug("ExampleConversation", "Failed to get context");
+                Log.Debug("TestConversation.OnMessage()", "Failed to get context");
 
             Test(messageResponse != null);
             _waitingForResponse = false;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestConversation.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

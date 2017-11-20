@@ -27,6 +27,9 @@ using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using IBM.Watson.DeveloperCloud.Connection;
+#if NETFX_CORE
+using System.Reflection;
+#endif
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -46,6 +49,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static Type[] FindAllDerivedTypes(Type type)
         {
             List<Type> types = new List<Type>();
+#if NETFX_CORE
+            foreach (var t in type.GetTypeInfo().Assembly.GetTypes())
+            {
+                if (t == type || t.GetTypeInfo().IsAbstract)
+                    continue;
+                if (type.IsAssignableFrom(t))
+                    types.Add(t);
+            }
+#else
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var t in assembly.GetTypes())
@@ -56,6 +68,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         types.Add(t);
                 }
             }
+#endif
 
             return types.ToArray();
         }
@@ -207,7 +220,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 return string.Empty;
 
             MD5 md5 = new MD5CryptoServiceProvider();
+#if NETFX_CORE
+            byte[] data = Encoding.GetEncoding(0).GetBytes(s);
+#else
             byte[] data = Encoding.Default.GetBytes(s);
+#endif
             byte[] result = md5.ComputeHash(data);
 
             StringBuilder output = new StringBuilder();
@@ -310,7 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                Log.Debug("Utility", "Time conversion assuming time is in Milliseconds: {0}, {1}", epochTime, ex.Message);
+                Log.Debug("Utility.GetLocalDateTimeFromEpoch()", "Time conversion assuming time is in Milliseconds: {0}, {1}", epochTime, ex.Message);
                 dateTime = dateTime.AddMilliseconds(epochTime).ToLocalTime();
             }
 
@@ -325,6 +342,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             get
             {
+#if !NETFX_CORE
                 if (string.IsNullOrEmpty(_macAddress))
                 {
                     foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
@@ -340,6 +358,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                         }
                     }
                 }
+#endif
 
                 return _macAddress;
             }
@@ -355,7 +374,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (colors == null || colors.Length == 0)
                 return null;
 
+#if NETFX_CORE
+            int lengthOfColor32 = Marshal.SizeOf<Color32>();
+#else
             int lengthOfColor32 = Marshal.SizeOf(typeof(Color32));
+#endif
             int length = lengthOfColor32 * colors.Length;
             byte[] bytes = new byte[length];
 
@@ -417,7 +440,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
             catch (Exception e)
             {
-                Log.Error("Utility", "DeserializeResponse Exception: {0}", e.ToString());
+                Log.Error("Utility.DeserializeResponse()", "DeserializeResponse Exception: {0}", e.ToString());
             }
 
             return null;
@@ -1218,7 +1241,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Visual Recognition", "GetClassifier Exception: {0}", e.ToString());
+                    Log.Error("Utility.OnGetTokenResp()", "Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }

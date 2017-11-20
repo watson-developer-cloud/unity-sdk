@@ -19,6 +19,9 @@
 
 using UnityEngine;
 using System;
+#if NETFX_CORE
+using System.Reflection;
+#endif
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {

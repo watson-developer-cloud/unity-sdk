@@ -51,7 +51,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                     if (firstClip.channels != clips[i].channels
                         || firstClip.frequency != clips[i].frequency)
                     {
-                        Log.Error("AudioClipUtil", "Combine() requires clips to have the sample number of channels and same frequency.");
+                        Log.Error("AudioClipUtil.Combine()", "Combine() requires clips to have the sample number of channels and same frequency.");
                         return null;
                     }
                 }
@@ -100,10 +100,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             for (int i = 0; i < samples.Length; ++i)
                 writer.Write((short)(samples[i] * divisor));
 
+#if NETFX_CORE
+            return stream.ToArray();
+#else
             byte[] data = new byte[samples.Length * 2];
             Array.Copy(stream.GetBuffer(), data, data.Length);
 
             return data;
+#endif
         }
     }
 }

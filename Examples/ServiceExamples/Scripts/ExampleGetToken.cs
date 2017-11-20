@@ -15,10 +15,12 @@
 *
 */
 
+using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ExampleGetToken : MonoBehaviour
@@ -42,7 +44,7 @@ public class ExampleGetToken : MonoBehaviour
     {
         //  Get token
         if (!Utility.GetToken(OnGetToken, _url, _username, _password))
-            Log.Debug("ExampleGetToken", "Failed to get token.");
+            Log.Debug("ExampleGetToken.GetToken()", "Failed to get token.");
 
         while (!_receivedAuthToken)
             yield return null;
@@ -54,14 +56,14 @@ public class ExampleGetToken : MonoBehaviour
     private void OnGetToken(AuthenticationToken authenticationToken, string customData)
     {
         _authenticationToken = authenticationToken;
-        Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+        Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
         _receivedAuthToken = true;
     }
 
     private IEnumerator GetTokenTimeRemaining(float time)
     {
         yield return new WaitForSeconds(time);
-        Log.Debug("ExampleGetToken", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
+        Log.Debug("ExampleGetToken.GetTokenTimeRemaining()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
     }
 
     private void Message()
@@ -75,14 +77,18 @@ public class ExampleGetToken : MonoBehaviour
         Conversation conversation = new Conversation(credentials);
         conversation.VersionDate = _conversationVersionDate;
 
-        conversation.Message(OnMessage, _workspaceId, "hello");
+        conversation.Message(OnMessage, OnFail, _workspaceId, "hello");
     }
 
-    private void OnMessage(object resp, string customData)
+    private void OnMessage(object resp, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleGetToken", "message response: {0}", customData);
+        Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", customData);
 
         //  Check token time remaining
         Runnable.Run(GetTokenTimeRemaining(0f));
+    }
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleGetToken.OnFail()", "Error received: {0}", error.ToString());
     }
 }

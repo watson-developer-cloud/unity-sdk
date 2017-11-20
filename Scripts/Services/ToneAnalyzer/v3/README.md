@@ -24,14 +24,19 @@ Analyzes the tone of a piece of text. The message is analyzed for several tones 
 ```cs
 private void AnalyzeTone()
 {
-    if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
-        Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+    if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
+        Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
 }
 
-private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+    Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleToneAnalyzer.OnFail()", "Error received: {0}", error.ToString());
 }
 ```
 
-[tone-analyzer]: https://www.ibm.com/watson/developercloud/doc/tone-analyzer/index.html
+[tone-analyzer]: https://console.bluemix.net/docs/services/tone-analyzer/index.html

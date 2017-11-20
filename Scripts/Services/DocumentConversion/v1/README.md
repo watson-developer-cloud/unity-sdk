@@ -24,14 +24,19 @@ Converts a document to answer units, HTML or text. This method accepts a multipa
 ```cs
 void ConvertDocument ()
 {
-  if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, <document-filepath>, <conversion-target>))
-    Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+  if (!m_DocumentConversion.ConvertDocument(OnConvertDocument, OnFail, <document-filepath>, <conversion-target>))
+    Log.Debug("ExampleDocumentConversion.ConvertDocument()", "Document conversion failed!");
 }
 
-private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+private void OnConvertDocument(ConvertedDocument documentConversionResponse, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleDocumentConversion", "DocuemntConversion - ConvertDocument Response: {0}", data);
+  Log.Debug("ExampleDocumentConversion.OnConvertDocument()", "DocuemntConversion - ConvertDocument Response: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleDocumentConversion.OnFail()", "Error received: {0}", error.ToString());
 }
 ```
 
-[document_conversion]: https://www.ibm.com/watson/developercloud/document-conversion.html
+[document_conversion]: https://www.ibm.com/watson/services/document-conversion/

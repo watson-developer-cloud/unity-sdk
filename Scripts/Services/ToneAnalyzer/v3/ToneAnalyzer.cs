@@ -96,40 +96,52 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region Get Tone
         private const string ToneEndpoint = "/v3/tone";
-
-        /// <summary>
-        /// The Get Tone Analyzed callback delegate.
-        /// </summary>
-        /// <param name="resp"></param>
-        /// <param name="data"></param>
-        public delegate void OnGetToneAnalyzed(ToneAnalyzerResponse resp, string data);
-
         /// <summary>
         /// Gets the tone analyze.
         /// </summary>
         /// <returns><c>true</c>, if tone analyze was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="text">Text.</param>
         /// <param name="data">Data.</param>
-        public bool GetToneAnalyze(OnGetToneAnalyzed callback, string text, string data = null)
+        public bool GetToneAnalyze(SuccessCallback<ToneAnalyzerResponse> successCallback, FailCallback failCallback, string text, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ToneEndpoint);
             if (connector == null)
                 return false;
 
             GetToneAnalyzerRequest req = new GetToneAnalyzerRequest();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetToneAnalyzerResponse;
 
             Dictionary<string, string> upload = new Dictionary<string, string>();
             upload["text"] = "\"" + text + "\"";
             req.Send = Encoding.UTF8.GetBytes(Json.Serialize(upload));
-            req.Data = data;
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.Parameters["sentences"] = "true";
@@ -138,14 +150,25 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 
         private class GetToneAnalyzerRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetToneAnalyzed Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<ToneAnalyzerResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         };
 
         private void GetToneAnalyzerResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ToneAnalyzerResponse response = new ToneAnalyzerResponse();
+            ToneAnalyzerResponse result = new ToneAnalyzerResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetToneAnalyzerRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -155,21 +178,30 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = response;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("ToneAnalyzer", "GetToneAnalyzerResponse Exception: {0}", e.ToString());
+                    Log.Error("ToneAnalyzer.GetToneAnalyzerResponse()", "GetToneAnalyzerResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetToneAnalyzerRequest)req).Data;
-            if (((GetToneAnalyzerRequest)req).Callback != null)
-                ((GetToneAnalyzerRequest)req).Callback(resp.Success ? response : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetToneAnalyzerRequest)req).SuccessCallback != null)
+                    ((GetToneAnalyzerRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetToneAnalyzerRequest)req).FailCallback != null)
+                    ((GetToneAnalyzerRequest)req).FailCallback(resp.Error, customData);
+            }
         }
 
 

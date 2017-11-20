@@ -23,6 +23,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using FullSerializer;
 using System;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -119,7 +121,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestRetrieveAndRank", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestRetrieveAndRank.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -134,17 +136,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _retrieveAndRank = new RetrieveAndRank(credentials);
 
             //  Get clusters
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get clusters.");
-            if (!_retrieveAndRank.GetClusters(OnGetClusters))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get clusters.");
+            if (!_retrieveAndRank.GetClusters(OnGetClusters, OnFail))
+                Log.Debug("TestRetrieveAndRank.GetClusters()", "Failed to get clusters!");
             while (!_getClustersTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Create cluster
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to create cluster.");
-            if (!_retrieveAndRank.CreateCluster(OnCreateCluster, "unity-test-cluster", "1"))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to create cluster.");
+            if (!_retrieveAndRank.CreateCluster(OnCreateCluster, OnFail, "unity-test-cluster", "1"))
+                Log.Debug("TestRetrieveAndRank.CreateCluster()", "Failed to create cluster!");
             while (!_createClusterTested || !_readyToContinue)
                 yield return null;
 
@@ -155,78 +157,78 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             _readyToContinue = false;
             //  List cluster configs
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster configs.");
-            if (!_retrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, _clusterToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get cluster configs.");
+            if (!_retrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, OnFail, _clusterToDelete))
+                Log.Debug("TestRetrieveAndRank.GetClusterConfigs()", "Failed to get cluster configs!");
             while (!_getClusterConfigsTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Upload cluster config
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to upload cluster config.");
-            if (!_retrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, _clusterToDelete, _testClusterConfigName, _testClusterConfigPath))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", _testClusterConfigPath);
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to upload cluster config.");
+            if (!_retrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, OnFail, _clusterToDelete, _testClusterConfigName, _testClusterConfigPath))
+                Log.Debug("TestRetrieveAndRank.UploadClusterConfig()", "Failed to upload cluster config {0}!", _testClusterConfigPath);
             while (!_uploadClusterConfigTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Get cluster
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster.");
-            if (!_retrieveAndRank.GetCluster(OnGetCluster, _clusterToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get cluster.");
+            if (!_retrieveAndRank.GetCluster(OnGetCluster, OnFail, _clusterToDelete))
+                Log.Debug("TestRetrieveAndRank.GetCluster()", "Failed to get cluster!");
             while (!_getClusterTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Get cluster config
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get cluster config.");
-            if (!_retrieveAndRank.GetClusterConfig(OnGetClusterConfig, _clusterToDelete, _testClusterConfigName))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster config {0}!", _testClusterConfigName);
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get cluster config.");
+            if (!_retrieveAndRank.GetClusterConfig(OnGetClusterConfig, OnFail, _clusterToDelete, _testClusterConfigName))
+                Log.Debug("TestRetrieveAndRank.GetClusterConfig()", "Failed to get cluster config {0}!", _testClusterConfigName);
             while (!_getClusterConfigTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  List Collection request
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get collections.");
-            if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, _clusterToDelete, CollectionsAction.List))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get collections.");
+            if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, OnFail, _clusterToDelete, CollectionsAction.List))
+                Log.Debug("TestRetrieveAndRank.ForwardCollectionRequest()", "Failed to get collections!");
             while (!_getCollectionsTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Create Collection request
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to create collection.");
-            if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, _clusterToDelete, CollectionsAction.Create, _collectionNameToDelete, _testClusterConfigName))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to create collection.");
+            if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, OnFail, _clusterToDelete, CollectionsAction.Create, _collectionNameToDelete, _testClusterConfigName))
+                Log.Debug("TestRetrieveAndRank.ForwardCollectionRequest()", "Failed to create collections!");
             while (!_createCollectionTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Index documents
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to index documents.");
-            if (!_retrieveAndRank.IndexDocuments(OnIndexDocuments, _indexDataPath, _clusterToDelete, _collectionNameToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to index documents!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to index documents.");
+            if (!_retrieveAndRank.IndexDocuments(OnIndexDocuments, OnFail, _indexDataPath, _clusterToDelete, _collectionNameToDelete))
+                Log.Debug("TestRetrieveAndRank.IndexDocuments()", "Failed to index documents!");
             while (!_indexDocumentsTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Get rankers
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers.");
-            if (!_retrieveAndRank.GetRankers(OnGetRankers))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get rankers.");
+            if (!_retrieveAndRank.GetRankers(OnGetRankers, OnFail))
+                Log.Debug("TestRetrieveAndRank.GetRankers()", "Failed to get rankers!");
             while (!_getRankersTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Create ranker
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to create ranker.");
-            if (!_retrieveAndRank.CreateRanker(OnCreateRanker, _testRankerTrainingPath, _createdRankerName))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to create ranker.");
+            if (!_retrieveAndRank.CreateRanker(OnCreateRanker, OnFail, _testRankerTrainingPath, _createdRankerName))
+                Log.Debug("TestRetrieveAndRank.CreateRanker()", "Failed to create ranker!");
             while (!_createRankerTested || !_readyToContinue)
                 yield return null;
 
             //  Wait for ranker status to be `Available`.
-            Log.Debug("ExampleRetrieveAndRank", "Checking ranker status in 10 seconds");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Checking ranker status in 10 seconds");
             Runnable.Run(CheckRankerStatus(10f));
             while (!_isRankerReady || !_readyToContinue)
                 yield return null;
@@ -234,218 +236,218 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = false;
             //  Standard Search
             string[] fl = { "title", "id", "body", "author", "bibliography" };
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to search standard.");
-            if (!_retrieveAndRank.Search(OnSearchStandard, _clusterToDelete, _collectionNameToDelete, _testQuery, fl))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to search standard.");
+            if (!_retrieveAndRank.Search(OnSearchStandard, OnFail, _clusterToDelete, _collectionNameToDelete, _testQuery, fl))
+                Log.Debug("TestRetrieveAndRank.Search()", "Failed to search!");
             while (!_searchStandardTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Rank
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to rank.");
-            if (!_retrieveAndRank.Rank(OnRank, _rankerIdToDelete, _testAnswerDataPath))
-                Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to rank.");
+            if (!_retrieveAndRank.Rank(OnRank, OnFail, _rankerIdToDelete, _testAnswerDataPath))
+                Log.Debug("TestRetrieveAndRank.Rank()", "Failed to rank!");
             while (!_rankTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Get ranker info
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to get rankers.");
-            if (!_retrieveAndRank.GetRanker(OnGetRanker, _rankerIdToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to get rankers.");
+            if (!_retrieveAndRank.GetRanker(OnGetRanker, OnFail, _rankerIdToDelete))
+                Log.Debug("TestRetrieveAndRank.GetRanker()", "Failed to get ranker!");
             while (!_getRankerTested)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete rankers
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to delete ranker {0}.", _rankerIdToDelete);
-            if (!_retrieveAndRank.DeleteRanker(OnDeleteRanker, _rankerIdToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", _rankerIdToDelete);
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to delete ranker {0}.", _rankerIdToDelete);
+            if (!_retrieveAndRank.DeleteRanker(OnDeleteRanker, OnFail, _rankerIdToDelete))
+                Log.Debug("TestRetrieveAndRank.DeleteRanker()", "Failed to delete ranker {0}!", _rankerIdToDelete);
             while (!_deleteRankerTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete Collection request
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to delete collection {0}.", "TestCollectionToDelete");
-            if (!_retrieveAndRank.ForwardCollectionRequest(OnDeleteCollection, _clusterToDelete, CollectionsAction.Delete, "TestCollectionToDelete"))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to delete collection {0}.", "TestCollectionToDelete");
+            if (!_retrieveAndRank.ForwardCollectionRequest(OnDeleteCollection, OnFail, _clusterToDelete, CollectionsAction.Delete, "TestCollectionToDelete"))
+                Log.Debug("TestRetrieveAndRank.ForwardCollectionRequest()", "Failed to delete collections!");
             while (!_deleteCollectionTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete cluster config
             string clusterConfigToDelete = "test-config";
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster config.");
-            if (!_retrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, _clusterToDelete, clusterConfigToDelete))
-                Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", clusterConfigToDelete);
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to delete cluster config.");
+            if (!_retrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, OnFail, _clusterToDelete, clusterConfigToDelete))
+                Log.Debug("TestRetrieveAndRank.DeleteClusterConfig()", "Failed to delete cluster config {0}", clusterConfigToDelete);
             while (!_deleteClusterConfigTested || !_readyToContinue)
                 yield return null;
 
             _readyToContinue = false;
             //  Delete cluster
-            Log.Debug("ExampleRetrieveAndRank", "Attempting to delete cluster {0}.", _clusterToDelete);
-            if (!_retrieveAndRank.DeleteCluster(OnDeleteCluster, _clusterToDelete))
-                Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Attempting to delete cluster {0}.", _clusterToDelete);
+            if (!_retrieveAndRank.DeleteCluster(OnDeleteCluster, OnFail, _clusterToDelete))
+                Log.Debug("TestRetrieveAndRank.DeleteCluster()", "Failed to delete cluster!");
             while (!_deleteClusterTested || !_readyToContinue)
                 yield return null;
 
-            Log.Debug("ExampleRetrieveAndRank", "Retrieve and rank examples complete!");
+            Log.Debug("TestRetrieveAndRank.RunTest()", "Retrieve and rank examples complete!");
             yield break;
         }
 
-        private void OnGetClusters(SolrClusterListResponse resp, string data)
+        private void OnGetClusters(SolrClusterListResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get clusters response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetClusters()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClustersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateCluster(SolrClusterResponse resp, string data)
+        private void OnCreateCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Create cluster response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnCreateCluster()", "{0}", customData["json"].ToString());
             _clusterToDelete = resp.solr_cluster_id;
             Test(resp != null);
             _createClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteCluster(bool success, string data)
+        private void OnDeleteCluster(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Delete cluster response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnDeleteCluster()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetCluster(SolrClusterResponse resp, string data)
+        private void OnGetCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetCluster()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClusterTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetClusterConfigs(SolrConfigList resp, string data)
+        private void OnGetClusterConfigs(SolrConfigList resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster config response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfigs()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getClusterConfigsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteClusterConfig(bool success, string data)
+        private void OnDeleteClusterConfig(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Deletecluster config response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnDeleteClusterConfig()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
         
-        private void OnGetClusterConfig(byte[] respData, string data)
+        private void OnGetClusterConfig(byte[] respData, Dictionary<string, object> customData)
         {
 #if UNITY_EDITOR
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get cluster config response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetClusterConfig()", "{0}", customData["json"].ToString());
 #else
-		Log.Debug("ExampleRetrieveAndRank", "Not in editor - skipping download.");
+		Log.Debug("TestRetrieveAndRank.RunTest()", "Not in editor - skipping download.");
 #endif
             Test(respData != null);
             _getClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        //private void OnSaveConfig(bool success, string data)
+        //private void OnSaveConfig(bool success, Dictionary<string, object> customData)
         //{
-        //    Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Save config response: {0}", data);
-            //Test(success);
+        //    Log.Debug("TestRetrieveAndRank.OnSaveConfig()", "{0}", customData["json"].ToString());
+        //Test(success);
         //    _saveConfigTested = true;
         //    Runnable.Run(ReadyToContinue(_waitTime));
         //}
 
-        private void OnUploadClusterConfig(UploadResponse resp, string data)
+        private void OnUploadClusterConfig(UploadResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Upload cluster config response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnUploadClusterConfig()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _uploadClusterConfigTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetCollections(CollectionsResponse resp, string data)
+        private void OnGetCollections(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetCollections()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getCollectionsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateCollection(CollectionsResponse resp, string data)
+        private void OnCreateCollection(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnCreateCollection()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _createCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteCollection(CollectionsResponse resp, string data)
+        private void OnDeleteCollection(CollectionsResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get collections response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnDeleteCollection()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _deleteCollectionTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnIndexDocuments(IndexResponse resp, string data)
+        private void OnIndexDocuments(IndexResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Index documents response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnIndexDocuments()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _indexDocumentsTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetRankers(ListRankersPayload resp, string data)
+        private void OnGetRankers(ListRankersPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get rankers response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetRankers()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getRankersTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnCreateRanker(RankerStatusPayload resp, string data)
+        private void OnCreateRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Create ranker response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnCreateRanker()", "{0}", customData["json"].ToString());
             _rankerIdToDelete = resp.ranker_id;
             Test(resp != null);
             _createRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnRank(RankerOutputPayload resp, string data)
+        private void OnRank(RankerOutputPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Rank response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnRank()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _rankTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnGetRanker(RankerStatusPayload resp, string data)
+        private void OnGetRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Get ranker response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnGetRanker()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _getRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnDeleteRanker(bool success, string data)
+        private void OnDeleteRanker(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Delete ranker response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnDeleteRanker()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteRankerTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
         }
 
-        private void OnSearchStandard(SearchResponse resp, string data)
+        private void OnSearchStandard(SearchResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("\tExampleRetrieveAndRank", "Retrieve and rank - Search standard response: {0}", data);
+            Log.Debug("TestRetrieveAndRank.OnSearchStandard()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _searchStandardTested = true;
             Runnable.Run(ReadyToContinue(_waitTime));
@@ -455,46 +457,51 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             yield return new WaitForSeconds(waitTime);
 
-            if (!_retrieveAndRank.GetCluster((SolrClusterResponse resp, string data) =>
+            if (!_retrieveAndRank.GetCluster((SolrClusterResponse resp, Dictionary<string, object> customData) =>
             {
-                Log.Debug("\tExampleRetrieveAndRank", "Solr cluster status is '{0}'", resp.solr_cluster_status);
+                Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Solr cluster status is '{0}'", resp.solr_cluster_status);
                 if (resp.solr_cluster_status.ToLower() != "ready")
                 {
-                    Log.Debug("ExampleRetrieveAndRank", "Checking cluster status in 10 seconds");
+                    Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Checking cluster status in 10 seconds");
                     Runnable.Run(CheckClusterStatus(waitTime));
                 }
                 else
                 {
                     _isClusterReady = true;
                 }
-            }, _clusterToDelete))
-                Log.Debug("\tExampleRetrieveAndRank", "Failed to get cluster");
+            }, OnFail, _clusterToDelete))
+                Log.Debug("TestRetrieveAndRank.CheckClusterStatus()", "Failed to get cluster");
         }
 
         private IEnumerator CheckRankerStatus(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
 
-            if (!_retrieveAndRank.GetRanker((RankerStatusPayload resp, string data) =>
+            if (!_retrieveAndRank.GetRanker((RankerStatusPayload resp, Dictionary<string, object> customData) =>
             {
-                Log.Debug("\tExampleRetrieveAndRank", "Solr ranker status is '{0}'", resp.status);
+                Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Solr ranker status is '{0}'", resp.status);
                 if (resp.status.ToLower() != "available")
                 {
-                    Log.Debug("ExampleRetrieveAndRank", "Checking ranker status in 10 seconds");
+                    Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Checking ranker status in 10 seconds");
                     Runnable.Run(CheckRankerStatus(10f));
                 }
                 else
                 {
                     _isRankerReady = true;
                 }
-            }, _rankerIdToDelete))
-                Log.Debug("\tExampleRetrieveAndRank", "Failed to get ranker");
+            }, OnFail, _rankerIdToDelete))
+                Log.Debug("TestRetrieveAndRank.CheckRankerStatus()", "Failed to get ranker");
         }
 
         private IEnumerator ReadyToContinue(float waitTime)
         {
             yield return new WaitForSeconds(waitTime);
             _readyToContinue = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

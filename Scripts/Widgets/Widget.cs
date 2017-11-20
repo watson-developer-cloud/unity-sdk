@@ -200,16 +200,29 @@ namespace IBM.Watson.DeveloperCloud.Widgets
 
                 if (!string.IsNullOrEmpty(ReceiverFunction))
                 {
+#if NETFX_CORE
+                    MethodInfo info = Owner.GetType().GetMethod(ReceiverFunction, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
+                        BindingFlags.NonPublic | BindingFlags.Static);
+                    if (info != null)
+                    {
+                        DataReceiver = info.CreateDelegate(typeof(OnReceiveData), Owner) as OnReceiveData;
+                        if (DataReceiver == null)
+                            Log.Error("Widget.Start()", "CreateDelegate failed for function {0}", ReceiverFunction);
+                    }
+                    else
+                        Log.Error("Widget.Start()", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
+#else
                     MethodInfo info = Owner.GetType().GetMethod(ReceiverFunction, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
                         BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
                     if (info != null)
                     {
                         DataReceiver = Delegate.CreateDelegate(typeof(OnReceiveData), Owner, info) as OnReceiveData;
                         if (DataReceiver == null)
-                            Log.Error("Widget", "CreateDelegate failed for function {0}", ReceiverFunction);
+                            Log.Error("Widget.Start()", "CreateDelegate failed for function {0}", ReceiverFunction);
                     }
                     else
-                        Log.Error("Widget", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
+                        Log.Error("Widget.Start()", "Failed to find receiver function {0} in object {1}.", ReceiverFunction, Owner.gameObject.name);
+#endif
                 }
             }
 
@@ -335,7 +348,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                             }
                         }
 
-                        Log.Error("Widget", "Failed to resolve target {0} for object {1}.", _targetConnection, _targetObject.name);
+                        Log.Error("Widget.ResolveTargetInput()", "Failed to resolve target {0} for object {1}.", _targetConnection, _targetObject.name);
                         return false;
                     }
 
@@ -448,7 +461,7 @@ namespace IBM.Watson.DeveloperCloud.Widgets
                         }
                         catch (Exception e)
                         {
-                            Log.Error("Widget", "Exception sending data {0} to input {1} on object {2}: {3}",
+                            Log.Error("Widget.SendData()", "Exception sending data {0} to input {1} on object {2}: {3}",
                                 data.Name, c.TargetInput.InputName, c.TargetObject.name, e.ToString());
                         }
                     }
@@ -611,8 +624,13 @@ namespace IBM.Watson.DeveloperCloud.Widgets
         {
             List<T> inputs = new List<T>();
 
+#if NETFX_CORE
+            MemberInfo[] members = GetType().GetMembers(BindingFlags.Instance
+                | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public);
+#else
             MemberInfo[] members = GetType().GetMembers(BindingFlags.Instance | BindingFlags.GetField
                 | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public);
+#endif
             foreach (MemberInfo info in members)
             {
                 FieldInfo field = info as FieldInfo;

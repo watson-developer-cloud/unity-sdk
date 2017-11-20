@@ -20,6 +20,8 @@ using IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
+using IBM.Watson.DeveloperCloud.Connection;
+using System.Collections.Generic;
 
 public class ExampleDocumentConversion : MonoBehaviour
 {
@@ -47,18 +49,23 @@ public class ExampleDocumentConversion : MonoBehaviour
 
     private IEnumerator Examples()
     {
-        if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
-            Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+        if (!_documentConversion.ConvertDocument(OnConvertDocument, OnFail, _examplePath, _conversionTarget))
+            Log.Debug("ExampleDocumentConversion.ConvertDocument()", "Document conversion failed!");
 
         while (!_convertDocumentTested)
             yield return null;
 
-        Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
+        Log.Debug("ExampleDoucmentConversion.Examples()", "Document conversion examples complete.");
     }
 
-    private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+    private void OnConvertDocument(ConvertedDocument documentConversionResponse, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+        Log.Debug("ExampleDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
         _convertDocumentTested = true;
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleDoucmentConversion.OnFail()", "Error received: {0}", error.ToString());
     }
 }

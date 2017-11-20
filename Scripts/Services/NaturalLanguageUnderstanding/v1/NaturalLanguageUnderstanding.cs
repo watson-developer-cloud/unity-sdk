@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
@@ -94,33 +95,45 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         }
         #endregion
 
-        #region Analyze
+        #region Callback delegates
         /// <summary>
-        /// The callback used by Analyze().
+        /// Success callback delegate.
         /// </summary>
-        /// <param name="resp">The AnalysisResult response.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnAnalyze(AnalysisResults resp, string customData);
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
 
+        #region Analyze
         /// <summary>
         /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
         /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
         /// </summary>
-        /// <param name="callback">The OnAnalyze callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="parameters">The analyze parameters.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool Analyze(OnAnalyze callback, Parameters parameters, string customData = default(string))
+        public bool Analyze(SuccessCallback<AnalysisResults> successCallback, FailCallback failCallback, Parameters parameters, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
             AnalyzeRequest req = new AnalyzeRequest();
-            req.Callback = callback;
-            req._Parameters = parameters;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = OnAnalyzeResponse;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -139,15 +152,25 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private class AnalyzeRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public Parameters _Parameters { get; set; }
-            public OnAnalyze Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<AnalysisResults> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            AnalysisResults analysisResults = new AnalysisResults();
+            AnalysisResults result = new AnalysisResults();
             fsData data = null;
+            Dictionary<string, object> customData = ((AnalyzeRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -158,47 +181,53 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = analysisResults;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnAnalyzeResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnAnalyzeResponse()", "OnAnalyzeResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((AnalyzeRequest)req).Data;
-            if (((AnalyzeRequest)req).Callback != null)
-                ((AnalyzeRequest)req).Callback(resp.Success ? analysisResults : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((AnalyzeRequest)req).SuccessCallback != null)
+                    ((AnalyzeRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((AnalyzeRequest)req).FailCallback != null)
+                    ((AnalyzeRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region Get Models
         /// <summary>
-        /// The callback used by GetModels().
-        /// </summary>
-        /// <param name="resp">The GetModels response.</param>
-        /// <param name="customData">Optional data.</param>
-        public delegate void OnGetModels(ListModelsResults resp, string customData);
-
-        /// <summary>
         /// Lists available models for Relations and Entities features, including Watson Knowledge Studio 
         /// custom models that you have created and linked to your Natural Language Understanding service.
         /// </summary>
-        /// <param name="callback">The OnGetModels callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool GetModels(OnGetModels callback, string customData = default(string))
+        public bool GetModels(SuccessCallback<ListModelsResults> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             GetModelsRequest req = new GetModelsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
 
@@ -211,14 +240,25 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private class GetModelsRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public OnGetModels Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<ListModelsResults> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ListModelsResults modelData = new ListModelsResults();
+            ListModelsResults result = new ListModelsResults();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetModelsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -229,52 +269,56 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = modelData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery", "OnGetModelssResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnGetModelsResponse()", "OnGetModelssResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetModelsRequest)req).Data;
-            if (((GetModelsRequest)req).Callback != null)
-                ((GetModelsRequest)req).Callback(resp.Success ? modelData : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
-
+            if (resp.Success)
+            {
+                if (((GetModelsRequest)req).SuccessCallback != null)
+                    ((GetModelsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetModelsRequest)req).FailCallback != null)
+                    ((GetModelsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
         #region Delete Model
         /// <summary>
-        /// The callback used by DeleteModel().
-        /// </summary>
-        /// <param name="success">The success of the call.</param>
-        /// <param name="customData">Optional custom data.</param>
-        public delegate void OnDeleteModel(bool success, string customData);
-
-        /// <summary>
         /// Deletes the specified model.
         /// </summary>
-        /// <param name="callback">The callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="modelId">The model identifier.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool DeleteModel(OnDeleteModel callback, string modelId, string customData = default(string))
+        public bool DeleteModel(SuccessCallback<bool> successCallback, FailCallback failCallback, string modelId, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             if (string.IsNullOrEmpty(modelId))
                 throw new ArgumentNullException("modelId");
 
             DeleteModelRequest req = new DeleteModelRequest();
-            req.Callback = callback;
-            req.ModelId = modelId;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnDeleteModelResponse;
             req.Delete = true;
@@ -288,16 +332,36 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
         private class DeleteModelRequest : RESTConnector.Request
         {
-            public string Data { get; set; }
-            public string ModelId { get; set; }
-            public OnDeleteModel Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<bool> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            string customData = ((DeleteModelRequest)req).Data;
-            if (((DeleteModelRequest)req).Callback != null)
-                ((DeleteModelRequest)req).Callback(resp.Success, customData);
+            Dictionary<string, object> customData = ((DeleteModelRequest)req).CustomData;
+
+            if (resp.Success)
+            {
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+
+                if (((DeleteModelRequest)req).SuccessCallback != null)
+                    ((DeleteModelRequest)req).SuccessCallback(resp.Success, customData);
+            }
+            else
+            {
+                if (((DeleteModelRequest)req).FailCallback != null)
+                    ((DeleteModelRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 

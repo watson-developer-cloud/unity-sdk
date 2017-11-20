@@ -18,6 +18,14 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleRetrieveAndRank.OnFail()", "Error received: {0}", error.ToString());
+}
+```
 
 ###  Getting clusters
 Retrieves the list of Solr clusters for the service instance.
@@ -25,13 +33,13 @@ Retrieves the list of Solr clusters for the service instance.
 ```cs
 void GetClusters()
 {
-  if (!_retrieveAndRank.GetClusters(OnGetClusters))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to get clusters!");
+  if (!_retrieveAndRank.GetClusters(OnGetClusters, OnFail))
+    Log.Debug("ExampleRetrieveAndRank.GetClusters()", "Failed to get clusters!");
 }
 
-private void OnGetClusters(SolrClusterListResponse resp, string data)
+private void OnGetClusters(SolrClusterListResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusters results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetClusters()", "GetClusters results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -41,13 +49,13 @@ Provisions a Solr cluster asynchronously. When the operation is successful, the 
 ```cs
 void CreateCluster()
 {
-  if (!_retrieveAndRank.CreateCluster(OnCreateCluster, <cluster-name>, <cluster-size>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to create cluster!");
+  if (!_retrieveAndRank.CreateCluster(OnCreateCluster, OnFail, <cluster-name>, <cluster-size>))
+    Log.Debug("ExampleRetrieveAndRank.CreateCluster()", "Failed to create cluster!");
 }
 
-private void OnCreateCluster(SolrClusterResponse resp, string data)
+private void OnCreateCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "CreateCluster results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnCreateClusterMethod()", "CreateCluster results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -57,13 +65,13 @@ Stops and deletes a Solr Cluster asynchronously.
 ```cs
 void DeleteCluster()
 {
-  if (!_retrieveAndRank.DeleteCluster(OnDeleteCluster, <cluster-id>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to delete cluster!");
+  if (!_retrieveAndRank.DeleteCluster(OnDeleteCluster, OnFail, <cluster-id>))
+    Log.Debug("ExampleRetrieveAndRank.DeleteCluster()", "Failed to delete cluster!");
 }
 
-private void OnDeleteCluster(bool success, string data)
+private void OnDeleteCluster(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "DeleteCluster results: {0}", success);
+  Log.Debug("ExampleRetrieveAndRank.OnDeleteCluster()", "DeleteCluster results: {0}", success);
 }
 
 ```
@@ -74,13 +82,13 @@ Returns status and other information about a cluster.
 ```cs
 void GetCluster()
 {
-  if (!_retrieveAndRank.GetCluster(OnGetCluster, <cluster-id>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster!");
+  if (!_retrieveAndRank.GetCluster(OnGetCluster, OnFail, <cluster-id>))
+    Log.Debug("ExampleRetrieveAndRank.GetCluster()", "Failed to get cluster!");
 }
 
-private void OnGetCluster(SolrClusterResponse resp, string data)
+private void OnGetCluster(SolrClusterResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetCluster results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetCluster()", "GetCluster results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -90,13 +98,13 @@ Retrieves all configurations for a cluster.
 ```cs
 void GetClusterConfigs()
 {
-  if (!_retrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, <cluster-id>))
-  Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster configs!");
+  if (!_retrieveAndRank.GetClusterConfigs(OnGetClusterConfigs, OnFail, <cluster-id>))
+  Log.Debug("ExampleRetrieveAndRank.GetClusterConfigs()", "Failed to get cluster configs!");
 }
 
-private void OnGetClusterConfigs(SolrConfigList resp, string data)
+private void OnGetClusterConfigs(SolrConfigList resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfigs results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetClusterConfigs()", "GetClusterConfigs results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -106,13 +114,13 @@ Deletes the configuration for a cluster. Before you delete the configuration, de
 ```cs
 void DeleteClusterConfig()
 {
-  if (!_retrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, <cluster-id>, <cluster-config>))
-    Log.Debug("ExampleRetriveAndRank", "Failed to delete cluster config {0}", <cluster-config>);
+  if (!_retrieveAndRank.DeleteClusterConfig(OnDeleteClusterConfig, OnFail, <cluster-id>, <cluster-config>))
+    Log.Debug("ExampleRetrieveAndRank.DeleteClusterConfig()", "Failed to delete cluster config {0}", <cluster-config>);
 }
 
-private void OnDeleteClusterConfig(bool success, string data)
+private void OnDeleteClusterConfig(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "DeleteClusterConfig results: {0}", success);
+  Log.Debug("ExampleRetrieveAndRank.OnDeleteClusterConfig()", "DeleteClusterConfig results: {0}", success);
 }
 ```
 
@@ -122,13 +130,13 @@ Retrieves the configuration for a cluster by its name.
 ```cs
 void GetClusterConfig()
 {
-  if (!_retrieveAndRank.GetClusterConfig(OnGetClusterConfig, <cluster-id>, <cluster-config-name>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to get cluster config {0}!", <cluster-config-name>);
+  if (!_retrieveAndRank.GetClusterConfig(OnGetClusterConfig, OnFail, <cluster-id>, <cluster-config-name>))
+    Log.Debug("ExampleRetrieveAndRank.GetClusterConfig()", "Failed to get cluster config {0}!", <cluster-config-name>);
 }
 
-private void OnGetClusterConfig(byte[] respData, string data)
+private void OnGetClusterConfig(byte[] respData, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetClusterConfig()", "GetClusterConfig results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -137,13 +145,13 @@ Saves the cluster config
 ```cs
 void SaveClusterConfig()
 {
-  if(!_retrieveAndRank.SaveConfig(OnSaveConfig, <response-data>, <file-path>, data))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to save cluster config!");
+  if(!_retrieveAndRank.SaveConfig(OnSaveConfig, OnFail, <response-data>, <file-path>, data))
+    Log.Debug("ExampleRetrieveAndRank.SaveConfig()", "Failed to save cluster config!");
 }
 
-private void OnSaveConfig(bool success, string data)
+private void OnSaveConfig(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "SaveClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnSaveConfig()", "SaveClusterConfig results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -153,13 +161,13 @@ Uploads a zip file containing the configuration files for your Solr collection. 
 ```cs
 void UploadClusterConfig()
 {
-  if (!_retrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, <cluster-id>, <cluster-config-name>, <cluster-config-path>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to upload cluster config {0}!", <cluster-config-path>);
+  if (!_retrieveAndRank.UploadClusterConfig(OnUploadClusterConfig, OnFail, <cluster-id>, <cluster-config-name>, <cluster-config-path>))
+    Log.Debug("ExampleRetrieveAndRank.UploadClusterConfig()", "Failed to upload cluster config {0}!", <cluster-config-path>);
 }
 
-private void OnUploadClusterConfig(UploadResponse resp, string data)
+private void OnUploadClusterConfig(UploadResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "UploadClusterConfig results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnUploadClusterConfig()", "UploadClusterConfig results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -169,13 +177,13 @@ An example of a method that forwards to the [Solr Collections API](https://cwiki
 ```cs
 void ListCollections()
 {
-  if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, <cluster-id>, CollectionsAction.LIST))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to get collections!");
+  if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, OnFail, <cluster-id>, CollectionsAction.LIST))
+    Log.Debug("ExampleRetrieveAndRank.ForwardCollectionRequest()", "Failed to get collections!");
 }
 
-private void OnGetCollections(CollectionsResponse resp, string data)
+private void OnGetCollections(CollectionsResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetCollections()", "ListCollections results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -185,13 +193,13 @@ An example of a method that forwards to the [Solr Collections API](https://cwiki
 ```cs
 void CreateCollection()
 {
-  if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, <cluster-id>, CollectionsAction.CREATE, <collection-name>, <cluster-config-name>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to create collections!");
+  if (!_retrieveAndRank.ForwardCollectionRequest(OnCreateCollection, OnFail, <cluster-id>, CollectionsAction.CREATE, <collection-name>, <cluster-config-name>))
+    Log.Debug("ExampleRetrieveAndRank.ForwardCollectionRequest()", "Failed to create collections!");
 }
 
-private void OnCreateCollection(CollectionsResponse resp, string data)
+private void OnCreateCollection(CollectionsResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "ListCollections results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnCreateCollection()", "ListCollections results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -201,13 +209,13 @@ An example of a method that forwards to the [Solr Collections API](https://cwiki
 ```cs
 void DeleteCollection()
 {
-  if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, <cluster-id>, CollectionsAction.DELETE, <collection-name>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to delete collections!");
+  if (!_retrieveAndRank.ForwardCollectionRequest(OnGetCollections, OnFail, <cluster-id>, CollectionsAction.DELETE, <collection-name>))
+    Log.Debug("ExampleRetrieveAndRank.ForwardCollectionRequest()", "Failed to delete collections!");
 }
 
-private void OnGetCollections(CollectionsResponse resp, string data)
+private void OnGetCollections(CollectionsResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "DeleteCollection results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetCollections()", "DeleteCollection results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -221,13 +229,13 @@ You must commit your documents to the index to search for them. For more informa
 ```cs
 void IndexDocuments()
 {
-  if (!_retrieveAndRank.IndexDocuments(OnIndexDocuments, <index-data-path>, <cluster-id>, <collection-name>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to index documents!");
+  if (!_retrieveAndRank.IndexDocuments(OnIndexDocuments, OnFail, <index-data-path>, <cluster-id>, <collection-name>))
+    Log.Debug("ExampleRetrieveAndRank.IndexDocuments()", "Failed to index documents!");
 }
 
-private void OnIndexDocuments(IndexResponse resp, string data)
+private void OnIndexDocuments(IndexResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "IndexDocuments results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnIndexDocuments()", "IndexDocuments results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -239,18 +247,18 @@ void Search()
 {
   //  Standard search
   string[] fl = { "title", "id", "body", "author", "bibliography" };
-  if (!_retrieveAndRank.Search(OnSearch, <cluster-id>, <collection-name>, <query>, fl))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
+  if (!_retrieveAndRank.Search(OnSearch, OnFail, <cluster-id>, <collection-name>, <query>, fl))
+    Log.Debug("ExampleRetrieveAndRank.Search()", "Failed to search!");
 
   //  Ranked search
   string[] fl = { "title", "id", "body", "author", "bibliography" };
-  if (!_retrieveAndRank.Search(OnSearch, <cluster-id>, <collection-name>, <query>, fl, true, <ranker-id>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to search!");
+  if (!_retrieveAndRank.Search(OnSearch, OnFail, <cluster-id>, <collection-name>, <query>, fl, true, <ranker-id>))
+    Log.Debug("ExampleRetrieveAndRank.Search()", "Failed to search!");
 }
 
-private void OnSearch(SearchResponse resp, string data)
+private void OnSearch(SearchResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "Search results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnSearch()", "Search results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -260,13 +268,13 @@ Retrieves the list of rankers for the service instance.
 ```cs
 void GetRankers()
 {
-  if (!_retrieveAndRank.GetRankers(OnGetRankers))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to get rankers!");
+  if (!_retrieveAndRank.GetRankers(OnGetRankers, OnFail))
+    Log.Debug("ExampleRetrieveAndRank.GetRankers()", "Failed to get rankers!");
 }
 
-private void OnGetRankers(ListRankersPayload resp, string data)
+private void OnGetRankers(ListRankersPayload resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetRankers results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetRankers()", "GetRankers results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -278,13 +286,13 @@ When the operation is successful, the status of the ranker is set to Training. T
 ```cs
 void CreateRanker()
 {
-  if (!_retrieveAndRank.CreateRanker(OnCreateRanker, <ranker-training-path>, <ranker-name>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to create ranker!");
+  if (!_retrieveAndRank.CreateRanker(OnCreateRanker, OnFail, <ranker-training-path>, <ranker-name>))
+    Log.Debug("ExampleRetrieveAndRank.CreateRanker()", "Failed to create ranker!");
 }
 
-private void OnCreateRanker(RankerStatusPayload resp, string data)
+private void OnCreateRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "CreateRanker results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnCreateRanker()", "CreateRanker results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -296,13 +304,13 @@ Use this method to return answers when you train the ranker with custom features
 ```cs
 void Rank()
 {
-  if (!_retrieveAndRank.Rank(OnRank, <ranker-id>, <ranker-data-path>))
-    Log.Debug("ExampleRetriveAndRank", "Failed to rank!");
+  if (!_retrieveAndRank.Rank(OnRank, OnFail, <ranker-id>, <ranker-data-path>))
+    Log.Debug("ExampleRetrieveAndRank.Rank()", "Failed to rank!");
 }
 
-private void OnRank(RankerOutputPayload resp, string data)
+private void OnRank(RankerOutputPayload resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "Rank results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnRank()", "Rank results: {0}", customData["json"].ToString());
 }
 ```
 
@@ -312,13 +320,13 @@ Deletes a ranker.
 ```cs
 void DeleteRanker()
 {
-  if (!_retrieveAndRank.DeleteRanker(OnDeleteRanker, <ranker-to-delete>))
-    Log.Debug("ExampleRetrieveAndRank", "Failed to delete ranker {0}!", <rankerToDelete>);
+  if (!_retrieveAndRank.DeleteRanker(OnDeleteRanker, OnFail, <ranker-to-delete>))
+    Log.Debug("ExampleRetrieveAndRank.DeleteRanker()", "Failed to delete ranker {0}!", <rankerToDelete>);
 }
 
-private void OnDeleteRanker(bool success, string data)
+private void OnDeleteRanker(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "DeleteRanker results: {0}", success);
+  Log.Debug("ExampleRetrieveAndRank.OnDeleteRanker()", "DeleteRanker results: {0}", success);
 }
 ```
 
@@ -328,15 +336,14 @@ Returns status and other information about a ranker.
 ```cs
 void GetRanker()
 {
-  if (!_retrieveAndRank.GetRanker(OnGetRanker, <ranker-id>))
-      Log.Debug("ExampleRetrieveAndRank", "Failed to get ranker!");
+  if (!_retrieveAndRank.GetRanker(OnGetRanker, OnFail, <ranker-id>))
+      Log.Debug("ExampleRetrieveAndRank.GetRanker()", "Failed to get ranker!");
 }
 
-private void OnGetRanker(RankerStatusPayload resp, string data)
+private void OnGetRanker(RankerStatusPayload resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleRetrieveAndRank", "GetRanker results: {0}", data.ToString());
+  Log.Debug("ExampleRetrieveAndRank.OnGetRanker()", "GetRanker results: {0}", customData["json"].ToString());
 }
 ```
-[personality-insights]: https://www.ibm.com/watson/developercloud/personality-insights.html
-[personality-models]: https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html
-[consumption-preferences]:https://www.ibm.com/watson/developercloud/doc/personality-insights/preferences.html
+[retrieve-and-rank-service]: https://www.ibm.com/watson/services/retrieve-and-rank/
+[retrieve-and-rank-documentation]: https://console.bluemix.net/docs/services/retrieve-and-rank/index.html

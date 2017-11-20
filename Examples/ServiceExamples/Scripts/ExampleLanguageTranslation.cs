@@ -18,6 +18,9 @@
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2;
 using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
+using System.Collections.Generic;
 
 public class ExampleLanguageTranslation : MonoBehaviour
 {
@@ -33,13 +36,18 @@ public class ExampleLanguageTranslation : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
         _languageTranslation = new LanguageTranslation(credentials);
 
-        Debug.Log("English Phrase to translate: " + _pharseToTranslate);
-        _languageTranslation.GetTranslation(_pharseToTranslate, "en", "es", OnGetTranslation);
+        Log.Debug("ExampleLangaugeTranslation.Start()", "English Phrase to translate: " + _pharseToTranslate);
+        _languageTranslation.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es");
     }
 
-    private void OnGetTranslation(Translations translation, string customData)
+    private void OnGetTranslation(Translations translation, Dictionary<string, object> customData)
     {
         if (translation != null && translation.translations.Length > 0)
-            Debug.Log("Spanish Translation: " + translation.translations[0].translation);
+            Log.Debug("ExampleLangaugeTranslation.OnGetTranslation()", "Spanish Translation: " + translation.translations[0].translation);
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleLangaugeTranslation.OnFail()", "Error received: {0}", error.ToString());
     }
 }

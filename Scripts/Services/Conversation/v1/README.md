@@ -22,19 +22,28 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleConversation.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
 ### Message
 Send a message to the Conversation instance
 ```cs
 //  Send a simple message using a string
 private void Message()
 {
-  if (!_conversation.Message(OnMessage, <workspace-id>, <input-string>))
-    Log.Debug("ExampleConversation", "Failed to message!");
+  if (!_conversation.Message(OnMessage, OnFail, <workspace-id>, <input-string>))
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
-private void OnMessage(object resp, string data)
+private void OnMessage(object resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", customData["json"].ToString());
 }
 ```
 ```cs
@@ -49,13 +58,13 @@ private void Message()
     }
   };
 
-  if (!_conversation.Message(OnMessage, <workspace-id>, messageRequest))
-    Log.Debug("ExampleConversation", "Failed to message!");
+  if (!_conversation.Message(OnMessage, OnFail, <workspace-id>, messageRequest))
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
-private void OnMessage(object resp, string data)
+private void OnMessage(object resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", customData["json"].ToString());
 }
 ```
 ```cs
@@ -64,13 +73,13 @@ Dictionary<string, object> _context; // context to persist
 //  Initiate a conversation
 private void Message0()
 {
-  if (!_conversation.Message(OnMessage, <workspace-id>, <input-string0>))
-    Log.Debug("ExampleConversation", "Failed to message!");
+  if (!_conversation.Message(OnMessage, OnFail, <workspace-id>, <input-string0>))
+    Log.Debug("ExampleConversation.Message()", "Failed to message!");
 }
 
-private void OnMessage0(object resp, string data)
+private void OnMessage0(object resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage0()", "Conversation: Message Response: {0}", customData["json"].ToString());
 
   //  Set context for next round of messaging
   object _tempContext = null;
@@ -79,7 +88,7 @@ private void OnMessage0(object resp, string data)
   if (_tempContext != null)
       _context = _tempContext as Dictionary<string, object>;
   else
-      Log.Debug("ExampleConversation", "Failed to get context");
+      Log.Debug("ExampleConversation.OnMessage0()", "Failed to get context");
 }
 
 private void Message1()
@@ -93,14 +102,14 @@ private void Message1()
     context = _context
   };
 
-  if (!_conversation.Message(OnMessage, <workspace-id>, messageRequest))
-    Log.Debug("ExampleConversation", "Failed to message!");
+  if (!_conversation.Message(OnMessage, OnFail, <workspace-id>, messageRequest))
+    Log.Debug("ExampleConversation.Message1()", "Failed to message!");
 }
 
-private void OnMessage1(object resp, string data)
+private void OnMessage1(object resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+  Log.Debug("ExampleConversation.OnMessage1()", "Conversation: Message Response: {0}", customData["json"].ToString());
 }
 ```
 
-[conversation]:https://www.ibm.com/watson/developercloud/doc/conversation/index.html
+[conversation]: https://console.bluemix.net/docs/services/conversation/index.html

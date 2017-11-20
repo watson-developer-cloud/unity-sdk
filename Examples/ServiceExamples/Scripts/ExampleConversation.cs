@@ -22,6 +22,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
 using FullSerializer;
 using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleConversation : MonoBehaviour
 {
@@ -54,8 +55,8 @@ public class ExampleConversation : MonoBehaviour
 
     private IEnumerator Examples()
     {
-        if (!_conversation.Message(OnMessage, _workspaceId, "hello"))
-            Log.Debug("ExampleConversation", "Failed to message!");
+        if (!_conversation.Message(OnMessage, OnFail, _workspaceId, "hello"))
+            Log.Debug("ExampleConversation.Message()", "Failed to message!");
 
         while (_waitingForResponse)
             yield return null;
@@ -89,7 +90,7 @@ public class ExampleConversation : MonoBehaviour
         while (_waitingForResponse)
             yield return null;
 
-        Log.Debug("ExampleConversation", "Conversation examples complete.");
+        Log.Debug("ExampleConversation.Examples()", "Conversation examples complete.");
     }
 
     private void AskQuestion()
@@ -103,13 +104,13 @@ public class ExampleConversation : MonoBehaviour
             context = _context
         };
 
-        if (!_conversation.Message(OnMessage, _workspaceId, messageRequest))
-            Log.Debug("ExampleConversation", "Failed to message!");
+        if (!_conversation.Message(OnMessage, OnFail, _workspaceId, messageRequest))
+            Log.Debug("ExampleConversation.AskQuestion()", "Failed to message!");
     }
 
-    private void OnMessage(object resp, string data)
+    private void OnMessage(object resp, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleConversation", "Conversation: Message Response: {0}", data);
+        Log.Debug("ExampleConversation.OnMessage()", "Conversation: Message Response: {0}", customData["json"].ToString());
 
         //  Convert resp to fsdata
         fsData fsdata = null;
@@ -131,7 +132,12 @@ public class ExampleConversation : MonoBehaviour
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;
         else
-            Log.Debug("ExampleConversation", "Failed to get context");
+            Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
         _waitingForResponse = false;
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleConversation.OnFail()", "Error received: {0}", error.ToString());
     }
 }

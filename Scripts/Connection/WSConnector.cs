@@ -23,8 +23,16 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using WebSocketSharp;
 
+#if !NETFX_CORE
+using WebSocketSharp;
+#else
+using System;
+using System.Threading.Tasks;
+using Windows.Networking.Sockets;
+using Windows.Security.Credentials;
+using Windows.Storage.Streams;
+#endif
 
 namespace IBM.Watson.DeveloperCloud.Connection
 {
@@ -147,7 +155,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
         #region Private Data
         private ConnectionState _connectionState = ConnectionState.CLOSED;
+#if !NETFX_CORE
         private Thread _sendThread = null;
+#else
+        private Task _sendTask = null;
+#endif
         private AutoResetEvent _sendEvent = new AutoResetEvent(false);
         private Queue<Message> _sendQueue = new Queue<Message>();
         private AutoResetEvent _receiveEvent = new AutoResetEvent(false);
@@ -173,15 +185,23 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <summary>
         /// Create a WSConnector for the given service and function. 
         /// </summary>
-        /// <param name="serviceID">The ID of the service.</param>
+        /// <param name="credentials">The credentials for the service.</param>
         /// <param name="function">The name of the function to connect.</param>
         /// <param name="args">Additional function arguments.</param>
         /// <returns>The WSConnector object or null or error.</returns>
-        public static WSConnector CreateConnector(Credentials credentials, string url, string function, string args)
+        public static WSConnector CreateConnector(Credentials credentials, string function, string args)
         {
             WSConnector connector = new WSConnector();
+            if (credentials.HasAuthorizationToken())
+            {
+                args += "&watson-token=" + credentials.AuthenticationToken;
+            }
+            else if (credentials.HasCredentials())
+            {
+                connector.Authentication = credentials;
+            }
+
             connector.URL = FixupURL(credentials.Url) + function + args;
-            connector.Authentication = credentials;
 
             return connector;
         }
@@ -195,7 +215,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public void Send(Message msg, bool queue = false)
         {
 #if ENABLE_MESSAGE_DEBUGGING
-            Log.Debug( "WSConnector", "Sending {0} message: {1}",
+            Log.Debug( "WSConnector.Send()", "Sending {0} message: {1}",
                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif
@@ -206,6 +226,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     _sendEvent.Set();
             }
 
+#if !NETFX_CORE
             if (!queue && _sendThread == null)
             {
                 _connectionState = ConnectionState.CONNECTING;
@@ -215,6 +236,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 _sendThread = new Thread(SendMessages);
                 _sendThread.Start();
             }
+#else
+            if (!queue && _sendTask == null)
+            {
+                _connectionState = ConnectionState.CONNECTING;
+                _sendTask = Task.Run(() => SendMessagesAsync());
+            }
+#endif
 
             // Run our receiver as a co-routine so it can invoke functions 
             // on the main thread.
@@ -250,7 +278,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         {
                             Message msg = _receiveQueue.Dequeue();
 #if ENABLE_MESSAGE_DEBUGGING
-                            Log.Debug( "WSConnector", "Received {0} message: {1}",
+                            Log.Debug( "WSConnector.ProcessReceiveQueue()", "Received {0} message: {1}",
                                 msg is TextMessage ? "TextMessage" : "BinaryMessage", 
                                 msg is TextMessage ? ((TextMessage)msg).Text : ((BinaryMessage)msg).Data.Length.ToString() + " bytes" );
 #endif
@@ -267,51 +295,59 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
         #region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
-        private void SendMessages()
-        {
-            try
-            {
-                WebSocket ws = null;
+#if !NETFX_CORE
+		private void SendMessages()
+		{
+			try
+			{
+				WebSocket ws = null;
 
-                ws = new WebSocket(URL);
-                //if (Headers != null)
-                //    ws.Headers = Headers;
-                if (Authentication != null)
-                    ws.SetCredentials(Authentication.Username, Authentication.Password, true);
-                ws.OnOpen += OnWSOpen;
-                ws.OnClose += OnWSClose;
-                ws.OnError += OnWSError;
-                ws.OnMessage += OnWSMessage;
-                ws.Connect();
+				ws = new WebSocket(URL);
+				//if (Headers != null)
+				//    ws.Headers = Headers;
+				if (Authentication != null)
+					ws.SetCredentials(Authentication.Username, Authentication.Password, true);
+				ws.OnOpen += OnWSOpen;
+				ws.OnClose += OnWSClose;
+				ws.OnError += OnWSError;
+				ws.OnMessage += OnWSMessage;
+				ws.Connect();
 
-                while (_connectionState == ConnectionState.CONNECTED)
-                {
-                    _sendEvent.WaitOne(500);
+				while (_connectionState == ConnectionState.CONNECTED)
+				{
+					_sendEvent.WaitOne(50);
 
-                    Message msg = null;
-                    lock (_sendQueue)
-                    {
-                        if (_sendQueue.Count > 0)
-                            msg = _sendQueue.Dequeue();
-                    }
+					Message msg = null;
+					lock (_sendQueue)
+					{
+						if (_sendQueue.Count > 0)
+							msg = _sendQueue.Dequeue();
+					}
 
-                    if (msg == null)
-                        continue;
+					while (msg != null)
+					{
+						if (msg is TextMessage)
+							ws.Send(((TextMessage)msg).Text);
+						else if (msg is BinaryMessage)
+							ws.Send(((BinaryMessage)msg).Data);
 
-                    if (msg is TextMessage)
-                        ws.Send(((TextMessage)msg).Text);
-                    else if (msg is BinaryMessage)
-                        ws.Send(((BinaryMessage)msg).Data);
-                }
+						msg = null;
+						lock (_sendQueue)
+						{
+							if (_sendQueue.Count > 0)
+								msg = _sendQueue.Dequeue();
+						}
+					}
+				}
 
-                ws.Close();
-            }
-            catch (System.Exception e)
-            {
-                _connectionState = ConnectionState.DISCONNECTED;
-                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
-            }
-        }
+				ws.Close();
+			}
+			catch (System.Exception e)
+			{
+				_connectionState = ConnectionState.DISCONNECTED;
+				Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+			}
+		}
 
         private void OnWSOpen(object sender, System.EventArgs e)
         {
@@ -340,6 +376,115 @@ namespace IBM.Watson.DeveloperCloud.Connection
         {
             _connectionState = ConnectionState.DISCONNECTED;
         }
+#else
+        private async Task SendMessagesAsync()
+        {
+            try
+            {
+                MessageWebSocket webSocket = new MessageWebSocket();
+
+                if (Authentication != null)
+                {
+                    PasswordCredential credential = new PasswordCredential(Authentication.Url, Authentication.Username, Authentication.Password);
+                    webSocket.Control.ServerCredential = credential;
+                }
+
+                webSocket.MessageReceived += WebSocket_MessageReceived;
+                webSocket.Closed += WebSocket_Closed;
+
+                DataWriter messageWriter = new DataWriter(webSocket.OutputStream);
+
+                await webSocket.ConnectAsync(new Uri(URL));
+
+                _connectionState = ConnectionState.CONNECTED;
+
+                while (_connectionState == ConnectionState.CONNECTED)
+                {
+                    _sendEvent.WaitOne(50);
+
+                    Message msg = null;
+                    lock (_sendQueue)
+                    {
+                        if (_sendQueue.Count > 0)
+                            msg = _sendQueue.Dequeue();
+                    }
+
+                    while (msg != null)
+                    {
+                        if (msg is TextMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Utf8;
+                            messageWriter.WriteString(((TextMessage)msg).Text);
+                            await messageWriter.StoreAsync();
+                        }
+                        else if (msg is BinaryMessage)
+                        {
+                            webSocket.Control.MessageType = SocketMessageType.Binary;
+                            messageWriter.WriteBytes(((BinaryMessage)msg).Data);
+                            await messageWriter.StoreAsync();
+                        }
+
+                        msg = null;
+                        lock (_sendQueue)
+                        {
+                            if (_sendQueue.Count > 0)
+                                msg = _sendQueue.Dequeue();
+                        }
+                    }
+                }
+
+                webSocket.Close(1000, "Complete");
+            }
+            catch (System.Exception e)
+            {
+                _connectionState = ConnectionState.DISCONNECTED;
+                Log.Error("WSConnector.SendMessagesAsync()", "Caught WebSocket exception: {0}", e.ToString());
+            }
+        }
+
+        private void WebSocket_Closed(IWebSocket sender, WebSocketClosedEventArgs args)
+        {
+            _connectionState = (args.Code == 1000) ? ConnectionState.CLOSED : ConnectionState.DISCONNECTED;
+        }
+
+        private void WebSocket_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+        {
+            try
+            {
+                Message msg = null;
+                if (args.MessageType == SocketMessageType.Utf8)
+                {
+                    using (var dataReader = args.GetDataReader())
+                    {
+                        dataReader.UnicodeEncoding = UnicodeEncoding.Utf8;
+                        string data = dataReader.ReadString(dataReader.UnconsumedBufferLength);
+                        msg = new TextMessage(data);
+                    }
+                }
+                else if (args.MessageType == SocketMessageType.Binary)
+                {
+                    using (var dataReader = args.GetDataReader())
+                    {
+                        uint length = dataReader.UnconsumedBufferLength;
+                        if (length > 0)
+                        {
+                            byte[] data = new byte[length];
+                            dataReader.ReadBytes(data);
+                            msg = new BinaryMessage(data);
+                        }
+                    }
+                }
+
+                lock (_receiveQueue)
+                    _receiveQueue.Enqueue(msg);
+                _receiveEvent.Set();
+            }
+            catch (System.Exception e)
+            {
+                Log.Error("WSConnector.SendMessagesAsync()", "Caught WebSocket exception: {0}", e.ToString());
+            }
+        }
+#endif
         #endregion
     }
 }

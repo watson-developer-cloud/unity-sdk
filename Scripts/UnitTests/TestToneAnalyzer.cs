@@ -22,6 +22,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -74,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestToneAnalyzer", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestToneAnalyzer.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -89,22 +91,26 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
 
             //  Analyze tone
-            if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
-                Log.Debug("ExampleToneAnalyzer", "Failed to analyze!");
+            if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
+                Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
 
             while (!_analyzeToneTested)
                 yield return null;
 
-            Log.Debug("ExampleToneAnalyzer", "Tone analyzer examples complete.");
+            Log.Debug("ExampleToneAnalyzer.RunTest()", "Tone analyzer examples complete.");
 
             yield break;
         }
 
-        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleToneAnalyzer", "Tone Analyzer - Analyze Response: {0}", data);
+            Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _analyzeToneTested = true;
+        }
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("ExampleRetrieveAndRank.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

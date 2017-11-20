@@ -87,6 +87,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Conversation constructor
+        /// </summary>
+        /// <param name="credentials">The service credentials</param>
         public Conversation(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
@@ -100,28 +104,39 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         }
         #endregion
 
-        #region Message
+        #region Callback delegates
         /// <summary>
-        /// The callback delegate for the Message() function.
+        /// Success callback delegate.
         /// </summary>
-        /// <param name="resp">The response object to a call to Message().</param>
-        public delegate void OnMessage(object resp, string customData);
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
 
+        #region Message
         /// <summary>
         /// Message the specified workspaceId, input and callback.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="workspaceID">Workspace identifier.</param>
         /// <param name="input">Input.</param>
-        /// <param name="callback">Callback.</param>
         /// <param name="customData">Custom data.</param>
-        public bool Message(OnMessage callback, string workspaceID, string input, string customData = default(string))
+        public bool Message(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceID, string input, Dictionary<string, object> customData = null)
         {
-            if (string.IsNullOrEmpty(workspaceID))
-                throw new ArgumentNullException("workspaceId");
-            if (string.IsNullOrEmpty(input))
-                throw new ArgumentNullException("input");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            //if (string.IsNullOrEmpty(workspaceID))
+            //    throw new ArgumentNullException("workspaceId");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Workspaces);
             if (connector == null)
@@ -131,14 +146,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             string reqString = string.Format(reqJson, input);
 
             MessageReq req = new MessageReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
-            req.Data = customData;
             req.Send = Encoding.UTF8.GetBytes(reqString);
             req.OnResponse = MessageResp;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             return connector.Send(req);
         }
@@ -146,19 +162,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// <summary>
         /// Message the specified workspaceId, input and callback.
         /// </summary>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="workspaceID">Workspace identifier.</param>
         /// <param name="messageRequest">Message request object.</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool Message(OnMessage callback, string workspaceID, MessageRequest messageRequest, string customData = default(string))
+        public bool Message(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceID, MessageRequest messageRequest, Dictionary<string, object> customData = null)
         {
             if (string.IsNullOrEmpty(workspaceID))
                 throw new ArgumentNullException("workspaceId");
-            if (string.IsNullOrEmpty(messageRequest.input["text"] as string))
-                throw new ArgumentNullException("messageRequest.input.text");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Workspaces);
             if (connector == null)
@@ -190,15 +207,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             string stringToSend = stringBuilder.ToString();
 
             MessageReq req = new MessageReq();
-            req.Callback = callback;
-            req.MessageRequest = messageRequest;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
-            req.Data = customData;
             req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = MessageResp;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             return connector.Send(req);
         }
@@ -206,15 +223,25 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
         private class MessageReq : RESTConnector.Request
         {
-            public OnMessage Callback { get; set; }
-            public MessageRequest MessageRequest { get; set; }
-            public string Data { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void MessageResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            object dataObject = null;
+            object result = null;
             string data = "";
+            Dictionary<string, object> customData = ((MessageReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -222,19 +249,27 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                 {
                     //  For deserializing into a generic object
                     data = Encoding.UTF8.GetString(resp.Data);
-                    dataObject = Json.Deserialize(data);
+                    result = Json.Deserialize(data);
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Conversation", "MessageResp Exception: {0}", e.ToString());
+                    Log.Error("Conversation.MessageResp()", "MessageResp Exception: {0}", e.ToString());
                     data = e.Message;
                     resp.Success = false;
                 }
             }
 
-            string customData = ((MessageReq)req).Data;
-            if (((MessageReq)req).Callback != null)
-                ((MessageReq)req).Callback(resp.Success ? dataObject : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((MessageReq)req).SuccessCallback != null)
+                    ((MessageReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((MessageReq)req).FailCallback != null)
+                    ((MessageReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 

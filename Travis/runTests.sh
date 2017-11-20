@@ -21,10 +21,12 @@ echo "Attempting to run UnitySDK integration Tests..."
   -quit
 if [ $? = 0 ] ; then
   echo "UnitTest COMPLETED! Exited with $?"
+  echo 'Test logs'
+  cat $(pwd)/integrationTests.log
   exit 0
 else
   echo "UnitTest FAILED! Exited with $?"
-  echo 'Logs tests'
+  echo 'Test logs'
   cat $(pwd)/integrationTests.log
   exit 1
 fi

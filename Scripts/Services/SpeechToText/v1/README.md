@@ -34,18 +34,28 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleSpeechToText.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
+
 ### Get models
 Retrieves a list of all models available for use with the service. The information includes the name of the model and its minimum sampling rate in Hertz, among other things.
 ```cs
 private void GetModels()
 {
-  if(!_speechToText.GetModels(HandleGetModels))
-    Log.Debug("ExampleSpeechToText", "Failed to get models");
+  if(!_speechToText.GetModels(HandleGetModels, OnFail))
+    Log.Debug("ExampleSpeechToText.GetModels()", "Failed to get models");
 }
 
-private void HandleGetModels(ModelSet result, string customData)
+private void HandleGetModels(ModelSet result, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get models response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetModels()", "Speech to Text - Get models response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -57,53 +67,21 @@ Retrieves information about a single specified model that is available for use w
 ```cs
 private void GetModel()
 {
-  if(!_speechToText.GetModel(HandleGetModel, <model-name>))
-    Log.Debug("ExampleSpeechToText", "Failed to get model");
+  if(!_speechToText.GetModel(HandleGetModel, OnFail, <model-name>))
+    Log.Debug("ExampleSpeechToText.GetModel()", "Failed to get model");
 }
 
-private void HandleGetModel(Model result, string customData)
+private void HandleGetModel(Model result, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetModel()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
 }
 ```
 
 ### Recognize audio
 #### Accessing the device microphone and sending data to the Speech to Text instance
-You can access the microphone of a device using Unity's Microphone class.
-
-```cs
-_speechToText.StartListening(OnRecognize);
-_recording = Microphone.Start(<device-name>, <loop>, <length-seconds>, <frequency>);
-```
-
-AudioData can be created using the resulting AudioClip
-```cs
-int midPoint = _recording.samples / 2;
-samples = new float[midPoint];
-_recording.GetData(samples, 0);
-
-AudioData record = new AudioData();
-record.MaxLevel = Mathf.Max(samples);
-record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
-record.Clip.SetData(samples, 0);
-```
-
-The AudioData can be sent to the Speech to Text service and handled by the OnRecognize callback
-```cs
- _speechToText.OnListen(record);
-```
-
-```cs
-private void OnRecognize(SpeechRecognitionEvent result)
-{
-    //  do something
-}
-```
-
 Please see `ExampleStreaming` scene for an example.
 
 #### Streaming mode
-
 For requests to transcribe live audio as it becomes available or to transcribe multiple audio files with multipart requests, you must set the Transfer-Encoding header to chunked to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service receives no data chunk for 30 seconds and the service has no audio to transcribe for 30 seconds. The server also closes the connection (status code 400) if no speech is detected for inactivity_timeout seconds of audio (not processing time); use the inactivity_timeout parameter to change the default of 30 seconds. An example of streaming from the Unity microphone is provided in the Examples directory.
 
 #### Non-multipart requests
@@ -131,26 +109,13 @@ private void Recognize()
   //  create AudioClip with clip bytearray data
   _audioClip = WaveFile.ParseWAV(<clip-name>, <clip-data>);
 
-  if(!_speechToText.Recognize(HandleRecognize))
-    Log.Debug("ExampleSpeechToText", "Failed to recognize!");
+  if(!_speechToText.Recognize(HandleRecognize, OnFail))
+    Log.Debug("ExampleSpeechToText.Recognize()", "Failed to recognize!");
 }
 
-private void HandleRecognize(SpeechRecognitionEvent result)
+private void HandleRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
 {
-  if (result != null && result.results.Length > 0)
-  {
-    foreach (var res in result.results)
-    {
-      foreach (var alt in res.alternatives)
-      {
-        string text = alt.transcript;
-        Log.Debug("ExampleSpeechToText", string.Format("{0} ({1}, {2:0.00})\n", text, res.final ? "Final" : "Interim", alt.confidence));
-
-        if (res.final)
-          _recognizeTested = true;
-      }
-    }
-  }
+  Log.Debug("ExampleSpeechToText.HandleRecognize()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -162,13 +127,13 @@ Lists information about all custom language models that are owned by the calling
 ```cs
 private void GetCustomizations()
 {
-  if(!_speechToText.GetCustomizations(HandleGetCustomizations))
-    Log.Debug("ExampleSpeechToText", "Failed to get customizations");
+  if(!_speechToText.GetCustomizations(HandleGetCustomizations, OnFail))
+    Log.Debug("ExampleSpeechToText.GetCustomizations()", "Failed to get customizations");
 }
 
-private void HandleGetCustomizations(Customizations customizations, string customData)
+private void HandleGetCustomizations(Customizations customizations, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customizations response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomizations()", "Speech to Text - Get customizations response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -180,13 +145,13 @@ Lists information about a custom language model. Only the owner of a custom mode
 ```cs
 private void GetCustomization()
 {
-  if(!_speechToText.GetCustomization(HandleGetCustomization, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to get customization");
+  if(!_speechToText.GetCustomization(HandleGetCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.GetCustomization()", "Failed to get customization");
 }
 
-private void HandleGetCustomization(Customization customization, string customData)
+private void HandleGetCustomization(Customization customization, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get customization response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomization()", "Speech to Text - Get customization response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -198,13 +163,13 @@ Creates a new custom language model for a specified base language model. The cus
 ```cs
 private void CreateModel()
 {
-  if(!_speechToText.CreateCustomization(HandleCreateCustomization, <customization-name>, <base-model-name>, <customization-description>))
-    Log.Debug("ExampleSpeechToText", "Failed to create custom model");
+  if(!_speechToText.CreateCustomization(HandleCreateCustomization, OnFail, <customization-name>, <base-model-name>, <customization-description>))
+    Log.Debug("ExampleSpeechToText.CreateCustomization()", "Failed to create custom model");
 }
 
-private void HandleCreateCustomization(CustomizationID customizationID, string customData)
+private void HandleCreateCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get model response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleCreateCustomization()", "Speech to Text - Get model response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -216,13 +181,13 @@ Initiates the training of a custom language model with new corpora, words, or bo
 ```cs
 private void TrainModel()
 {
-  if(!_speechToText.TrainCustomization(HandleTrainCustomization, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to train custom model");
+  if(!_speechToText.TrainCustomization(HandleTrainCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.TrainCustomization()", "Failed to train custom model");
 }
 
-private void HandleTrainCustomization(bool success, string customData)
+private void HandleTrainCustomization(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Train model response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleTrainCustomization()", "Speech to Text - Train model response: {0}", success);
 }
 ```
 
@@ -235,13 +200,13 @@ Resets a custom language model by removing all corpora and words from the model.
 ```cs
 private void ResetModel()
 {
-  if(!_speechToText.ResetCustomization(HandleResetCustomization, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to train custom model");
+  if(!_speechToText.ResetCustomization(HandleResetCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.ResetCustomization()", "Failed to train custom model");
 }
 
-private void HandleResetCustomization(bool success, string customData)
+private void HandleResetCustomization(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Reset model response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleResetCustomization()", "Speech to Text - Reset model response: {0}", success);
 }
 ```
 
@@ -253,13 +218,13 @@ Upgrades a custom language model to the latest release level of the Speech to Te
 ```cs
 private void UpgradeModel()
 {
-  if(!_speechToText.UpgradeCustomization(HandleUpgradeCustomizationh, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to train custom model");
+  if(!_speechToText.UpgradeCustomization(HandleUpgradeCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.UpgradeCustomization()", "Failed to train custom model");
 }
 
-private void HandleUpgradeCustomizationh(bool success, string customData)
+private void HandleUpgradeCustomizationh(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Upgrade model response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleUpgradeCustomizationh()", "Speech to Text - Upgrade model response: {0}", success);
 }
 ``` -->
 
@@ -271,13 +236,13 @@ Deletes an existing custom language model. The custom model cannot be deleted if
 ```cs
 private void DeleteModel()
 {
-  if(!_speechToText.DeleteCustomization(HandleDeleteCustomization, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to delete custom model");
+  if(!_speechToText.DeleteCustomization(HandleDeleteCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.DeleteCustomization()", "Failed to delete custom model");
 }
 
-private void HandleDeleteCustomization(bool success, string customData)
+private void HandleDeleteCustomization(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Delete model response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", "Speech to Text - Delete model response: {0}", success);
 }
 ```
 
@@ -290,13 +255,13 @@ Adds a single corpus text file of new training data to the custom language model
 ```cs
 private void AddCustomCorpus()
 {
-  if(!_speechToText.AddCustomCorpus(HandleAddCustomCorpus, <customization-id>, <corpus-name>, <allow-overwrite>, <corpus-file-path>))
-    Log.Debug("ExampleSpeechToText", "Failed to delete custom model");
+  if(!_speechToText.AddCustomCorpus(HandleAddCustomCorpus, OnFail, <customization-id>, <corpus-name>, <allow-overwrite>, <corpus-file-path>))
+    Log.Debug("ExampleSpeechToText.AddCustomCorpus()", "Failed to delete custom model");
 }
 
-private void HandleAddCustomCorpus(bool success, string customData)
+private void HandleAddCustomCorpus(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom corpus response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", "Speech to Text - Add custom corpus response: {0}", success);
 }
 ```
 
@@ -309,13 +274,13 @@ Lists information about all corpora that have been added to the specified custom
 ```cs
 private void GetCorpora()
 {
-  if(!_speechToText.GetCustomCorpora(HandleGetCustomCorpora, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to get custom corpora");
+  if(!_speechToText.GetCustomCorpora(HandleGetCustomCorpora, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.GetCustomCorpora()", "Failed to get custom corpora");
 }
 
-private void HandleGetCustomCorpora(Corpora corpora, string customData)
+private void HandleGetCustomCorpora(Corpora corpora, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpora response: {0}", customdData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomCorpora()", "Speech to Text - Get custom corpora response: {0}", customdData);
 }
 ```
 
@@ -328,13 +293,13 @@ Lists information about a single specified corpus. The information includes the 
 ```cs
 private void GetCorpus()
 {
-  if(!_speechToText.GetCustomCorpus(HandleGetCustomCorpus, <customization-id>, <corpus-name>))
-    Log.Debug("ExampleSpeechToText", "Failed to get custom corpus");
+  if(!_speechToText.GetCustomCorpus(HandleGetCustomCorpus, OnFail, <customization-id>, <corpus-name>))
+    Log.Debug("ExampleSpeechToText.GetCustomCorpus()", "Failed to get custom corpus");
 }
 
-private void HandleGetCustomCorpus(Corpus corpus, string customData)
+private void HandleGetCustomCorpus(Corpus corpus, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom corpus response: {0}", customdData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomCorpus()", "Speech to Text - Get custom corpus response: {0}", customdData);
 }
 ```
 
@@ -347,13 +312,13 @@ Deletes an existing corpus from a custom language model. The service removes any
 ```cs
 private void DeleteCorpus()
 {
-  if(!_speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, <customization-id>, <corpus-name>))
-    Log.Debug("ExampleSpeechToText", "Failed to delete custom corpus");
+  if(!_speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, OnFail, <customization-id>, <corpus-name>))
+    Log.Debug("ExampleSpeechToText.DeleteCustomCorpus()", "Failed to delete custom corpus");
 }
 
-private void HandleDeleteCustomCorpus(bool success, string customData)
+private void HandleDeleteCustomCorpus(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom corpus response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "Speech to Text - Delete custom corpus response: {0}", success);
 }
 ```
 
@@ -401,20 +366,20 @@ var words = new Words()
 
 private void AddCustomWordsUsingObject()
 {
-  if(!_speechToText.AddCustomWords(HandleAddCustomWords, <customization-id>, words))
-    Log.Debug("ExampleSpeechToText", "Failed to add custom words");
+  if(!_speechToText.AddCustomWords(HandleAddCustomWords, OnFail, <customization-id>, words))
+    Log.Debug("ExampleSpeechToText.AddCustomWords()", "Failed to add custom words");
 }
 
 //  Add custom words using words file
 private void AddCustomWordsUsingFile()
 {
-  if(!_speechToText.AddCustomWords(HandleAddCustomWords, <customization-id>, <words-filepath>))
-    Log.Debug("ExampleSpeechToText", "Failed to add custom words");
+  if(!_speechToText.AddCustomWords(HandleAddCustomWords, OnFail, <customization-id>, <words-filepath>))
+    Log.Debug("ExampleSpeechToText.AddCustomWords()", "Failed to add custom words");
 }
 
-private void HandleAddCustomCorpus(bool success, string customData)
+private void HandleAddCustomCorpus(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Add custom words response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleAddCustomCorpus()", "Speech to Text - Add custom words response: {0}", success);
 }
 ```
 
@@ -426,13 +391,13 @@ Lists information about all custom words from a custom language model. You can l
 ```cs
 private void GetCustomWords()
 {
-  if(!_speechToText.GetCustomWords(HandleGetCustomWords, <customization-id>))
-    Log.Debug("ExampleSpeechToText", "Failed to get custom words");
+  if(!_speechToText.GetCustomWords(HandleGetCustomWords, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.GetCustomWordsMethod()", "Failed to get custom words");
 }
 
-private void HandleGetCustomWords(WordsList wordList, string customData)
+private void HandleGetCustomWords(WordsList wordList, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom words response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomWords()", "Speech to Text - Get custom words response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -445,13 +410,13 @@ Lists information about a custom word from a custom language model. Only the own
 ```cs
 private void GetCustomWord()
 {
-  if(!_speechToText.GetCustomWord(HandleGetCustomWord, <customization-id>, <word>))
-    Log.Debug("ExampleSpeechToText", "Failed to get custom word");
+  if(!_speechToText.GetCustomWord(HandleGetCustomWord, OnFail, <customization-id>, <word>))
+    Log.Debug("ExampleSpeechToText.GetCustomWord()", "Failed to get custom word");
 }
 
-private void HandleGetCustomWord(WordData word, string customData)
+private void HandleGetCustomWord(WordData word, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Get custom word response: {0}", customData);
+  Log.Debug("ExampleSpeechToText.HandleGetCustomWord()", "Speech to Text - Get custom word response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -466,14 +431,237 @@ Removing a custom word does not affect the custom model until you train the mode
 ```cs
 private void DeleteCustomWord()
 {
-  if(!_speechToText.DeleteCustomWord(HandleDeleteCustomWord, <customization-id>, <word>))
-    Log.Debug("ExampleSpeechToText", "Failed to delete custom word");
+  if(!_speechToText.DeleteCustomWord(HandleDeleteCustomWord, OnFail, <customization-id>, <word>))
+    Log.Debug("ExampleSpeechToText.DeleteCustomWord()", "Failed to delete custom word");
 }
 
-private void HandleDeleteCustomWord(bool success, string customData)
+private void HandleDeleteCustomWord(bool success, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleSpeechToText", "Speech to Text - Delete custom word response: {0}", success);
+  Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "Speech to Text - Delete custom word response: {0}", success);
 }
 ```
 
-[speech-to-text]: https://www.ibm.com/watson/developercloud/doc/speech-to-text/index.html
+
+
+### List custom acoustic models
+Lists information about all custom acoustic models that are owned by an instance of the service. Use the `language` parameter to see all custom acoustic models for the specified language; omit the parameter to see all custom acoustic models for all languages. You must use credentials for the instance of the service that owns a model to list information about it.
+```cs
+private void ListCustomAcousticModels()
+{
+  if(!_speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels, OnFail))
+    Log.Debug("ExampleSpeechToText.GetCustomAcousticModels()", "Failed to list custom acoustic models");
+}
+
+private void HandleListCustomAcousticModels(AcousticCustomizations acousticCustomizations, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleListCustomAcousticModels()", "acousticCustomizations: {0}", customData["json"].ToString());
+}
+```
+
+
+
+
+### Create custom acoustic model
+Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the base model for which it is created. The model is owned by the instance of the service whose credentials are used to create it.
+```cs
+private void CreateAcousticCustomization()
+{
+  if(!_speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, OnFail, "<createdAcousticModelName>"))
+    Log.Debug("ExampleSpeechToText.CreateAcousticCustomization()", "Failed to create acoustic customization");
+}
+
+private void HandleCreateAcousticCustomization(CustomizationID customizationID, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleCreateAcousticCustomization()", "customizationId: {0}", customData["json"].ToString());
+}
+
+```
+
+
+
+
+
+### Delete custom acoustic model
+Deletes an existing custom acoustic model. The custom model cannot be deleted if another request, such as adding an audio resource to the model, is currently being processed. You must use credentials for the instance of the service that owns a model to delete it.
+```cs
+private void DeleteAcousticCustomization()
+{
+  if(!_speechToText.DeleteAcousticCustomization(HandleDeleteAcousticCustomization, OnFail, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText.DeleteAcousticCustomization()", "Failed to delete acoustic customization");
+}
+
+private void HandleDeleteAcousticCustomization(bool success, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", "deleted acoustic customization: {0}", success);
+}
+```
+
+
+
+
+
+### Get details about a custom acoustic model
+Lists information about a specified custom acoustic model. You must use credentials for the instance of the service that owns a model to list information about it.
+```cs
+private void GetCustomAcousticModel()
+{
+  if(!_speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, OnFail, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText.GetCustomAcousticModel()", "Failed to get custom acoustic model");
+}
+
+private void HandleGetCustomAcousticModel(AcousticCustomization acousticCustomization, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticModel()", "acousticCustomization: {0}", customData["json"].ToString());
+}
+```
+
+
+
+
+
+### Train a custom acoustic model
+Initiates the training of a custom acoustic model with new or changed audio resources. After adding or deleting audio resources for a custom acoustic model, use this method to begin the actual training of the model on the latest audio data. The custom acoustic model does not reflect its changed data until you train it. You must use credentials for the instance of the service that owns a model to train it.
+
+The training method is asynchronous. It can take on the order of minutes or hours to complete depending on the total amount of audio data on which the model is being trained and the current load on the service. Typically, training takes approximately twice the length of the total audio contained in the custom model. The method returns an HTTP 200 response code to indicate that the training process has begun.
+
+You can monitor the status of the training by using the `GET /v1/acoustic_customizations/{customization_id}` method to poll the model's status. Use a loop to check the status once a minute. The method returns an `AcousticCustomization` object that includes `status` and `progress` fields. A status of `available` indicates that the custom model is trained and ready to use. The service cannot accept subsequent training requests, or requests to add new audio resources, until the existing request completes.
+
+You can use the optional `custom_language_model_id` query parameter to specify the GUID of a separately created custom language model that is to be used during training. Specify a custom language model if you have verbatim transcriptions of the audio files that you have added to the custom model or you have either corpora (text files) or a list of words that are relevant to the contents of the audio files. For information about creating a separate custom language model, see [Creating a custom language model][creating-a-custom-language-model].
+
+Training can fail to start for the following reasons:
+* The service is currently handling another request for the custom model, such as another training request or a request to add audio resources to the model.
+* The custom model contains less than 10 minutes or more than 50 hours of audio data.
+* One or more of the custom model's audio resources is invalid.
+```cs
+private void TrainAcousticCustomization()
+{
+  if(!_speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, OnFail, "<createdAcousticModelId>", "<customLanguageModelId>", "<forceTrain>"))
+    Log.Debug("ExampleSpeechToText.TrainAcousticCustomization()", "Failed to train acoustic customization");
+}
+
+private void HandleTrainAcousticCustomization(bool success, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleTrainAcousticCustomization()", "train customization success: {0}", success);
+}
+```
+
+
+
+
+
+### Reset a custom acoustic model
+Resets a custom acoustic model by removing all audio resources from the model. Resetting a custom acoustic model initializes the model to its state when it was first created. Metadata such as the name and language of the model are preserved, but the model's audio resources are removed and must be re-created. You must use credentials for the instance of the service that owns a model to reset it.
+```cs
+private void ResetAcousticCustomization()
+{
+  if(!_speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText.ResetAcousticCustomization()", "Failed to reset acoustic customizations");
+}
+
+private void HandleResetAcousticCustomization(bool success, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleResetAcousticCustomization()", "reset customization success: {0}", success);
+}
+```
+
+
+
+
+
+### List information about a custom acoustic model's audio resources
+Lists information about all audio resources from a custom acoustic model. The information includes the name of the resource and information about its audio data, such as its duration. It also includes the status of the audio resource, which is important for checking the service's analysis of the resource in response to a request to add it to the custom acoustic model. You must use credentials for the instance of the service that owns a model to list its audio resources.
+```cs
+private void GetCustomAcousticResources()
+{
+  if(!_speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, OnFail, "<createdAcousticModelId>"))
+    Log.Debug("ExampleSpeechToText.GetCustomAcousticResources()", "Failed to get custom acoustic resources");
+}
+
+private void HandleGetCustomAcousticResources(AudioResources audioResources, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResources()", "audioResources: {0}", customData["json"].ToString());
+}
+```
+
+
+
+
+
+### Delete an audio resource from a custom acoustic model
+Deletes an existing audio resource from a custom acoustic model. Deleting an archive-type audio resource removes the entire archive of files; the current interface does not allow deletion of individual files from an archive resource. Removing an audio resource does not affect the custom model until you train the model on its updated data by using the `POST /v1/acoustic_customizations/{customization_id}/train` method. You must use credentials for the instance of the service that owns a model to delete its audio resources.
+```cs
+private void DeleteAcousticResource()
+{
+  if(!_speechToText.DeleteAcousticResource(HandleDeleteAcousticResource, OnFail, "<createdAcousticModelId>", "<acousticResourceName>"))
+    Log.Debug("ExampleSpeechToText.DeleteAcousticResource()", "Failed to delete acoustic resource");
+}
+
+private void HandleDeleteAcousticResource(bool success, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", "deleted acoustic resource: {0}", success);
+}
+```
+
+
+
+
+
+### Get information about an audio resource associated with a custom acoustic model
+Lists information about an audio resource from a custom acoustic model. The method returns an `AudioListing` object whose fields depend on the type of audio resource you specify with the method's `audio_name` parameter:
+For an audio-type resource, the object's fields match those of an `AudioResource` object: `duration`, `name`, `details`, and `status`.
+
+For an archive-type resource, the object includes a `container` field whose fields match those of an `AudioResource` object. It also includes an `audio` field, which contains an array of `AudioResource` objects that provides information about the audio files that are contained in the archive.
+
+The information includes the status of the specified audio resource, which is important for checking the service's analysis of the resource in response to a request to add it to the custom model. You must use credentials for the instance of the service that owns a model to list its audio resources.
+```cs
+private void GetCustomAcousticResource()
+{
+  if(!_speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, OnFail, "<createdAcousticModelId>", "<acousticResourceName>"))
+    Log.Debug("ExampleSpeechToText.GetCustomAcousticResource()", "Failed to get custom acoustic resource");
+}
+
+private void HandleGetCustomAcousticResource(AudioListing audioListing, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleGetCustomAcousticResource()", "audioListing: {0}", customData["json"].ToString());
+}
+```
+
+
+
+
+
+### Add an audio resource to a custom acoustic model
+Adds an audio resource to a custom acoustic model. Add audio content that reflects the acoustic characteristics of the audio that you plan to transcribe. You must use credentials for the instance of the service that owns a model to add an audio resource to it. Adding audio data does not affect the custom acoustic model until you train the model for the new data by using the `POST /v1/acoustic_customizations/{customization_id}/train` method.
+
+You can add individual audio files or an archive file that contains multiple audio files. Adding multiple audio files via a single archive file is significantly more efficient than adding each file individually.
+You can add an individual audio file in any format that the service supports for speech recognition. Use the `Content-Type` header to specify the format of the audio file.
+
+You can add an archive file (**.zip** or **.tar.gz** file) that contains audio files in any format that the service supports for speech recognition. All audio files added with the same archive file must have the same audio format. Use the `Content-Type` header to specify the archive type, `application/zip` or `application/gzip`. Use the `Contained-Content-Type` header to specify the format of the contained audio files; the default format is `audio/wav`.
+
+You can use this method to add any number of audio resources to a custom model by calling the method once for each audio or archive file. But the addition of one audio resource must be fully complete before you can add another. You must add a minimum of 10 minutes and a maximum of 50 hours of audio that includes speech, not just silence, to a custom acoustic model before you can train it. No audio resource, audio- or archive-type, can be larger than 100 MB.
+
+The method is asynchronous. It can take several seconds to complete depending on the duration of the audio and, in the case of an archive file, the total number of audio files being processed. The service returns a 201 response code if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and automatically extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit requests to add additional audio resources to a custom acoustic model, or to train the model, until the service's analysis of all audio files for the current request completes.
+
+To determine the status of the service's analysis of the audio, use the `GET /v1/acoustic_customizations/{customization_id}/audio/{audio_name}` method to poll the status of the audio. The method accepts the GUID of the custom model and the name of the audio resource, and it returns the status of the resource. Use a loop to check the status of the audio every few seconds until it becomes `ok`.
+
+**Note:** The sampling rate of an audio file must match the sampling rate of the base model for the custom model: for broadband models, at least 16 kHz; for narrowband models, at least 8 kHz. If the sampling rate of the audio is higher than the minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio is lower than the minimum required rate, the service labels the audio file as `invalid`.
+```cs
+private void AddAcousticResource()
+{
+  string mimeType = Utility.GetMimeType(Path.GetExtension("<acousticResourceUrl>"));
+  if(!_speechToText.AddAcousticResource(HandleAddAcousticResource, OnFail, "<acousticModelId>", "<acousticResourceName>", mimeType, mimeType, true, "<acousticResourceData>")
+    Log.Debug("ExampleSpeechToText.AddAcousticResourceMethod()", "Failed to add acoustic resource");
+}
+
+private void HandleAddAcousticResource(string data)
+{
+  Log.Debug("ExampleSpeechToText.HandleAddAcousticResource()", "added acoustic resource: {0}", customData["json"].ToString());
+}
+```
+
+
+
+
+
+[speech-to-text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
+[creating-a-custom-language-model]: https://console.bluemix.net/docs/services/speech-to-text/language-create.html

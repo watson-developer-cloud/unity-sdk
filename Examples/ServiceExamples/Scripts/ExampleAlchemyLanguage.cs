@@ -23,6 +23,8 @@ using System.Collections;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleAlchemyLanguage : MonoBehaviour
 {
@@ -118,569 +120,575 @@ public class ExampleAlchemyLanguage : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Get Author URL POST
-        if (!_alchemyAPI.GetAuthors(OnGetAuthorsUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors URL POST!");
+        if (!_alchemyAPI.GetAuthors(OnGetAuthorsUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetAuthors()", "Failed to get authors URL POST!");
         while (!_getAuthorsURLTested)
             yield return null;
 
         //Get Author HTML POST
-        if (!_alchemyAPI.GetAuthors(OnGetAuthorsHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get authors HTML POST!");
+        if (!_alchemyAPI.GetAuthors(OnGetAuthorsHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetAuthors()", "Failed to get authors HTML POST!");
         while (!_getAuthorsHTMLTested)
             yield return null;
 
         ////Get Concepts Text POST
-        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts Text POST!");
+        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts Text POST!");
         while (!_getRankedConceptsTextTested)
             yield return null;
 
         //Get Concepts HTML POST
-        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts HTML POST!");
+        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts HTML POST!");
         while (!_getRankedConceptsHTMLTested)
             yield return null;
 
         //Get Concepts URL POST
-        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get concepts url POST!");
+        if (!_alchemyAPI.GetRankedConcepts(OnGetConceptsUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts url POST!");
         while (!_getRankedConceptsURLTested)
             yield return null;
 
         //Get Date URL POST
-        if (!_alchemyAPI.GetDates(OnGetDatesUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by URL POST");
+        if (!_alchemyAPI.GetDates(OnGetDatesUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetDates()", "Failed to get dates by URL POST");
         while (!_getDatesURLTested)
             yield return null;
 
         //Get Date Text POST
-        if (!_alchemyAPI.GetDates(OnGetDatesText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by text POST");
+        if (!_alchemyAPI.GetDates(OnGetDatesText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetDates()", "Failed to get dates by text POST");
         while (!_getDatesTextTested)
             yield return null;
 
         //Get Date HTML POST
-        if (!_alchemyAPI.GetDates(OnGetDatesHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get dates by HTML POST");
+        if (!_alchemyAPI.GetDates(OnGetDatesHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetDates()", "Failed to get dates by HTML POST");
         while (!_getDatesHTMLTested)
             yield return null;
 
         //Get Emotions URL POST
-        if (!_alchemyAPI.GetEmotions(OnGetEmotionsUrl, _exampleURL_watsonJeopardy, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by URL POST");
+        if (!_alchemyAPI.GetEmotions(OnGetEmotionsUrl, OnFail, _exampleURL_watsonJeopardy, true))
+            Log.Debug("ExampleAlchemyLanguage.GetEmotions()", "Failed to get emotions by URL POST");
         while (!_getEmotionURLTested)
             yield return null;
 
         //Get Emotions Text POST
-        if (!_alchemyAPI.GetEmotions(OnGetEmotionsText, _exampleText_watsonJeopardy, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by text POST");
+        if (!_alchemyAPI.GetEmotions(OnGetEmotionsText, OnFail, _exampleText_watsonJeopardy, true))
+            Log.Debug("ExampleAlchemyLanguage.GetEmotions()", "Failed to get emotions by text POST");
         while (!_getEmotionTextTested)
             yield return null;
 
         //Get Emotions HTML POST
-        if (!_alchemyAPI.GetEmotions(OnGetEmotionsHtml, _watson_beats_jeopardy_html, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get emotions by HTML POST");
+        if (!_alchemyAPI.GetEmotions(OnGetEmotionsHtml, OnFail, _watson_beats_jeopardy_html, true))
+            Log.Debug("ExampleAlchemyLanguage.GetEmotions()", "Failed to get emotions by HTML POST");
         while (!_getEmotionHTMLTested)
             yield return null;
 
         //Extract Entities URL POST
-        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by URL POST");
+        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.ExtractEntities()", "Failed to get entities by URL POST");
         while (!_getEntityExtractionURLTested)
             yield return null;
 
         //Extract Entities Text POST
-        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by text POST");
+        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.ExtractEntities()", "Failed to get entities by text POST");
         while (!_getEntityExtractionTextTested)
             yield return null;
 
         //Extract Entities HTML POST
-        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get entities by HTML POST");
+        if (!_alchemyAPI.ExtractEntities(OnExtractEntitiesHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.ExtractEntities()", "Failed to get entities by HTML POST");
         while (!_getEntityExtractionHTMLTested)
             yield return null;
 
         //Detect Feeds URL POST
-        if (!_alchemyAPI.DetectFeeds(OnDetectFeedsUrl, "http://time.com/newsfeed/"))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by URL POST");
+        if (!_alchemyAPI.DetectFeeds(OnDetectFeedsUrl, OnFail, "http://time.com/newsfeed/"))
+            Log.Debug("ExampleAlchemyLanguage.DetectFeeds()", "Failed to get feeds by URL POST");
         while (!_detectFeedsURLTested)
             yield return null;
 
         ////Detect Feeds HTML POST
-        //if (!_alchemyAPI.DetectFeeds(OnDetectFeedsHtml, ycombinator_html))
-        //    Log.Debug("ExampleAlchemyLanguage", "Failed to get feeds by HTML POST");
+        //if (!_alchemyAPI.DetectFeeds(OnDetectFeedsHtml, OnFail, ycombinator_html))
+        //    Log.Debug("ExampleAlchemyLanguage.DetectFeeds()", "Failed to get feeds by HTML POST");
         //while (!_detectFeedsHTMLTested)
         //    yield return null;
 
         //Extract Keywords URL POST
-        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by URL POST");
+        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.ExtractKeywords()", "Failed to get keywords by URL POST");
         while (!_getKeywordExtractionURLTested)
             yield return null;
 
         //Extract Keywords Text POST
-        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by text POST");
+        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.ExtractKeywords()", "Failed to get keywords by text POST");
         while (!_getKeywordExtractionTextTested)
             yield return null;
 
         //Extract Keywords HTML POST
-        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get keywords by HTML POST");
+        if (!_alchemyAPI.ExtractKeywords(OnExtractKeywordsHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.ExtractKeywords()", "Failed to get keywords by HTML POST");
         while (!_getKeywordExtractionHTMLTested)
             yield return null;
 
         //Extract Languages URL POST
-        if (!_alchemyAPI.GetLanguages(OnGetLanguagesUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by text POST");
+        if (!_alchemyAPI.GetLanguages(OnGetLanguagesUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetLanguages()", "Failed to get languages by text POST");
         while (!_getLanguageURLTested)
             yield return null;
 
         //Extract Languages Text POST
-        if (!_alchemyAPI.GetLanguages(OnGetLanguagesText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by text POST");
+        if (!_alchemyAPI.GetLanguages(OnGetLanguagesText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetLanguages()", "Failed to get languages by text POST");
         while (!_getLanguageTextTested)
             yield return null;
 
         //Extract Languages HTML POST
-        if (!_alchemyAPI.GetLanguages(OnGetLanguagesHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get languages by HTML POST");
+        if (!_alchemyAPI.GetLanguages(OnGetLanguagesHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetLanguages()", "Failed to get languages by HTML POST");
         while (!_getLanguageHTMLTested)
             yield return null;
 
         //Get Microformats URL POST
-        if (!_alchemyAPI.GetMicroformats(OnGetMicroformatsUrl, _exampleURL_microformats))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
+        if (!_alchemyAPI.GetMicroformats(OnGetMicroformatsUrl, OnFail, _exampleURL_microformats))
+            Log.Debug("ExampleAlchemyLanguage.GetMicroformats()", "Failed to get microformats by text POST");
         while (!_getMicroformatURLTested)
             yield return null;
 
         //Get Microformats HTML POST
-        //if (!_alchemyAPI.GetMicroformats(OnGetMicroformatsHtml, microformats_html))
-        //    Log.Debug("ExampleAlchemyLanguage", "Failed to get microformats by text POST");
+        //if (!_alchemyAPI.GetMicroformats(OnGetMicroformatsHtml, OnFail, microformats_html))
+        //    Log.Debug("ExampleAlchemyLanguage.GetMicroformats()", "Failed to get microformats by text POST");
         //while (!_getMicroformatHTMLTested)
         //    yield return null;
 
         //Get PublicationDate URL POST
-        if (!_alchemyAPI.GetPublicationDate(OnGetPublicationDateUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by url POST");
+        if (!_alchemyAPI.GetPublicationDate(OnGetPublicationDateUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetPublicationDate()", "Failed to get publication dates by url POST");
         while (!_getPubDateURLTested)
             yield return null;
 
         //Get PublicationDate HTML POST
-        if (!_alchemyAPI.GetPublicationDate(OnGetPublicationDateHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get publication dates by html POST");
+        if (!_alchemyAPI.GetPublicationDate(OnGetPublicationDateHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetPublicationDate()", "Failed to get publication dates by html POST");
         while (!_getPubDateHTMLTested)
             yield return null;
 
         //Get Relations URL POST
-        if (!_alchemyAPI.GetRelations(OnGetRelationsUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+        if (!_alchemyAPI.GetRelations(OnGetRelationsUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRelations()", "Failed to get relations by text POST");
         while (!_getRelationsURLTested)
             yield return null;
 
         //Get Relations Text POST
-        if (!_alchemyAPI.GetRelations(OnGetRelationsText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by text POST");
+        if (!_alchemyAPI.GetRelations(OnGetRelationsText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRelations()", "Failed to get relations by text POST");
         while (!_getRelationsTextTested)
             yield return null;
 
         //Get Relations HTML POST
-        if (!_alchemyAPI.GetRelations(OnGetRelationsHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get relations by HTML POST");
+        if (!_alchemyAPI.GetRelations(OnGetRelationsHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetRelations()", "Failed to get relations by HTML POST");
         while (!_getRelationsHTMLTested)
             yield return null;
 
         //Get Sentiment URL POST
-        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by text POST");
+        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetTextSentiment()", "Failed to get sentiment by text POST");
         while (!_getTextSentimentURLTested)
             yield return null;
 
         //Get Sentiment Text POST
-        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by text POST");
+        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetTextSentiment()", "Failed to get sentiment by text POST");
         while (!_getTextSentimentTextTested)
             yield return null;
 
         //Get Sentiment HTML POST
-        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get sentiment by HTML POST");
+        if (!_alchemyAPI.GetTextSentiment(OnGetTextSentimentHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetTextSentiment()", "Failed to get sentiment by HTML POST");
         while (!_getTextSentimentHTMLTested)
             yield return null;
 
         //Get Targeted Sentiment URL POST
-        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentUrl, _exampleURL_watsonJeopardy, "Jeopardy|Jennings|Watson"))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by text POST");
+        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentUrl, OnFail, _exampleURL_watsonJeopardy, "Jeopardy|Jennings|Watson"))
+            Log.Debug("ExampleAlchemyLanguage.GetTargetedSentiment()", "Failed to get targeted sentiment by text POST");
         while (!_getTargetedSentimentURLTested)
             yield return null;
 
         //Get Targeted Sentiment Text POST
-        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentText, _exampleText_watsonJeopardy, "Jeopardy|Jennings|Watson"))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by text POST");
+        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentText, OnFail, _exampleText_watsonJeopardy, "Jeopardy|Jennings|Watson"))
+            Log.Debug("ExampleAlchemyLanguage.GetTargetedSentiment()", "Failed to get targeted sentiment by text POST");
         while (!_getTargetedSentimentTextTested)
             yield return null;
 
         //Get Targeted Sentiment HTML POST
-        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentHtml, _watson_beats_jeopardy_html, "Jeopardy|Jennings|Watson"))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get targeted sentiment by HTML POST");
+        if (!_alchemyAPI.GetTargetedSentiment(OnGetTargetedSentimentHtml, OnFail, _watson_beats_jeopardy_html, "Jeopardy|Jennings|Watson"))
+            Log.Debug("ExampleAlchemyLanguage.GetTargetedSentiment()", "Failed to get targeted sentiment by HTML POST");
         while (!_getTargetedSentimentHTMLTested)
             yield return null;
 
         //Get Taxonomy URL POST
-        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
+        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedTaxonomy()", "Failed to get ranked taxonomy by text POST");
         while (!_getRankedTaxonomyURLTested)
             yield return null;
 
         //Get Taxonomy Text POST
-        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyText, _exampleText_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by text POST");
+        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyText, OnFail, _exampleText_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedTaxonomy9", "Failed to get ranked taxonomy by text POST");
         while (!_getRankedTaxonomyTextTested)
             yield return null;
 
         //Get Taxonomy HTML POST
-        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get ranked taxonomy by HTML POST");
+        if (!_alchemyAPI.GetRankedTaxonomy(OnGetRankedTaxonomyHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetRankedTaxonomy()", "Failed to get ranked taxonomy by HTML POST");
         while (!_getRankedTaxonomyHTMLTested)
             yield return null;
 
         //Get Text HTML POST
-        if (!_alchemyAPI.GetText(OnGetTextHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text POST");
+        if (!_alchemyAPI.GetText(OnGetTextHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetText()", "Failed to get text by text POST");
         while (!_getTextHTMLTested)
             yield return null;
 
         //Get Text URL POST
-        if (!_alchemyAPI.GetText(OnGetTextUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get text by text POST");
+        if (!_alchemyAPI.GetText(OnGetTextUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetText()", "Failed to get text by text POST");
         while (!_getTextURLTested)
             yield return null;
 
         //Get Raw Text HTML POST
-        if (!_alchemyAPI.GetRawText(OnGetRawTextHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
+        if (!_alchemyAPI.GetRawText(OnGetRawTextHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetRawText()", "Failed to get raw text by text POST");
         while (!_getRawTextHTMLTested)
             yield return null;
 
         //Get Raw Text URL POST
-        if (!_alchemyAPI.GetRawText(OnGetRawTextUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get raw text by text POST");
+        if (!_alchemyAPI.GetRawText(OnGetRawTextUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetRawText()", "Failed to get raw text by text POST");
         while (!_getRawTextURLTested)
             yield return null;
 
         //Get Title HTML POST
-        if (!_alchemyAPI.GetTitle(OnGetTitleHtml, _watson_beats_jeopardy_html))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+        if (!_alchemyAPI.GetTitle(OnGetTitleHtml, OnFail, _watson_beats_jeopardy_html))
+            Log.Debug("ExampleAlchemyLanguage.GetTitle()", "Failed to get title by text POST");
         while (!_getTitleHTMLTested)
             yield return null;
 
         //Get Title URL POST
-        if (!_alchemyAPI.GetTitle(OnGetTitleUrl, _exampleURL_watsonJeopardy))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get title by text POST");
+        if (!_alchemyAPI.GetTitle(OnGetTitleUrl, OnFail, _exampleURL_watsonJeopardy))
+            Log.Debug("ExampleAlchemyLanguage.GetTitle()", "Failed to get title by text POST");
         while (!_getTitleURLTested)
             yield return null;
 
         //  Get Combined Data URL POST
-        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataUrl, _exampleURL_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataUrl, OnFail, _exampleURL_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+            Log.Debug("ExampleAlchemyLanguage.GetCombinedData()", "Failed to get combined data by text POST");
         while (!_getCombinedDataURLTested)
             yield return null;
 
         //Get Combined Data Text POST
-        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataText, _exampleText_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by text POST");
+        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataText, OnFail, _exampleText_watsonJeopardy, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+            Log.Debug("ExampleAlchemyLanguage.GetCombinedData()", "Failed to get combined data by text POST");
         while (!_getCombinedDataTextTested)
             yield return null;
 
         //Get Combined Data HTML POST
-        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataHtml, _watson_beats_jeopardy_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
-            Log.Debug("ExampleAlchemyLanguage", "Failed to get combined data by HTML POST");
+        if (!_alchemyAPI.GetCombinedData(OnGetCombinedDataHtml, OnFail, _watson_beats_jeopardy_html, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true))
+            Log.Debug("ExampleAlchemyLanguage.GetCombinedData()", "Failed to get combined data by HTML POST");
         while (!_getCombinedDataHTMLTested)
             yield return null;
 
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language examples complete");
+        Log.Debug("ExampleAlchemyLanguage.Examples()", "Alchemy Language examples complete");
     }
 
-    private void OnGetAuthorsHtml(AuthorsData authors, string data)
+    private void OnGetAuthorsHtml(AuthorsData authors, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get authors response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetAuthorsHtml()", "Alchemy Language - Get authors response html: {0}", customData["json"].ToString());
         _getAuthorsHTMLTested = true;
     }
 
-    private void OnGetAuthorsUrl(AuthorsData authors, string data)
+    private void OnGetAuthorsUrl(AuthorsData authors, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get authors response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetAuthorsUrl()", "Alchemy Language - Get authors response url: {0}", customData["json"].ToString());
         _getAuthorsURLTested = true;
     }
 
-    private void OnGetConceptsHtml(ConceptsData concepts, string data)
+    private void OnGetConceptsHtml(ConceptsData concepts, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked concepts response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetAuthorsUrl()", "Alchemy Language - Get ranked concepts response html: {0}", customData["json"].ToString());
         _getRankedConceptsHTMLTested = true;
     }
 
-    private void OnGetConceptsUrl(ConceptsData concepts, string data)
+    private void OnGetConceptsUrl(ConceptsData concepts, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked concepts response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetConceptsUrl()", "Alchemy Language - Get ranked concepts response url: {0}", customData["json"].ToString());
         _getRankedConceptsURLTested = true;
     }
 
-    private void OnGetConceptsText(ConceptsData concepts, string data)
+    private void OnGetConceptsText(ConceptsData concepts, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked concepts response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetConceptsText()", "Alchemy Language - Get ranked concepts response text: {0}", customData["json"].ToString());
         _getRankedConceptsTextTested = true;
     }
 
-    private void OnGetDatesHtml(DateData dates, string data)
+    private void OnGetDatesHtml(DateData dates, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get dates response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetDatesHtml()", "Alchemy Language - Get dates response html: {0}", customData["json"].ToString());
         _getDatesHTMLTested = true;
     }
 
-    private void OnGetDatesUrl(DateData dates, string data)
+    private void OnGetDatesUrl(DateData dates, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get dates response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetDatesUrl()", "Alchemy Language - Get dates response url: {0}", customData["json"].ToString());
         _getDatesURLTested = true;
     }
 
-    private void OnGetDatesText(DateData dates, string data)
+    private void OnGetDatesText(DateData dates, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get dates response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetDatesText()", "Alchemy Language - Get dates response text: {0}", customData["json"].ToString());
         _getDatesTextTested = true;
     }
 
-    private void OnGetEmotionsHtml(EmotionData emotions, string data)
+    private void OnGetEmotionsHtml(EmotionData emotions, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get emotions response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetEmotionsHtml()", "Alchemy Language - Get emotions response html: {0}", customData["json"].ToString());
         _getEmotionHTMLTested = true;
     }
 
-    private void OnGetEmotionsUrl(EmotionData emotions, string data)
+    private void OnGetEmotionsUrl(EmotionData emotions, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get emotions response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetEmotionsUrl()", "Alchemy Language - Get emotions response html: {0}", customData["json"].ToString());
         _getEmotionURLTested = true;
     }
 
-    private void OnGetEmotionsText(EmotionData emotions, string data)
+    private void OnGetEmotionsText(EmotionData emotions, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get emotions response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetEmotionsText()", "Alchemy Language - Get emotions response html: {0}", customData["json"].ToString());
         _getEmotionTextTested = true;
     }
 
-    private void OnExtractEntitiesHtml(EntityData entityData, string data)
+    private void OnExtractEntitiesHtml(EntityData entityData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract entities response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractEntitiesHtml()", "Alchemy Language - Extract entities response html: {0}", customData["json"].ToString());
         _getEntityExtractionHTMLTested = true;
     }
 
-    private void OnExtractEntitiesUrl(EntityData entityData, string data)
+    private void OnExtractEntitiesUrl(EntityData entityData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract entities response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractEntitiesUrl()", "Alchemy Language - Extract entities response url: {0}", customData["json"].ToString());
         _getEntityExtractionURLTested = true;
     }
 
-    private void OnExtractEntitiesText(EntityData entityData, string data)
+    private void OnExtractEntitiesText(EntityData entityData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract entities response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractEntitiesText()", "Alchemy Language - Extract entities response text: {0}", customData["json"].ToString());
         _getEntityExtractionTextTested = true;
     }
 
-    //private void OnDetectFeedsHtml(FeedData feedData, string data)
+    //private void OnDetectFeedsHtml(FeedData feedData, Dictionary<string, object> customData)
     //{
-    //    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Detect feeds response html: {0}", data);
+    //    Log.Debug("ExampleAlchemyLanguage.OnDetectFeedsHtml()", "Alchemy Language - Detect feeds response html: {0}", customData["json"].ToString());
     //    _detectFeedsHTMLTested = true;
     //}
 
-    private void OnDetectFeedsUrl(FeedData feedData, string data)
+    private void OnDetectFeedsUrl(FeedData feedData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Detect feeds response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnDetectFeedsUrl()", "Alchemy Language - Detect feeds response url: {0}", customData["json"].ToString());
         _detectFeedsURLTested = true;
     }
 
-    private void OnExtractKeywordsHtml(KeywordData keywordData, string data)
+    private void OnExtractKeywordsHtml(KeywordData keywordData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract keywords response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractKeywordsHtml()", "Alchemy Language - Extract keywords response html: {0}", customData["json"].ToString());
         _getKeywordExtractionHTMLTested = true;
     }
 
-    private void OnExtractKeywordsUrl(KeywordData keywordData, string data)
+    private void OnExtractKeywordsUrl(KeywordData keywordData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract keywords response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractKeywordsUrl()", "Alchemy Language - Extract keywords response url: {0}", customData["json"].ToString());
         _getKeywordExtractionURLTested = true;
     }
 
-    private void OnExtractKeywordsText(KeywordData keywordData, string data)
+    private void OnExtractKeywordsText(KeywordData keywordData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Extract keywords response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnExtractKeywordsText()", "Alchemy Language - Extract keywords response text: {0}", customData["json"].ToString());
         _getKeywordExtractionTextTested = true;
     }
 
-    private void OnGetLanguagesHtml(LanguageData languages, string data)
+    private void OnGetLanguagesHtml(LanguageData languages, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get languages response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetLanguagesHtml()", "Alchemy Language - Get languages response html: {0}", customData["json"].ToString());
         _getLanguageHTMLTested = true;
     }
 
-    private void OnGetLanguagesUrl(LanguageData languages, string data)
+    private void OnGetLanguagesUrl(LanguageData languages, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get languages response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetLanguagesUrl()", "Alchemy Language - Get languages response url: {0}", customData["json"].ToString());
         _getLanguageURLTested = true;
     }
 
-    private void OnGetLanguagesText(LanguageData languages, string data)
+    private void OnGetLanguagesText(LanguageData languages, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get languages response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetLanguagesText()", "Alchemy Language - Get languages response text: {0}", customData["json"].ToString());
         _getLanguageTextTested = true;
     }
 
-    //private void OnGetMicroformatsHtml(MicroformatData microformats, string data)
+    //private void OnGetMicroformatsHtml(MicroformatData microformats, Dictionary<string, object> customData)
     //{
-    //    Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get microformats response html: {0}", data);
+    //    Log.Debug("ExampleAlchemyLanguage.OnGetMicroformatsHtml()", "Alchemy Language - Get microformats response html: {0}", customData["json"].ToString());
     //    _getMicroformatHTMLTested = true;
     //}
 
-    private void OnGetMicroformatsUrl(MicroformatData microformats, string data)
+    private void OnGetMicroformatsUrl(MicroformatData microformats, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get microformats response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetMicroformatsUrl()", "Alchemy Language - Get microformats response url: {0}", customData["json"].ToString());
         _getMicroformatURLTested = true;
     }
 
-    private void OnGetPublicationDateHtml(PubDateData pubDates, string data)
+    private void OnGetPublicationDateHtml(PubDateData pubDates, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get publication date response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetPublicationDateHtml()", "Alchemy Language - Get publication date response html: {0}", customData["json"].ToString());
         _getPubDateHTMLTested = true;
     }
 
-    private void OnGetPublicationDateUrl(PubDateData pubDates, string data)
+    private void OnGetPublicationDateUrl(PubDateData pubDates, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get publication date response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetPublicationDateUrl()", "Alchemy Language - Get publication date response url: {0}", customData["json"].ToString());
         _getPubDateURLTested = true;
     }
     
-    private void OnGetRelationsHtml(RelationsData relationsData, string data)
+    private void OnGetRelationsHtml(RelationsData relationsData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get relations response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRelationsHtml()", "Alchemy Language - Get relations response html: {0}", customData["json"].ToString());
         _getRelationsHTMLTested = true;
     }
 
-    private void OnGetRelationsUrl(RelationsData relationsData, string data)
+    private void OnGetRelationsUrl(RelationsData relationsData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get relations response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRelationsUrl()", "Alchemy Language - Get relations response url: {0}", customData["json"].ToString());
         _getRelationsURLTested = true;
     }
 
-    private void OnGetRelationsText(RelationsData relationsData, string data)
+    private void OnGetRelationsText(RelationsData relationsData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get relations response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRelationsText()", "Alchemy Language - Get relations response text: {0}", customData["json"].ToString());
         _getRelationsTextTested = true;
     }
 
-    private void OnGetTextSentimentHtml(SentimentData sentimentData, string data)
+    private void OnGetTextSentimentHtml(SentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get text sentiment response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTextSentimentHtml()", "Alchemy Language - Get text sentiment response html: {0}", customData["json"].ToString());
         _getTextSentimentHTMLTested = true;
     }
 
-    private void OnGetTextSentimentUrl(SentimentData sentimentData, string data)
+    private void OnGetTextSentimentUrl(SentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get text sentiment response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTextSentimentUrl()", "Alchemy Language - Get text sentiment response url: {0}", customData["json"].ToString());
         _getTextSentimentURLTested = true;
     }
 
-    private void OnGetTextSentimentText(SentimentData sentimentData, string data)
+    private void OnGetTextSentimentText(SentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get text sentiment response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTextSentimentText()", "Alchemy Language - Get text sentiment response text: {0}", customData["json"].ToString());
         _getTextSentimentTextTested = true;
     }
 
-    private void OnGetTargetedSentimentHtml(TargetedSentimentData sentimentData, string data)
+    private void OnGetTargetedSentimentHtml(TargetedSentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get targeted sentiment response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentimentHtml()", "Alchemy Language - Get targeted sentiment response html: {0}", customData["json"].ToString());
         _getTargetedSentimentHTMLTested = true;
     }
 
-    private void OnGetTargetedSentimentUrl(TargetedSentimentData sentimentData, string data)
+    private void OnGetTargetedSentimentUrl(TargetedSentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get targeted sentiment response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentimentUrl()", "Alchemy Language - Get targeted sentiment response url: {0}", customData["json"].ToString());
         _getTargetedSentimentURLTested = true;
     }
 
-    private void OnGetTargetedSentimentText(TargetedSentimentData sentimentData, string data)
+    private void OnGetTargetedSentimentText(TargetedSentimentData sentimentData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get targeted sentiment response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentimentText()", "Alchemy Language - Get targeted sentiment response text: {0}", customData["json"].ToString());
         _getTargetedSentimentTextTested = true;
     }
 
-    private void OnGetRankedTaxonomyHtml(TaxonomyData taxonomyData, string data)
+    private void OnGetRankedTaxonomyHtml(TaxonomyData taxonomyData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked taxonomy response html: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomyHtml()", "Alchemy Language - Get ranked taxonomy response html: {0}", customData["json"].ToString());
         _getRankedTaxonomyHTMLTested = true;
     }
 
-    private void OnGetRankedTaxonomyUrl(TaxonomyData taxonomyData, string data)
+    private void OnGetRankedTaxonomyUrl(TaxonomyData taxonomyData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked taxonomy response url: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomyUrl()", "Alchemy Language - Get ranked taxonomy response url: {0}", customData["json"].ToString());
         _getRankedTaxonomyURLTested = true;
     }
 
-    private void OnGetRankedTaxonomyText(TaxonomyData taxonomyData, string data)
+    private void OnGetRankedTaxonomyText(TaxonomyData taxonomyData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get ranked taxonomy response text: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomyText()", "Alchemy Language - Get ranked taxonomy response text: {0}", customData["json"].ToString());
         _getRankedTaxonomyTextTested = true;
     }
 
-    private void OnGetTextHtml(TextData textData, string data)
+    private void OnGetTextHtml(TextData textData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Text HTML response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTextHtml()", "Alchemy Language - Get Text HTML response: {0}", customData["json"].ToString());
         _getTextHTMLTested = true;
     }
 
-    private void OnGetTextUrl(TextData textData, string data)
+    private void OnGetTextUrl(TextData textData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Text Url response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTextUrl()", "Alchemy Language - Get Text Url response: {0}", customData["json"].ToString());
         _getTextURLTested = true;
     }
 
-    private void OnGetRawTextHtml(TextData textData, string data)
+    private void OnGetRawTextHtml(TextData textData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get raw text HTML response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRawTextHtml()", "Alchemy Language - Get raw text HTML response: {0}", customData["json"].ToString());
         _getRawTextHTMLTested = true;
     }
 
-    private void OnGetRawTextUrl(TextData textData, string data)
+    private void OnGetRawTextUrl(TextData textData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get raw text Url response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetRawTextUrl()", "Alchemy Language - Get raw text Url response: {0}", customData["json"].ToString());
         _getRawTextURLTested = true;
     }
 
-    private void OnGetTitleHtml(Title titleData, string data)
+    private void OnGetTitleHtml(Title titleData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Title HTML response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTitleHtml()", "Alchemy Language - Get Title HTML response: {0}", customData["json"].ToString());
         _getTitleHTMLTested = true;
     }
 
-    private void OnGetTitleUrl(Title titleData, string data)
+    private void OnGetTitleUrl(Title titleData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Title Url response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetTitleUrl()", "Alchemy Language - Get Title Url response: {0}", customData["json"].ToString());
         _getTitleURLTested = true;
     }
 
-    private void OnGetCombinedDataHtml(CombinedCallData combinedData, string data)
+    private void OnGetCombinedDataHtml(CombinedCallData combinedData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Combined Data HTML response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetCombinedDataHtml()", "Alchemy Language - Get Combined Data HTML response: {0}", customData["json"].ToString());
         _getCombinedDataHTMLTested = true;
     }
 
-    private void OnGetCombinedDataUrl(CombinedCallData combinedData, string data)
+    private void OnGetCombinedDataUrl(CombinedCallData combinedData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Combined Data Url response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetCombinedDataUrl()", "Alchemy Language - Get Combined Data Url response: {0}", customData["json"].ToString());
         _getCombinedDataURLTested = true;
     }
 
-    private void OnGetCombinedDataText(CombinedCallData combinedData, string data)
+    private void OnGetCombinedDataText(CombinedCallData combinedData, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAlchemyLanguage", "Alchemy Language - Get Combined Data Text response: {0}", data);
+        Log.Debug("ExampleAlchemyLanguage.OnGetCombinedDataText()", "Alchemy Language - Get Combined Data Text response: {0}", customData["json"].ToString());
         _getCombinedDataTextTested = true;
     }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
+    }
 }
+

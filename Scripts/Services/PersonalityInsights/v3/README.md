@@ -27,16 +27,21 @@ Extract personality characteristics based on how a person writes.
 ```cs
 private void GetProfile()
 {
-  if(!m_personalityInsights.GetProfile(OnGetProfileJson, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
-    Log.Debug("ExamplePersonalityInsights", "Failed to get profile!");
+  if(!m_personalityInsights.GetProfile(OnGetProfileJson, OnFail, dataPath, ContentType.TEXT_HTML, ContentLanguage.ENGLISH, ContentType.APPLICATION_JSON, AcceptLanguage.ENGLISH, true, true, true))
+    Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
 }
 
-private void OnGetProfile(Profile profile, string data)
+private void OnGetProfile(Profile profile, Dictionary<string, object> customData)
 {
-  Log.Debug("ExamplePersonalityInsights", "Profile result: {0}", data);
+  Log.Debug("ExamplePersonalityInsights.OnGetProfile()", "Profile result: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExamplePersonalityInsights.OnFail()", "Error received: {0}", error.ToString());
 }
 ```
 
-[personality-insights]: https://www.ibm.com/watson/developercloud/personality-insights.html
-[personality-models]: https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html
-[consumption-preferences]:https://www.ibm.com/watson/developercloud/doc/personality-insights/preferences.html
+[personality-insights]: https://www.ibm.com/watson/services/personality-insights/
+[personality-models]: https://console.bluemix.net/docs/services/personality-insights/models.html
+[consumption-preferences]: https://console.bluemix.net/docs/services/personality-insights/preferences.html

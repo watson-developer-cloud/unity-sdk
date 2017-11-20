@@ -23,6 +23,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -74,7 +76,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             catch
             {
-                Log.Debug("TestDocumentConversion", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
+                Log.Debug("TestDocumentConversion.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
             }
 
             //  Create credential and instantiate service
@@ -89,22 +91,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _documentConversion = new DocumentConversion(credentials);
             _examplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
 
-            if (!_documentConversion.ConvertDocument(OnConvertDocument, _examplePath, _conversionTarget))
-                Log.Debug("ExampleDocumentConversion", "Document conversion failed!");
+            if (!_documentConversion.ConvertDocument(OnConvertDocument, OnFail, _examplePath, _conversionTarget))
+                Log.Debug("TestDocumentConversion.RunTest()", "Document conversion failed!");
 
             while (!_convertDocumentTested)
                 yield return null;
 
-            Log.Debug("ExampleDoucmentConversion", "Document conversion examples complete.");
+            Log.Debug("TestDoucmentConversion.RunTest()", "Document conversion examples complete.");
 
             yield break;
         }
 
-        private void OnConvertDocument(ConvertedDocument documentConversionResponse, string data)
+        private void OnConvertDocument(ConvertedDocument documentConversionResponse, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleDoucmentConversion", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
+            Log.Debug("TestDoucmentConversion.OnConvertDocument()", "DocumentConversion - Convert document Response: {0}", documentConversionResponse.htmlContent);
             Test(documentConversionResponse != null);
             _convertDocumentTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestDoucmentConversion.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

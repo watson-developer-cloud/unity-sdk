@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleTradeoffAnalytics : MonoBehaviour
 {
@@ -120,16 +121,16 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
 
         problemToSolve.options = listOption.ToArray();
 
-        _tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false);
+        _tradeoffAnalytics.GetDilemma(OnGetDilemma, OnFail, problemToSolve, false);
         while(!_GetDillemaTested)
         yield return null;
 
-        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff analytics examples complete.");
+        Log.Debug("ExampleTradeoffAnalyitics.Examples()", "Tradeoff analytics examples complete.");
     }
 
-    private void OnGetDilemma(DilemmasResponse resp, string data)
+    private void OnGetDilemma(DilemmasResponse resp, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleTradeoffAnalyitics", "Tradeoff Analytics - Get Dillema: {0}", data);
+        Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "{0}", customData["json"].ToString());
         _GetDillemaTested = true;
     }
 
@@ -149,5 +150,10 @@ public class ExampleTradeoffAnalytics : MonoBehaviour
     public class TestData : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationData
     {
 
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleTradeoffAnalytics.OnFail()", "Error received: {0}", error.ToString());
     }
 }

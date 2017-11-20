@@ -95,34 +95,49 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region GetAuthors
         private const string GetAuthorsUrl = "/url/URLGetAuthors";
         private const string GetAuthorsHtml = "/html/HTMLGetAuthors";
 
         /// <summary>
-        /// On get authors delegate.
-        /// </summary>
-        public delegate void OnGetAuthors(AuthorsData authorExtractionData, string data);
-
-        /// <summary>
         /// Extracts authors from a source.
         /// </summary>
         /// <returns><c>true</c>, if authors was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">URL or HTML source.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetAuthors(OnGetAuthors callback, string source, string customData = default(string))
+        public bool GetAuthors(SuccessCallback<AuthorsData> successCallback, FailCallback failCallback, string source, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new ArgumentNullException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetAuthorsRequest req = new GetAuthorsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -151,7 +166,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetAuthors!");
+                Log.Error("AlchemyAPI.GetAuthors()", "Either a URL or a html page source is required for GetAuthors!");
                 return false;
             }
 
@@ -169,19 +184,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetAuthorsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<AuthorsData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetAuthors Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetAuthorsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            AuthorsData authorsData = new AuthorsData();
+            AuthorsData result = new AuthorsData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetAuthorsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -191,21 +211,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = authorsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetAuthorsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyAPI.OnGetAuthorsResponse()", "OnGetAuthorsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
-
-            string customData = ((GetAuthorsRequest)req).Data;
-            if (((GetAuthorsRequest)req).Callback != null)
-                ((GetAuthorsRequest)req).Callback(resp.Success ? authorsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            
+            if (resp.Success)
+            {
+                if (((GetAuthorsRequest)req).SuccessCallback != null)
+                    ((GetAuthorsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetAuthorsRequest)req).FailCallback != null)
+                    ((GetAuthorsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -215,38 +244,37 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         private const string GetRankedConceptsText = "/text/TextGetRankedConcepts";
 
         /// <summary>
-        /// On get ranked concepts delegate.
-        /// </summary>
-        public delegate void OnGetRankedConcepts(ConceptsData conceptExtractionData, string data);
-
-        /// <summary>
         /// Extracts concepts from a source.
         /// </summary>
         /// <returns><c>true</c>, if ranked concepts was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text Source.</param>
         /// <param name="maxRetrieve">Maximum results retreived.</param>
         /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
         /// <param name="includeLinkedData">If set to <c>true</c> include linked data.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetRankedConcepts(OnGetRankedConcepts callback, string source,
+        public bool GetRankedConcepts(SuccessCallback<ConceptsData> successCallback, FailCallback failCallback, string source,
             int maxRetrieve = 8,
             bool includeKnowledgeGraph = false,
             bool includeLinkedData = true,
             bool includeSourceText = false,
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetRankedConceptsRequest req = new GetRankedConceptsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -299,17 +327,22 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
             /// <summary>
-            /// The callback.
+            /// The success callback.
             /// </summary>
-            public OnGetRankedConcepts Callback { get; set; }
+            public SuccessCallback<ConceptsData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
         }
 
         private void OnGetRankedConceptsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ConceptsData conceptsData = new ConceptsData();
+            ConceptsData result = new ConceptsData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetRankedConceptsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -319,21 +352,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = conceptsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+                    
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRankedConceptsResponse()", "OnGetRankedConceptsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetRankedConceptsRequest)req).Data;
-            if (((GetRankedConceptsRequest)req).Callback != null)
-                ((GetRankedConceptsRequest)req).Callback(resp.Success ? conceptsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetRankedConceptsRequest)req).SuccessCallback != null)
+                    ((GetRankedConceptsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetRankedConceptsRequest)req).FailCallback != null)
+                    ((GetRankedConceptsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -351,15 +393,18 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts dates from a source.
         /// </summary>
         /// <returns><c>true</c>, if dates was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="anchorDate">Anchor date in the yyyy-mm-dd hh:mm:ss format. If this is not set, anchor date is set to today's date and time.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetDates(OnGetDates callback, string source, string anchorDate = default(string), bool includeSourceText = false, string customData = default(string))
+        public bool GetDates(SuccessCallback<DateData> successCallback, FailCallback failCallback, string source, string anchorDate = default(string), bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetAuthors.");
             if (string.IsNullOrEmpty(_apiKey))
@@ -368,8 +413,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 anchorDate = GetCurrentDatetime();
 
             GetDatesRequest req = new GetDatesRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -418,19 +464,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetDatesRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<DateData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetDates Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetDatesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DateData dateData = new DateData();
+            DateData result = new DateData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetDatesRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -440,21 +491,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = dateData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnDatesResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetDatesResponse()", "OnDatesResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetDatesRequest)req).Data;
-            if (((GetDatesRequest)req).Callback != null)
-                ((GetDatesRequest)req).Callback(resp.Success ? dateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetDatesRequest)req).SuccessCallback != null)
+                    ((GetDatesRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetDatesRequest)req).FailCallback != null)
+                    ((GetDatesRequest)req).FailCallback(resp.Error, customData);
+            }
         }
 
         private string GetCurrentDatetime()
@@ -479,22 +539,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Gets the emotions from a source.
         /// </summary>
         /// <returns><c>true</c>, if emotions was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetEmotions(OnGetEmotions callback, string source, bool includeSourceText = false, string customData = default(string))
+        public bool GetEmotions(SuccessCallback<EmotionData> successCallback, FailCallback failCallback, string source, bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetEmotions.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetEmotionsRequest req = new GetEmotionsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -542,19 +606,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetEmotionsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<EmotionData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetEmotions Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetEmotionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EmotionData emotionData = new EmotionData();
+            EmotionData result = new EmotionData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetEmotionsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -564,21 +633,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = emotionData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetEmotionsResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetEmotionsRequest)req).Data;
-            if (((GetEmotionsRequest)req).Callback != null)
-                ((GetEmotionsRequest)req).Callback(resp.Success ? emotionData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetEmotionsRequest)req).SuccessCallback != null)
+                    ((GetEmotionsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetEmotionsRequest)req).FailCallback != null)
+                    ((GetEmotionsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -596,7 +674,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the entities from a source.
         /// </summary>
         /// <returns><c>true</c>, if entities was extracted, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="maxRetrieve">Maximum results retreived.</param>
         /// <param name="resolveCoreference">If set to <c>true</c> resolve coreference.</param>
@@ -608,7 +687,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="extractStructuredEntities">If set to <c>true</c> extract structured entities.</param>
         /// <param name="customData">Custom data.</param>
-        public bool ExtractEntities(OnGetEntities callback, string source,
+        public bool ExtractEntities(SuccessCallback<EntityData> successCallback, FailCallback failCallback, string source,
             int maxRetrieve = 50,
             bool resolveCoreference = true,
             bool disambiguate = true,
@@ -618,18 +697,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool analyzeSentiment = false,
             bool includeSourceText = false,
             bool extractStructuredEntities = true,
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for ExtractEntities.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetEntitiesRequest req = new GetEntitiesRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -685,19 +767,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetEntitiesRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<EntityData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetEntities Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            EntityData entityData = new EntityData();
+            EntityData result = new EntityData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetEntitiesRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -707,21 +794,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = entityData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEntitiesResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetEntitiesResponse()", "OnGetEntitiesResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetEntitiesRequest)req).Data;
-            if (((GetEntitiesRequest)req).Callback != null)
-                ((GetEntitiesRequest)req).Callback(resp.Success ? entityData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetEntitiesRequest)req).SuccessCallback != null)
+                    ((GetEntitiesRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetEntitiesRequest)req).FailCallback != null)
+                    ((GetEntitiesRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -738,21 +834,25 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Detects RSS feeds in a source.
         /// </summary>
         /// <returns><c>true</c>, if feeds was detected, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">URL to detect feeds.</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFeeds(OnDetectFeeds callback, string source, string customData = default(string))
+        public bool DetectFeeds(SuccessCallback<FeedData> successCallback, FailCallback failCallback, string source, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetEmotions.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             DetectFeedsRequest req = new DetectFeedsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -769,7 +869,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
                 //                service = SERVICE_DETECT_FEEDS_HTML;
                 //                string htmlData = default(string);
@@ -778,7 +878,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for DetectFeeds!");
+                Log.Error("AlchemyAPI.DetectFeeds()", "A URL source is required for DetectFeeds!");
                 return false;
             }
 
@@ -796,19 +896,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class DetectFeedsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<FeedData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnDetectFeeds Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnDetectFeedsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            FeedData feedData = new FeedData();
+            FeedData result = new FeedData();
             fsData data = null;
+            Dictionary<string, object> customData = ((DetectFeedsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -818,21 +923,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = feedData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnDetectFeedsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnDetectFeedsResponse()", "OnDetectFeedsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((DetectFeedsRequest)req).Data;
-            if (((DetectFeedsRequest)req).Callback != null)
-                ((DetectFeedsRequest)req).Callback(resp.Success ? feedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((DetectFeedsRequest)req).SuccessCallback != null)
+                    ((DetectFeedsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DetectFeedsRequest)req).FailCallback != null)
+                    ((DetectFeedsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -850,30 +964,34 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the keywords from a source.
         /// </summary>
         /// <returns><c>true</c>, if keywords was extracted, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="maxRetrieve">Maximum results retreived.</param>
         /// <param name="includeKnowledgeGraph">If set to <c>true</c> include knowledge graph.</param>
         /// <param name="analyzeSentiment">If set to <c>true</c> analyze sentiment.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool ExtractKeywords(OnGetKeywords callback, string source,
+        public bool ExtractKeywords(SuccessCallback<KeywordData> successCallback, FailCallback failCallback, string source,
             int maxRetrieve = 50,
             bool includeKnowledgeGraph = false,
             bool analyzeSentiment = false,
             bool includeSourceText = false,
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for ExtractKeywords.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetKeywordsRequest req = new GetKeywordsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -925,19 +1043,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetKeywordsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<KeywordData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetKeywords Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetKeywordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            KeywordData keywordData = new KeywordData();
+            KeywordData result = new KeywordData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetKeywordsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -947,21 +1070,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = keywordData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetKeywordsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetKeywordsResponse()", "OnGetKeywordsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetKeywordsRequest)req).Data;
-            if (((GetKeywordsRequest)req).Callback != null)
-                ((GetKeywordsRequest)req).Callback(resp.Success ? keywordData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetKeywordsRequest)req).SuccessCallback != null)
+                    ((GetKeywordsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetKeywordsRequest)req).FailCallback != null)
+                    ((GetKeywordsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -979,22 +1111,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the language a source is written.
         /// </summary>
         /// <returns><c>true</c>, if languages was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetLanguages(OnGetLanguages callback, string source, bool includeSourceText = false, string customData = default(string))
+        public bool GetLanguages(SuccessCallback<LanguageData> successCallback, FailCallback failCallback, string source, bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetLanguages.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetLanguagesRequest req = new GetLanguagesRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1042,19 +1178,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetLanguagesRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<LanguageData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetLanguages Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            LanguageData languageData = new LanguageData();
+            LanguageData result = new LanguageData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetLanguagesRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1064,21 +1205,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = languageData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetEmotionsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetLanguagesResponse()", "OnGetEmotionsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetLanguagesRequest)req).Data;
-            if (((GetLanguagesRequest)req).Callback != null)
-                ((GetLanguagesRequest)req).Callback(resp.Success ? languageData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetLanguagesRequest)req).SuccessCallback != null)
+                    ((GetLanguagesRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetLanguagesRequest)req).FailCallback != null)
+                    ((GetLanguagesRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1095,21 +1245,25 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts microformats from a URL source.
         /// </summary>
         /// <returns><c>true</c>, if microformats was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">URL to extract microformats from.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetMicroformats(OnGetMicroformats callback, string source, string customData = default(string))
+        public bool GetMicroformats(SuccessCallback<MicroformatData> successCallback, FailCallback failCallback, string source, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a url for GetMicroformats.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetMicroformatsRequest req = new GetMicroformatsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1126,7 +1280,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else if (source.StartsWith(Application.dataPath) && !normalizedSource.StartsWith("http://") && !normalizedSource.StartsWith("https://"))
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
                 //                service = SERVICE_GET_MICROFORMAT_HTML;
                 //                string htmlData = default(string);
@@ -1135,7 +1289,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "A URL source is required for GetMicroformats!");
+                Log.Error("AlchemyAPI.GetMicroformats()", "A URL source is required for GetMicroformats!");
                 return false;
             }
 
@@ -1153,19 +1307,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetMicroformatsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MicroformatData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetMicroformats Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetMicroformatsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            MicroformatData microformatData = new MicroformatData();
+            MicroformatData result = new MicroformatData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetMicroformatsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1175,21 +1334,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = microformatData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetMicroformatsResponse()", "OnGetMicroformatsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetMicroformatsRequest)req).Data;
-            if (((GetMicroformatsRequest)req).Callback != null)
-                ((GetMicroformatsRequest)req).Callback(resp.Success ? microformatData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetMicroformatsRequest)req).SuccessCallback != null)
+                    ((GetMicroformatsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMicroformatsRequest)req).FailCallback != null)
+                    ((GetMicroformatsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1206,21 +1374,25 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the publication date from a source.
         /// </summary>
         /// <returns><c>true</c>, if publication date was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">URL or HTML sources.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetPublicationDate(OnGetPublicationDate callback, string source, string customData = default(string))
+        public bool GetPublicationDate(SuccessCallback<PubDateData> successCallback, FailCallback failCallback, string source, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a url for GetPublicationDate.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetPublicationDateRequest req = new GetPublicationDateRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1249,7 +1421,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetPublicationDate!");
+                Log.Error("AlchemyAPI.GetPublicationDate()", "Either a URL or a html page source is required for GetPublicationDate!");
                 return false;
             }
 
@@ -1267,19 +1439,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetPublicationDateRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<PubDateData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetPublicationDate Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetPublicationDateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            PubDateData pubDateData = new PubDateData();
+            PubDateData result = new PubDateData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetPublicationDateRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1289,21 +1466,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = pubDateData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetPublicationDateResponse()", "OnGetPublicationDateResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetPublicationDateRequest)req).Data;
-            if (((GetPublicationDateRequest)req).Callback != null)
-                ((GetPublicationDateRequest)req).Callback(resp.Success ? pubDateData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetPublicationDateRequest)req).SuccessCallback != null)
+                    ((GetPublicationDateRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetPublicationDateRequest)req).FailCallback != null)
+                    ((GetPublicationDateRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1321,7 +1507,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the relations from a source.
         /// </summary>
         /// <returns><c>true</c>, if relations was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="maxRetrieve">Max retrieve.</param>
         /// <param name="includeKeywords">If set to <c>true</c> include keywords.</param>
@@ -1335,7 +1522,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <param name="excludeEntitiesInSentiment">If set to <c>true</c> exclude entities in sentiment.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetRelations(OnGetRelations callback, string source,
+        public bool GetRelations(SuccessCallback<RelationsData> successCallback, FailCallback failCallback, string source,
             int maxRetrieve = 50,
             bool includeKeywords = false,
             bool includeEntities = false,
@@ -1347,18 +1534,21 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool analyzeSentiment = false,
             bool excludeEntitiesInSentiment = false,
             bool includeSourceText = false,
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetRelations.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetRelationsRequest req = new GetRelationsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1417,19 +1607,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetRelationsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<RelationsData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetRelations Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            RelationsData relationsData = new RelationsData();
+            RelationsData result = new RelationsData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetRelationsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1439,21 +1634,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = relationsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRelationsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRelationsResponse()", "OnGetRelationsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetRelationsRequest)req).Data;
-            if (((GetRelationsRequest)req).Callback != null)
-                ((GetRelationsRequest)req).Callback(resp.Success ? relationsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetRelationsRequest)req).SuccessCallback != null)
+                    ((GetRelationsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetRelationsRequest)req).FailCallback != null)
+                    ((GetRelationsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1471,22 +1675,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the sentiment from a source.
         /// </summary>
         /// <returns><c>true</c>, if text sentiment was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetTextSentiment(OnGetTextSentiment callback, string source, bool includeSourceText = false, string customData = default(string))
+        public bool GetTextSentiment(SuccessCallback<SentimentData> successCallback, FailCallback failCallback, string source, bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetTextSentiment.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetTextSentimentRequest req = new GetTextSentimentRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1534,19 +1742,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetTextSentimentRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<SentimentData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetTextSentiment Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetTextSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SentimentData sentimentData = new SentimentData();
+            SentimentData result = new SentimentData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetTextSentimentRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1556,21 +1769,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = sentimentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTextSentimentResponse()", "OnGetTextSentimentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetTextSentimentRequest)req).Data;
-            if (((GetTextSentimentRequest)req).Callback != null)
-                ((GetTextSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetTextSentimentRequest)req).SuccessCallback != null)
+                    ((GetTextSentimentRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetTextSentimentRequest)req).FailCallback != null)
+                    ((GetTextSentimentRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1588,15 +1810,18 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts targeted sentiment from a source.
         /// </summary>
         /// <returns><c>true</c>, if targeted sentiment was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="targets">Targets.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetTargetedSentiment(OnGetTargetedSentiment callback, string source, string targets, bool includeSourceText = false, string customData = default(string))
+        public bool GetTargetedSentiment(SuccessCallback<TargetedSentimentData> successCallback, FailCallback failCallback, string source, string targets, bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetTargetedSentiment.");
             if (string.IsNullOrEmpty(targets))
@@ -1605,8 +1830,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 SetCredentials();
 
             GetTargetedSentimentRequest req = new GetTargetedSentimentRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1655,19 +1881,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetTargetedSentimentRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TargetedSentimentData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetTargetedSentiment Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetTargetedSentimentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TargetedSentimentData sentimentData = new TargetedSentimentData();
+            TargetedSentimentData result = new TargetedSentimentData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetTargetedSentimentRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1677,21 +1908,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = sentimentData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTargetedSentimentResponse()", "OnGetTargetedSentimentResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetTargetedSentimentRequest)req).Data;
-            if (((GetTargetedSentimentRequest)req).Callback != null)
-                ((GetTargetedSentimentRequest)req).Callback(resp.Success ? sentimentData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetTargetedSentimentRequest)req).SuccessCallback != null)
+                    ((GetTargetedSentimentRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetTargetedSentimentRequest)req).FailCallback != null)
+                    ((GetTargetedSentimentRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1709,22 +1949,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the ranked taxonomy from a source.
         /// </summary>
         /// <returns><c>true</c>, if ranked taxonomy was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetRankedTaxonomy(OnGetRankedTaxonomy callback, string source, bool includeSourceText = false, string customData = default(string))
+        public bool GetRankedTaxonomy(SuccessCallback<TaxonomyData> successCallback, FailCallback failCallback, string source, bool includeSourceText = false, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetRankedTaxonomy.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
-            GetRankedTaxomomyRequest req = new GetRankedTaxomomyRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            GetRankedTaxonomyRequest req = new GetRankedTaxonomyRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1769,22 +2013,27 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <summary>
         /// Get ranked taxomomy request.
         /// </summary>
-        public class GetRankedTaxomomyRequest : RESTConnector.Request
+        public class GetRankedTaxonomyRequest : RESTConnector.Request
         {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TaxonomyData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
             /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetRankedTaxonomy Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetRankedTaxonomyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TaxonomyData taxonomyData = new TaxonomyData();
+            TaxonomyData result = new TaxonomyData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetRankedTaxonomyRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1794,21 +2043,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = taxonomyData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetRankedTaxonomyResponse()", "OnGetRankedTaxonomyResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetRankedTaxomomyRequest)req).Data;
-            if (((GetRankedTaxomomyRequest)req).Callback != null)
-                ((GetRankedTaxomomyRequest)req).Callback(resp.Success ? taxonomyData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetRankedTaxonomyRequest)req).SuccessCallback != null)
+                    ((GetRankedTaxonomyRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetRankedTaxonomyRequest)req).FailCallback != null)
+                    ((GetRankedTaxonomyRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1825,23 +2083,27 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts text from a source.
         /// </summary>
         /// <returns><c>true</c>, if text was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML or URL source.</param>
         /// <param name="extractLinks">If set to <c>true</c> extract links.</param>
         /// <param name="useMetadata">If set to <c>true</c> use metadata.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetText(OnGetText callback, string source, bool extractLinks = false, bool useMetadata = true, string customData = default(string))
+        public bool GetText(SuccessCallback<TextData> successCallback, FailCallback failCallback, string source, bool extractLinks = false, bool useMetadata = true, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetText.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetTextRequest req = new GetTextRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1872,7 +2134,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetText!");
+                Log.Error("AlchemyAPI.GetText()", "Either a URL or a html page source is required for GetText!");
                 return false;
             }
 
@@ -1890,19 +2152,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetTextRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TextData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetText Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetTextResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TextData textData = new TextData();
+            TextData result = new TextData();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetTextRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -1912,21 +2179,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = textData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTextResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTextResponse()", "OnGetTextResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetTextRequest)req).Data;
-            if (((GetTextRequest)req).Callback != null)
-                ((GetTextRequest)req).Callback(resp.Success ? textData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetTextRequest)req).SuccessCallback != null)
+                    ((GetTextRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetTextRequest)req).FailCallback != null)
+                    ((GetTextRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -1938,21 +2214,25 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Gets raw text from a source.
         /// </summary>
         /// <returns><c>true</c>, if raw text was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML or URL source.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetRawText(OnGetText callback, string source, string customData = default(string))
+        public bool GetRawText(SuccessCallback<TextData> successCallback, FailCallback failCallback, string source, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetRawText.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetTextRequest req = new GetTextRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -1981,7 +2261,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetRawText!");
+                Log.Error("AlchemyAPI.GetRawText()", "Either a URL or a html page source is required for GetRawText!");
                 return false;
             }
 
@@ -2007,22 +2287,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Extracts the title from a source.
         /// </summary>
         /// <returns><c>true</c>, if title was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML or URL source.</param>
         /// <param name="useMetadata">If set to <c>true</c> use metadata.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetTitle(OnGetTitle callback, string source, bool useMetadata = true, string customData = default(string))
+        public bool GetTitle(SuccessCallback<Title> successCallback, FailCallback failCallback, string source, bool useMetadata = true, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetText.");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetTitleRequest req = new GetTitleRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -2052,7 +2336,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             }
             else
             {
-                Log.Error("Alchemy Language", "Either a URL or a html page source is required for GetTitle!");
+                Log.Error("AlchemyAPI.GetTitle()", "Either a URL or a html page source is required for GetTitle!");
                 return false;
             }
 
@@ -2070,19 +2354,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetTitleRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Title> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetTitle Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetTitleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Title titleData = new Title();
+            Title result = new Title();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetTitleRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -2092,21 +2381,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = titleData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnGetTitleResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnGetTitleResponse()", "OnGetTitleResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetTitleRequest)req).Data;
-            if (((GetTitleRequest)req).Callback != null)
-                ((GetTitleRequest)req).Callback(resp.Success ? titleData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetTitleRequest)req).SuccessCallback != null)
+                    ((GetTitleRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetTitleRequest)req).FailCallback != null)
+                    ((GetTitleRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -2124,7 +2422,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Access multiple services in one call.
         /// </summary>
         /// <returns><c>true</c>, if combined data was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="source">HTML, URL or Text source.</param>
         /// <param name="includeSourceText">If set to <c>true</c> include source text.</param>
         /// <param name="extractAuthors">If set to <c>true</c> extract authors.</param>
@@ -2142,7 +2441,7 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <param name="extractPageImage">If set to <c>true</c> extract page image.</param>
         /// <param name="extractImageKeywords">If set to <c>true</c> extract image keywords.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetCombinedData(OnGetCombinedData callback, string source,
+        public bool GetCombinedData(SuccessCallback<CombinedCallData> successCallback, FailCallback failCallback, string source,
             bool includeSourceText = false,
             bool extractAuthors = false,
             bool extractConcepts = true,
@@ -2158,10 +2457,12 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
             bool extractTitle = false,
             bool extractPageImage = false,
             bool extractImageKeywords = false,
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(source))
                 throw new WatsonException("Please provide a source for GetCombinedData.");
             if (!extractAuthors
@@ -2183,8 +2484,9 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                 SetCredentials();
 
             CombinedCallRequest req = new CombinedCallRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -2263,19 +2565,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class CombinedCallRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<CombinedCallData> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetCombinedData Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnCombinedCallResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            CombinedCallData combinedData = new CombinedCallData();
+            CombinedCallData result = new CombinedCallData();
             fsData data = null;
+            Dictionary<string, object> customData = ((CombinedCallRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -2285,21 +2592,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = combinedData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyLanguage", "OnCombinedCallResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyApi.OnCombinedCallResponse()", "OnCombinedCallResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((CombinedCallRequest)req).Data;
-            if (((CombinedCallRequest)req).Callback != null)
-                ((CombinedCallRequest)req).Callback(resp.Success ? combinedData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((CombinedCallRequest)req).SuccessCallback != null)
+                    ((CombinedCallRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CombinedCallRequest)req).FailCallback != null)
+                    ((CombinedCallRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -2315,7 +2631,8 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// Gets news.
         /// </summary>
         /// <returns><c>true</c>, if news was gotten, <c>false</c> otherwise.</returns>
-        /// <param name="callback">Callback.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="returnFields">Fields returned.</param>
         /// <param name="queryFields">Values for each field.</param>
         /// <param name="startDate">Date to start the query.</param>
@@ -2324,23 +2641,26 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         /// <param name="timeSlice">the duration (in seconds) of each time slice. a human readable duration is also acceptable e.g. '1d', '4h', '1M', etc.
         /// If set, this parameter causes the query engine to return a time series representing the count in each slice of time. If omitted, the query engine returns the total count over the time duration.</param>
         /// <param name="customData">Custom data.</param>
-        public bool GetNews(OnGetNews callback,
+        public bool GetNews(SuccessCallback<NewsResponse> successCallback, FailCallback failCallback,
             string[] returnFields = default(string[]),
             Dictionary<string, string> queryFields = null,
             string startDate = "now-1d",
             string endDate = "now",
             int maxResults = 10,
             string timeSlice = default(string),
-            string customData = default(string))
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(_apiKey))
                 SetCredentials();
 
             GetNewsRequest req = new GetNewsRequest();
-            req.Callback = callback;
-            req.Data = customData;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
 
             req.Parameters["apikey"] = _apiKey;
             req.Parameters["outputMode"] = "json";
@@ -2369,19 +2689,24 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
         public class GetNewsRequest : RESTConnector.Request
         {
             /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<NewsResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
             /// Custom data.
             /// </summary>
-            public string Data { get; set; }
-            /// <summary>
-            /// The callback.
-            /// </summary>
-            public OnGetNews Callback { get; set; }
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void OnGetNewsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            NewsResponse newsData = new NewsResponse();
+            NewsResponse result = new NewsResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetNewsRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -2391,21 +2716,30 @@ namespace IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = newsData;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("AlchemyDataNews", "OnGetNewsResponse Exception: {0}", e.ToString());
+                    Log.Error("AlchemyAPI.OnGetNewsResponse()", "OnGetNewsResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetNewsRequest)req).Data;
-            if (((GetNewsRequest)req).Callback != null)
-                ((GetNewsRequest)req).Callback(resp.Success ? newsData : null, (!string.IsNullOrEmpty(customData) ? customData : data.ToString()));
+            if (resp.Success)
+            {
+                if (((GetNewsRequest)req).SuccessCallback != null)
+                    ((GetNewsRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetNewsRequest)req).FailCallback != null)
+                    ((GetNewsRequest)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 

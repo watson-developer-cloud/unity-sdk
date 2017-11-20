@@ -20,18 +20,27 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleNaturalLanguageUnderstanding.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
 ### Analyze
 Analyze features of natural language content.
 ```cs
 private void Analyze()
 {
-  if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, <parameters>))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+  if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, <parameters>))
+      Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
 }
 
-private void OnAnalyze(AnalysisResults resp, string customData)
+private void OnAnalyze(AnalysisResults resp, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "AnalysisResults: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding.OnAnalyze()", "AnalysisResults: {0}", customData["json"].ToString());
 }
 ```
 
@@ -42,13 +51,13 @@ List available custom models.
 ```cs
 private void GetModels()
 {
-  if (!_naturalLanguageUnderstanding.GetModels(OnGetModels))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to get models.");
+  if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
+      Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
 }
 
-private void OnGetModels(ListModelsResults resp, string customData)
+private void OnGetModels(ListModelsResults resp, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "ListModelsResult: {0}", customData.ToString());
+    Log.Debug("ExampleNaturalLanguageUnderstanding.OnGetModels()", "ListModelsResult: {0}", customData["json"].ToString());
 }
 ```
 
@@ -59,17 +68,17 @@ Delete a custom model.
 ```cs
 private void DeleteModel()
 {
-  if (!_naturalLanguageUnderstanding.DeleteModel(OnDeleteModel, <model-id>))
-      Log.Debug("ExampleNaturalLanguageUnderstandingV1", "Failed to delete model.");
+  if (!_naturalLanguageUnderstanding.DeleteModel(OnDeleteModel, OnFail, <model-id>))
+      Log.Debug("ExampleNaturalLanguageUnderstanding.DeleteModel()", "Failed to delete model.");
 }
 
-private void OnDeleteModel(bool success, string customData)
+private void OnDeleteModel(bool success, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleNaturalLanguageUnderstandingV1", "DeleteModelResult: {0}", success);
+    Log.Debug("ExampleNaturalLanguageUnderstanding.OnDeleteModel()", "DeleteModelResult: {0}", success);
 }
 ```
 
-[natural_language_understanding]: https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/index.html
-[custom_models]: https://www.ibm.com/watson/developercloud/doc/natural-language-understanding/customizing.html
-[entities]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#entities
-[relations]: https://www.ibm.com/watson/developercloud/natural-language-understanding/api/v1/#relations
+[natural_language_understanding]: https://console.bluemix.net/docs/services/natural-language-understanding/index.html
+[custom_models]: https://console.bluemix.net/docs/services/natural-language-understanding/customizing.html
+[entities]: https://console.bluemix.net/docs/services/natural-language-understanding/entity-types.html
+[relations]: https://console.bluemix.net/docs/services/natural-language-understanding/relations.html

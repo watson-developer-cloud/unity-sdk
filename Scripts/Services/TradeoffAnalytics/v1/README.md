@@ -98,13 +98,18 @@ private void GetDillema()
 
   problemToSolve.options = listOption.ToArray();
 
-  if(!_tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false))
-    Log.Debug("ExampleTradeoffAnalytics", "Failed to get dillema!");
+  if(!_tradeoffAnalytics.GetDilemma(OnGetDilemma, OnFail, problemToSolve, false))
+    Log.Debug("ExampleTradeoffAnalytics.GetDilemma()", "Failed to get dillema!");
 }
 
-private void OnGetDillema(DilemmasResponse resp)
+private void OnGetDillema(DilemmasResponse resp, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleTradeoffAnalytics", "Get dillema result: {0}", data);
+  Log.Debug("ExampleTradeoffAnalytics.OnGetDillema()", "Get dillema result: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleTradeoffAnalytics.OnFail()", "Error received: {0}", error.ToString());
 }
 
 public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationDataValue
@@ -115,4 +120,4 @@ public class TestDataValue : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytic
 }
 ```
 
-[tradeoff_analytics]: http://www.ibm.com/watson/developercloud/doc/tradeoff-analytics/
+[tradeoff_analytics]: https://console.bluemix.net/docs/services/tradeoff-analytics/index.html

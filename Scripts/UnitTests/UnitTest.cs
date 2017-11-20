@@ -16,7 +16,7 @@
 */
 
 //  Uncomment to print the current service endpoint.
-#define PRINT_ENDPOINT
+//#define PRINT_ENDPOINT
 
 using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
@@ -48,14 +48,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             if (!condition)
             {
-                Log.Error("UnitTest", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
+                Log.Error("UnitTest.Test()", "UnitTest {0} has failed, Stack:\n{1}", GetType().Name, StackTraceUtility.ExtractStackTrace());
                 TestFailed = true;
             }
             else
             {
-                Log.Status("UnitTest", "UnitTest {0} has passed.", GetType().Name);
+                Log.Status("UnitTest.Test()", "UnitTest {0} has passed.", GetType().Name);
 #if PRINT_ENDPOINT
-                Log.Status("UnitTest", "endpoint: {0}", _url);
+                Log.Status("UnitTest.Test()", "endpoint: {0}", _url);
 #endif
             }
         }

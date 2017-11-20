@@ -82,27 +82,53 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region Dilemmas
         private const string DillemaEndpoint = "/v1/dilemmas";
         /// <summary>
-        /// The On Dilemma callback delegate.
+        /// Returns a dilemma that contains the problem and a resolution. The problem contains a set of options and objectives. The resolution 
+        /// contains a set of optimal options, their analytical characteristics, and by default their representation on a two-dimensional space. 
+        /// You can optionally request that the service also return a refined set of preferable options that are most likely to appeal to the 
+        /// greatest number of users
         /// </summary>
-        /// <param name="resp"></param>
-        public delegate void OnDilemma(DilemmasResponse resp, string CustomData);
-
-        public bool GetDilemma(OnDilemma callback, Problem problem, Boolean generateVisualization, string customData = default(string))
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="problem">The decision problem.</param>
+        /// <param name="generateVisualization">Indicates whether to calculate the map visualization. If true, the visualization is returned if 
+        /// the is_objective field is true for at least three columns and at least three options have a status of FRONT in the problem resolution.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns></returns>
+        public bool GetDilemma(SuccessCallback<DilemmasResponse> successCallback, FailCallback failCallback, Problem problem, Boolean generateVisualization, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, DillemaEndpoint);
             if (connector == null)
                 return false;
 
             GetDilemmaRequest req = new GetDilemmaRequest();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetDilemmaResponse;
-            req.Data = customData;
             req.Parameters["generate_visualization"] = generateVisualization.ToString();
 
             fsData tempData = null;
@@ -116,14 +142,25 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
 
         private class GetDilemmaRequest : RESTConnector.Request
         {
-            public OnDilemma Callback { get; set; }
-            public string Data { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<DilemmasResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         };
 
         private void GetDilemmaResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DilemmasResponse response = new DilemmasResponse();
+            DilemmasResponse result = new DilemmasResponse();
             fsData data = null;
+            Dictionary<string, object> customData = ((GetDilemmaRequest)req).CustomData;
 
             if (resp.Success)
             {
@@ -133,21 +170,30 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = response;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
-                    Log.Error("TradeoffAnalytics", "GetDilemmaResponse Exception: {0}", e.ToString());
+                    Log.Error("TradeoffAnalytics.GetDilemmaResponse()", "GetDilemmaResponse Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
-            string customData = ((GetDilemmaRequest)req).Data;
-            if (((GetDilemmaRequest)req).Callback != null)
-                ((GetDilemmaRequest)req).Callback(resp.Success ? response : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((GetDilemmaRequest)req).SuccessCallback != null)
+                    ((GetDilemmaRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetDilemmaRequest)req).FailCallback != null)
+                    ((GetDilemmaRequest)req).FailCallback(resp.Error, customData);
+            }
         }
 
         #endregion
