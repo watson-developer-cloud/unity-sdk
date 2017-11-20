@@ -12,8 +12,17 @@ using IBM.Watson.DeveloperCloud.Utilities;
 
 void Start()
 {
-    Credentials credentials = new Credentials(<apikey>, <url>);
+    Credentials credentials = new Credentials("<apikey>", "<url>");
     VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
+```
+
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleVisualRecognition.OnFail()", "Error received: {0}", error.ToString());
 }
 ```
 
@@ -25,17 +34,17 @@ For each image, the response includes a score for each class within each selecte
 void Classify()
 {
     //  Classify using image url
-	if(!_visualRecognition.Classify(<image-url>, OnClassify))
+	if(!_visualRecognition.Classify("<image-url>", OnClassify, OnFail))
     	Log.Debug("ExampleVisualRecognition.Classify()", "Classify image failed!");
 
     //  Classify using image path
-    if(!_visualRecognition.Classify(OnClassify, <image-path>, <classifier-owners>, <classifier-ids>, 0.5f))
+    if(!_visualRecognition.Classify(OnClassify, OnFail, "<image-path>", "<classifier-owners>", "<classifier-ids>", 0.5f))
         Log.Debug("ExampleVisualRecognition.Classify()", "Classify image failed!");
 }
 
-private void OnClassify(ClassifyTopLevelMultiple classify)
+private void OnClassify(ClassifyTopLevelMultiple classify, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnClassify()", "Classify result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnClassify()", "Classify result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -47,17 +56,17 @@ For each image, the response includes face location, a minimum and maximum estim
 void DetectFaces()
 {
     //  Classify using image url
-	if(!_visualRecognition.DetectFaces(<image-url>, OnDetectFaces))
+	if(!_visualRecognition.DetectFaces("<image-url>", OnDetectFaces, OnFail))
         Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 
     //  Classify using image path
-    if(!_visualRecognition.DetectFaces(OnDetectFaces, <image-path>))
+    if(!_visualRecognition.DetectFaces(OnDetectFaces, OnFail, "<image-path>"))
         Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 }
 
-private void OnDetectFaces(FacesTopLevelMultiple multipleImages)
+private void OnDetectFaces(FacesTopLevelMultiple multipleImages, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnDetectFaces()", "Detect faces result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnDetectFaces()", "Detect faces result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -70,13 +79,13 @@ The compressed file containing negative examples is not used to create a class w
 ```cs
 void TrainClassifier()
 {
-    if(!_visualRecognition.TrainClassifier(<classifier-name>, <class-name>, <positive-examples-path>, <negative-examples-path>, OnTrainClassifier))
+    if(!_visualRecognition.TrainClassifier(OnTrainClassifier, OnFail, "<classifier-name>", "<class-name>", "<positive-examples-path>", "<negative-examples-path>"))
         Log.Debug("ExampleVisualRecognition.TrainClassifier()", "Train classifier failed!");
 }
 
-private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnTrainClassifier()", "Train classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnTrainClassifier()", "Train classifier result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -85,13 +94,13 @@ Retrieve a list of user-created classifiers.
 ```cs
 void GetClassifiers()
 {
-	if(!_visualRecognition.GetClassifiers(OnGetClassifiers))
+	if(!_visualRecognition.GetClassifiers(OnGetClassifiers, OnFail))
         Log.Debug("ExampleVisualRecognition.GetClassifiers()", "Getting classifiers failed!");
 }
 
-private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, string data)
+private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnGetClassifiers()", "Get classifiers result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnGetClassifiers()", "Get classifiers result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -100,13 +109,13 @@ Retrieve information about a specific classifier.
 ```cs
 void GetClassifier()
 {
-    if(!_visualRecognition.GetClassifier(<classifier-id>, OnGetClassifier))
+    if(!_visualRecognition.GetClassifier(OnGetClassifier, OnFail, "<classifier-id>"))
         Log.Debug("ExampleVisualRecognition.GetClassifier()", "Getting classifier failed!");
 }
 
-private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnGetClassifier()", "Get classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnGetClassifier()", "Get classifier result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -123,13 +132,13 @@ private VisualRecognition _visualRecognition = new VisualRecognition();
 
 void UpdateClassifier()
 {
-   if(!_visualRecognition.UpdateClassifier(OnUpdateClassifier, <classifier-id>, <classifier-name>, <class-name>, <positive-examples-path>))
+   if(!_visualRecognition.UpdateClassifier(OnUpdateClassifier, OnFail, "<classifier-id>", "<classifier-name>", "<class-name>", "<positive-examples-path>"))
         Log.Debug("ExampleVisualRecognition.UpdateClassifier()", "Update classifier failed!");
 }
 
-private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier, string data)
+private void OnUpdateClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnUpdateClassifier()", "Update classifier result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnUpdateClassifier()", "Update classifier result: {0}", customData["json"].ToString());
 }
 ```
 
@@ -138,178 +147,13 @@ Delete a custom classifier with the specified classifier ID.
 ```cs
 void DeleteClassifier()
 {
-    if(!_visualRecognition.DeleteClassifier(<classifier-id>, OnDeleteClassifier))
+    if(!_visualRecognition.DeleteClassifier(OnDeleteClassifier, OnFail, "<classifier-id>"))
         Log.Debug("ExampleVisualRecognition.DeleteClassifier()", "Deleting classifier failed!");
 }
 
-private void OnDeleteClassifier(bool success)
+private void OnDeleteClassifier(bool success, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleVisualRecognition.OnDeleteClassifier()", "Update classifier result: {0}", success);
-}
-```
-
-### Create a collection
-Create a new collection of images to search. You can create a maximum of 5 collections.
-```cs
-void CreateCollection()
-{
-    if(!_visualRecognition.CreateCollection(OnCreateCollection, <collection-name>))
-        Log.Debug("ExampleVisualRecognition.CreateCollectionMethod()", "Failed to create collection");
-}
-
-private void OnCreateCollection(CreateCollection collection, string data)
-{
-      Log.Debug("ExampleVisualRecognition.OnCreateCollection()", "Create collection result: {0}", data);
-}
-```
-
-### List collections
-List all custom collections.
-```cs
-void GetCollections()
-{
-    if(!_visualRecognition.GetCollections(OnGetCollections))
-        Log.Debug("ExampleVisualRecognition.GetCollectionsMethod()", "Failed to get collections");
-}
-
-private void OnGetCollections(GetCollections collections, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnGetCollections()", "Get collections result: {0}", data);
-}
-```
-
-### Retrieve collection details
-Retrieve information about a specific collection.
-```cs
-void GetCollection()
-{
-    if(!_visualRecognition.GetCollection(OnGetCollection, <collection-id>))
-        Log.Debug("ExampleVisualRecognition.GetCollection()", "Failed to get collection");
-}
-
-private void OnGetCollection(CreateCollection collection, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnGetCollection()", "Get collections result: {0}", data);
-}
-```
-
-### Delete a collection
-Delete a user created collection.
-```cs
-void DeleteCollection()
-{
-    if(!_visualRecognition.DeleteCollection(OnDeleteCollection, <collection-id>))
-        Log.Debug("ExampleVisualRecognition.DeleteCollection()", "Failed to delete collection");
-}
-
-private void OnDeleteCollection(bool success, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnDeleteCollection()", "Delete collection result: {0}", data);
-}
-```
-
-### Add images to a collection
-Add images to a collection. Each collection can contain 1000000 images. It takes 1 second to upload 1 images, so uploading 1000000 images takes 11 days.
-```cs
-void AddCollectionImage()
-{
-    if(!_visualRecognition.AddCollectionImage(OnAddImageToCollection, <collection-id>, <collection-path>, <image-metadata>))
-        Log.Debug("ExampleVisualRecognition.AddCollectionImage()", "Failed to add images to collection");
-}
-private void OnAddImageToCollection(CollectionsConfig images, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnAddImageToCollectionMethod()", "Add collectionimage result: {0}", data);
-}
-```
-
-### List images in a collection
-List 100 images in a collection. This returns an arbitrary selection of 100 images. Each collection can contain 1000000 images.
-```cs
-void GetCollectionImages()
-{
-    if(!_visualRecognition.GetCollectionImages(OnGetCollectionImages, <collection-id>))
-        Log.Debug("ExampleVisualRecognition.GetCollectionImages()", "Failed to get collection images");
-}
-
-private void OnGetCollectionImages(GetCollectionImages collections, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnGetCollectionImages()", "Get collection images result: {0}", data);
-}
-```
-
-### List image details
-List details about a specific image in a collection.
-```cs
-void GetImage()
-{
-    if(!_visualRecognition.GetImage(OnGetImage, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition.GetImage()", "Failed to get collection image");
-}
-
-private void OnGetImage(GetCollectionsBrief image, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnGetImage()", "Get collection image result: {0}", data);
-}
-```
-
-### Delete an image
-Delete an image from a collection.
-```cs
-void DeleteCollectionImage()
-{
-    if(!_visualRecognition.DeleteCollectionImage(OnDeleteCollectionImage, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition.DeleteCollectionImage()", "Failed to delete collection image");
-}
-
-private void OnDeleteCollectionImage(bool success, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnDeleteCollectionImage()", "Delete collection image result: {0}", data);
-}
-```
-
-### List metadata
-View the metadata for a specific image in a collection.
-```cs
-void GetMetadata()
-{
-    if(!_visualRecognition.GetMetadata(OnGetMetadata, <collection-id>, <image-name>))
-        Log.Debug("ExampleVisualRecognition.GetMetadata()", "Failed to get metadata");
-}
-
-private void OnGetMetadata(object responseObject, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnGetMetadata()", "Get metadata result: {0}", data);
-}
-```
-
-### Delete metadata
-Delete all metadata associated with an image.
-```cs
-void DeleteMetadata()
-{
-    if(!_visualRecognition.DeleteCollectionImageMetadata(OnDeleteMetadata, <collection-id>, <image-name>)
-        Log.Debug("ExampleVisualRecognition.DeleteCollectionImageMetadata()", "Failed to delete image metadata");
-}
-
-private void OnDeleteMetadata(bool success, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnDeleteMetadata()", "Delete image metadata result: {0}", success);
-
-}
-```
-
-### Find similar images
-Upload an image to find similar images in your custom collection.
-```cs
-void FindSimilar()
-{
-    if(!visualRecognition.FindSimilar(OnFindSimilar, <collection-d>, <image-path>))
-        Log.Debug("ExampleVisualRecognition.FindSimilar()", "Failed to find similar images");
-}
-
-private void OnFindSimilar(SimilarImagesConfig images, string data)
-{
-    Log.Debug("ExampleVisualRecognition.OnFindSimilar()", "Find similar result: {0}", data);
+    Log.Debug("ExampleVisualRecognition.OnDeleteClassifier()", "Update classifier result: {0}", customData["json"].ToString());
 }
 ```
 

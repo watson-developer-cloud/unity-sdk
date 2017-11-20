@@ -24,6 +24,7 @@ using UnityEngine;
 using FullSerializer;
 using System;
 using System.IO;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -162,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             problemToSolve.options = listOption.ToArray();
 
-            _tradeoffAnalytics.GetDilemma(OnGetDilemma, problemToSolve, false);
+            _tradeoffAnalytics.GetDilemma(OnGetDilemma, OnFail, problemToSolve, false);
             while (!_GetDillemaTested)
                 yield return null;
 
@@ -171,9 +172,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetDilemma(DilemmasResponse resp, string data)
+        private void OnGetDilemma(DilemmasResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "Tradeoff Analytics - Get Dillema: {0}", data);
+            Log.Debug("ExampleTradeoffAnalyitics.OnGetDilemma()", "{0}", customData["json"].ToString());
             Test(resp != null);
             _GetDillemaTested = true;
         }
@@ -194,6 +195,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public class TestData : IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1.ApplicationData
         {
 
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestTradeoffAnalytics.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

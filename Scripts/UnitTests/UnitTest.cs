@@ -16,7 +16,7 @@
 */
 
 //  Uncomment to print the current service endpoint.
-#define PRINT_ENDPOINT
+//#define PRINT_ENDPOINT
 
 using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;

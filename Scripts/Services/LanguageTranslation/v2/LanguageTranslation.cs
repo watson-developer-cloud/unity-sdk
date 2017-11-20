@@ -34,31 +34,6 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
     public class LanguageTranslation : IWatsonService
     {
         #region Public Types
-        /// <summary>
-        /// Callback for GetModels() method.
-        /// </summary>
-        /// <param name="models"></param>
-        public delegate void GetModelsCallback(TranslationModels models, string customData = null);
-        /// <summary>
-        /// Callback for GetModel() method.
-        /// </summary>
-        /// <param name="model"></param>
-        public delegate void GetModelCallback(TranslationModel model, string customData = null);
-        /// <summary>
-        /// Callback for GetLanguages() method.
-        /// </summary>
-        /// <param name="languages"></param>
-        public delegate void GetLanguagesCallback(Languages languages, string customData = null);
-        /// <summary>
-        /// Callback for Identify() method.
-        /// </summary>
-        /// <param name="languages"></param>
-        public delegate void IdentifyCallback(string languages, string customData = null);
-        /// <summary>
-        /// Callback for Translate() method.
-        /// </summary>
-        /// <param name="translation"></param>
-        public delegate void TranslateCallback(Translations translation, string customData = null);
         #endregion
 
         #region Public Properties
@@ -109,16 +84,37 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         }
         #endregion
 
+        #region Callback delegates
+        /// <summary>
+        /// Success callback delegate.
+        /// </summary>
+        /// <typeparam name="T">Type of the returned object.</typeparam>
+        /// <param name="response">The returned object.</param>
+        /// <param name="customData">user defined custom data including raw json.</param>
+        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
+        /// <summary>
+        /// Fail callback delegate.
+        /// </summary>
+        /// <param name="error">The error object.</param>
+        /// <param name="customData">User defined custom data</param>
+        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        #endregion
+
         #region GetTranslation Functions
         /// <summary>
         /// Translate the provided text using the specified model.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="text">The text to translate.</param>
         /// <param name="model_id">The ID of the model to use.</param>
-        /// <param name="callback">The callback to receive the translated text.</param>
         /// <returns>Returns true on success.</returns>
-        public bool GetTranslation(string text, string model_id, TranslateCallback callback)
+        public bool GetTranslation(SuccessCallback<Translations> successCallback, FailCallback failCallback, string text, string model_id, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
             if (string.IsNullOrEmpty(model_id))
@@ -128,18 +124,23 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             parameters["model_id"] = model_id;
             parameters["text"] = new string[] { text };
 
-            return GetTranslation(Json.Serialize(parameters), callback);
+            return GetTranslation(successCallback, failCallback, Json.Serialize(parameters), customData);
         }
         /// <summary>
         /// Translate the provided text using the specified source and target.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="text">The text to translate.</param>
         /// <param name="source">The ID of the source language.</param>
         /// <param name="target">The ID of the target language.</param>
-        /// <param name="callback">The callback to receive the translated text.</param>
         /// <returns>Returns true on success.</returns>
-        public bool GetTranslation(string text, string source, string target, TranslateCallback callback)
+        public bool GetTranslation(SuccessCallback<Translations> successCallback, FailCallback failCallback, string text, string source, string target, Dictionary<string, object> customData = null)
         {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
             if (string.IsNullOrEmpty(source))
@@ -152,19 +153,25 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             parameters["target"] = target;
             parameters["text"] = new string[] { text };
 
-            return GetTranslation(Json.Serialize(parameters), callback);
+            return GetTranslation(successCallback, failCallback, Json.Serialize(parameters), customData);
         }
-        private bool GetTranslation(string json, TranslateCallback callback)
+        private bool GetTranslation(SuccessCallback<Translations> successCallback, FailCallback failCallback, string json, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException("json");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/translate");
             if (connector == null)
                 return false;
 
             TranslateReq req = new TranslateReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = TranslateResponse;
             req.Send = Encoding.UTF8.GetBytes(json);
             req.Headers["accept"] = "application/json";
@@ -175,13 +182,24 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private class TranslateReq : RESTConnector.Request
         {
-            public TranslateCallback Callback { get; set; }
-            public string Data { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Translations> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         };
         private void TranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Translations translations = new Translations();
+            Translations result = new Translations();
             fsData data = null;
+            Dictionary<string, object> customData = ((TranslateReq)req).CustomData;
 
             if (resp.Success)
             {
@@ -191,10 +209,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = translations;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -203,9 +223,16 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
             }
 
-            string customData = ((TranslateReq)req).Data;
-            if (((TranslateReq)req).Callback != null)
-                ((TranslateReq)req).Callback(resp.Success ? translations : null, !string.IsNullOrEmpty(customData) ? customData : data.ToString());
+            if (resp.Success)
+            {
+                if (((TranslateReq)req).SuccessCallback != null)
+                    ((TranslateReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((TranslateReq)req).FailCallback != null)
+                    ((TranslateReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -232,25 +259,32 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <summary>
         /// Retrieve the translation models with optional filters.
         /// </summary>
-        /// <param name="callback">The callback to invoke with the array of models.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="sourceFilter">Optional source language filter.</param>
         /// <param name="targetFilter">Optional target language filter.</param>
         /// <param name="defaults">Controls if we get default, non-default, or all models.</param>
         /// <returns>Returns a true on success, false if it failed to submit the request.</returns>
-        public bool GetModels(GetModelsCallback callback,
+        public bool GetModels(SuccessCallback<TranslationModels> successCallback, 
+            FailCallback failCallback,
             string sourceFilter = null,
             string targetFilter = null,
-            TypeFilter defaults = TypeFilter.ALL)
+            TypeFilter defaults = TypeFilter.ALL,
+            Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models");
             if (connector == null)
                 return false;
 
             GetModelsReq req = new GetModelsReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetModelsResponse;
 
             if (!string.IsNullOrEmpty(sourceFilter))
@@ -267,25 +301,40 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private class GetModelsReq : RESTConnector.Request
         {
-            public GetModelsCallback Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TranslationModels> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void GetModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModels models = new TranslationModels();
+            TranslationModels result = new TranslationModels();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetModelsReq)req).CustomData;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = models;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -294,8 +343,16 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
             }
 
-            if (((GetModelsReq)req).Callback != null)
-                ((GetModelsReq)req).Callback(resp.Success ? models : null);
+            if (resp.Success)
+            {
+                if (((GetModelsReq)req).SuccessCallback != null)
+                    ((GetModelsReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetModelsReq)req).FailCallback != null)
+                    ((GetModelsReq)req).FailCallback(resp.Error, customData);
+            }
         }
 
         /// <summary>
@@ -304,19 +361,23 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <param name="model_id"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public bool GetModel(string model_id, GetModelCallback callback)
+        public bool GetModel(SuccessCallback<TranslationModel> successCallback, FailCallback failCallback, string model_id, Dictionary<string, object> customData = null)
         {
             if (string.IsNullOrEmpty(model_id))
                 throw new ArgumentNullException("model_id");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models/");
             if (connector == null)
                 return false;
 
             GetModelReq req = new GetModelReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Function = WWW.EscapeURL(model_id);
             req.OnResponse = GetModelResponse;
 
@@ -325,25 +386,40 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private class GetModelReq : RESTConnector.Request
         {
-            public GetModelCallback Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TranslationModel> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void GetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            TranslationModel model = new TranslationModel();
+            TranslationModel result = new TranslationModel();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetModelReq)req).CustomData;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = model;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -352,8 +428,16 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
             }
 
-            if (((GetModelReq)req).Callback != null)
-                ((GetModelReq)req).Callback(resp.Success ? model : null);
+            if (resp.Success)
+            {
+                if (((GetModelReq)req).SuccessCallback != null)
+                    ((GetModelReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetModelReq)req).FailCallback != null)
+                    ((GetModelReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -361,19 +445,24 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <summary>
         /// This function returns a list to the callback of all identifiable languages.
         /// </summary>
-        /// <param name="callback">The callback to invoke with a Language array, null on error.</param>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <returns>Returns true if the request was submitted.</returns>
-        public bool GetLanguages(GetLanguagesCallback callback)
+        public bool GetLanguages(SuccessCallback<Languages> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
         {
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/identifiable_languages");
             if (connector == null)
                 return false;
 
             GetLanguagesReq req = new GetLanguagesReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.OnResponse = GetLanguagesResponse;
 
             return connector.Send(req);
@@ -381,25 +470,40 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
 
         private class GetLanguagesReq : RESTConnector.Request
         {
-            public GetLanguagesCallback Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Languages> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         }
 
         private void GetLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            Languages langs = new Languages();
+            Languages result = new Languages();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetLanguagesReq)req).CustomData;
+
             if (resp.Success)
             {
                 try
                 {
-                    fsData data = null;
                     fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = langs;
+                    object obj = result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -408,8 +512,16 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
                 }
             }
 
-            if (((GetLanguagesReq)req).Callback != null)
-                ((GetLanguagesReq)req).Callback(resp.Success ? langs : null);
+            if (resp.Success)
+            {
+                if (((GetLanguagesReq)req).SuccessCallback != null)
+                    ((GetLanguagesReq)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetLanguagesReq)req).FailCallback != null)
+                    ((GetLanguagesReq)req).FailCallback(resp.Error, customData);
+            }
         }
         #endregion
 
@@ -417,22 +529,27 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
         /// <summary>
         /// Identifies a language from the given text.
         /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
         /// <param name="text">The text sample to ID.</param>
-        /// <param name="callback">The callback to receive the results.</param>
         /// <returns></returns>
-        public bool Identify(string text, IdentifyCallback callback)
+        public bool Identify(SuccessCallback<IdentifyReq> successCallback, FailCallback failCallback, string text, Dictionary<string, object> customData = null)
         {
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/identify");
             if (connector == null)
                 return false;
 
             IdentifyReq req = new IdentifyReq();
-            req.Callback = callback;
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Send = Encoding.UTF8.GetBytes(text);
             req.Headers["Content-Type"] = "text/plain";
             req.OnResponse = OnIdentifyResponse;
@@ -440,27 +557,59 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v2
             return connector.Send(req);
         }
 
-        private class IdentifyReq : RESTConnector.Request
+        public class IdentifyReq : RESTConnector.Request
         {
-            public IdentifyCallback Callback { get; set; }
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<IdentifyReq> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
         };
 
-        private void OnIdentifyResponse(RESTConnector.Request r, RESTConnector.Response resp)
+        private void OnIdentifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            IdentifyReq req = r as IdentifyReq;
-            if (req == null)
-                throw new WatsonException("Unexpected Request type.");
+            IdentifyReq result = new IdentifyReq();
+            fsData data = null;
+            Dictionary<string, object> customData = ((IdentifyReq)req).CustomData;
 
             if (resp.Success)
             {
-                if (req.Callback != null)
-                    req.Callback(Encoding.UTF8.GetString(resp.Data));
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("LanguageTranslation.OnIdentifyResponse()", "OnIdentifyResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((IdentifyReq)req).SuccessCallback != null)
+                    ((IdentifyReq)req).SuccessCallback(result, customData);
             }
             else
             {
-                Log.Error("LanguageTranslation.OnIdentifyResponse()", "Identify() failed: {0}", resp.Error);
-                if (req.Callback != null)
-                    req.Callback(null);
+                if (((IdentifyReq)req).FailCallback != null)
+                    ((IdentifyReq)req).FailCallback(resp.Error, customData);
             }
         }
         #endregion

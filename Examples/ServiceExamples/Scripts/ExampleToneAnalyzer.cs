@@ -20,6 +20,8 @@ using IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using System.Collections;
+using IBM.Watson.DeveloperCloud.Connection;
+using System.Collections.Generic;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
@@ -49,7 +51,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Analyze tone
-        if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, _stringToTestTone))
+        if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
             Log.Debug("ExampleToneAnalyzer.Examples()", "Failed to analyze!");
 
         while (!_analyzeToneTested)
@@ -58,9 +60,14 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Log.Debug("ExampleToneAnalyzer.Examples()", "Tone analyzer examples complete.");
     }
 
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, string data)
+    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", data);
+        Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "{0}", customData["json"].ToString());
         _analyzeToneTested = true;
+    }
+
+    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+    {
+        Log.Error("ExampleRetrieveAndRank.OnFail()", "Error received: {0}", error.ToString());
     }
 }

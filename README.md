@@ -54,6 +54,23 @@ The credentials for each service contain either a `username`, `password` and end
 
 **WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
+## Watson Services
+To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
+* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
+* [Conversation](/Scripts/Services/Conversation/v1)
+* [Discovery](/Scripts/Services/Discovery/v1)
+* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
+* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
+* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
+* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
+* [Speech to Text](/Scripts/Services/SpeechToText/v1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
+* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
+* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
+* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+
 ## Authentication
 Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
 
@@ -81,22 +98,87 @@ void Start()
 }
 ```
 
-## Watson Services
-To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
-* [Conversation](/Scripts/Services/Conversation/v1)
-* [Discovery](/Scripts/Services/Discovery/v1)
-* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
-* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
-* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
-* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
-* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
-* [Speech to Text](/Scripts/Services/SpeechToText/v1)
-* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
-* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
-* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
-* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+## Callbacks
+Success and failure callbacks are required. You can specify the return type in the callback.  
+```cs
+private void Example()
+{
+    //  Call with sepcific callbacks
+    conversation.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
+    discovery.GetEnvironments(OnGetEnvironments, OnFail);
+}
+
+//  OnMessage callback
+private void OnMessage(object resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  OnGetEnvironments callback
+private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  OnMessageFail callback
+private void OnMessageFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnMessageFail()", "Error received: {0}", error.ToString());
+}
+
+//  OnGetEnvironmentsFail callback
+private void OnGetEnvironmentsFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnGetEnvironmentsFail()", "Error received: {0}", error.ToString());
+}
+```
+
+Since the success callback signature is generic and the failure callback always has the same signature, you can use a single set of callbacks to handle multiple calls.
+```cs
+private void Example()
+{
+    //  Call with generic callbacks
+    conversation.Message(OnSuccess, OnMessageFail, "<workspace-id>", "");
+    discovery.GetEnvironments(OnSuccess, OnFail);
+}
+
+//  Generic success callback
+private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCallback.OnSuccess()", "Response received: {0}", customData["json"].ToString());
+}
+
+//  Generic fail callback
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCallback.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
+## Custom data
+Custom data can be passed through a `Dictionary<string, object> customData` in each call. In most cases, the raw json response is returned in the customData under `"json"` entry. In cases where there is no returned json, the entry will contain the success and http response code of the call.
+
+```cs
+void Example()
+{
+    Dictionary<string, object> customData = new Dictionary<string, object>();
+    customData.Add("foo", "bar");
+    conversation.Message(OnSuccess, OnFail, "<workspace-id>", "", customData);
+}
+
+//  Generic success callback
+private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleCustomData.OnSuccess()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
+}
+
+//  Generic fail callback
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleCustomData.OnFail()", "Error received: {0}", error.ToString());  // returns error string
+    Log.Debug("ExampleCustomData.OnFail()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
+}
+```
 
 ## Authentication Tokens
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.

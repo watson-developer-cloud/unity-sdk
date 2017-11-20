@@ -16,18 +16,27 @@ void Start()
 }
 ```
 
+### Fail handler
+These examples use a common fail handler.
+```cs
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
+}
+```
+
 ### Get Authors
 You can extract Authors from a URL or HTML source.
 ```cs
 private void GetAuthors()
 {
-  if(!_alchemyApi.GetAuthors(OnGetAuthors, <url-or-htmlpage>))
+  if(!_alchemyApi.GetAuthors(OnGetAuthors, OnFail, <url-or-htmlpage>))
     Log.Debug("ExampleAlchemyLanguage.GetAuthors()", "Failed to get authors");
 }
 
-private void OnGetAuthors(AuthorsData authors, string data)
+private void OnGetAuthors(AuthorsData authors, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetAuthors()", "Alchemy Language - Get authors response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetAuthors()", "Alchemy Language - Get authors response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -36,13 +45,13 @@ You can get Concepts from a URL, HTML or Text source.
 ```cs
 private void GetRankedConcepts()
 {
-  if(!_alchemyApi.GetRankedConcepts(OnGetConcepts, <text-or-url-or-htmlpage>))
+  if(!_alchemyApi.GetRankedConcepts(OnGetConcepts, OnFail, <text-or-url-or-htmlpage>))
     Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts");
 }
 
-private void OnGetConcepts(ConceptsData concepts, string data)
+private void OnGetConcepts(ConceptsData concepts, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleAlchemyLanguage.OnGetConcepts()", "Alchemy Language - Get ranked concepts response text: {0}", data);
+  Log.Debug("ExampleAlchemyLanguage.OnGetConcepts()", "Alchemy Language - Get ranked concepts response text: {0}", customData["json"].ToString());
 }
 ```
 
@@ -51,13 +60,13 @@ You can extract Dates from a URL, HTML or Text source.
 ```cs
 private void GetRankedConcepts()
 {
-  if(!_alchemyApi.GetDates(OnGetConcepts, <text-or-url-or-htmlpage>))
+  if(!_alchemyApi.GetDates(OnGetConcepts, OnFail, <text-or-url-or-htmlpage>))
     Log.Debug("ExampleAlchemyLanguage.GetRankedConcepts()", "Failed to get concepts");
 }
 
-private void OnGetDates(DateData dates, string data)
+private void OnGetDates(DateData dates, Dictionary<string, object> customData)
 {
-  Log.Debug("ExampleAlchemyLanguage.OnGetDates()", "Alchemy Language - Get dates response html: {0}", data);
+  Log.Debug("ExampleAlchemyLanguage.OnGetDates()", "Alchemy Language - Get dates response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -66,13 +75,13 @@ You can get Emotions from a URL, HTML or Text source.
 ```cs
 private void GetEmotions()
 {
-  if(!_alchemyApi.GetEmotions(OnGetEmotions, <text-or-url-or-htmlpage>))
+  if(!_alchemyApi.GetEmotions(OnGetEmotions, OnFail, <text-or-url-or-htmlpage>))
     Log.Debug("ExampleAlchemyLanguage.GetEmotions()", "Failed to get emotions");
 }
 
-private void OnGetEmotions(EmotionData emotions, string data)
+private void OnGetEmotions(EmotionData emotions, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetEmotions()", "Alchemy Language - Get emotions response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetEmotions()", "Alchemy Language - Get emotions response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -81,13 +90,13 @@ You can extract Entities from a URL, HTML or Text source.
 ```cs
 private void ExtractEntities()
 {
-  if(!_alchemyApi.ExtractEntities(OnExtractEntities, <text-or-url-or-htmlpage>))
+  if(!_alchemyApi.ExtractEntities(OnExtractEntities, OnFail, <text-or-url-or-htmlpage>))
     Log.Debug("ExampleAlchemyLanguage.ExtractEntities()", "Failed to get emotions");
 }
 
-private void OnExtractEntities(EntityData entityData, string data)
+private void OnExtractEntities(EntityData entityData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnExtractEntities()", "Alchemy Language - Extract entities response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnExtractEntities()", "Alchemy Language - Extract entities response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -96,13 +105,13 @@ You can detect RSS Feeds from a URL source.
 ```cs
 private void GetFeeds()
 {
-  if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.DetectFeeds(OnDetectFeeds, OnFail, <url-or-htmlpage>))
 	    Log.Debug("ExampleAlchemyLanguage.GetFeeds()", "Failed to get feeds.");
 }
 
-private void OnDetectFeeds(FeedData feedData, string data)
+private void OnDetectFeeds(FeedData feedData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnDetectFeeds()", "Alchemy Language - Detect feeds response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnDetectFeeds()", "Alchemy Language - Detect feeds response url: {0}", customData["json"].ToString());
 }
 ```
 
@@ -111,13 +120,13 @@ You can extract Keywords form a URL, HTML or Text source.
 ```cs
 private void GetKeywords()
 {
-  if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, <text-or-url-or-htmlpage>))
+  if(!m_AlchemyLanguage.ExtractKeywords(OnExtractKeywords, OnFail, <text-or-url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetKeywords()", "Failed to get keywords by URL POST");
 }
 
-private void OnExtractKeywords(KeywordData keywordData, string data)
+private void OnExtractKeywords(KeywordData keywordData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnExtractKeywords()", "Alchemy Language - Extract keywords response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnExtractKeywords()", "Alchemy Language - Extract keywords response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -126,13 +135,13 @@ You can extract the language of a URL, HTML or Text source.
 ```cs
 private void GetLanguages()
 {
-  if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, <text-or-url>))
+  if(!m_AlchemyLanguage.GetLanguages(OnGetLanguages, OnFail, <text-or-url>))
       Log.Debug("ExampleAlchemyLanguage.GetLanguages()", "Failed to get languages");
 }
 
-private void OnGetLanguages(LanguageData languages, string data)
+private void OnGetLanguages(LanguageData languages, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetLanguages()", "Alchemy Language - Get languages response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetLanguages()", "Alchemy Language - Get languages response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -141,13 +150,13 @@ You can get the Microformat of a URL source.
 ```cs
 private void GetMicroformats()
 {
-  if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetMicroformats(OnGetMicroformats, OnFail, <url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetMicroformats()", "Failed to get microformats");
 }
 
-private void OnGetMicroformats(MicroformatData microformats, string data)
+private void OnGetMicroformats(MicroformatData microformats, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetMicroformats()", "Alchemy Language - Get microformats response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetMicroformats()", "Alchemy Language - Get microformats response url: {0}", customData["json"].ToString());
 }
 ```
 
@@ -156,13 +165,13 @@ You can extract the publication date from a URL or HTML source.
 ```cs
 private void GetPublicationDate()
 {
-  if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetPublicationDate(OnGetPublicationDate, OnFail, <url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetPublicationDate()", "Failed to get publication dates");
 }
 
-private void OnGetPublicationDate(PubDateData pubDates, string data)
+private void OnGetPublicationDate(PubDateData pubDates, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetPublicationDate()", "Alchemy Language - Get publication date response url: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetPublicationDate()", "Alchemy Language - Get publication date response url: {0}", customData["json"].ToString());
 }
 ```
 
@@ -171,13 +180,13 @@ You can extract Relations from a URL, HTML or Text source.
 ```cs
 private void GetRelations()
 {
-  if(!m_AlchemyLanguage.GetRelations(OnGetRelations, <text-or-url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetRelations(OnGetRelations, OnFail, <text-or-url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetRelations()", "Failed to get relations");
 }
 
-private void OnGetRelations(RelationsData relationsData, string data)
+private void OnGetRelations(RelationsData relationsData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetRelations()", "Alchemy Language - Get relations response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRelations()", "Alchemy Language - Get relations response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -186,13 +195,13 @@ You can extract the Sentiment from a URL, HTML or Text source.
 ```cs
 private void GetTextSentiment()
 {
-  if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, <text-or-url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetTextSentiment(OnGetTextSentiment, OnFail, <text-or-url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetTextSentiment()", "Failed to get sentiment");
 }
 
-private void OnGetTextSentiment(SentimentData sentimentData, string data)
+private void OnGetTextSentiment(SentimentData sentimentData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetTextSentiment()", "Alchemy Language - Get text sentiment response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTextSentiment()", "Alchemy Language - Get text sentiment response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -201,13 +210,13 @@ You can extract a Targeted Sentiment from a URL, HTML or Text source. Targets ar
 ```cs
 private void GetTargetedSentiment()
 {
-  if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, <text-or-url-or-htmlpage>, <targets>))
+  if(!m_AlchemyLanguage.GetTargetedSentiment(OnGetTargetedSentiment, OnFail, <text-or-url-or-htmlpage>, <targets>))
       Log.Debug("ExampleAlchemyLanguage.GetTargetedSentiment()", "Failed to get targeted sentiment");
 }
 
-private void OnGetTargetedSentiment(TargetedSentimentData sentimentData, string data)
+private void OnGetTargetedSentiment(TargetedSentimentData sentimentData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentiment()", "Alchemy Language - Get targeted sentiment response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTargetedSentiment()", "Alchemy Language - Get targeted sentiment response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -216,13 +225,13 @@ You can get the Taxonomy of entities from a URL, HTML or Text source.
 ```cs
 private void GetRankedTaxonomy()
 {
-  if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, <text-or-url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetRankedTaxonomy(OnGetRankedTaxonomy, OnFail, <text-or-url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetRankedTaxonomy()", "Failed to get ranked taxonomy");
 }
 
-private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, string data)
+private void OnGetRankedTaxonomy(TaxonomyData taxonomyData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomy()", "Alchemy Language - Get ranked taxonomy response html: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRankedTaxonomy()", "Alchemy Language - Get ranked taxonomy response html: {0}", customData["json"].ToString());
 }
 ```
 
@@ -231,13 +240,13 @@ You can exctract the Text from a URL or HTML source.
 ```cs
 private void GetText()
 {
-  if(!m_AlchemyLanguage.GetText(OnGetText, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetText(OnGetText, OnFail, <url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetText()", "Failed to get text by text");
 }
 
-private void OnGetText(TextData textData, string data)
+private void OnGetText(TextData textData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetText()", "Alchemy Language - Get Text HTML response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetText()", "Alchemy Language - Get Text HTML response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -246,13 +255,13 @@ You can exctract the Raw Text from a URL or HTML source.
 ```cs
 private void GetRawText()
 {
-  if(!m_AlchemyLanguage.GetRawText(OnGetText, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetRawText(OnGetText, OnFail, <url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetRawText()", "Failed to get raw text by text");
 }
 
-private void OnGetRawText(TextData textData, string data)
+private void OnGetRawText(TextData textData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetRawText()", "Alchemy Language - Get raw text HTML response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetRawText()", "Alchemy Language - Get raw text HTML response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -261,13 +270,13 @@ You can extract the Title form a URL or HTML source.
 ```cs
 private void GetTitle()
 {
-  if(!m_AlchemyLanguage.GetTitle(OnGetTitle, <url-or-htmlpage>))
+  if(!m_AlchemyLanguage.GetTitle(OnGetTitle, OnFail, <url-or-htmlpage>))
       Log.Debug("ExampleAlchemyLanguage.GetTitle()", "Failed to get title by text POST");
 }
 
-private void OnGetTitle(Title titleData, string data)
+private void OnGetTitle(Title titleData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetTitle()", "Alchemy Language - Get Title Url response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetTitle()", "Alchemy Language - Get Title Url response: {0}", customData["json"].ToString());
 }
 ```
 
@@ -276,13 +285,13 @@ You can combine multiple requests into one call using a Combined Data call from 
 ```cs
 private void CombinedCall()
 {
-  if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, <text-or-url-or-htmlpage>, <includeSourceText>, <extractAuthors>, <extractConcepts>, <extractDates>, <extractDocEmotion>, <extractEntities>, <extractFeeds>, <extractKeywords>, <extractPubDate>, <extractRelations>, <extractDocSentiment>, <extractTaxonomy>, <extractTitle>, <extractPageImage>, <extractImageKeywords>))
+  if(!m_AlchemyLanguage.GetCombinedData(OnGetCombinedData, OnFail, <text-or-url-or-htmlpage>, <includeSourceText>, <extractAuthors>, <extractConcepts>, <extractDates>, <extractDocEmotion>, <extractEntities>, <extractFeeds>, <extractKeywords>, <extractPubDate>, <extractRelations>, <extractDocSentiment>, <extractTaxonomy>, <extractTitle>, <extractPageImage>, <extractImageKeywords>))
       Log.Debug("ExampleAlchemyLanguage.CombinedCall()", "Failed to get combined data by text POST");
 }
 
-private void OnGetCombinedData(CombinedCallData combinedData, string data)
+private void OnGetCombinedData(CombinedCallData combinedData, Dictionary<string, object> customData)
 {
-    Log.Debug("ExampleAlchemyLanguage.OnGetCombinedData()", "Alchemy Language - Get Combined Data Text response: {0}", data);
+    Log.Debug("ExampleAlchemyLanguage.OnGetCombinedData()", "Alchemy Language - Get Combined Data Text response: {0}", customData["json"].ToString());
 }
 ```
 

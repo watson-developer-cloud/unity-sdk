@@ -24,11 +24,13 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
 
-    public class TestPersonalityInsightsV3 : UnitTest
+    public class TestPersonalityInsights : UnitTest
     {
         private string _username = null;
         private string _password = null;
@@ -97,12 +99,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
-            if (!_personalityInsights.GetProfile(OnGetProfileJson, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            if (!_personalityInsights.GetProfile(OnGetProfileJson, OnFail, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
                 Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
             while (!_getProfileJsonTested)
                 yield return null;
 
-            if (!_personalityInsights.GetProfile(OnGetProfileText, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            if (!_personalityInsights.GetProfile(OnGetProfileText, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
                 Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
             while (!_getProfileTextTested)
                 yield return null;
@@ -112,18 +114,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetProfileText(Profile profile, string data)
+        private void OnGetProfileText(Profile profile, Dictionary<string, object> customData = null)
         {
-            Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", data);
+            Log.Debug("ExamplePersonaltyInsights.OnGetProfileText()", "Personality Insights - GetProfileText Response: {0}", customData["json"].ToString());
             Test(profile != null);
             _getProfileTextTested = true;
         }
 
-        private void OnGetProfileJson(Profile profile, string data)
+        private void OnGetProfileJson(Profile profile, Dictionary<string, object> customData = null)
         {
-            Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", data);
+            Log.Debug("ExamplePersonaltyInsights.OnGetProfileJson()", "Personality Insights - GetProfileJson Response: {0}", customData["json"].ToString());
             Test(profile != null);
             _getProfileJsonTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("ExamplePersonaltyInsights.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
