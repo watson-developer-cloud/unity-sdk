@@ -185,7 +185,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <summary>
         /// Create a WSConnector for the given service and function. 
         /// </summary>
-        /// <param name="serviceID">The ID of the service.</param>
+        /// <param name="credentials">The credentials for the service.</param>
         /// <param name="function">The name of the function to connect.</param>
         /// <param name="args">Additional function arguments.</param>
         /// <returns>The WSConnector object or null or error.</returns>

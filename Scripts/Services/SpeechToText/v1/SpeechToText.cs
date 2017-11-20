@@ -258,6 +258,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Speech to Text constructor.
+        /// </summary>
+        /// <param name="credentials">The service credentials.</param>
         public SpeechToText(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
@@ -826,6 +830,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="clip">The AudioClip object.</param>
+        /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool Recognize(SuccessCallback<SpeechRecognitionEvent> successCallback, FailCallback failCallback, AudioClip clip, Dictionary<string, object> customData = null)
         {
@@ -848,6 +853,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="audioData">The audio data.</param>
         /// <param name="contentType">The content type of the audio data.</param>
+        /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool Recognize(SuccessCallback<SpeechRecognitionEvent> successCallback, FailCallback failCallback, byte[] audioData, string contentType, Dictionary<string, object> customData = null)
         {
@@ -1563,7 +1569,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="customizationID">The requested custom language model's identifier.</param>
+        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+        /// <param name="wordTypeToAdd">The word type.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool TrainCustomization(SuccessCallback<bool> successCallback, FailCallback failCallback, string customizationID, string wordTypeToAdd = WordTypeToAdd.All, Dictionary<string, object> customData = null)
@@ -1778,7 +1785,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+        /// <param name="customizationID">The identifier of the customization you would like to add the corpora to.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool GetCustomCorpora(SuccessCallback<Corpora> successCallback, FailCallback failCallback, string customizationID, Dictionary<string, object> customData = null)
@@ -1869,7 +1876,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+        /// <param name="customizationID">The identifier of the customization you would like to get the custom corpus from.</param>
         /// <param name="corpusName">The name of the custom corpus to be returned.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
@@ -2029,36 +2036,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
         #region Add Custom Coprpus
         /// <summary>
-        /// Adds a single corpus text file of new training data to the custom language model. Use multiple requests to submit multiple corpus text files. Only the owner of a custom model can use this method to add a corpus to the model.
-        /// Submit a plain text file that contains sample sentences from the domain of interest to enable the service to extract words in context.The more sentences you add that represent the context in which speakers use words from the domain, the better the service's recognition accuracy. Adding a corpus does not affect the custom model until you train the model for the new data by using the POST /v1/customizations/{customization_id}/train method.
-        /// Use the following guidelines to prepare a corpus text file:
-        /// - Provide a plain text file that is encoded in UTF-8 if it contains non-ASCII characters.The service assumes UTF-8 encoding if it encounters such characters.
-        /// - Include each sentence of the corpus on its own line, terminating each line with a carriage return. Including multiple sentences on the same line can degrade accuracy.
-        /// - Use consistent capitalization for words in the corpus. The words resource is case-sensitive; mix upper- and lowercase letters and use capitalization only when intended. 
-        /// - Beware of typographical errors.The service assumes that typos are new words; unless you correct them before training the model, the service adds them to the model's vocabulary.
-        /// The service automatically does the following:
-        /// - Converts numbers to their equivalent words.For example:
-        ///		500 becomes five hundred
-        ///		and
-        ///		0.15 becomes zero point fifteen
-        ///	- Removes the following punctuation and special characters:
-        ///		! @ # $ % ^ & * - + = ~ _ . , ; : ( ) < > [ ] { }
-        ///	- Ignores phrases enclosed in ( ) (parentheses), < > (angle brackets), [] (square brackets), and { } (curly braces).
-        ///	- Converts tokens that include certain symbols to meaningful strings.For example, the service converts a $ (dollar sign) followed by a number to its string representation:
-        ///		$100 becomes one hundred dollars
-        ///		and it converts a % (percent sign) preceded by a number to its string representation:
-        ///		100% becomes one hundred percent
-        ///		This list is not exhaustive; the service makes similar adjustments for other characters as needed.
-        ///	
-        /// The call returns an HTTP 201 response code if the corpus is valid.It then asynchronously pre-processes the contents of the corpus and automatically extracts new words that it finds.This can take on the order of a minute or two to complete depending on the total number of words and the number of new words in the corpus, as well as the current load on the service.You cannot submit requests to add additional corpora or words to the custom model, or to train the model, until the service's analysis of the corpus for the current request completes. Use the GET /v1/customizations/{customization_id}/corpora method to check the status of the analysis.
-        /// 
-        /// The service auto-populates the model's words resource with any word that is not found in its base vocabulary; these are referred to as out-of-vocabulary (OOV) words. You can use the GET /v1/customizations/{customization_id}/words method to examine the words resource, using other words method to eliminate typos and modify how words are pronounced as needed.
-        /// 
-        /// To add a corpus file that has the same name as an existing corpus, set the allow_overwrite query parameter to true; otherwise, the request fails.Overwriting an existing corpus causes the service to process the corpus text file and extract OOV words anew.Before doing so, it removes any OOV words associated with the existing corpus from the model's words resource unless they were also added by another corpus or they have been modified in some way with the POST /v1/customizations/{customization_id}/words or PUT /v1/customizations/{customization_id}/words/{word_name} method.
-        /// 
-        /// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million total words from all corpora combined.Also, you can add no more than 30 thousand new words to a model; this includes words that the service extracts from corpora and words that you add directly.
-        /// Note: This method is currently a beta release that is available for US English only
-        /// <summary>
         /// Overload method for AddCustomCorpus that takes string training data.
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
@@ -2142,7 +2119,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+        /// <param name="customizationID">The customization ID with words you would like to get.</param>
+        /// <param name="wordType">The type of the word.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool GetCustomWords(SuccessCallback<WordsList> successCallback, FailCallback failCallback, string customizationID, string wordType = WordType.All, Dictionary<string, object> customData = null)
@@ -2401,7 +2379,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="customizationID">The customization ID to be deleted.</param>
+        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+        /// <param name="word">The word to be deleted.</param>
         /// <param name="customData">Optional customization data.</param>
         /// <returns></returns>
         public bool DeleteCustomWord(SuccessCallback<bool> successCallback, FailCallback failCallback, string customizationID, string word, Dictionary<string, object> customData = null)
@@ -2472,7 +2451,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="language">The language for which custom models are to be returned. Currently, only en-US (the default) is supported.</param>
+        /// <param name="customizationID">The customization ID with the corpus to be deleted.</param>
+        /// <param name="word">The word to get details of.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns></returns>
         public bool GetCustomWord(SuccessCallback<WordData> successCallback, FailCallback failCallback, string customizationID, string word, Dictionary<string, object> customData = null)
@@ -3306,11 +3286,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="name">The custom model name.</param>
-        /// <param name="base_model_name">The base model name - only en-US_BroadbandModel is currently supported.</param>
-        /// <param name="description">Descripotion of the custom model.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns></returns>
+        /// <param name="customizationId">The cutomization identifier to add the acoustic resource to.</param>
+        /// <param name="audioName">The nameof the audio resrouce.</param>
+        /// <param name="contentType">The content type of the audio resource upload.</param>
+        /// <param name="containedContentType">The content type of the enclosed audio resource.</param>
+        /// <param name="allowOverwrite">Can this resource be overwritten?</param>
+        /// <param name="audioResource">The byte[] data of the audio resource.</param>
+        /// <param name="customData">optional custom data.</param>
+        /// <returns>True if the acoustic resource was sent to the service.</returns>
         public bool AddAcousticResource(SuccessCallback<bool> successCallback, FailCallback failCallback, string customizationId, string audioName, string contentType, string containedContentType, bool allowOverwrite, byte[] audioResource, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)

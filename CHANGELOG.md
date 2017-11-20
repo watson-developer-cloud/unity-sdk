@@ -1,5 +1,24 @@
 Change Log
 ==========
+## Version 2.0.0
+_2017-11-20_ MAJOR RELEASE, BREAKING CHANGES
+* New: Implemented error callbacks in each call
+* New: Implemented generic type success callbacks
+* New: Implemented `Dictionary<string, object>` to hold custom data for each call
+* New: Support for `Hololens`
+* New: Abstracted custom acoustic models for `SpeechToText`
+* New: Addition of streaming example where the sample is split up to improve latency
+* New: Transition to dll for `WebSocketSharp`
+* New: Added support for decoding unicode characters in `TextToSpeech`
+* Fixed: Transition `Delete` methods to `UnityWebRequest`
+* Fixed: Improvements to `SpeechToText` streaming
+* Fixed: `SpeechToText` streaming parameters
+* Fixed: Improvements to `ExampleStreaming`
+* Fixed: `SpeechToText` custom corpus
+* Fixed: Allow empty string to be sent when invoking `Message` from the `Conversation` service
+* Fixed: Standardized `Debug.Log` output throughout SDK
+* Fixed: Fix all integration tests
+
 ## Version 1.0.0
 _2017-08-31_ MAJOR RELEASE, BREAKING CHANGES
 
