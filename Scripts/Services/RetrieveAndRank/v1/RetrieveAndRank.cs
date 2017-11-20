@@ -116,6 +116,10 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Retrieve and Rank constructor
+        /// </summary>
+        /// <param name="credentials">The service credentials</param>
         public RetrieveAndRank(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
@@ -234,7 +238,6 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         #endregion
 
         #region CreateCluster
-        /// <summary>
         /// <summary>
         /// Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster. For information about cluster sizing see http://www.ibm.com/watson/developercloud/doc/retrieve-rank/solr_ops.shtml#sizing.
         /// </summary>
@@ -755,8 +758,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <summary>
         /// Saves the config zip to the file system.
         /// </summary>
-        /// <param name="successCallback">The success callback.</param>
-        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="callback">The success callback.</param>
         /// <param name="configData">Byte array of the config data.</param>
         /// <param name="configFileName">Where to save the zip file in the file system.</param>
         /// <param name="customData"></param>
@@ -1024,7 +1026,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="indexdataPath">Path to the file that defines the content.</param>
+        /// <param name="indexDataPath">Path to the file that defines the content.</param>
         /// <param name="clusterID">Cluster ID.</param>
         /// <param name="collectionName">Collection.</param>
         /// <param name="customData"></param>

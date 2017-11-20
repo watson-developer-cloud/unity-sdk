@@ -87,6 +87,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Conversation constructor
+        /// </summary>
+        /// <param name="credentials">The service credentials</param>
         public Conversation(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
