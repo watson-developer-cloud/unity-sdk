@@ -478,6 +478,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                                     break;
                             }
                         }
+                        else
+                        {
+                            bError = true;
+                        }
 
                         error = new Error()
                         {
