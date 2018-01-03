@@ -237,7 +237,7 @@ This library is licensed under Apache 2.0. Full license text is available in [LI
 ## Contributing
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-[wdc]: http://www.ibm.com/watson/developercloud/
+[wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
 [bluemix_registration]: http://bluemix.net/registration
@@ -264,7 +264,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [expressive_ssml]: https://console.bluemix.net/docs/services/text-to-speech/http.html#expressive
 [ssml]: https://console.bluemix.net/docs/services/text-to-speech/SSML.html
 [discovery-query]: https://console.bluemix.net/docs/services/discovery/using.html
-[natural_language_understanding]: https://www.ibm.com/watson/developercloud/natural-language-understanding.html
+[natural_language_understanding]: https://www.ibm.com/watson/services/natural-language-understanding/
 [nlu_models]: https://console.bluemix.net/docs/services/natural-language-understanding/customizing.html
 [nlu_entities]: https://console.bluemix.net/docs/services/natural-language-understanding/entity-types.html
 [nlu_relations]: https://console.bluemix.net/docs/services/natural-language-understanding/relations.html
