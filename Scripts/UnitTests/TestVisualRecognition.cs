@@ -91,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     throw new WatsonException(r.FormattedMessages);
 
                 //  Set credentials from imported credntials
-                Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][TestCredentialIndex].Credentials;
+                Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"];
                 _apikey = credential.Apikey.ToString();
                 _url = credential.Url.ToString();
             }

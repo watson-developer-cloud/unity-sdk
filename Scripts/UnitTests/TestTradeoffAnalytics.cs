@@ -68,7 +68,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     throw new WatsonException(r.FormattedMessages);
 
                 //  Set credentials from imported credntials
-                Credential credential = vcapCredentials.VCAP_SERVICES["tradeoff_analytics"][TestCredentialIndex].Credentials;
+                Credential credential = vcapCredentials.VCAP_SERVICES["tradeoff_analytics"];
                 _username = credential.Username.ToString();
                 _password = credential.Password.ToString();
                 _url = credential.Url.ToString();

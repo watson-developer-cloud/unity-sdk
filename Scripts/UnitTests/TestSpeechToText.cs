@@ -115,7 +115,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     throw new WatsonException(r.FormattedMessages);
 
                 //  Set credentials from imported credntials
-                Credential credential = vcapCredentials.VCAP_SERVICES["speech_to_text"][TestCredentialIndex].Credentials;
+                Credential credential = vcapCredentials.VCAP_SERVICES["speech_to_text"];
                 _username = credential.Username.ToString();
                 _password = credential.Password.ToString();
                 _url = credential.Url.ToString();

@@ -137,7 +137,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     throw new WatsonException(r.FormattedMessages);
 
                 //  Set credentials from imported credntials
-                Credential credential = vcapCredentials.VCAP_SERVICES["alchemy_api"][TestCredentialIndex].Credentials;
+				Credential credential = vcapCredentials.VCAP_SERVICES["alchemy_api"];
                 _apikey = credential.Apikey.ToString();
                 _url = credential.Url.ToString();
             }

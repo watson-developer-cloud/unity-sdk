@@ -127,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     [fsObject]
     public class VcapCredentials
     {
-        public Dictionary<string, List<VcapCredential>> VCAP_SERVICES { get; set; }
+		public Dictionary<string, Credential> VCAP_SERVICES { get; set; }
     }
 
     [fsObject]
