@@ -152,9 +152,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string Username { get; set; }
         [fsProperty("password")]
         public string Password { get; set; }
-        [fsProperty("workspaceId")]
+        [fsProperty("workspace_id")]
         public string WorkspaceId { get; set; }
-        [fsProperty("apikey")]
+        [fsProperty("api_key")]
         public string Apikey { get; set; }
         [fsProperty("note")]
         public string Note { get; set; }

@@ -76,40 +76,42 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             LogSystem.InstallDefaultReactors();
 
-            try
+            VcapCredentials vcapCredentials = new VcapCredentials();
+            fsData data = null;
+
+            string result = null;
+
+            var vcapUrl = System.Environment.GetEnvironmentVariable("VCAP_URL");
+            var vcapUsername = System.Environment.GetEnvironmentVariable("VCAP_USERNAME");
+            var vcapPassword = System.Environment.GetEnvironmentVariable("VCAP_PASSWORD");
+
+            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
             {
-                VcapCredentials vcapCredentials = new VcapCredentials();
-                fsData data = null;
+                while (!simpleGet.IsComplete)
+                    yield return null;
 
-                //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
-                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
-                var environmentalVariable = System.Environment.GetEnvironmentVariable("VCAP_SERVICES");
-                var fileContent = File.ReadAllText(environmentalVariable);
-
-                //  Add in a parent object because Unity does not like to deserialize root level collection types.
-                fileContent = Utility.AddTopLevelObjectToJson(fileContent, "VCAP_SERVICES");
-
-                //  Convert json to fsResult
-                fsResult r = fsJsonParser.Parse(fileContent, out data);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                //  Convert fsResult to VcapCredentials
-                object obj = vcapCredentials;
-                r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                //  Set credentials from imported credntials
-                Credential credential = vcapCredentials.VCAP_SERVICES["discovery"];
-                _username = credential.Username.ToString();
-                _password = credential.Password.ToString();
-                _url = credential.Url.ToString();
+                result = simpleGet.Result;
             }
-            catch
-            {
-                Log.Debug("TestDiscovery.RunTest()", "Failed to get credentials from VCAP_SERVICES file. Please configure credentials to run this test. For more information, see: https://github.com/watson-developer-cloud/unity-sdk/#authentication");
-            }
+
+            //  Add in a parent object because Unity does not like to deserialize root level collection types.
+            result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
+
+            //  Convert json to fsResult
+            fsResult r = fsJsonParser.Parse(result, out data);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            //  Convert fsResult to VcapCredentials
+            object obj = vcapCredentials;
+            r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            //  Set credentials from imported credntials
+            Credential credential = vcapCredentials.VCAP_SERVICES["discovery"];
+            _username = credential.Username.ToString();
+            _password = credential.Password.ToString();
+            _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -464,7 +466,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", customData["json"].ToString());
 
-                _createdCollectionID = default(string);
+            _createdCollectionID = default(string);
             Test(resp != null);
 
             _deleteCollectionTested = true;
@@ -474,9 +476,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestDiscovery.OnDeleteConfiguration()", "Discovery - Delete configuration Response: deleted:{0}", customData["json"].ToString());
 
-                _createdConfigurationID = default(string);
+            _createdConfigurationID = default(string);
             Test(resp != null);
-            
+
             _deleteConfigurationTested = true;
         }
 
