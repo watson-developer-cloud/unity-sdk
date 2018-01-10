@@ -56,7 +56,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 fsData data = null;
 
                 //  Get credentials from a credential file defined in environmental variables in the VCAP_SERVICES format. 
-                //  See https://www.ibm.com/watson/developercloud/doc/common/getting-started-variables.html.
+                //  See https://console.bluemix.net/docs/services/watson/getting-started-variables.html.
                 var environmentalVariable = Environment.GetEnvironmentVariable("VCAP_SERVICES");
                 var fileContent = File.ReadAllText(environmentalVariable);
 
