@@ -28,7 +28,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 {
     /// <summary>
     /// This class wraps the Retrieve and Rank service.
-    /// <a href="http://www.ibm.com/watson/developercloud/retrieve-rank.html">Retrieve and Rank Service</a>
+    /// <a href="https://www.ibm.com/watson/services/retrieve-and-rank/">Retrieve and Rank Service</a>
     /// </summary>
     public class RetrieveAndRank : IWatsonService
     {
@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         #region CreateCluster
         /// <summary>
-        /// Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster. For information about cluster sizing see http://www.ibm.com/watson/developercloud/doc/retrieve-rank/solr_ops.shtml#sizing.
+        /// Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster. For information about cluster sizing see https://console.bluemix.net/docs/services/retrieve-and-rank/using-solr.html.
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
@@ -1344,7 +1344,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
-        /// <param name="trainingDataPath">Training data in CSV format. The first header must be question_id and the last header must be the relevance label. The other headers are alphanumeric feature names. For details, see Using your own data (http://www.ibm.com/watson/developercloud/doc/retrieve-rank/data_format.shtml).</param>
+        /// <param name="trainingDataPath">Training data in CSV format. The first header must be question_id and the last header must be the relevance label. The other headers are alphanumeric feature names. For details, see Using your own data (https://console.bluemix.net/docs/services/retrieve-and-rank/overview.html).</param>
         /// <param name="name">Metadata in JSON format. The metadata identifies an optional name to identify the ranker.</param>
         /// <param name="customData"></param>
         /// <returns></returns>
@@ -1456,7 +1456,7 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
 
         #region Rank
         /// <summary>
-        /// Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the Get information about a ranker method to retrieve the status (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status). Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the Search and rank method (http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#query_ranker).
+        /// Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the Get information about a ranker method to retrieve the status (https://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/?curl#get_status). Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the Search and rank method (https://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/?curl#query_ranker).
         /// </summary>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
