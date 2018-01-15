@@ -34,7 +34,7 @@ public static class RunTravisBuild
 
   static public void OSX()
   {
-    BuildPipeline.BuildPlayer(BuildScenes, Application.dataPath + "TestBuildOSX", BuildTarget.StandaloneOSXIntel64, BuildOptions.None);
+    BuildPipeline.BuildPlayer(BuildScenes, Application.dataPath + "TestBuildOSX", BuildTarget.StandaloneOSX, BuildOptions.None);
   }
 
   static public void Windows()
