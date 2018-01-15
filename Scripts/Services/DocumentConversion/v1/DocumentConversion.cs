@@ -71,6 +71,8 @@ namespace IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1
         #region Constructor
         public DocumentConversion(Credentials credentials)
         {
+            Log.Warning("DocumentConversion", "The Document Conversion service has been deprecated. Please use the Discovery service.");
+
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
             {
                 Credentials = credentials;
