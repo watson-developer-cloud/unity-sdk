@@ -1309,7 +1309,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     public class SimpleGet: IDisposable
     {
         public string Result { get; set; }
-        public bool IsComplete { get; set; } = false;
+        public bool IsComplete { get; set; }
 
         private string _url = null;
         private string _username = null;
@@ -1318,6 +1318,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         public SimpleGet(string url, string username = null, string password = null)
         {
+			IsComplete = false;
+
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url is required for SimpleGet()");
 
