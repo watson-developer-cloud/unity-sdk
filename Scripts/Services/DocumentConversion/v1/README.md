@@ -1,5 +1,7 @@
 # Document Conversion
 
+Important: Starting on 11-03-2017, it will no longer be possible to create a new instance of Document Conversion on Bluemix. Existing service instances will be supported until 10-03-2018. To continue using features, you will need to [migrate](https://console.bluemix.net/docs/services/discovery/migrate-dcs-rr.html#migrating-from-watson-document-conversion-and-retrieve-and-rank). Note: May not apply in select Dedicated environments.
+
 The IBM Watson™ [Document conversion][document_conversion] service converts a single HTML, PDF, or Microsoft Word™ document into a normalized HTML, plain text, or a set of JSON-formatted Answer units that can be used with other Watson services. Carefully inspect output to make sure that it contains all elements and metadata required by the security standards of you or your organization.
 
 ## Usage
