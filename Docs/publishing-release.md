@@ -8,10 +8,9 @@ The following tasks should be completed before publishing a release. Track the p
 - [ ] Draft release with version in the format of `v2.0.0` targeting the 'master' branch. Standard release should be named using the format `Watson Developer Cloud Unity SDK [version]`, ex: `Watson Developer Cloud Unity SDK v2.0.0`.
  
 #### Source Changes (in `rc` branch)
-
+- [ ] Update `String.Version` in `Scripts/Utilities/Constants.cs` to the current version, ex: `watson-apis-unity-sdk/2.0.0`
 - [ ] Update changelog.
 - [ ] Update `PROJECT_NUMBER` in `Doxyfile` to current version.
-- [ ] Update `SDK_VERSION` in `src/IBM.WatsonDeveloperCloud/Constants.cs`
 
 #### Publish Release
 
