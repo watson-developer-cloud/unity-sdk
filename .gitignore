@@ -67,3 +67,5 @@ exclude-filter.txt.meta
 /Travis/runTests.sh.meta
 /Travis/TravisBuild.cs.meta
 Docs/publishing-release.md.meta
+*html.meta
+*ps1.meta
