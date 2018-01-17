@@ -25,10 +25,10 @@ Ensure that you have the following prerequisites:
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the latest SDK release by clicking [here][latest_release].
+You can get the latest SDK release by clicking [here][latest_release] for the source or downloading the SDK from the [Unity Asset Store][asset_store_link].
 
 ### Installing the SDK source into your Unity project
-Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
+If you get the SDK source from github, move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_. If you get the SDK from the Unity Asset Store it will be installed in your `Assets` directory.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
@@ -56,20 +56,21 @@ The credentials for each service contain either a `username`, `password` and end
 
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1)
-* [Conversation](/Scripts/Services/Conversation/v1)
-* [Discovery](/Scripts/Services/Discovery/v1)
-* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
-* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
-* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
-* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
-* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
-* [Speech to Text](/Scripts/Services/SpeechToText/v1)
-* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
-* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
-* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1)
-* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+
+* [Alchemy Language](Scripts/Services/AlchemyAPI/v1/)
+* [Conversation](Scripts/Services/Conversation/v1/)
+* [Discovery](Scripts/Services/Discovery/v1/)
+* [Document Conversion](Scripts/Services/DocumentConversion/v1/) **Deprecated**
+* [Language Translator](Scripts/Services/LanguageTranslator/v2/)
+* [Natural Language Classifier](Scripts/Services/NaturalLanguageClassifier/v2/)
+* [Natural Language Understanding](Scripts/Services/NaturalLanguageUnderstanding/v1/)
+* [Personality Insights](Scripts/Services/PersonalityInsights/v3/)
+* [Retrieve and Rank](Scripts/Services/RetrieveAndRank/v1/) **Deprecated**
+* [Speech to Text](Scripts/Services/SpeechToText/v1/)
+* [Text to Speech](Scripts/Services/TextToSpeech/v1/)
+* [Tone Analyzer](Scripts/Services/ToneAnalyzer/v3/)
+* [Tradeoff Analytics](Scripts/Services/TradeoffAnalytics/v1/)
+* [Visual Recognition](Scripts/Services/VisualRecognition/v3/)
 
 ## Authentication
 Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
@@ -225,8 +226,7 @@ Documentation can be found [here][documentation]. You can also access the docume
 ## Questions
 
 If you are having difficulties using the APIs or have a question about the IBM Watson Services, please ask a question on
-[dW Answers](https://developer.ibm.com/answers/questions/ask/?topics=watson)
-or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
+[dW Answers](https://developer.ibm.com/answers/questions/ask/?topics=watson) or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
 
 ## Open Source @ IBM
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/).
@@ -242,6 +242,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
 [bluemix_registration]: http://bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
+[asset_store_link]: https://www.assetstore.unity3d.com/en/#!/108831
 
 [speech_to_text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
 [text_to_speech]: https://console.bluemix.net/docs/services/text-to-speech/index.html

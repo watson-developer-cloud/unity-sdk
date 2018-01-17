@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="tradeoff-analytics">Tradeoff Analytics</h1>
+<p><strong>NOTE:</strong> The IBM Watson™ Tradeoff Analytics service is being deprecated. As of May 11, 2017, it will no longer be possible to create a new instance of the service on Bluemix. Existing service instances will continue to be supported until April 11, 2018.</p>
+<p>The <a href="https://console.bluemix.net/docs/services/tradeoff-analytics/index.html">Tradeoff Analytics</a> service helps people make better decisions when faced with multiple, sometimes conflicting, goals and alternatives.</p>
+<h2 id="usage">Usage</h2>
+<p>The IBM Watson™ Tradeoff Analytics service helps people make better choices when faced with a decision problem that includes multiple, often conflicting, goals and alternatives. By using mathematical filtering techniques to identify the top options based on different criteria, the service can help users explore the trade-offs between options to make complex decisions. The service also offers smart visualization via a JavaScript library for intuitive graphical exploration of trade-offs.</p>
+<h3 id="instantiating-and-authenticating-the-service">Instantiating and authenticating the service</h3>
+<p>Before you can send requests to the service it must be instantiated and credentials must be set.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">TradeoffAnalytics</span>.<span class="fu">v1</span>;</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">{</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(&lt;username&gt;, &lt;password&gt;, &lt;url&gt;);</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    TradeoffAnalytics _tradeoffAnalytics = <span class="kw">new</span> <span class="fu">TradeoffAnalytics</span>(credentials);</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">}</a></code></pre></div>
+<h3 id="get-dillema">Get dillema</h3>
+<p>Returns a dilemma that contains the problem and a resolution. The problem contains a set of options and objectives. The resolution contains a set of optimal options, their analytical characteristics, and by default their representation on a two-dimensional space. You can optionally request that the service also return a refined set of preferable options that are most likely to appeal to the greatest number of users.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetDillema</span>()</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  Problem problemToSolve = <span class="kw">new</span> <span class="fu">Problem</span>();</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  problemToSolve.<span class="fu">subject</span> = <span class="st">&quot;Test Subject&quot;</span>;</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  List&lt;Column&gt; listColumn = <span class="kw">new</span> List&lt;Column&gt;();</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  Column columnPrice = <span class="kw">new</span> <span class="fu">Column</span>();</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">  columnPrice.<span class="fu">description</span> = <span class="st">&quot;Price Column to minimize&quot;</span>;</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  columnPrice.<span class="fu">range</span> = <span class="kw">new</span> <span class="fu">ValueRange</span>();</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  ((ValueRange)columnPrice.<span class="fu">range</span>).<span class="fu">high</span> = <span class="dv">600</span>;</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">  ((ValueRange)columnPrice.<span class="fu">range</span>).<span class="fu">low</span> = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  columnPrice.<span class="fu">type</span> = <span class="st">&quot;numeric&quot;</span>;</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">  columnPrice.<span class="fu">key</span> = <span class="st">&quot;price&quot;</span>;</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">  columnPrice.<span class="fu">full_name</span> = <span class="st">&quot;Price&quot;</span>;</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">  columnPrice.<span class="fu">goal</span> = <span class="st">&quot;min&quot;</span>;</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">  columnPrice.<span class="fu">is_objective</span> = <span class="kw">true</span>;</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">  columnPrice.<span class="fu">format</span> = <span class="st">&quot;$####0.00&quot;</span>;</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">  Column columnWeight = <span class="kw">new</span> <span class="fu">Column</span>();</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">  columnWeight.<span class="fu">description</span> = <span class="st">&quot;Weight Column to minimize&quot;</span>;</a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">  columnWeight.<span class="fu">type</span> = <span class="st">&quot;numeric&quot;</span>;</a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">  columnWeight.<span class="fu">key</span> = <span class="st">&quot;weight&quot;</span>;</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">  columnWeight.<span class="fu">full_name</span> = <span class="st">&quot;Weight&quot;</span>;</a>
+<a class="sourceLine" id="cb2-24" data-line-number="24">  columnWeight.<span class="fu">goal</span> = <span class="st">&quot;min&quot;</span>;</a>
+<a class="sourceLine" id="cb2-25" data-line-number="25">  columnWeight.<span class="fu">is_objective</span> = <span class="kw">true</span>;</a>
+<a class="sourceLine" id="cb2-26" data-line-number="26">  columnWeight.<span class="fu">format</span> = <span class="st">&quot;####0 g&quot;</span>;</a>
+<a class="sourceLine" id="cb2-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28">  Column columnBrandName = <span class="kw">new</span> <span class="fu">Column</span>();</a>
+<a class="sourceLine" id="cb2-29" data-line-number="29">  columnBrandName.<span class="fu">description</span> = <span class="st">&quot;All Brand Names&quot;</span>;</a>
+<a class="sourceLine" id="cb2-30" data-line-number="30">  columnBrandName.<span class="fu">type</span> = <span class="st">&quot;categorical&quot;</span>;</a>
+<a class="sourceLine" id="cb2-31" data-line-number="31">  columnBrandName.<span class="fu">key</span> = <span class="st">&quot;brand&quot;</span>;</a>
+<a class="sourceLine" id="cb2-32" data-line-number="32">  columnBrandName.<span class="fu">full_name</span> = <span class="st">&quot;Brand&quot;</span>;</a>
+<a class="sourceLine" id="cb2-33" data-line-number="33">  columnBrandName.<span class="fu">goal</span> = <span class="st">&quot;max&quot;</span>;</a>
+<a class="sourceLine" id="cb2-34" data-line-number="34">  columnBrandName.<span class="fu">is_objective</span> = <span class="kw">true</span>;</a>
+<a class="sourceLine" id="cb2-35" data-line-number="35">  columnBrandName.<span class="fu">preference</span> = <span class="kw">new</span> <span class="dt">string</span>[]{<span class="st">&quot;Samsung&quot;</span>, <span class="st">&quot;Apple&quot;</span>, <span class="st">&quot;HTC&quot;</span>};</a>
+<a class="sourceLine" id="cb2-36" data-line-number="36">  columnBrandName.<span class="fu">range</span> = <span class="kw">new</span> <span class="fu">CategoricalRange</span>();</a>
+<a class="sourceLine" id="cb2-37" data-line-number="37">  ((CategoricalRange)columnBrandName.<span class="fu">range</span>).<span class="fu">keys</span> = <span class="kw">new</span> <span class="dt">string</span>[]{<span class="st">&quot;Samsung&quot;</span>, <span class="st">&quot;Apple&quot;</span>, <span class="st">&quot;HTC&quot;</span>};</a>
+<a class="sourceLine" id="cb2-38" data-line-number="38"></a>
+<a class="sourceLine" id="cb2-39" data-line-number="39">  listColumn.<span class="fu">Add</span>(columnPrice);</a>
+<a class="sourceLine" id="cb2-40" data-line-number="40">  listColumn.<span class="fu">Add</span>(columnWeight);</a>
+<a class="sourceLine" id="cb2-41" data-line-number="41"></a>
+<a class="sourceLine" id="cb2-42" data-line-number="42">  problemToSolve.<span class="fu">columns</span> = listColumn.<span class="fu">ToArray</span>();</a>
+<a class="sourceLine" id="cb2-43" data-line-number="43"></a>
+<a class="sourceLine" id="cb2-44" data-line-number="44"></a>
+<a class="sourceLine" id="cb2-45" data-line-number="45">  List&lt;Option&gt; listOption = <span class="kw">new</span> List&lt;Option&gt;();</a>
+<a class="sourceLine" id="cb2-46" data-line-number="46"></a>
+<a class="sourceLine" id="cb2-47" data-line-number="47">  Option option1 = <span class="kw">new</span> <span class="fu">Option</span>();</a>
+<a class="sourceLine" id="cb2-48" data-line-number="48">  option1.<span class="fu">key</span> = <span class="st">&quot;1&quot;</span>;</a>
+<a class="sourceLine" id="cb2-49" data-line-number="49">  option1.<span class="fu">name</span> = <span class="st">&quot;Samsung Galaxy S4&quot;</span>;</a>
+<a class="sourceLine" id="cb2-50" data-line-number="50">  option1.<span class="fu">values</span> = <span class="kw">new</span> <span class="fu">TestDataValue</span>();</a>
+<a class="sourceLine" id="cb2-51" data-line-number="51">  (option1.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">weight</span> = <span class="dv">130</span>;</a>
+<a class="sourceLine" id="cb2-52" data-line-number="52">  (option1.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">brand</span> = <span class="st">&quot;Samsung&quot;</span>;</a>
+<a class="sourceLine" id="cb2-53" data-line-number="53">  (option1.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">price</span> = <span class="dv">249</span>;</a>
+<a class="sourceLine" id="cb2-54" data-line-number="54">  listOption.<span class="fu">Add</span>(option1);</a>
+<a class="sourceLine" id="cb2-55" data-line-number="55"></a>
+<a class="sourceLine" id="cb2-56" data-line-number="56">  Option option2 = <span class="kw">new</span> <span class="fu">Option</span>();</a>
+<a class="sourceLine" id="cb2-57" data-line-number="57">  option2.<span class="fu">key</span> = <span class="st">&quot;2&quot;</span>;</a>
+<a class="sourceLine" id="cb2-58" data-line-number="58">  option2.<span class="fu">name</span> = <span class="st">&quot;Apple iPhone 5&quot;</span>;</a>
+<a class="sourceLine" id="cb2-59" data-line-number="59">  option2.<span class="fu">values</span> = <span class="kw">new</span> <span class="fu">TestDataValue</span>();</a>
+<a class="sourceLine" id="cb2-60" data-line-number="60">  (option2.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">weight</span> = <span class="dv">112</span>;</a>
+<a class="sourceLine" id="cb2-61" data-line-number="61">  (option2.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">brand</span> = <span class="st">&quot;Apple&quot;</span>;</a>
+<a class="sourceLine" id="cb2-62" data-line-number="62">  (option2.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">price</span> = <span class="dv">599</span>;</a>
+<a class="sourceLine" id="cb2-63" data-line-number="63">  listOption.<span class="fu">Add</span>(option2);</a>
+<a class="sourceLine" id="cb2-64" data-line-number="64"></a>
+<a class="sourceLine" id="cb2-65" data-line-number="65">  Option option3 = <span class="kw">new</span> <span class="fu">Option</span>();</a>
+<a class="sourceLine" id="cb2-66" data-line-number="66">  option3.<span class="fu">key</span> = <span class="st">&quot;3&quot;</span>;</a>
+<a class="sourceLine" id="cb2-67" data-line-number="67">  option3.<span class="fu">name</span> = <span class="st">&quot;HTC One&quot;</span>;</a>
+<a class="sourceLine" id="cb2-68" data-line-number="68">  option3.<span class="fu">values</span> = <span class="kw">new</span> <span class="fu">TestDataValue</span>();</a>
+<a class="sourceLine" id="cb2-69" data-line-number="69">  (option3.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">weight</span> = <span class="dv">143</span>;</a>
+<a class="sourceLine" id="cb2-70" data-line-number="70">  (option3.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">brand</span> = <span class="st">&quot;HTC&quot;</span>;</a>
+<a class="sourceLine" id="cb2-71" data-line-number="71">  (option3.<span class="fu">values</span> <span class="kw">as</span> TestDataValue).<span class="fu">price</span> = <span class="dv">299</span>;</a>
+<a class="sourceLine" id="cb2-72" data-line-number="72">  listOption.<span class="fu">Add</span>(option3);</a>
+<a class="sourceLine" id="cb2-73" data-line-number="73"></a>
+<a class="sourceLine" id="cb2-74" data-line-number="74">  problemToSolve.<span class="fu">options</span> = listOption.<span class="fu">ToArray</span>();</a>
+<a class="sourceLine" id="cb2-75" data-line-number="75"></a>
+<a class="sourceLine" id="cb2-76" data-line-number="76">  <span class="kw">if</span>(!_tradeoffAnalytics.<span class="fu">GetDilemma</span>(OnGetDilemma, OnFail, problemToSolve, <span class="kw">false</span>))</a>
+<a class="sourceLine" id="cb2-77" data-line-number="77">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleTradeoffAnalytics.GetDilemma()&quot;</span>, <span class="st">&quot;Failed to get dillema!&quot;</span>);</a>
+<a class="sourceLine" id="cb2-78" data-line-number="78">}</a>
+<a class="sourceLine" id="cb2-79" data-line-number="79"></a>
+<a class="sourceLine" id="cb2-80" data-line-number="80"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetDillema</span>(DilemmasResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-81" data-line-number="81">{</a>
+<a class="sourceLine" id="cb2-82" data-line-number="82">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleTradeoffAnalytics.OnGetDillema()&quot;</span>, <span class="st">&quot;Get dillema result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-83" data-line-number="83">}</a>
+<a class="sourceLine" id="cb2-84" data-line-number="84"></a>
+<a class="sourceLine" id="cb2-85" data-line-number="85"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-86" data-line-number="86">{</a>
+<a class="sourceLine" id="cb2-87" data-line-number="87">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleTradeoffAnalytics.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-88" data-line-number="88">}</a>
+<a class="sourceLine" id="cb2-89" data-line-number="89"></a>
+<a class="sourceLine" id="cb2-90" data-line-number="90"><span class="kw">public</span> <span class="kw">class</span> TestDataValue : IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">TradeoffAnalytics</span>.<span class="fu">v1</span>.<span class="fu">ApplicationDataValue</span></a>
+<a class="sourceLine" id="cb2-91" data-line-number="91">{</a>
+<a class="sourceLine" id="cb2-92" data-line-number="92">  <span class="kw">public</span> <span class="dt">double</span> price { <span class="kw">get</span>; <span class="kw">set</span>; }</a>
+<a class="sourceLine" id="cb2-93" data-line-number="93">  <span class="kw">public</span> <span class="dt">double</span> weight { <span class="kw">get</span>; <span class="kw">set</span>; }</a>
+<a class="sourceLine" id="cb2-94" data-line-number="94">  <span class="kw">public</span> <span class="dt">string</span> brand { <span class="kw">get</span>; <span class="kw">set</span>; }</a>
+<a class="sourceLine" id="cb2-95" data-line-number="95">}</a></code></pre></div>
+</body>
+</html>
