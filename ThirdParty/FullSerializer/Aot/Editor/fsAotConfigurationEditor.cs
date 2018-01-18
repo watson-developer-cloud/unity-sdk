@@ -12,10 +12,10 @@ namespace FullSerializer {
 	[InitializeOnLoad]
 	public static class PlayStateNotifier {
 		static PlayStateNotifier() {
-			EditorApplication.playmodeStateChanged += ModeChanged;
+			EditorApplication.playModeStateChanged += ModeChanged;
 		}
 
-		private static void ModeChanged () {
+		private static void ModeChanged (PlayModeStateChange playModeStateChange) {
 			if (!EditorApplication.isPlayingOrWillChangePlaymode && EditorApplication.isPlaying) {
 				Debug.Log("There are " + fsAotCompilationManager.AotCandidateTypes.Count + " candidate types");
 				foreach (fsAotConfiguration target in Resources.FindObjectsOfTypeAll<fsAotConfiguration>()) {
