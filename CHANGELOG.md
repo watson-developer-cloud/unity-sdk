@@ -78,7 +78,7 @@ _2016-08-26_
 * Deprecated: Retired `Dialog` service.
 * Fix: `ExampleLanguageTranslation` now is using `LanguageTranslator` before `LanguageTranslation` service goes live.
 * Fix: Abstracted custom voice model methods in `Text to Speech` service.
-* Fix: Error when pasting credentials from the new Bluemix site into the `Config Editor`.
+* Fix: Error when pasting credentials from the new IBM Cloud site into the `Config Editor`.
 * New: Added `CameraWidget` and `CameraDisplayWidget` to get video from device camera.
 * New: Added test scene for using the device camera with the `Visual Recognition` service.
 
