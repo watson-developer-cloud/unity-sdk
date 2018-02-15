@@ -9,15 +9,6 @@ git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/UnityTe
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
 
-  echo "Attempting to remove TravisBuild from Travis directory..."
-  rm Travis/TravisBuild.cs
-  if [ $? = 0 ] ; then
-    echo "Removing travis build script SUCCEEDED! Exited with $?"
-  else
-    echo "Removing travis build script FAILED! Exited with $?"
-    exit 1
-  fi
-
   echo "Attempting to remove TravisIntegrationTests from Travis directory..."
   rm Travis/TravisIntegrationTests.cs
   if [ $? = 0 ] ; then
