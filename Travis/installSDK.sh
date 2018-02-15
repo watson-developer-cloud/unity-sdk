@@ -32,16 +32,6 @@ if [ $? = 0 ] ; then
   if [ $? = 0 ] ; then
     echo "Creating Travis/UnityTestProject/Assets/Scripts/Editor/ SUCCEEDED! Exited with $?"
 
-    echo "Attempting to move Travis build script..."
-    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisBuild.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisBuild.cs
-    if [ $? = 0 ] ; then
-      echo "Moving travis build script SUCCEEDED! Exited with $?"
-      exit 0
-    else
-      echo "Moving travis build script FAILED! Exited with $?"
-      exit 1
-    fi
-
     echo "Attempting to move integration tests script..."
     mv Travis/UnityTestProject/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisIntegrationTests.cs
     if [ $? = 0 ] ; then
