@@ -16,9 +16,9 @@
 */
 
 //  Uncomment to train a new classifier
-#define TRAIN_CLASSIFIER
+//#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-#define DELETE_TRAINED_CLASSIFIER
+//#define DELETE_TRAINED_CLASSIFIER
 
 using UnityEngine;
 using System.Collections;
@@ -202,12 +202,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getClassifiersTested = true;
         }
 
+#if DELETE_TRAINED_CLASSIFIER
         private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", customData["json"].ToString());
             Test(classifier != null);
             _getClassifierTested = true;
         }
+#endif
 
 #if DELETE_TRAINED_CLASSIFIER
         private void OnDeleteClassifier(bool success, Dictionary<string, object> customData)
@@ -261,7 +263,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _detectFacesPostTested = true;
         }
 
-        #region Delay
+#region Delay
         //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
         //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
         private float _delayTime = 15f;
@@ -274,7 +276,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield return new WaitForSeconds(delayTime);
             _isWaitingForDelay = false;
         }
-        #endregion
+#endregion
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
