@@ -1,48 +1,52 @@
-# Watson Developer Cloud Unity SDK
+# Watson APIs Unity SDK
 [![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
 
 Use this SDK to build Watson-powered applications in Unity.
 
-## Table of Contents
-* [Before you begin](#before-you-begin)
-* [Getting the Watson SDK and adding it to Unity](#getting-the-watson-sdk-and-adding-it-to-unity)
-  * [Installing the SDK source into your Unity project](#installing-the-sdk-source-into-your-unity-project)
-* [Configuring your service credentials](#configuring-your-service-credentials)
-* [Authentication](#authentication)
-* [Watson Services](#watson-services)
-* [Authentication Tokens](#authentication-tokens)
-* [Documentation](#documentation)
-* [Questions](#questions)
-* [Open Source @ IBM](#open-source--ibm)
-* [License](#license)
-* [Contributing](#contributing)
+<details>
+  <summary>Table of Contents</summary>
+
+  * [Before you begin](#before-you-begin)
+  * [Getting the Watson SDK and adding it to Unity](#getting-the-watson-sdk-and-adding-it-to-unity)
+    * [Installing the SDK source into your Unity project](#installing-the-sdk-source-into-your-unity-project)
+  * [Configuring your service credentials](#configuring-your-service-credentials)
+  * [Authentication](#authentication)
+  * [Watson Services](#watson-services)
+  * [Authentication Tokens](#authentication-tokens)
+  * [Documentation](#documentation)
+  * [Questions](#questions)
+  * [Open Source @ IBM](#open-source--ibm)
+  * [License](#license)
+  * [Contributing](#contributing)
+
+</details>
 
 ## Before you begin
 Ensure that you have the following prerequisites:
 
-* An IBM Bluemix account. If you don't have one, [sign up][bluemix_registration].
+* An IBM Cloud account. If you don't have one, [sign up][ibm_cloud_registration].
 * [Unity][get_unity]. You can use the **free** Personal edition.
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the latest SDK release by clicking [here][latest_release] for the source or downloading the SDK from the [Unity Asset Store][asset_store_link].
+You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-If you get the SDK source from github, move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_. If you get the SDK from the Unity Asset Store it will be installed in your `Assets` directory.
+Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
 
-**Note:** Service credentials are different from your Bluemix account username and password.
+**Note:** Service credentials are different from your IBM Cloud account username and password.
 
 1. Determine which services to configure.
 1. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
-    1. Log in to Bluemix at https://bluemix.net.
+    1. Log in to IBM Cloud at https://console.bluemix.net.
     1. Click the service you would like to use.
     1. Click **Service credentials**.
     1. Click **View credentials** to access your credentials.
 1. If you need to configure the services that you want to use, complete the following steps.
-    1. Log in to Bluemix at https://bluemix.net.
+    1. Log in to IBM Cloud at https://console.bluemix.net.
     1. Click the **Create service** button.
     1. Under **Watson**, select which service you would like to create an instance of and click that service.
     1. Give the service and credential a name. Select a plan and click the **Create** button on the bottom.
@@ -56,21 +60,20 @@ The credentials for each service contain either a `username`, `password` and end
 
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-
-* [Alchemy Language](Scripts/Services/AlchemyAPI/v1/)
-* [Conversation](Scripts/Services/Conversation/v1/)
-* [Discovery](Scripts/Services/Discovery/v1/)
-* [Document Conversion](Scripts/Services/DocumentConversion/v1/) **Deprecated**
-* [Language Translator](Scripts/Services/LanguageTranslator/v2/)
-* [Natural Language Classifier](Scripts/Services/NaturalLanguageClassifier/v2/)
-* [Natural Language Understanding](Scripts/Services/NaturalLanguageUnderstanding/v1/)
-* [Personality Insights](Scripts/Services/PersonalityInsights/v3/)
-* [Retrieve and Rank](Scripts/Services/RetrieveAndRank/v1/) **Deprecated**
-* [Speech to Text](Scripts/Services/SpeechToText/v1/)
-* [Text to Speech](Scripts/Services/TextToSpeech/v1/)
-* [Tone Analyzer](Scripts/Services/ToneAnalyzer/v3/)
-* [Tradeoff Analytics](Scripts/Services/TradeoffAnalytics/v1/)
-* [Visual Recognition](Scripts/Services/VisualRecognition/v3/)
+* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1) **Deprecated**
+* [Conversation](/Scripts/Services/Conversation/v1)
+* [Discovery](/Scripts/Services/Discovery/v1)
+* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
+* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
+* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
+* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
+* [Speech to Text](/Scripts/Services/SpeechToText/v1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
+* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
+* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1) **Deprecated**
+* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
 
 ## Authentication
 Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
@@ -184,7 +187,7 @@ private void OnFail(RESTConnector.Error error, Dictionary<string, object> custom
 ## Authentication Tokens
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
 
-You can write an authentication proxy in IBM® Bluemix® that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
+You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
 
 ```cs
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
@@ -240,7 +243,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
-[bluemix_registration]: http://bluemix.net/registration
+[ibm_cloud_registration]: http://console.bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
 [asset_store_link]: https://www.assetstore.unity3d.com/en/#!/108831
 

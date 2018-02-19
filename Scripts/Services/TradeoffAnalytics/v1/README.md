@@ -1,6 +1,6 @@
 # Tradeoff Analytics
 
-**NOTE:** The IBM Watson™ Tradeoff Analytics service is being deprecated. As of May 11, 2017, it will no longer be possible to create a new instance of the service on Bluemix. Existing service instances will continue to be supported until April 11, 2018.
+**NOTE:** The IBM Watson™ Tradeoff Analytics service is being deprecated. As of May 11, 2017, it will no longer be possible to create a new instance of the service on IBM Cloud. Existing service instances will continue to be supported until April 11, 2018.
 
 The [Tradeoff Analytics][tradeoff_analytics] service helps people make better decisions when faced with multiple, sometimes conflicting, goals and alternatives.
 
