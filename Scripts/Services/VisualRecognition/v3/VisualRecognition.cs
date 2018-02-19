@@ -226,7 +226,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition.Classify()", "Failed to upload {0}!", imagePath);
             }
 
-            return Classify(successCallback, failCallback, imageData, owners, classifierIDs, threshold, acceptLanguage, customData);
+            return Classify(successCallback, failCallback, imageData, GetMimeType(imagePath), owners, classifierIDs, threshold, acceptLanguage, customData);
         }
 
         /// <summary>
@@ -235,13 +235,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="imageData">Byte array of image data.</param>
+        /// <param name="imageMimeType">The mimetype of the image data.</param>
         /// <param name="owners">Owners.</param>
         /// <param name="classifierIDs">An array of classifier identifiers.</param>
         /// <param name="threshold">Threshold.</param>
         /// <param name="acceptLanguage">Accepted language.</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool Classify(SuccessCallback<ClassifyTopLevelMultiple> successCallback, FailCallback failCallback, byte[] imageData, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", Dictionary<string, object> customData = null)
+        public bool Classify(SuccessCallback<ClassifyTopLevelMultiple> successCallback, FailCallback failCallback, byte[] imageData, string imageMimeType, string[] owners = default(string[]), string[] classifierIDs = default(string[]), float threshold = default(float), string acceptLanguage = "en", Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -264,8 +265,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.OnResponse = OnClassifyResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-            req.Headers["Accept-Language"] = acceptLanguage;
+            req.Headers["Content-Type"] = "multipart/form-data";
+            req.Headers["Accept"] = "application/json";
 
             if (owners != default(string[]))
                 req.Parameters["owners"] = string.Join(",", owners);
@@ -275,7 +276,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["threshold"] = threshold;
 
             if (imageData != null)
-                req.Send = imageData;
+            {
+                req.Forms = new Dictionary<string, RESTConnector.Form>();
+                req.Forms.Add("images_file", new RESTConnector.Form(imageData, imageMimeType));
+            }
 
             return connector.Send(req);
         }
