@@ -174,10 +174,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <returns>The fixed up URL.</returns>
         public static string FixupURL(string URL)
         {
-            if (URL.StartsWith("http://stream"))
-                URL = URL.Replace("http://stream", "ws://stream-tls10");
-            else if (URL.StartsWith("https://stream"))
-                URL = URL.Replace("https://stream", "wss://stream-tls10");
+            if (URL.StartsWith("http://stream."))
+                URL = URL.Replace("http://stream.", "ws://stream-tls10.");
+            else if (URL.StartsWith("https://stream."))
+                URL = URL.Replace("https://stream.", "wss://stream-tls10.");
+            else if (URL.StartsWith("http://stream-tls10."))
+                URL = URL.Replace("http://stream-tls10.", "ws://stream-tls10.");
+            else if (URL.StartsWith("https://stream-tls10."))
+                URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
 
             return URL;
         }
