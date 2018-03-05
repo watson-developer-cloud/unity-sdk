@@ -263,7 +263,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _detectFacesPostTested = true;
         }
 
-#region Delay
+        #region Delay
+#if DELETE_TRAINED_CLASSIFIER
         //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
         //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
         private float _delayTime = 15f;
@@ -276,7 +277,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield return new WaitForSeconds(delayTime);
             _isWaitingForDelay = false;
         }
-#endregion
+#endif
+        #endregion
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
