@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
@@ -29,12 +30,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The unique identifier of the conversation.
         /// </summary>
         /// <value>The unique identifier of the conversation.</value>
-        public dynamic ConversationId { get; set; }
+        public Dictionary<string, object> ConversationId { get; set; }
         /// <summary>
         /// For internal use only.
         /// </summary>
         /// <value>For internal use only.</value>
-        public dynamic System { get; set; }
+        public Dictionary<string, object> System { get; set; }
     }
 
 }

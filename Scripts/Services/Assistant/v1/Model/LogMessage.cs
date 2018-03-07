@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
@@ -61,7 +62,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The text of the message.
         /// </summary>
         /// <value>The text of the message.</value>
-        public dynamic Msg { get; set; }
+        public Dictionary<string, object> Msg { get; set; }
     }
 
 }

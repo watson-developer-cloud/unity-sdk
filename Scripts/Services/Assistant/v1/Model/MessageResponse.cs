@@ -30,32 +30,32 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The user input from the request.
         /// </summary>
         /// <value>The user input from the request.</value>
-        public dynamic Input { get; set; }
+        public Dictionary<string, object> Input { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
         /// <value>An array of intents recognized in the user input, sorted in descending order of confidence.</value>
-        public dynamic Intents { get; set; }
+        public Dictionary<string, object> Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
         /// <value>An array of entities identified in the user input.</value>
-        public dynamic Entities { get; set; }
+        public Dictionary<string, object> Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. `true` indicates that all matching intents are returned.
         /// </summary>
         /// <value>Whether to return more than one intent. `true` indicates that all matching intents are returned.</value>
-        public dynamic AlternateIntents { get; set; }
+        public Dictionary<string, object> AlternateIntents { get; set; }
         /// <summary>
         /// State information for the conversation.
         /// </summary>
         /// <value>State information for the conversation.</value>
-        public dynamic Context { get; set; }
+        public Dictionary<string, object> Context { get; set; }
         /// <summary>
         /// Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.
         /// </summary>
         /// <value>Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.</value>
-        public dynamic Output { get; set; }
+        public Dictionary<string, object> Output { get; set; }
     }
 
 }

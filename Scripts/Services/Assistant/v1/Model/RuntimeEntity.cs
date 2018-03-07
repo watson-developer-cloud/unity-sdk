@@ -30,32 +30,32 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The recognized entity from a term in the input.
         /// </summary>
         /// <value>The recognized entity from a term in the input.</value>
-        public dynamic Entity { get; set; }
+        public Dictionary<string, object> Entity { get; set; }
         /// <summary>
         /// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
         /// </summary>
         /// <value>Zero-based character offsets that indicate where the entity value begins and ends in the input text.</value>
-        public dynamic Location { get; set; }
+        public Dictionary<string, object> Location { get; set; }
         /// <summary>
         /// The term in the input text that was recognized.
         /// </summary>
         /// <value>The term in the input text that was recognized.</value>
-        public dynamic Value { get; set; }
+        public Dictionary<string, object> Value { get; set; }
         /// <summary>
         /// A decimal percentage that represents Watson's confidence in the entity.
         /// </summary>
         /// <value>A decimal percentage that represents Watson's confidence in the entity.</value>
-        public dynamic Confidence { get; set; }
+        public Dictionary<string, object> Confidence { get; set; }
         /// <summary>
         /// The metadata for the entity.
         /// </summary>
         /// <value>The metadata for the entity.</value>
-        public dynamic Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// The recognized capture groups for the entity, as defined by the entity pattern.
         /// </summary>
         /// <value>The recognized capture groups for the entity, as defined by the entity pattern.</value>
-        public dynamic Groups { get; set; }
+        public Dictionary<string, object> Groups { get; set; }
     }
 
 }

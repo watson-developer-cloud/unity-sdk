@@ -30,22 +30,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// Up to 50 messages logged with the request.
         /// </summary>
         /// <value>Up to 50 messages logged with the request.</value>
-        public dynamic LogMessages { get; set; }
+        public Dictionary<string, object> LogMessages { get; set; }
         /// <summary>
         /// An array of responses to the user.
         /// </summary>
         /// <value>An array of responses to the user.</value>
-        public dynamic Text { get; set; }
+        public Dictionary<string, object> Text { get; set; }
         /// <summary>
         /// An array of the nodes that were triggered to create the response.
         /// </summary>
         /// <value>An array of the nodes that were triggered to create the response.</value>
-        public dynamic NodesVisited { get; set; }
+        public Dictionary<string, object> NodesVisited { get; set; }
         /// <summary>
         /// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message.
         /// </summary>
         /// <value>An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message.</value>
-        public dynamic NodesVisitedDetails { get; set; }
+        public Dictionary<string, object> NodesVisitedDetails { get; set; }
     }
 
 }

@@ -83,23 +83,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
         }
 
-        #region Callback delegates
-        /// <summary>
-        /// Success callback delegate.
-        /// </summary>
-        /// <typeparam name="T">Type of the returned object.</typeparam>
-        /// <param name="response">The returned object.</param>
-        /// <param name="customData">user defined custom data including raw json.</param>
-        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        /// <summary>
-        /// Fail callback delegate.
-        /// </summary>
-        /// <param name="error">The error object.</param>
-        /// <param name="customData">User defined custom data</param>
-        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
-        #endregion
-
         public bool CreateWorkspace(SuccessCallback<Workspace> successCallback, FailCallback failCallback, CreateWorkspace properties = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
@@ -115,7 +98,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces", Url));
             if (connector == null)
             return false;
 
@@ -193,7 +176,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -271,7 +254,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -349,7 +332,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListWorkspacesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces"));
             if (connector == null)
             return false;
 
@@ -427,7 +410,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -504,7 +487,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/message");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/message", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -581,7 +564,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{0}/intents", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -659,7 +642,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}", Url, workspaceId, intent));
             if (connector == null)
             return false;
 
@@ -737,7 +720,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}", Url, workspaceId, intent));
             if (connector == null)
             return false;
 
@@ -815,7 +798,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListIntentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -893,7 +876,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}", Url, workspaceId, intent));
             if (connector == null)
             return false;
 
@@ -970,7 +953,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}/examples");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}/examples", Url, workspaceId, intent));
             if (connector == null)
             return false;
 
@@ -1048,7 +1031,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}/examples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}/examples/{3}", Url, workspaceId, intent, text));
             if (connector == null)
             return false;
 
@@ -1126,7 +1109,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}/examples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}/examples/{3}", Url, workspaceId, intent, text));
             if (connector == null)
             return false;
 
@@ -1204,7 +1187,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListExamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}/examples");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}/examples", Url, workspaceId, intent));
             if (connector == null)
             return false;
 
@@ -1282,7 +1265,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/intents/{intent}/examples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/intents/{2}/examples/{3}", Url, workspaceId, intent, text));
             if (connector == null)
             return false;
 
@@ -1359,7 +1342,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -1437,7 +1420,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}", Url, workspaceId, entity));
             if (connector == null)
             return false;
 
@@ -1515,7 +1498,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}", Url, workspaceId, entity));
             if (connector == null)
             return false;
 
@@ -1593,7 +1576,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListEntitiesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -1671,7 +1654,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}", Url, workspaceId, entity));
             if (connector == null)
             return false;
 
@@ -1748,7 +1731,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values", Url, workspaceId, entity));
             if (connector == null)
             return false;
 
@@ -1826,7 +1809,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}", Url, workspaceId, entity, value));
             if (connector == null)
             return false;
 
@@ -1904,7 +1887,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}", Url, workspaceId, entity, value));
             if (connector == null)
             return false;
 
@@ -1982,7 +1965,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListValuesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values", Url, workspaceId, entity));
             if (connector == null)
             return false;
 
@@ -2060,7 +2043,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}", Url, workspaceId, entity, value));
             if (connector == null)
             return false;
 
@@ -2137,7 +2120,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}/synonyms");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}/synonyms", Url, workspaceId, entity, value));
             if (connector == null)
             return false;
 
@@ -2215,7 +2198,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}/synonyms/{synonym}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}/synonyms/{4}", Url, workspaceId, entity, value, synonym));
             if (connector == null)
             return false;
 
@@ -2293,7 +2276,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}/synonyms/{synonym}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}/synonyms/{4}", Url, workspaceId, entity, value, synonym));
             if (connector == null)
             return false;
 
@@ -2371,7 +2354,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListSynonymsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}/synonyms");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}/synonyms", Url, workspaceId, entity, value));
             if (connector == null)
             return false;
 
@@ -2449,7 +2432,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/entities/{entity}/values/{value}/synonyms/{synonym}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/entities/{2}/values/{3}/synonyms/{4}", Url, workspaceId, entity, value, synonym));
             if (connector == null)
             return false;
 
@@ -2526,7 +2509,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/dialog_nodes");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/dialog_nodes", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -2604,7 +2587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/dialogNodes/{dialogNode}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/dialogNodes/{2}", Url, workspaceId, dialogNode));
             if (connector == null)
             return false;
 
@@ -2682,7 +2665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/dialogNodes/{dialogNode}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/dialogNodes/{2}", Url, workspaceId, dialogNode));
             if (connector == null)
             return false;
 
@@ -2760,7 +2743,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListDialogNodesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/dialog_nodes");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/dialog_nodes", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -2838,7 +2821,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/dialogNodes/{dialogNode}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/dialogNodes/{2}", Url, workspaceId, dialogNode));
             if (connector == null)
             return false;
 
@@ -2915,7 +2898,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListAllLogsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/logs");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/logs", Url));
             if (connector == null)
             return false;
 
@@ -2993,7 +2976,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListLogsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/logs");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/logs", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -3070,7 +3053,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnCreateCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/counterexamples");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/counterexamples", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -3148,7 +3131,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnDeleteCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/counterexamples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/counterexamples/{2}", Url, workspaceId, text));
             if (connector == null)
             return false;
 
@@ -3226,7 +3209,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/counterexamples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/counterexamples/{2}", Url, workspaceId, text));
             if (connector == null)
             return false;
 
@@ -3304,7 +3287,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnListCounterexamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/counterexamples");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/counterexamples", Url, workspaceId));
             if (connector == null)
             return false;
 
@@ -3382,7 +3365,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnUpdateCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/workspaces/{workspaceId}/counterexamples/{text}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("{0}/v1/workspaces/{1}/counterexamples/{2}", Url, workspaceId, text));
             if (connector == null)
             return false;
 
