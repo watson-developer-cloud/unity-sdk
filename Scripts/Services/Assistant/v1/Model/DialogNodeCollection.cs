@@ -21,19 +21,22 @@ using System.Collections.Generic;
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// DialogNodeCollection.
+    /// An array of dialog nodes.
     /// </summary>
     [fsObject]
     public class DialogNodeCollection
     {
         /// <summary>
-        /// Gets or Sets DialogNodes
+        /// An array of objects describing the dialog nodes defined for the workspace.
         /// </summary>
+        /// <value>An array of objects describing the dialog nodes defined for the workspace.</value>
+        [fsProperty("dialog_nodes")]
         public List<DialogNode> DialogNodes { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

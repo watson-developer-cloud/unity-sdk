@@ -30,31 +30,37 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The user input from the request.
         /// </summary>
         /// <value>The user input from the request.</value>
+        [fsProperty("input")]
         public Dictionary<string, object> Input { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
         /// <value>An array of intents recognized in the user input, sorted in descending order of confidence.</value>
+        [fsProperty("intents")]
         public Dictionary<string, object> Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
         /// <value>An array of entities identified in the user input.</value>
+        [fsProperty("entities")]
         public Dictionary<string, object> Entities { get; set; }
         /// <summary>
-        /// Whether to return more than one intent. `true` indicates that all matching intents are returned.
+        /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>
-        /// <value>Whether to return more than one intent. `true` indicates that all matching intents are returned.</value>
+        /// <value>Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.</value>
+        [fsProperty("alternate_intents")]
         public Dictionary<string, object> AlternateIntents { get; set; }
         /// <summary>
         /// State information for the conversation.
         /// </summary>
         /// <value>State information for the conversation.</value>
+        [fsProperty("context")]
         public Dictionary<string, object> Context { get; set; }
         /// <summary>
         /// Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.
         /// </summary>
         /// <value>Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.</value>
+        [fsProperty("output")]
         public Dictionary<string, object> Output { get; set; }
     }
 

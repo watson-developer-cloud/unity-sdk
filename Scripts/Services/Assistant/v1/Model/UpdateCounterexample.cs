@@ -26,9 +26,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class UpdateCounterexample
     {
         /// <summary>
-        /// The text of the example to be marked as irrelevant input.
+        /// The text of a user input counterexample.
         /// </summary>
-        /// <value>The text of the example to be marked as irrelevant input.</value>
+        /// <value>The text of a user input counterexample.</value>
+        [fsProperty("text")]
         public string Text { get; set; }
     }
 

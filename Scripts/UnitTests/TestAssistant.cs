@@ -40,11 +40,10 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _assistantVersionDate = "2017-05-26";
 
         private fsSerializer _serializer = new fsSerializer();
-        private Dictionary<string, object> _context = null;
 
         private string _inputString = "Turn on the winshield wipers";
 
-        private static string _createdWorkspaceName = "dotnet-sdk-example-workspace-delete";
+        private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private static string _createdWorkspaceDescription = "A Workspace created by the Unity SDK Conversation example script. Please delete this.";
         private static string _createdWorkspaceLanguage = "en";
         private static string _createdEntity = "entity";
@@ -181,12 +180,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 yield return null;
 
             //  Message
+            Dictionary<string, object> input = new Dictionary<string, object>();
+            input.Add("text", _inputString);
             MessageRequest messageRequest = new MessageRequest()
             {
-                Input = new InputData()
-                {
-                    Text = _inputString
-                },
+                Input = input,
                 AlternateIntents = true
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest);

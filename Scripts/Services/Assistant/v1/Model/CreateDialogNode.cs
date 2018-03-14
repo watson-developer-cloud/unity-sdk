@@ -125,71 +125,85 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// How the dialog node is processed.
         /// </summary>
         /// <value>How the dialog node is processed.</value>
+        [fsProperty("type")]
         public NodeTypeEnum? NodeType { get; set; }
         /// <summary>
         /// How an `event_handler` node is processed.
         /// </summary>
         /// <value>How an `event_handler` node is processed.</value>
+        [fsProperty("event_name")]
         public EventNameEnum? EventName { get; set; }
         /// <summary>
-        /// The dialog node ID.
+        /// The dialog node ID. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.  - It must be no longer than 1024 characters.
         /// </summary>
-        /// <value>The dialog node ID.</value>
+        /// <value>The dialog node ID. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.  - It must be no longer than 1024 characters.</value>
+        [fsProperty("dialog_node")]
         public string DialogNode { get; set; }
         /// <summary>
-        /// The description of the dialog node.
+        /// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.
         /// </summary>
-        /// <value>The description of the dialog node.</value>
+        /// <value>The description of the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 128 characters.</value>
+        [fsProperty("description")]
         public string Description { get; set; }
         /// <summary>
-        /// The condition that will trigger the dialog node.
+        /// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// </summary>
-        /// <value>The condition that will trigger the dialog node.</value>
+        /// <value>The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.</value>
+        [fsProperty("conditions")]
         public string Conditions { get; set; }
         /// <summary>
-        /// The ID of the parent dialog node (if any).
+        /// The ID of the parent dialog node.
         /// </summary>
-        /// <value>The ID of the parent dialog node (if any).</value>
+        /// <value>The ID of the parent dialog node.</value>
+        [fsProperty("parent")]
         public string Parent { get; set; }
         /// <summary>
-        /// The previous dialog node.
+        /// The ID of the previous dialog node.
         /// </summary>
-        /// <value>The previous dialog node.</value>
+        /// <value>The ID of the previous dialog node.</value>
+        [fsProperty("previous_sibling")]
         public string PreviousSibling { get; set; }
         /// <summary>
-        /// The output of the dialog node.
+        /// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
         /// </summary>
-        /// <value>The output of the dialog node.</value>
+        /// <value>The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).</value>
+        [fsProperty("output")]
         public object Output { get; set; }
         /// <summary>
         /// The context for the dialog node.
         /// </summary>
         /// <value>The context for the dialog node.</value>
+        [fsProperty("context")]
         public object Context { get; set; }
         /// <summary>
         /// The metadata for the dialog node.
         /// </summary>
         /// <value>The metadata for the dialog node.</value>
+        [fsProperty("metadata")]
         public object Metadata { get; set; }
         /// <summary>
-        /// The next step to execute following this dialog node.
+        /// The next step to be executed in dialog processing.
         /// </summary>
-        /// <value>The next step to execute following this dialog node.</value>
+        /// <value>The next step to be executed in dialog processing.</value>
+        [fsProperty("next_step")]
         public DialogNodeNextStep NextStep { get; set; }
         /// <summary>
-        /// The actions for the dialog node.
+        /// An array of objects describing any actions to be invoked by the dialog node.
         /// </summary>
-        /// <value>The actions for the dialog node.</value>
+        /// <value>An array of objects describing any actions to be invoked by the dialog node.</value>
+        [fsProperty("actions")]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
-        /// The alias used to identify the dialog node.
+        /// The alias used to identify the dialog node. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.  - It must be no longer than 64 characters.
         /// </summary>
-        /// <value>The alias used to identify the dialog node.</value>
+        /// <value>The alias used to identify the dialog node. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.  - It must be no longer than 64 characters.</value>
+        [fsProperty("title")]
         public string Title { get; set; }
         /// <summary>
         /// The location in the dialog context where output is stored.
         /// </summary>
         /// <value>The location in the dialog context where output is stored.</value>
+        [fsProperty("variable")]
         public string Variable { get; set; }
     }
 

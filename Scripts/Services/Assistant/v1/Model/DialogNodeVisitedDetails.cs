@@ -29,11 +29,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// A dialog node that was triggered during processing of the input message.
         /// </summary>
         /// <value>A dialog node that was triggered during processing of the input message.</value>
+        [fsProperty("dialog_node")]
         public string DialogNode { get; set; }
         /// <summary>
         /// The title of the dialog node.
         /// </summary>
         /// <value>The title of the dialog node.</value>
+        [fsProperty("title")]
         public string Title { get; set; }
     }
 

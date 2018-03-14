@@ -27,19 +27,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class Example
     {
         /// <summary>
-        /// The text of the example.
+        /// The text of the user input example.
         /// </summary>
-        /// <value>The text of the example.</value>
+        /// <value>The text of the user input example.</value>
+        [fsProperty("text")]
         public string ExampleText { get; set; }
         /// <summary>
         /// The timestamp for creation of the example.
         /// </summary>
         /// <value>The timestamp for creation of the example.</value>
+        [fsProperty("created")]
         public virtual DateTime Created { get; private set; }
         /// <summary>
         /// The timestamp for the last update to the example.
         /// </summary>
         /// <value>The timestamp for the last update to the example.</value>
+        [fsProperty("updated")]
         public virtual DateTime Updated { get; private set; }
     }
 

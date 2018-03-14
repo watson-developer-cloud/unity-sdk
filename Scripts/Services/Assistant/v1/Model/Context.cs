@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// Context information for the message. Include the context from the previous response to maintain state for the conversation.
+    /// State information for the conversation. To maintain state, include the context from the previous response.
     /// </summary>
     [fsObject]
     public class Context
@@ -30,11 +30,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The unique identifier of the conversation.
         /// </summary>
         /// <value>The unique identifier of the conversation.</value>
+        [fsProperty("conversation_id")]
         public Dictionary<string, object> ConversationId { get; set; }
         /// <summary>
         /// For internal use only.
         /// </summary>
         /// <value>For internal use only.</value>
+        [fsProperty("system")]
         public Dictionary<string, object> System { get; set; }
     }
 

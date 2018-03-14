@@ -27,24 +27,28 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class OutputData
     {
         /// <summary>
-        /// Up to 50 messages logged with the request.
+        /// An array of up to 50 messages logged with the request.
         /// </summary>
-        /// <value>Up to 50 messages logged with the request.</value>
+        /// <value>An array of up to 50 messages logged with the request.</value>
+        [fsProperty("log_messages")]
         public Dictionary<string, object> LogMessages { get; set; }
         /// <summary>
         /// An array of responses to the user.
         /// </summary>
         /// <value>An array of responses to the user.</value>
+        [fsProperty("text")]
         public Dictionary<string, object> Text { get; set; }
         /// <summary>
-        /// An array of the nodes that were triggered to create the response.
+        /// An array of the nodes that were triggered to create the response, in the order in which they were visited. This information is useful for debugging and for tracing the path taken through the node tree.
         /// </summary>
-        /// <value>An array of the nodes that were triggered to create the response.</value>
+        /// <value>An array of the nodes that were triggered to create the response, in the order in which they were visited. This information is useful for debugging and for tracing the path taken through the node tree.</value>
+        [fsProperty("nodes_visited")]
         public Dictionary<string, object> NodesVisited { get; set; }
         /// <summary>
-        /// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message.
+        /// An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.
         /// </summary>
-        /// <value>An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message.</value>
+        /// <value>An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.</value>
+        [fsProperty("nodes_visited_details")]
         public Dictionary<string, object> NodesVisitedDetails { get; set; }
     }
 

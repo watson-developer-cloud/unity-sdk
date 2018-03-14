@@ -27,14 +27,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class IntentCollection
     {
         /// <summary>
-        /// An array of intents.
+        /// An array of objects describing the intents defined for the workspace.
         /// </summary>
-        /// <value>An array of intents.</value>
+        /// <value>An array of objects describing the intents defined for the workspace.</value>
+        [fsProperty("intents")]
         public List<IntentExport> Intents { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

@@ -26,9 +26,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class CreateCounterexample
     {
         /// <summary>
-        /// The text of a user input marked as irrelevant input.
+        /// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters  - It cannot consist of only whitespace characters  - It must be no longer than 1024 characters.
         /// </summary>
-        /// <value>The text of a user input marked as irrelevant input.</value>
+        /// <value>The text of a user input marked as irrelevant input. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters  - It cannot consist of only whitespace characters  - It must be no longer than 1024 characters.</value>
+        [fsProperty("text")]
         public string Text { get; set; }
     }
 

@@ -30,11 +30,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The name of the recognized intent.
         /// </summary>
         /// <value>The name of the recognized intent.</value>
+        [fsProperty("intent")]
         public Dictionary<string, object> Intent { get; set; }
         /// <summary>
         /// A decimal percentage that represents Watson's confidence in the intent.
         /// </summary>
         /// <value>A decimal percentage that represents Watson's confidence in the intent.</value>
+        [fsProperty("confidence")]
         public Dictionary<string, object> Confidence { get; set; }
     }
 

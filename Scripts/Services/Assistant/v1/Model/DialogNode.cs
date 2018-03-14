@@ -126,81 +126,97 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// How the dialog node is processed.
         /// </summary>
         /// <value>How the dialog node is processed.</value>
+        [fsProperty("type")]
         public NodeTypeEnum? NodeType { get; set; }
         /// <summary>
         /// How an `event_handler` node is processed.
         /// </summary>
         /// <value>How an `event_handler` node is processed.</value>
+        [fsProperty("event_name")]
         public EventNameEnum? EventName { get; set; }
         /// <summary>
         /// The dialog node ID.
         /// </summary>
         /// <value>The dialog node ID.</value>
+        [fsProperty("dialog_node")]
         public string DialogNodeId { get; set; }
         /// <summary>
         /// The description of the dialog node.
         /// </summary>
         /// <value>The description of the dialog node.</value>
+        [fsProperty("description")]
         public string Description { get; set; }
         /// <summary>
         /// The condition that triggers the dialog node.
         /// </summary>
         /// <value>The condition that triggers the dialog node.</value>
+        [fsProperty("conditions")]
         public string Conditions { get; set; }
         /// <summary>
-        /// The ID of the parent dialog node.
+        /// The ID of the parent dialog node. This property is not returned if the dialog node has no parent.
         /// </summary>
-        /// <value>The ID of the parent dialog node.</value>
+        /// <value>The ID of the parent dialog node. This property is not returned if the dialog node has no parent.</value>
+        [fsProperty("parent")]
         public string Parent { get; set; }
         /// <summary>
-        /// The ID of the previous sibling dialog node.
+        /// The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous sibling.
         /// </summary>
-        /// <value>The ID of the previous sibling dialog node.</value>
+        /// <value>The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous sibling.</value>
+        [fsProperty("previous_sibling")]
         public string PreviousSibling { get; set; }
         /// <summary>
         /// The output of the dialog node.
         /// </summary>
         /// <value>The output of the dialog node.</value>
+        [fsProperty("output")]
         public object Output { get; set; }
         /// <summary>
         /// The context (if defined) for the dialog node.
         /// </summary>
         /// <value>The context (if defined) for the dialog node.</value>
+        [fsProperty("context")]
         public object Context { get; set; }
         /// <summary>
-        /// The metadata (if any) for the dialog node.
+        /// Any metadata for the dialog node.
         /// </summary>
-        /// <value>The metadata (if any) for the dialog node.</value>
+        /// <value>Any metadata for the dialog node.</value>
+        [fsProperty("metadata")]
         public object Metadata { get; set; }
         /// <summary>
         /// The next step to execute following this dialog node.
         /// </summary>
         /// <value>The next step to execute following this dialog node.</value>
+        [fsProperty("next_step")]
         public DialogNodeNextStep NextStep { get; set; }
         /// <summary>
         /// The timestamp for creation of the dialog node.
         /// </summary>
         /// <value>The timestamp for creation of the dialog node.</value>
+        [fsProperty("created")]
         public virtual DateTime Created { get; private set; }
         /// <summary>
         /// The timestamp for the most recent update to the dialog node.
         /// </summary>
         /// <value>The timestamp for the most recent update to the dialog node.</value>
+        [fsProperty("updated")]
         public virtual DateTime Updated { get; private set; }
         /// <summary>
         /// The actions for the dialog node.
         /// </summary>
         /// <value>The actions for the dialog node.</value>
+        [fsProperty("actions")]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
         /// The alias used to identify the dialog node.
         /// </summary>
         /// <value>The alias used to identify the dialog node.</value>
+        [fsProperty("title")]
         public string Title { get; set; }
         /// <summary>
         /// The location in the dialog context where output is stored.
         /// </summary>
         /// <value>The location in the dialog context where output is stored.</value>
+        [fsProperty("variable")]
         public string Variable { get; set; }
     }
 

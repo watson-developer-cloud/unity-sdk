@@ -26,14 +26,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class LogPagination
     {
         /// <summary>
-        /// The URL that will return the next page of results.
+        /// The URL that will return the next page of results, if any.
         /// </summary>
-        /// <value>The URL that will return the next page of results.</value>
+        /// <value>The URL that will return the next page of results, if any.</value>
+        [fsProperty("next_url")]
         public string NextUrl { get; set; }
         /// <summary>
         /// Reserved for future use.
         /// </summary>
         /// <value>Reserved for future use.</value>
+        [fsProperty("matched")]
         public long? Matched { get; set; }
     }
 

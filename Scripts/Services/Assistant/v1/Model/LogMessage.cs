@@ -28,9 +28,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class LogMessage
     {
         /// <summary>
-        /// The severity of the message.
+        /// The severity of the log message.
         /// </summary>
-        /// <value>The severity of the message.</value>
+        /// <value>The severity of the log message.</value>
         public enum LevelEnum
         {
             
@@ -54,14 +54,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         }
 
         /// <summary>
-        /// The severity of the message.
+        /// The severity of the log message.
         /// </summary>
-        /// <value>The severity of the message.</value>
+        /// <value>The severity of the log message.</value>
+        [fsProperty("level")]
         public LevelEnum? Level { get; set; }
         /// <summary>
-        /// The text of the message.
+        /// The text of the log message.
         /// </summary>
-        /// <value>The text of the message.</value>
+        /// <value>The text of the log message.</value>
+        [fsProperty("msg")]
         public Dictionary<string, object> Msg { get; set; }
     }
 

@@ -30,11 +30,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// An array of objects describing the examples marked as irrelevant input.
         /// </summary>
         /// <value>An array of objects describing the examples marked as irrelevant input.</value>
+        [fsProperty("counterexamples")]
         public List<Counterexample> Counterexamples { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

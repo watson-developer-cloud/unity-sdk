@@ -50,26 +50,31 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The type of action to invoke.
         /// </summary>
         /// <value>The type of action to invoke.</value>
+        [fsProperty("type")]
         public ActionTypeEnum? ActionType { get; set; }
         /// <summary>
         /// The name of the action.
         /// </summary>
         /// <value>The name of the action.</value>
+        [fsProperty("name")]
         public string Name { get; set; }
         /// <summary>
         /// A map of key/value pairs to be provided to the action.
         /// </summary>
         /// <value>A map of key/value pairs to be provided to the action.</value>
+        [fsProperty("parameters")]
         public object Parameters { get; set; }
         /// <summary>
         /// The location in the dialog context where the result of the action is stored.
         /// </summary>
         /// <value>The location in the dialog context where the result of the action is stored.</value>
+        [fsProperty("result_variable")]
         public string ResultVariable { get; set; }
         /// <summary>
         /// The name of the context variable that the client application will use to pass in credentials for the action.
         /// </summary>
         /// <value>The name of the context variable that the client application will use to pass in credentials for the action.</value>
+        [fsProperty("credentials")]
         public string Credentials { get; set; }
     }
 

@@ -27,19 +27,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class UpdateIntent
     {
         /// <summary>
-        /// The name of the intent.
+        /// The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.
         /// </summary>
-        /// <value>The name of the intent.</value>
+        /// <value>The name of the intent. This string must conform to the following restrictions:  - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.  - It cannot begin with the reserved prefix `sys-`.  - It must be no longer than 128 characters.</value>
+        [fsProperty("intent")]
         public string Intent { get; set; }
         /// <summary>
         /// The description of the intent.
         /// </summary>
         /// <value>The description of the intent.</value>
+        [fsProperty("description")]
         public string Description { get; set; }
         /// <summary>
         /// An array of user input examples for the intent.
         /// </summary>
         /// <value>An array of user input examples for the intent.</value>
+        [fsProperty("examples")]
         public List<CreateExample> Examples { get; set; }
     }
 

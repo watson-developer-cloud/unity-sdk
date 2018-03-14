@@ -27,14 +27,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class LogCollection
     {
         /// <summary>
-        /// An array of log events.
+        /// An array of objects describing log events.
         /// </summary>
-        /// <value>An array of log events.</value>
+        /// <value>An array of objects describing log events.</value>
+        [fsProperty("logs")]
         public List<LogExport> Logs { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public LogPagination Pagination { get; set; }
     }
 

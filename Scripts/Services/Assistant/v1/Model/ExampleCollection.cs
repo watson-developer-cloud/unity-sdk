@@ -27,14 +27,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class ExampleCollection
     {
         /// <summary>
-        /// An array of Example objects describing the examples defined for the intent.
+        /// An array of objects describing the examples defined for the intent.
         /// </summary>
-        /// <value>An array of Example objects describing the examples defined for the intent.</value>
+        /// <value>An array of objects describing the examples defined for the intent.</value>
+        [fsProperty("examples")]
         public List<Example> Examples { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

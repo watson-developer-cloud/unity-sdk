@@ -26,9 +26,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class UpdateExample
     {
         /// <summary>
-        /// The text of the user input example.
+        /// The text of the user input example. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 1024 characters.
         /// </summary>
-        /// <value>The text of the user input example.</value>
+        /// <value>The text of the user input example. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 1024 characters.</value>
+        [fsProperty("text")]
         public string Text { get; set; }
     }
 

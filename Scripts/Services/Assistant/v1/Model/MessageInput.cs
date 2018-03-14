@@ -20,7 +20,7 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// An input object that includes the input text.
+    /// The text of the user input.
     /// </summary>
     [fsObject]
     public class MessageInput
@@ -29,6 +29,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The user's input.
         /// </summary>
         /// <value>The user's input.</value>
+        [fsProperty("text")]
         public string Text { get; set; }
     }
 

@@ -30,11 +30,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// A recognized capture group for the entity.
         /// </summary>
         /// <value>A recognized capture group for the entity.</value>
+        [fsProperty("group")]
         public string Group { get; set; }
         /// <summary>
         /// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
         /// </summary>
         /// <value>Zero-based character offsets that indicate where the entity value begins and ends in the input text.</value>
+        [fsProperty("location")]
         public List<long?> Location { get; set; }
     }
 

@@ -30,16 +30,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The text of the synonym.
         /// </summary>
         /// <value>The text of the synonym.</value>
+        [fsProperty("synonym")]
         public string SynonymText { get; set; }
         /// <summary>
         /// The timestamp for creation of the synonym.
         /// </summary>
         /// <value>The timestamp for creation of the synonym.</value>
+        [fsProperty("created")]
         public virtual DateTime Created { get; private set; }
         /// <summary>
         /// The timestamp for the most recent update to the synonym.
         /// </summary>
         /// <value>The timestamp for the most recent update to the synonym.</value>
+        [fsProperty("updated")]
         public virtual DateTime Updated { get; private set; }
     }
 

@@ -29,21 +29,25 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The URL that will return the same page of results.
         /// </summary>
         /// <value>The URL that will return the same page of results.</value>
+        [fsProperty("refresh_url")]
         public string RefreshUrl { get; set; }
         /// <summary>
         /// The URL that will return the next page of results.
         /// </summary>
         /// <value>The URL that will return the next page of results.</value>
+        [fsProperty("next_url")]
         public string NextUrl { get; set; }
         /// <summary>
         /// Reserved for future use.
         /// </summary>
         /// <value>Reserved for future use.</value>
+        [fsProperty("total")]
         public long? Total { get; set; }
         /// <summary>
         /// Reserved for future use.
         /// </summary>
         /// <value>Reserved for future use.</value>
+        [fsProperty("matched")]
         public long? Matched { get; set; }
     }
 

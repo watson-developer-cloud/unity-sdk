@@ -29,9 +29,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class ValueExport
     {
         /// <summary>
-        /// Specifies the type of value (`synonyms` or `patterns`). The default value is `synonyms`.
+        /// Specifies the type of value.
         /// </summary>
-        /// <value>Specifies the type of value (`synonyms` or `patterns`). The default value is `synonyms`.</value>
+        /// <value>Specifies the type of value.</value>
         public enum ValueTypeEnum
         {
             
@@ -49,39 +49,46 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         }
 
         /// <summary>
-        /// Specifies the type of value (`synonyms` or `patterns`). The default value is `synonyms`.
+        /// Specifies the type of value.
         /// </summary>
-        /// <value>Specifies the type of value (`synonyms` or `patterns`). The default value is `synonyms`.</value>
+        /// <value>Specifies the type of value.</value>
+        [fsProperty("type")]
         public ValueTypeEnum? ValueType { get; set; }
         /// <summary>
         /// The text of the entity value.
         /// </summary>
         /// <value>The text of the entity value.</value>
+        [fsProperty("value")]
         public string ValueText { get; set; }
         /// <summary>
         /// Any metadata related to the entity value.
         /// </summary>
         /// <value>Any metadata related to the entity value.</value>
+        [fsProperty("metadata")]
         public object Metadata { get; set; }
         /// <summary>
         /// The timestamp for creation of the entity value.
         /// </summary>
         /// <value>The timestamp for creation of the entity value.</value>
+        [fsProperty("created")]
         public virtual DateTime Created { get; private set; }
         /// <summary>
         /// The timestamp for the last update to the entity value.
         /// </summary>
         /// <value>The timestamp for the last update to the entity value.</value>
+        [fsProperty("updated")]
         public virtual DateTime Updated { get; private set; }
         /// <summary>
-        /// An array of synonyms for the entity value.
+        /// An array containing any synonyms for the entity value.
         /// </summary>
-        /// <value>An array of synonyms for the entity value.</value>
+        /// <value>An array containing any synonyms for the entity value.</value>
+        [fsProperty("synonyms")]
         public List<string> Synonyms { get; set; }
         /// <summary>
-        /// An array of patterns for the entity value. A pattern is specified as a regular expression.
+        /// An array containing any patterns for the entity value.
         /// </summary>
-        /// <value>An array of patterns for the entity value. A pattern is specified as a regular expression.</value>
+        /// <value>An array containing any patterns for the entity value.</value>
+        [fsProperty("patterns")]
         public List<string> Patterns { get; set; }
     }
 

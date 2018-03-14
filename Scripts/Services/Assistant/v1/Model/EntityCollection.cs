@@ -27,14 +27,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class EntityCollection
     {
         /// <summary>
-        /// An array of entities.
+        /// An array of objects describing the entities defined for the workspace.
         /// </summary>
-        /// <value>An array of entities.</value>
+        /// <value>An array of objects describing the entities defined for the workspace.</value>
+        [fsProperty("entities")]
         public List<EntityExport> Entities { get; set; }
         /// <summary>
-        /// An object defining the pagination data for the returned objects.
+        /// The pagination data for the returned objects.
         /// </summary>
-        /// <value>An object defining the pagination data for the returned objects.</value>
+        /// <value>The pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

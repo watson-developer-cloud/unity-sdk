@@ -20,15 +20,16 @@ using FullSerializer;
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// An object defining the user input.
+    /// The user input.
     /// </summary>
     [fsObject]
     public class InputData
     {
         /// <summary>
-        /// The text of the user input.
+        /// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// </summary>
-        /// <value>The text of the user input.</value>
+        /// <value>The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it must be no longer than 2048 characters.</value>
+        [fsProperty("text")]
         public string Text { get; set; }
     }
 

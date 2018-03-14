@@ -30,11 +30,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// An array of entity values.
         /// </summary>
         /// <value>An array of entity values.</value>
+        [fsProperty("values")]
         public List<ValueExport> Values { get; set; }
         /// <summary>
         /// An object defining the pagination data for the returned objects.
         /// </summary>
         /// <value>An object defining the pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

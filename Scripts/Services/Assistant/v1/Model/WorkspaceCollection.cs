@@ -27,14 +27,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     public class WorkspaceCollection
     {
         /// <summary>
-        /// An array of workspaces.
+        /// An array of objects describing the workspaces associated with the service instance.
         /// </summary>
-        /// <value>An array of workspaces.</value>
+        /// <value>An array of objects describing the workspaces associated with the service instance.</value>
+        [fsProperty("workspaces")]
         public List<Workspace> Workspaces { get; set; }
         /// <summary>
         /// An object defining the pagination data for the returned objects.
         /// </summary>
         /// <value>An object defining the pagination data for the returned objects.</value>
+        [fsProperty("pagination")]
         public Pagination Pagination { get; set; }
     }
 

@@ -122,7 +122,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(request.Input, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnMessageResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/message", workspaceId));
@@ -201,15 +204,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-
+            
             CreateWorkspaceRequestObj req = new CreateWorkspaceRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
             req.OnResponse = OnCreateWorkspaceResponse;
-
+            
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
             if (connector == null)
                 return false;
@@ -293,6 +300,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteWorkspaceResponse;
 
@@ -559,7 +567,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateWorkspaceResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
@@ -645,7 +656,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateIntentResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
@@ -732,6 +746,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteIntentResponse;
 
@@ -1001,7 +1016,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateIntentResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
@@ -1088,7 +1106,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateExampleResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
@@ -1176,6 +1197,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteExampleResponse;
 
@@ -1446,7 +1468,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateExampleResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
@@ -1532,7 +1557,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateCounterexampleResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
@@ -1619,6 +1647,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteCounterexampleResponse;
 
@@ -1886,7 +1915,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateCounterexampleResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
@@ -1972,7 +2004,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateEntityResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
@@ -2059,6 +2094,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteEntityResponse;
 
@@ -2328,7 +2364,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateEntityResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
@@ -2415,7 +2454,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateValueResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
@@ -2503,6 +2545,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteValueResponse;
 
@@ -2775,7 +2818,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateValueResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
@@ -2863,7 +2909,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateSynonymResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
@@ -2952,6 +3001,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteSynonymResponse;
 
@@ -3225,7 +3275,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateSynonymResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
@@ -3311,7 +3364,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateDialogNodeResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
@@ -3398,10 +3454,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
+            req.Delete = true;
 
             req.OnResponse = OnDeleteDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialogNodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
                 return false;
 
@@ -3489,7 +3546,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
             req.OnResponse = OnGetDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialogNodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
                 return false;
 
@@ -3665,10 +3722,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            req.Headers["Content-Type"] = "application/json";
+            fsData data = null;
+            _serializer.TrySerialize(properties, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialogNodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
                 return false;
 

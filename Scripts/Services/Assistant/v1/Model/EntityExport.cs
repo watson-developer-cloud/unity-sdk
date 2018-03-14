@@ -31,36 +31,43 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The name of the entity.
         /// </summary>
         /// <value>The name of the entity.</value>
+        [fsProperty("entity")]
         public string EntityName { get; set; }
         /// <summary>
         /// The timestamp for creation of the entity.
         /// </summary>
         /// <value>The timestamp for creation of the entity.</value>
+        [fsProperty("created")]
         public virtual DateTime Created { get; private set; }
         /// <summary>
         /// The timestamp for the last update to the entity.
         /// </summary>
         /// <value>The timestamp for the last update to the entity.</value>
+        [fsProperty("updated")]
         public virtual DateTime Updated { get; private set; }
         /// <summary>
         /// The description of the entity.
         /// </summary>
         /// <value>The description of the entity.</value>
+        [fsProperty("description")]
         public string Description { get; set; }
         /// <summary>
         /// Any metadata related to the entity.
         /// </summary>
         /// <value>Any metadata related to the entity.</value>
+        [fsProperty("metadata")]
         public object Metadata { get; set; }
         /// <summary>
         /// Whether fuzzy matching is used for the entity.
         /// </summary>
         /// <value>Whether fuzzy matching is used for the entity.</value>
+        [fsProperty("fuzzy_match")]
         public bool? FuzzyMatch { get; set; }
         /// <summary>
-        /// An array of entity values.
+        /// An array objects describing the entity values.
         /// </summary>
-        /// <value>An array of entity values.</value>
+        /// <value>An array objects describing the entity values.</value>
+        [fsProperty("values")]
         public List<ValueExport> Values { get; set; }
     }
 
