@@ -388,6 +388,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetWorkspaceResponse;
@@ -479,7 +481,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListWorkspacesResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
@@ -835,6 +846,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetIntentResponse;
@@ -928,7 +941,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (export != null)
+                req.Parameters["export"] = export;
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListIntentsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
@@ -1287,7 +1311,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnGetExampleResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
@@ -1379,7 +1404,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListExamplesResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
@@ -1735,6 +1769,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetCounterexampleResponse;
@@ -1826,6 +1862,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListCounterexamplesResponse;
@@ -2183,6 +2229,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
+            if (export != null)
+                req.Parameters["export"] = export;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetEntityResponse;
@@ -2276,7 +2326,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (export != null)
+                req.Parameters["export"] = export;
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListEntitiesResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
@@ -2635,6 +2696,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (export != null)
+                req.Parameters["export"] = export;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetValueResponse;
@@ -2729,7 +2794,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (export != null)
+                req.Parameters["export"] = export;
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListValuesResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
@@ -3091,6 +3167,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetSynonymResponse;
@@ -3185,7 +3263,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListSynonymsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
@@ -3542,6 +3629,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetDialogNodeResponse;
@@ -3634,7 +3723,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (includeCount != null)
+                req.Parameters["include_count"] = includeCount;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListDialogNodesResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
@@ -3812,6 +3910,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if(pageLimit != null)
+                req.Parameters["page_imit"] = pageLimit;
+            if(!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListAllLogsResponse;
@@ -3903,7 +4010,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Parameters["version"] = VersionDate;
-
+            if (pageLimit != null)
+                req.Parameters["page_limit"] = pageLimit;
+            if (!string.IsNullOrEmpty(sort))
+                req.Parameters["sort"] = sort;
+            if (!string.IsNullOrEmpty(cursor))
+                req.Parameters["cursor"] = cursor;
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
             req.OnResponse = OnListLogsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/logs", workspaceId));

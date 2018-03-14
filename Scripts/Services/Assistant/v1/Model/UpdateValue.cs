@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -24,7 +25,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
     /// <summary>
     /// UpdateValue.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(UpdateValueConverter))]
     public class UpdateValue
     {
         /// <summary>
@@ -33,13 +34,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>Specifies the type of value.</value>
         public enum ValueTypeEnum
         {
-            
+
             /// <summary>
             /// Enum SYNONYMS for synonyms
             /// </summary>
             [EnumMember(Value = "synonyms")]
             SYNONYMS,
-            
+
             /// <summary>
             /// Enum PATTERNS for patterns
             /// </summary>
@@ -79,4 +80,64 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         public List<string> Patterns { get; set; }
     }
 
+    #region Updaet Value Converter
+    public class UpdateValueConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(CreateValue);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            UpdateValue updateValue = (UpdateValue)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (updateValue.ValueType != null)
+            {
+                _serializer.TrySerialize(updateValue.ValueType, out tempData);
+                serialization.Add("type", tempData);
+            }
+
+            if (updateValue.Value != null)
+            {
+                _serializer.TrySerialize(updateValue.Value, out tempData);
+                serialization.Add("value", tempData);
+            }
+
+            if (updateValue.Metadata != null)
+            {
+                _serializer.TrySerialize(updateValue.Metadata, out tempData);
+                serialization.Add("metadata", tempData);
+            }
+
+            if (updateValue.Synonyms != null)
+            {
+                _serializer.TrySerialize(updateValue.Synonyms, out tempData);
+                serialization.Add("synonyms", tempData);
+            }
+
+            if (updateValue.Patterns != null)
+            {
+                _serializer.TrySerialize(updateValue.Patterns, out tempData);
+                serialization.Add("patterns", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+        #endregion
+    }
 }

@@ -80,7 +80,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         public List<string> Patterns { get; set; }
     }
 
-    #region Value Type Converter
+    #region Create Value Converter
     public class CreateValueConverter : fsConverter
     {
         private fsSerializer _serializer = new fsSerializer();

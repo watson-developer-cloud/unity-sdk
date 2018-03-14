@@ -33,7 +33,8 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _workspaceId;
+        private string _url = null;
+        private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
         private string _createdWorkspaceId;
 
         private Assistant _service;
@@ -44,17 +45,17 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _inputString = "Turn on the winshield wipers";
 
         private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
-        private static string _createdWorkspaceDescription = "A Workspace created by the Unity SDK Conversation example script. Please delete this.";
+        private static string _createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
         private static string _createdWorkspaceLanguage = "en";
-        private static string _createdEntity = "entity";
-        private static string _createdEntityDescription = "Entity created by the Unity SDK Conversation example script.";
-        private static string _createdValue = "value";
-        private static string _createdIntent = "intent";
-        private static string _createdIntentDescription = "Intent created by the Unity SDK Conversation example script.";
-        private static string _createdCounterExampleText = "Example text";
-        private static string _createdSynonym = "synonym";
-        private static string _createdExample = "example";
-        private static string _dialogNodeName = "dialognode";
+        private static string _createdEntity = "untiyEntity";
+        private static string _createdEntityDescription = "Entity created by the Unity SDK Assistant example script.";
+        private static string _createdValue = "untiyuntiyalue";
+        private static string _createdIntent = "untiyIntent";
+        private static string _createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
+        private static string _createdCounterExampleText = "untiyExample text";
+        private static string _createdSynonym = "untiySynonym";
+        private static string _createdExample = "untiyExample";
+        private static string _dialogNodeName = "untiyDialognode";
         private static string _dialogNodeDesc = "Unity SDK Integration test dialog node";
 
         private bool _listWorkspacesTested = false;
@@ -141,7 +142,7 @@ namespace Assets.Watson.Scripts.UnitTests
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
-            _workspaceId = credential.WorkspaceId.ToString();
+            //_workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -195,7 +196,7 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.ListIntents(OnListIntents, OnFail, _createdWorkspaceId);
             while (!_listIntentsTested)
                 yield return null;
-            //  Create Intents
+            //  Create Intent
             CreateIntent createIntent = new CreateIntent()
             {
                 Intent = _createdIntent,
@@ -205,7 +206,7 @@ namespace Assets.Watson.Scripts.UnitTests
             while (!_createIntentTested)
                 yield return null;
             //  Get Intent
-            _service.GetIntent(OnGetIntent, OnFail, _workspaceId, _createdIntent);
+            _service.GetIntent(OnGetIntent, OnFail, _createdWorkspaceId, _createdIntent);
             while (!_getIntentTested)
                 yield return null;
             //  Update Intents
@@ -216,12 +217,12 @@ namespace Assets.Watson.Scripts.UnitTests
                 Intent = updatedIntent,
                 Description = updatedIntentDescription
             };
-            _service.UpdateIntent(OnUpdateIntent, OnFail, _workspaceId, _createdIntent, updateIntent);
+            _service.UpdateIntent(OnUpdateIntent, OnFail, _createdWorkspaceId, _createdIntent, updateIntent);
             while (!_updateIntentTested)
                 yield return null;
 
             //  List Examples
-            _service.ListExamples(OnListExamples, OnFail, _workspaceId, _createdIntent);
+            _service.ListExamples(OnListExamples, OnFail, _createdWorkspaceId, updatedIntent);
             while (!_listExamplesTested)
                 yield return null;
             //  Create Examples
@@ -229,11 +230,11 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Text = _createdExample
             };
-            _service.CreateExample(OnCreateExample, OnFail, _workspaceId, _createdIntent, createExample);
+            _service.CreateExample(OnCreateExample, OnFail, _createdWorkspaceId, updatedIntent, createExample);
             while (!_createExampleTested)
                 yield return null;
             //  Get Example
-            _service.GetExample(OnGetExample, OnFail, _workspaceId, _createdIntent, _createdExample);
+            _service.GetExample(OnGetExample, OnFail, _createdWorkspaceId, updatedIntent, _createdExample);
             while (!_getExampleTested)
                 yield return null;
             //  Update Examples
@@ -242,12 +243,12 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Text = updatedExample
             };
-            _service.UpdateExample(OnUpdateExample, OnFail, _workspaceId, _createdIntent, _createdExample, updateExample);
+            _service.UpdateExample(OnUpdateExample, OnFail, _createdWorkspaceId, updatedIntent, _createdExample, updateExample);
             while (!_updateExampleTested)
                 yield return null;
 
             //  List Entities
-            _service.ListEntities(OnListEntities, OnFail, _workspaceId);
+            _service.ListEntities(OnListEntities, OnFail, _createdWorkspaceId);
             while (!_listEntitiesTested)
                 yield return null;
             //  Create Entities
@@ -256,11 +257,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 Entity = _createdEntity,
                 Description = _createdEntityDescription
             };
-            _service.CreateEntity(OnCreateEntity, OnFail, _workspaceId, entity);
+            _service.CreateEntity(OnCreateEntity, OnFail, _createdWorkspaceId, entity);
             while (!_createEntityTested)
                 yield return null;
             //  Get Entity
-            _service.GetEntity(OnGetEntity, OnFail, _workspaceId, _createdEntity);
+            _service.GetEntity(OnGetEntity, OnFail, _createdWorkspaceId, _createdEntity);
             while (!_getEntityTested)
                 yield return null;
             //  Update Entities
@@ -271,12 +272,12 @@ namespace Assets.Watson.Scripts.UnitTests
                 Entity = updatedEntity,
                 Description = updatedEntityDescription
             };
-            _service.UpdateEntity(OnUpdateEntity, OnFail, _workspaceId, _createdEntity, updateEntity);
+            _service.UpdateEntity(OnUpdateEntity, OnFail, _createdWorkspaceId, _createdEntity, updateEntity);
             while (!_updateEntityTested)
                 yield return null;
 
             //  List Values
-            _service.ListValues(OnListValues, OnFail, _workspaceId, _createdEntity);
+            _service.ListValues(OnListValues, OnFail, _createdWorkspaceId, updatedEntity);
             while (!_listValuesTested)
                 yield return null;
             //  Create Values
@@ -284,11 +285,11 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Value = _createdValue
             };
-            _service.CreateValue(OnCreateValue, OnFail, _workspaceId, _createdEntity, value);
+            _service.CreateValue(OnCreateValue, OnFail, _createdWorkspaceId, updatedEntity, value);
             while (!_createValueTested)
                 yield return null;
             //  Get Value
-            _service.GetValue(OnGetValue, OnFail, _workspaceId, _createdEntity, _createdValue);
+            _service.GetValue(OnGetValue, OnFail, _createdWorkspaceId, updatedEntity, _createdValue);
             while (!_getValueTested)
                 yield return null;
             //  Update Values
@@ -297,12 +298,12 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Value = updatedValue
             };
-            _service.UpdateValue(OnUpdateValue, OnFail, _workspaceId, _createdEntity, _createdValue, updateValue);
+            _service.UpdateValue(OnUpdateValue, OnFail, _createdWorkspaceId, updatedEntity, _createdValue, updateValue);
             while (!_updateValueTested)
                 yield return null;
 
             //  List Synonyms
-            _service.ListSynonyms(OnListSynonyms, OnFail, _workspaceId, _createdEntity, _createdValue);
+            _service.ListSynonyms(OnListSynonyms, OnFail, _createdWorkspaceId, updatedEntity, updatedValue);
             while (!_listSynonymsTested)
                 yield return null;
             //  Create Synonyms
@@ -310,11 +311,11 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Synonym = _createdSynonym
             };
-            _service.CreateSynonym(OnCreateSynonym, OnFail, _workspaceId, _createdEntity, _createdValue, synonym);
+            _service.CreateSynonym(OnCreateSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, synonym);
             while (!_createSynonymTested)
                 yield return null;
             //  Get Synonym
-            _service.GetSynonym(OnGetSynonym, OnFail, _workspaceId, _createdEntity, _createdValue, _createdSynonym);
+            _service.GetSynonym(OnGetSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, _createdSynonym);
             while (!_getSynonymTested)
                 yield return null;
             //  Update Synonyms
@@ -323,12 +324,12 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Synonym = updatedSynonym
             };
-            _service.UpdateSynonym(OnUpdateSynonym, OnFail, _workspaceId, _createdEntity, _createdValue, _createdSynonym, updateSynonym);
+            _service.UpdateSynonym(OnUpdateSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, _createdSynonym, updateSynonym);
             while (!_updateSynonymTested)
                 yield return null;
 
             //  List Dialog Nodes
-            _service.ListDialogNodes(OnListDialogNodes, OnFail, _workspaceId);
+            _service.ListDialogNodes(OnListDialogNodes, OnFail, _createdWorkspaceId);
             while (!_listDialogNodesTested)
                 yield return null;
             //  Create Dialog Nodes
@@ -337,11 +338,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 DialogNode = _dialogNodeName,
                 Description = _dialogNodeDesc
             };
-            _service.CreateDialogNode(OnCreateDialogNode, OnFail, _workspaceId, createDialogNode);
+            _service.CreateDialogNode(OnCreateDialogNode, OnFail, _createdWorkspaceId, createDialogNode);
             while (!_createDialogNodeTested)
                 yield return null;
             //  Get Dialog Node
-            _service.GetDialogNode(OnGetDialogNode, OnFail, _workspaceId, _dialogNodeName);
+            _service.GetDialogNode(OnGetDialogNode, OnFail, _createdWorkspaceId, _dialogNodeName);
             while (!_getDialogNodeTested)
                 yield return null;
             //  Update Dialog Nodes
@@ -352,12 +353,12 @@ namespace Assets.Watson.Scripts.UnitTests
                 DialogNode = updatedDialogNodeName,
                 Description = updatedDialogNodeDescription
             };
-            _service.UpdateDialogNode(OnUpdateDialogNode, OnFail, _workspaceId, _dialogNodeName, updateDialogNode);
+            _service.UpdateDialogNode(OnUpdateDialogNode, OnFail, _createdWorkspaceId, _dialogNodeName, updateDialogNode);
             while (!_updateDialogNodeTested)
                 yield return null;
 
             //  List Logs In Workspace
-            _service.ListLogs(OnListLogs, OnFail, _workspaceId);
+            _service.ListLogs(OnListLogs, OnFail, _createdWorkspaceId);
             while (!_listLogsInWorkspaceTested)
                 yield return null;
             //  List All Logs
@@ -367,7 +368,7 @@ namespace Assets.Watson.Scripts.UnitTests
                 yield return null;
 
             //  List Counterexamples
-            _service.ListCounterexamples(OnListCounterexamples, OnFail, _workspaceId);
+            _service.ListCounterexamples(OnListCounterexamples, OnFail, _createdWorkspaceId);
             while (!_listCounterexamplesTested)
                 yield return null;
             //  Create Counterexamples
@@ -375,11 +376,11 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Text = _createdCounterExampleText
             };
-            _service.CreateCounterexample(OnCreateCounterexample, OnFail, _workspaceId, example);
+            _service.CreateCounterexample(OnCreateCounterexample, OnFail, _createdWorkspaceId, example);
             while (!_createCounterexampleTested)
                 yield return null;
             //  Get Counterexample
-            _service.GetCounterexample(OnGetCounterexample, OnFail, _workspaceId, _createdCounterExampleText);
+            _service.GetCounterexample(OnGetCounterexample, OnFail, _createdWorkspaceId, _createdCounterExampleText);
             while (!_getCounterexampleTested)
                 yield return null;
             //  Update Counterexamples
@@ -388,40 +389,40 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 Text = updatedCounterExampleText
             };
-            _service.UpdateCounterexample(OnUpdateCounterexample, OnFail, _workspaceId, _createdCounterExampleText, updateCounterExample);
+            _service.UpdateCounterexample(OnUpdateCounterexample, OnFail, _createdWorkspaceId, _createdCounterExampleText, updateCounterExample);
             while (!_updateCounterexampleTested)
                 yield return null;
 
             //  Delete Counterexample
-            _service.DeleteCounterexample(OnDeleteCounterexample, OnFail, _workspaceId, _createdCounterExampleText);
+            _service.DeleteCounterexample(OnDeleteCounterexample, OnFail, _createdWorkspaceId, updatedCounterExampleText);
             while (!_deleteCounterexampleTested)
                 yield return null;
             //  Delete Dialog Node
-            _service.DeleteDialogNode(OnDeleteDialogNode, OnFail, _workspaceId, _dialogNodeName);
+            _service.DeleteDialogNode(OnDeleteDialogNode, OnFail, _createdWorkspaceId, updatedDialogNodeName);
             while (!_deleteDialogNodeTested)
                 yield return null;
             //  Delete Synonym
-            _service.DeleteSynonym(OnDeleteSynonym, OnFail, _workspaceId, _createdEntity, _createdValue, _createdSynonym);
+            _service.DeleteSynonym(OnDeleteSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, updatedSynonym);
             while (!_deleteSynonymTested)
                 yield return null;
             //  Delete Value
-            _service.DeleteValue(OnDeleteValue, OnFail, _workspaceId, _createdEntity, _createdValue);
+            _service.DeleteValue(OnDeleteValue, OnFail, _createdWorkspaceId, updatedEntity, updatedValue);
             while (!_deleteValueTested)
                 yield return null;
             //  Delete Entity
-            _service.DeleteEntity(OnDeleteEntity, OnFail, _workspaceId, _createdEntity);
+            _service.DeleteEntity(OnDeleteEntity, OnFail, _createdWorkspaceId, updatedEntity);
             while (!_deleteEntityTested)
                 yield return null;
             //  Delete Example
-            _service.DeleteExample(OnDeleteExample, OnFail, _workspaceId, _createdIntent, _createdExample);
+            _service.DeleteExample(OnDeleteExample, OnFail, _createdWorkspaceId, updatedIntent, updatedExample);
             while (!_deleteExampleTested)
                 yield return null;
             //  Delete Intent
-            _service.DeleteIntent(OnDeleteIntent, OnFail, _workspaceId, _createdIntent);
+            _service.DeleteIntent(OnDeleteIntent, OnFail, _createdWorkspaceId, updatedIntent);
             while (!_deleteIntentTested)
                 yield return null;
             //  Delete Workspace
-            _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _workspaceId);
+            _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
                 yield return null;
 
@@ -432,265 +433,266 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
             _deleteWorkspaceTested = true;
         }
 
         private void OnDeleteIntent(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
             _deleteIntentTested = true;
         }
 
         private void OnDeleteExample(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
             _deleteExampleTested = true;
         }
 
         private void OnDeleteEntity(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
             _deleteEntityTested = true;
         }
 
         private void OnDeleteValue(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
             _deleteValueTested = true;
         }
 
         private void OnDeleteSynonym(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
             _deleteSynonymTested = true;
         }
 
         private void OnDeleteDialogNode(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
             _deleteDialogNodeTested = true;
         }
 
         private void OnDeleteCounterexample(object response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
             _deleteCounterexampleTested = true;
         }
 
         private void OnUpdateCounterexample(Counterexample response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateCounterexample()", "Response: {0}", customData["json"].ToString());
             _updateCounterexampleTested = true;
         }
 
         private void OnGetCounterexample(Counterexample response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetCounterexample()", "Response: {0}", customData["json"].ToString());
             _getCounterexampleTested = true;
         }
 
         private void OnCreateCounterexample(Counterexample response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateCounterexample()", "Response: {0}", customData["json"].ToString());
             _createCounterexampleTested = true;
         }
 
         private void OnListCounterexamples(CounterexampleCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListCounterexamples()", "Response: {0}", customData["json"].ToString());
             _listCounterexamplesTested = true;
         }
 
         private void OnListAllLogs(LogCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListAllLogs()", "Response: {0}", customData["json"].ToString());
             _listAllLogsTested = true;
         }
 
         private void OnListLogs(LogCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListLogs()", "Response: {0}", customData["json"].ToString());
             _listLogsInWorkspaceTested = true;
         }
 
         private void OnUpdateDialogNode(DialogNode response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateDialogNode()", "Response: {0}", customData["json"].ToString());
             _updateDialogNodeTested = true;
         }
 
         private void OnGetDialogNode(DialogNode response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetDialogNode()", "Response: {0}", customData["json"].ToString());
             _getDialogNodeTested = true;
         }
 
         private void OnCreateDialogNode(DialogNode response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateDialogNode()", "Response: {0}", customData["json"].ToString());
             _createDialogNodeTested = true;
         }
 
         private void OnListDialogNodes(DialogNodeCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListDialogNodes()", "Response: {0}", customData["json"].ToString());
             _listDialogNodesTested = true;
         }
 
         private void OnUpdateSynonym(Synonym response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateSynonym()", "Response: {0}", customData["json"].ToString());
             _updateSynonymTested = true;
         }
 
         private void OnGetSynonym(Synonym response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetSynonym()", "Response: {0}", customData["json"].ToString());
             _getSynonymTested = true;
         }
 
         private void OnCreateSynonym(Synonym response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateSynonym()", "Response: {0}", customData["json"].ToString());
             _createSynonymTested = true;
         }
 
         private void OnListSynonyms(SynonymCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListSynonyms()", "Response: {0}", customData["json"].ToString());
             _listSynonymsTested = true;
         }
 
         private void OnUpdateValue(Value response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateValue()", "Response: {0}", customData["json"].ToString());
             _updateValueTested = true;
         }
 
         private void OnGetValue(ValueExport response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetValue()", "Response: {0}", customData["json"].ToString());
             _getValueTested = true;
         }
 
         private void OnCreateValue(Value response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateValue()", "Response: {0}", customData["json"].ToString());
             _createValueTested = true;
         }
 
         private void OnListValues(ValueCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListValues()", "Response: {0}", customData["json"].ToString());
             _listValuesTested = true;
         }
 
         private void OnUpdateEntity(Entity response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateEntity()", "Response: {0}", customData["json"].ToString());
             _updateEntityTested = true;
         }
 
         private void OnGetEntity(EntityExport response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetEntity()", "Response: {0}", customData["json"].ToString());
             _getEntityTested = true;
         }
 
         private void OnCreateEntity(Entity response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateEntity()", "Response: {0}", customData["json"].ToString());
             _createEntityTested = true;
         }
 
         private void OnListEntities(EntityCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListEntities()", "Response: {0}", customData["json"].ToString());
             _listEntitiesTested = true;
         }
 
         private void OnUpdateExample(Example response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateExample()", "Response: {0}", customData["json"].ToString());
             _updateExampleTested = true;
         }
 
         private void OnGetExample(Example response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetExample()", "Response: {0}", customData["json"].ToString());
             _getExampleTested = true;
         }
 
         private void OnCreateExample(Example response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateExample()", "Response: {0}", customData["json"].ToString());
             _createExampleTested = true;
         }
 
         private void OnListExamples(ExampleCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListExamples()", "Response: {0}", customData["json"].ToString());
             _listExamplesTested = true;
         }
 
         private void OnUpdateIntent(Intent response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateIntent()", "Response: {0}", customData["json"].ToString());
             _updateIntentTested = true;
         }
 
         private void OnGetIntent(IntentExport response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetIntent()", "Response: {0}", customData["json"].ToString());
             _getIntentTested = true;
         }
 
         private void OnCreateIntent(Intent response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnCreateIntent()", "Response: {0}", customData["json"].ToString());
             _createIntentTested = true;
         }
 
         private void OnListIntents(IntentCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListIntents()", "Response: {0}", customData["json"].ToString());
             _listIntentsTested = true;
         }
 
         private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
             _messageTested = true;
         }
 
         private void OnUpdateWorkspace(Workspace response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
             _updateWorkspaceTested = true;
         }
 
         private void OnGetWorkspace(WorkspaceExport response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
             _getWorkspaceTested = true;
         }
 
         private void OnCreateWorkspace(Workspace response, Dictionary<string, object> customData)
         {
+            Log.Debug("ExampleAssistant.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
             _createdWorkspaceId = response.WorkspaceId;
-            Test(!string.IsNullOrEmpty(response.WorkspaceId));
             _createWorkspaceTested = true;
         }
 
         private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
         {
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
             _listWorkspacesTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
+            Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
             Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
         }
     }
