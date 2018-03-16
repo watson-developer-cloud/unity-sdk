@@ -47,7 +47,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static class String
         {
             /// <exclude />
-            public const string Version = "watson-apis-unity-sdk/2.0.0";
+            public const string Version = "watson-apis-unity-sdk/2.1.0";
             /// <exclude />
             public const string DebugDispalyQuality = "Quality: {0}";
         }
