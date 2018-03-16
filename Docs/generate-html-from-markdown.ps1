@@ -1,5 +1,6 @@
 ﻿pandoc ../README.md -f markdown -t html -s -o ../README.html
 pandoc ../Scripts/Services/AlchemyAPI/v1/README.md -f markdown -t html -s -o ../Scripts/Services/AlchemyAPI/v1/index.html
+pandoc ../Scripts/Services/Assistant/v1/README.md -f markdown -t html -s -o ../Scripts/Services/Assistant/v1/index.html
 pandoc ../Scripts/Services/Conversation/v1/README.md -f markdown -t html -s -o ../Scripts/Services/Conversation/v1/index.html
 pandoc ../Scripts/Services/Discovery/v1/README.md -f markdown -t html -s -o ../Scripts/Services/Discovery/v1/index.html
 pandoc ../Scripts/Services/DocumentConversion/v1/README.md -f markdown -t html -s -o ../Scripts/Services/DocumentConversion/v1/index.html
