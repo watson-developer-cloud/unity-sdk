@@ -61,6 +61,7 @@ The credentials for each service contain either a `username`, `password` and end
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
 * [Alchemy Language](/Scripts/Services/AlchemyAPI/v1) **Deprecated**
+* [Assistant](/Scripts/Services/Assistant/v1)
 * [Conversation](/Scripts/Services/Conversation/v1)
 * [Discovery](/Scripts/Services/Discovery/v1)
 * [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**

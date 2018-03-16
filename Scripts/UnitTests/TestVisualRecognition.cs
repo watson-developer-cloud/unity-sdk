@@ -265,7 +265,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         #region Delay
 #if DELETE_TRAINED_CLASSIFIER
-
         //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
         //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
         private float _delayTime = 15f;
