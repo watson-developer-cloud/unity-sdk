@@ -127,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     [fsObject]
     public class VcapCredentials
     {
-        public Dictionary<string, List<VcapCredential>> VCAP_SERVICES { get; set; }
+		public Dictionary<string, Credential> VCAP_SERVICES { get; set; }
     }
 
     [fsObject]
@@ -152,9 +152,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string Username { get; set; }
         [fsProperty("password")]
         public string Password { get; set; }
-        [fsProperty("workspaceId")]
+        [fsProperty("workspace_id")]
         public string WorkspaceId { get; set; }
-        [fsProperty("apikey")]
+        [fsProperty("api_key")]
         public string Apikey { get; set; }
         [fsProperty("note")]
         public string Note { get; set; }

@@ -15,9 +15,9 @@
 *
 */
 //  Uncomment to train a new classifier
-#define TRAIN_CLASSIFIER
+//#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-#define DELETE_TRAINED_CLASSIFIER
+//#define DELETE_TRAINED_CLASSIFIER
 
 using UnityEngine;
 using System.Collections;
@@ -136,7 +136,7 @@ public class ExampleVisualRecognition : MonoBehaviour
 
         while (!_detectFacesPostTested)
             yield return null;
-        
+
 #if DELETE_TRAINED_CLASSIFIER
         #region Delay
         Runnable.Run(Delay(_delayTime));
@@ -163,11 +163,13 @@ public class ExampleVisualRecognition : MonoBehaviour
         _getClassifiersTested = true;
     }
 
+#if DELETE_TRAINED_CLASSIFIER
     private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", customData["json"].ToString());
         _getClassifierTested = true;
     }
+#endif
 
 #if DELETE_TRAINED_CLASSIFIER
     private void OnDeleteClassifier(bool success, Dictionary<string, object> customData)
@@ -218,8 +220,10 @@ public class ExampleVisualRecognition : MonoBehaviour
     #region Delay
     //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
     //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
+#if DELETE_TRAINED_CLASSIFIER
     private float _delayTime = 15f;
     private bool _isWaitingForDelay = false;
+
 
     private IEnumerator Delay(float delayTime)
     {
@@ -228,6 +232,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         yield return new WaitForSeconds(delayTime);
         _isWaitingForDelay = false;
     }
+#endif
     #endregion
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

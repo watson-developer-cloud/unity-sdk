@@ -27,6 +27,8 @@ using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using IBM.Watson.DeveloperCloud.Connection;
+using System.Collections;
+using UnityEngine.Networking;
 #if NETFX_CORE
 using System.Reflection;
 #endif
@@ -397,7 +399,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             return bytes;
         }
-
 
         #region De-Serialization
 
@@ -1155,7 +1156,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-#region Get Token
+        #region Get Token
         private const string TokenRestEndpoint = "https://gateway.watsonplatform.net/authorization/api/v1/token";
         private const string TokenStreamEndpoint = "https://stream.watsonplatform.net/authorization/api/v1/token";
 
@@ -1250,7 +1251,20 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             if (((GetTokenReq)req).Callback != null)
                 ((GetTokenReq)req).Callback(resp.Success ? authenticationToken : null, string.IsNullOrEmpty(customData) ? token : customData);
         }
-#endregion
+        #endregion
+
+        #region
+        /// <summary>
+        /// Create basic authentication header data for REST requests.
+        /// </summary>
+        /// <param name="username">The username to be encoded.</param>
+        /// <param name="password">The password to be encoded.</param>
+        /// <returns>The authentication data base64 encoded.</returns>
+        public static string CreateAuthorization(string username, string password)
+        {
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(username + ":" + password));
+        }
+        #endregion
     }
 
     /// <summary>
@@ -1289,6 +1303,81 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             {
                 return TimeUntilExpiration <= 0;
             }
+        }
+    }
+
+    public class SimpleGet: IDisposable
+    {
+        public string Result { get; set; }
+        public bool IsComplete { get; set; }
+
+        private string _url = null;
+        private string _username = null;
+        private string _password = null;
+        private bool _disposed = false;
+
+        public SimpleGet(string url, string username = null, string password = null)
+        {
+			IsComplete = false;
+
+            if (string.IsNullOrEmpty(url))
+                throw new ArgumentNullException("url is required for SimpleGet()");
+
+            _url = url;
+            if (!string.IsNullOrEmpty(username))
+                _username = username;
+            if (!string.IsNullOrEmpty(password))
+                _password = password;
+
+            Runnable.Run(GetRequest());
+        }
+
+        private IEnumerator GetRequest()
+        {
+            if (string.IsNullOrEmpty(_url))
+                throw new ArgumentNullException("No url is set.");
+
+            using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(_url))
+            {
+                string authorization = Utility.CreateAuthorization(_username, _password);
+                unityWebRequest.SetRequestHeader("Authorization", authorization);
+
+                yield return unityWebRequest.SendWebRequest();
+
+                if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
+                {
+                    Log.Debug("SimpleGet.GetRequest()", "Error with get request: {0}", unityWebRequest.error);
+                }
+                else
+                {
+                    Result = unityWebRequest.downloadHandler.text;
+                    IsComplete = true;
+                }
+            }
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+
+                if (disposing)
+                {
+                    // Clean up managed resources, like files or GDI objects
+                }
+
+                // Clean up unmanaged resources, like COM components
+            }
+        }
+
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
     }
 }

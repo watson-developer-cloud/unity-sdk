@@ -1,5 +1,16 @@
 Change Log
 ==========
+
+## Version 2.1.0
+_2018-03-06_
+New: Abstract Watson Assistant service.
+New: External credentials in integration tests.
+New: Documentation on publishing a release.
+Fixed: Visual Recognition Classify method sends byte[] data in form data instead of body data.
+Fixed: Redirect Speech to Text streaming requests to TLS 1.0 streaming endpoint.
+Deprecated: Document Conversion - Please use Discovery.
+Removed: Language Translation - Please use Langauge Translator.
+
 ## Version 2.0.0
 _2017-11-20_ MAJOR RELEASE, BREAKING CHANGES
 * New: Implemented error callbacks in each call
@@ -78,7 +89,7 @@ _2016-08-26_
 * Deprecated: Retired `Dialog` service.
 * Fix: `ExampleLanguageTranslation` now is using `LanguageTranslator` before `LanguageTranslation` service goes live.
 * Fix: Abstracted custom voice model methods in `Text to Speech` service.
-* Fix: Error when pasting credentials from the new Bluemix site into the `Config Editor`.
+* Fix: Error when pasting credentials from the new IBM Cloud site into the `Config Editor`.
 * New: Added `CameraWidget` and `CameraDisplayWidget` to get video from device camera.
 * New: Added test scene for using the device camera with the `Visual Recognition` service.
 

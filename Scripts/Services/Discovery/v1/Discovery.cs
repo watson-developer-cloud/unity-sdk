@@ -29,7 +29,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
     /// <summary>
     /// This class wraps the Discovery service
-    /// <a href="http://www.ibm.com/watson/developercloud/discovery.html">Discovery Service</a>
+    /// <a href="https://www.ibm.com/watson/services/discovery/">Discovery Service</a>
     /// </summary>
     public class Discovery : IWatsonService
     {
@@ -226,7 +226,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="name">The name of the environment to be created.</param>
         /// <param name="description">The description of the environment to be created.</param>
-        /// <param name="size">The size of the environment to be created. See <a href="http://www.ibm.com/watson/developercloud/discovery.html#pricing-block">pricing.</a></param>
+        /// <param name="size">The size of the environment to be created. See <a href="https://www.ibm.com/watson/services/discovery/#pricing-block">pricing.</a></param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
         public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), int size = 0, Dictionary<string, object> customData = null)
