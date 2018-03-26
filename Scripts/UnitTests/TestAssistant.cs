@@ -33,7 +33,6 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _url = null;
         private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
         private string _createdWorkspaceId;
 
