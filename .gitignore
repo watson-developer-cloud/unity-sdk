@@ -68,3 +68,5 @@ etc.meta
 /Travis/runTests.sh.meta
 /Travis/TravisBuild.cs.meta
 Docs/publishing-release.md.meta
+*.md.meta
+*.html.meta
