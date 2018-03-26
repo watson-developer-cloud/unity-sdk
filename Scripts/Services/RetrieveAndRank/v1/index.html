@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="retrieve-and-rank">Retrieve and Rank</h1>
+<p>The IBM Watson™ [Retrieve and Rank][retrieve_and_rank] service combines two information retrieval components in a single service: the power of Apache Solr and a sophisticated machine learning capability. This combination provides users with more relevant results by automatically reranking them by using these machine learning algorithms.</p>
+<h2 id="usage">Usage</h2>
+<p>Ingest documents and query the document corpus.</p>
+<h3 id="instantiating-and-authenticating-the-service">Instantiating and authenticating the service</h3>
+<p>Before you can send requests to the service it must be instantiated and credentials must be set.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">RetrieveAndRank</span>.<span class="fu">v1</span>;</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">{</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(&lt;username&gt;, &lt;password&gt;, &lt;url&gt;);</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    RetrieveAndRank _retrieveAndRank = <span class="kw">new</span> <span class="fu">RetrieveAndRank</span>(credentials);</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">}</a></code></pre></div>
+<h3 id="fail-handler">Fail handler</h3>
+<p>These examples use a common fail handler.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">}</a></code></pre></div>
+<h3 id="getting-clusters">Getting clusters</h3>
+<p>Retrieves the list of Solr clusters for the service instance.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetClusters</span>()</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetClusters</span>(OnGetClusters, OnFail))</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetClusters()&quot;</span>, <span class="st">&quot;Failed to get clusters!&quot;</span>);</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClusters</span>(SolrClusterListResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetClusters()&quot;</span>, <span class="st">&quot;GetClusters results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="creating-a-cluster">Creating a cluster</h3>
+<p>Provisions a Solr cluster asynchronously. When the operation is successful, the status of the cluster is set to NOT_AVAILABLE. The status must be READY before you can use the cluster.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="dt">void</span> <span class="fu">CreateCluster</span>()</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">CreateCluster</span>(OnCreateCluster, OnFail, &lt;cluster-name&gt;, &lt;cluster-size&gt;))</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.CreateCluster()&quot;</span>, <span class="st">&quot;Failed to create cluster!&quot;</span>);</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnCreateCluster</span>(SolrClusterResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnCreateClusterMethod()&quot;</span>, <span class="st">&quot;CreateCluster results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="deleting-a-cluster">Deleting a cluster</h3>
+<p>Stops and deletes a Solr Cluster asynchronously.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="dt">void</span> <span class="fu">DeleteCluster</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">DeleteCluster</span>(OnDeleteCluster, OnFail, &lt;cluster-id&gt;))</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.DeleteCluster()&quot;</span>, <span class="st">&quot;Failed to delete cluster!&quot;</span>);</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteCluster</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnDeleteCluster()&quot;</span>, <span class="st">&quot;DeleteCluster results: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="get-a-cluster">Get a cluster</h3>
+<p>Returns status and other information about a cluster.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetCluster</span>()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetCluster</span>(OnGetCluster, OnFail, &lt;cluster-id&gt;))</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetCluster()&quot;</span>, <span class="st">&quot;Failed to get cluster!&quot;</span>);</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetCluster</span>(SolrClusterResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetCluster()&quot;</span>, <span class="st">&quot;GetCluster results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="listing-cluster-configs">Listing cluster configs</h3>
+<p>Retrieves all configurations for a cluster.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetClusterConfigs</span>()</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetClusterConfigs</span>(OnGetClusterConfigs, OnFail, &lt;cluster-id&gt;))</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetClusterConfigs()&quot;</span>, <span class="st">&quot;Failed to get cluster configs!&quot;</span>);</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClusterConfigs</span>(SolrConfigList resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetClusterConfigs()&quot;</span>, <span class="st">&quot;GetClusterConfigs results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="deleting-a-cluster-config">Deleting a cluster config</h3>
+<p>Deletes the configuration for a cluster. Before you delete the configuration, delete any collections that point to it.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="dt">void</span> <span class="fu">DeleteClusterConfig</span>()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">DeleteClusterConfig</span>(OnDeleteClusterConfig, OnFail, &lt;cluster-id&gt;, &lt;cluster-config&gt;))</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.DeleteClusterConfig()&quot;</span>, <span class="st">&quot;Failed to delete cluster config {0}&quot;</span>, &lt;cluster-config&gt;);</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteClusterConfig</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnDeleteClusterConfig()&quot;</span>, <span class="st">&quot;DeleteClusterConfig results: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="getting-a-cluster-config">Getting a cluster config</h3>
+<p>Retrieves the configuration for a cluster by its name.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetClusterConfig</span>()</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetClusterConfig</span>(OnGetClusterConfig, OnFail, &lt;cluster-id&gt;, &lt;cluster-config-name&gt;))</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetClusterConfig()&quot;</span>, <span class="st">&quot;Failed to get cluster config {0}!&quot;</span>, &lt;cluster-config-name&gt;);</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClusterConfig</span>(<span class="dt">byte</span>[] respData, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetClusterConfig()&quot;</span>, <span class="st">&quot;GetClusterConfig results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="save-cluster-config">Save cluster config</h3>
+<p>Saves the cluster config</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="dt">void</span> <span class="fu">SaveClusterConfig</span>()</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="kw">if</span>(!_retrieveAndRank.<span class="fu">SaveConfig</span>(OnSaveConfig, OnFail, &lt;response-data&gt;, &lt;file-path&gt;, data))</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.SaveConfig()&quot;</span>, <span class="st">&quot;Failed to save cluster config!&quot;</span>);</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnSaveConfig</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnSaveConfig()&quot;</span>, <span class="st">&quot;SaveClusterConfig results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="uploading-a-cluster-config">Uploading a cluster config</h3>
+<p>Uploads a zip file containing the configuration files for your Solr collection. The zip file must include schema.xml, solrconfig.xml, and other files you need for your configuration. Configuration files on the zip file’s path are not uploaded. The request fails if a configuration with the same name exists. To update an existing config, use the <a href="https://cwiki.apache.org/confluence/display/solr/Config+API">Solr configuration API</a>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="dt">void</span> <span class="fu">UploadClusterConfig</span>()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">UploadClusterConfig</span>(OnUploadClusterConfig, OnFail, &lt;cluster-id&gt;, &lt;cluster-config-name&gt;, &lt;cluster-config-path&gt;))</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.UploadClusterConfig()&quot;</span>, <span class="st">&quot;Failed to upload cluster config {0}!&quot;</span>, &lt;cluster-config-path&gt;);</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnUploadClusterConfig</span>(UploadResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnUploadClusterConfig()&quot;</span>, <span class="st">&quot;UploadClusterConfig results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-collection-request">List collection request</h3>
+<p>An example of a method that forwards to the <a href="https://cwiki.apache.org/confluence/display/solr/Collections+API">Solr Collections API</a>. This Retrieve and Rank resource improves error handling and resiliency of the Solr Collections API.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="dt">void</span> <span class="fu">ListCollections</span>()</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">ForwardCollectionRequest</span>(OnGetCollections, OnFail, &lt;cluster-id&gt;, CollectionsAction.<span class="fu">LIST</span>))</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.ForwardCollectionRequest()&quot;</span>, <span class="st">&quot;Failed to get collections!&quot;</span>);</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetCollections</span>(CollectionsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetCollections()&quot;</span>, <span class="st">&quot;ListCollections results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="create-collection-request">Create Collection request</h3>
+<p>An example of a method that forwards to the <a href="https://cwiki.apache.org/confluence/display/solr/Collections+API">Solr Collections API</a>. This Retrieve and Rank resource improves error handling and resiliency of the Solr Collections API.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="dt">void</span> <span class="fu">CreateCollection</span>()</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">ForwardCollectionRequest</span>(OnCreateCollection, OnFail, &lt;cluster-id&gt;, CollectionsAction.<span class="fu">CREATE</span>, &lt;collection-name&gt;, &lt;cluster-config-name&gt;))</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.ForwardCollectionRequest()&quot;</span>, <span class="st">&quot;Failed to create collections!&quot;</span>);</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnCreateCollection</span>(CollectionsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnCreateCollection()&quot;</span>, <span class="st">&quot;ListCollections results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="delete-collection-request">Delete Collection request</h3>
+<p>An example of a method that forwards to the <a href="https://cwiki.apache.org/confluence/display/solr/Collections+API">Solr Collections API</a>. This Retrieve and Rank resource improves error handling and resiliency of the Solr Collections API.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="dt">void</span> <span class="fu">DeleteCollection</span>()</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">ForwardCollectionRequest</span>(OnGetCollections, OnFail, &lt;cluster-id&gt;, CollectionsAction.<span class="fu">DELETE</span>, &lt;collection-name&gt;))</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.ForwardCollectionRequest()&quot;</span>, <span class="st">&quot;Failed to delete collections!&quot;</span>);</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetCollections</span>(CollectionsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetCollections()&quot;</span>, <span class="st">&quot;DeleteCollection results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="index-documents">Index documents</h3>
+<p>Adds content to a Solr index so you can search it.</p>
+<p>An example of a method that forwards to Solr. For more information about indexing, see <a href="https://cwiki.apache.org/confluence/display/solr/Indexing+and+Basic+Data+Operations">Indexing and Basic Data Operations</a> in the Apache Solr Reference.</p>
+<p>You must commit your documents to the index to search for them. For more information about when to commit, see <a href="https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig">UpdateHandlers in SolrConfig</a> in the Solr Reference.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="dt">void</span> <span class="fu">IndexDocuments</span>()</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">IndexDocuments</span>(OnIndexDocuments, OnFail, &lt;index-data-path&gt;, &lt;cluster-id&gt;, &lt;collection-name&gt;))</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.IndexDocuments()&quot;</span>, <span class="st">&quot;Failed to index documents!&quot;</span>);</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnIndexDocuments</span>(IndexResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnIndexDocuments()&quot;</span>, <span class="st">&quot;IndexDocuments results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="standard-search-and-ranked-search">Standard Search and Ranked Search</h3>
+<p>Forwards to the Solr <a href="https://cwiki.apache.org/confluence/display/solr/The+Standard+Query+Parser">standard query parser</a>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="dt">void</span> <span class="fu">Search</span>()</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">  <span class="co">//  Standard search</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">  <span class="dt">string</span>[] fl = { <span class="st">&quot;title&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;body&quot;</span>, <span class="st">&quot;author&quot;</span>, <span class="st">&quot;bibliography&quot;</span> };</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">Search</span>(OnSearch, OnFail, &lt;cluster-id&gt;, &lt;collection-name&gt;, &lt;query&gt;, fl))</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.Search()&quot;</span>, <span class="st">&quot;Failed to search!&quot;</span>);</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">  <span class="co">//  Ranked search</span></a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">  <span class="dt">string</span>[] fl = { <span class="st">&quot;title&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;body&quot;</span>, <span class="st">&quot;author&quot;</span>, <span class="st">&quot;bibliography&quot;</span> };</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">Search</span>(OnSearch, OnFail, &lt;cluster-id&gt;, &lt;collection-name&gt;, &lt;query&gt;, fl, <span class="kw">true</span>, &lt;ranker-id&gt;))</a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.Search()&quot;</span>, <span class="st">&quot;Failed to search!&quot;</span>);</a>
+<a class="sourceLine" id="cb16-12" data-line-number="12">}</a>
+<a class="sourceLine" id="cb16-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb16-14" data-line-number="14"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnSearch</span>(SearchResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb16-15" data-line-number="15">{</a>
+<a class="sourceLine" id="cb16-16" data-line-number="16">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnSearch()&quot;</span>, <span class="st">&quot;Search results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb16-17" data-line-number="17">}</a></code></pre></div>
+<h3 id="getting-rankers">Getting rankers</h3>
+<p>Retrieves the list of rankers for the service instance.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetRankers</span>()</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetRankers</span>(OnGetRankers, OnFail))</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetRankers()&quot;</span>, <span class="st">&quot;Failed to get rankers!&quot;</span>);</a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetRankers</span>(ListRankersPayload resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetRankers()&quot;</span>, <span class="st">&quot;GetRankers results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="creating-a-ranker">Creating a ranker</h3>
+<p>Sends data to create and train a ranker and returns information about the new ranker.</p>
+<p>When the operation is successful, the status of the ranker is set to Training. The status must be Available before you can use the ranker.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="dt">void</span> <span class="fu">CreateRanker</span>()</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">CreateRanker</span>(OnCreateRanker, OnFail, &lt;ranker-training-path&gt;, &lt;ranker-name&gt;))</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.CreateRanker()&quot;</span>, <span class="st">&quot;Failed to create ranker!&quot;</span>);</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnCreateRanker</span>(RankerStatusPayload resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnCreateRanker()&quot;</span>, <span class="st">&quot;CreateRanker results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="rank">Rank</h3>
+<p>Returns the top answer and a list of ranked answers with their ranked scores and confidence values. Use the <a href="http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#get_status">Get information about a ranker</a> method to retrieve the status.</p>
+<p>Use this method to return answers when you train the ranker with custom features. However, in most cases, you can use the <a href="http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/#query_ranker">Search and rank</a> method.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="dt">void</span> <span class="fu">Rank</span>()</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">Rank</span>(OnRank, OnFail, &lt;ranker-id&gt;, &lt;ranker-data-path&gt;))</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.Rank()&quot;</span>, <span class="st">&quot;Failed to rank!&quot;</span>);</a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb19-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnRank</span>(RankerOutputPayload resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb19-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnRank()&quot;</span>, <span class="st">&quot;Rank results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb19-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="deleting-rankers">Deleting rankers</h3>
+<p>Deletes a ranker.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="dt">void</span> <span class="fu">DeleteRanker</span>()</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">DeleteRanker</span>(OnDeleteRanker, OnFail, &lt;ranker-to-delete&gt;))</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.DeleteRanker()&quot;</span>, <span class="st">&quot;Failed to delete ranker {0}!&quot;</span>, &lt;rankerToDelete&gt;);</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteRanker</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnDeleteRanker()&quot;</span>, <span class="st">&quot;DeleteRanker results: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb20-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="getting-ranker-info">Getting ranker info</h3>
+<p>Returns status and other information about a ranker.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="dt">void</span> <span class="fu">GetRanker</span>()</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="kw">if</span> (!_retrieveAndRank.<span class="fu">GetRanker</span>(OnGetRanker, OnFail, &lt;ranker-id&gt;))</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">      Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.GetRanker()&quot;</span>, <span class="st">&quot;Failed to get ranker!&quot;</span>);</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetRanker</span>(RankerStatusPayload resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleRetrieveAndRank.OnGetRanker()&quot;</span>, <span class="st">&quot;GetRanker results: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10">}</a></code></pre></div>
+</body>
+</html>
