@@ -93,8 +93,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private DateTime _lastStartSent = DateTime.Now;
         private string _recognizeModel = "en-US_BroadbandModel";   // ID of the model to use.
         private int _maxAlternatives = 1;              // maximum number of alternatives to return.
-        private string[] _keywords = { "" };
-        private float _keywordsThreshold = 0.5f;
+        private string[] _keywords = null;
+        private float? _keywordsThreshold = null;
         private float? _wordAlternativesThreshold = null;
         private bool _profanityFilter = true;
         private bool _smartFormatting = false;
@@ -218,7 +218,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// NON-MULTIPART ONLY: Confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No keyword spotting is performed if you omit the parameter. If you specify a threshold, you must also specify one or more keywords.
         /// </summary>
-        public float KeywordsThreshold { get { return _keywordsThreshold; } set { _keywordsThreshold = value; } }
+        public float? KeywordsThreshold { get { return _keywordsThreshold; } set { _keywordsThreshold = value; } }
         /// <summary>
         /// NON-MULTIPART ONLY: Confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the threshold. Specify a probability between 0 and 1 inclusive. No alternative words are computed if you omit the parameter.
         /// </summary>
@@ -662,8 +662,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
             start["inactivity_timeout"] = InactivityTimeout;
             start["interim_results"] = EnableInterimResults;
-            start["keywords"] = Keywords;
-            start["keywords_threshold"] = KeywordsThreshold;
+            if(Keywords != null)
+                start["keywords"] = Keywords;
+            if(KeywordsThreshold != null)
+                start["keywords_threshold"] = KeywordsThreshold;
             start["max_alternatives"] = MaxAlternatives;
             start["profanity_filter"] = ProfanityFilter;
             start["smart_formatting"] = SmartFormatting;
