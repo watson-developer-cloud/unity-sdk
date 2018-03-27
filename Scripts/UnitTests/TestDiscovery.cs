@@ -501,7 +501,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
+            Log.Error("TestDiscovery.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
