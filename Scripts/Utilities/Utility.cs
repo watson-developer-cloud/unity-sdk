@@ -1342,9 +1342,17 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 string authorization = Utility.CreateAuthorization(_username, _password);
                 unityWebRequest.SetRequestHeader("Authorization", authorization);
 
+#if UNITY_5_6 || UNITY_2017_1
+                yield return unityWebRequest.Send();
+#else
                 yield return unityWebRequest.SendWebRequest();
+#endif
 
+#if UNITY_2017_1_OR_NEWER
                 if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
+#else
+                if (unityWebRequest.isError)
+#endif
                 {
                     Log.Debug("SimpleGet.GetRequest()", "Error with get request: {0}", unityWebRequest.error);
                 }
