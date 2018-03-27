@@ -26,9 +26,14 @@ using UnityEngine;
 
 public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
+    [SerializeField]
+    private string _versionDate = "2017-02-27";
 
     NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
 
@@ -43,6 +48,7 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
+        _naturalLanguageUnderstanding.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

@@ -25,7 +25,9 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleAlchemyDataNews : MonoBehaviour
 {
+    [SerializeField]
     private string _apikey = null;
+    [SerializeField]
     private string _url = null;
 
     private AlchemyAPI _alchemyAPI = null;

@@ -25,12 +25,16 @@ using System.Collections.Generic;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
-    private ToneAnalyzer _toneAnalyzer;
+    [SerializeField]
     private string _toneAnalyzerVersionDate = "2017-05-26";
+
+    private ToneAnalyzer _toneAnalyzer;
 
     private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
     private bool _analyzeToneTested = false;

@@ -26,13 +26,18 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleConversation : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
+    [SerializeField]
     private string _workspaceId = null;
+    [SerializeField]
+    private string _conversationVersionDate = "2017-05-26";
 
     private Conversation _conversation;
-    private string _conversationVersionDate = "2017-05-26";
 
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();

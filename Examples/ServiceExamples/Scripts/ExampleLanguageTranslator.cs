@@ -27,8 +27,11 @@ public class ExampleLanguageTranslator : MonoBehaviour
 {
     private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
     private string _pharseToIdentify = "Hola, donde esta la bibliteca?";
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
 
     private LanguageTranslator _languageTranslator;

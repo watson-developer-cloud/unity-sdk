@@ -28,10 +28,13 @@ using UnityEditor;
 
 public class ExampleRetrieveAndRank : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
+
     private RetrieveAndRank _retrieveAndRank;
 
     private string _testClusterConfigName;

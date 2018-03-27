@@ -26,10 +26,13 @@ using UnityEngine.UI;
 
 public class ExampleStreaming : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
+
     public Text ResultsField;
 
     private int _recordingRoutine = 0;

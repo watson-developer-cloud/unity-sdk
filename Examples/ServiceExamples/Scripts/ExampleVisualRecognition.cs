@@ -29,7 +29,9 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
+    [SerializeField]
     private string _apikey = null;
+    [SerializeField]
     private string _url = null;
 
     private VisualRecognition _visualRecognition;

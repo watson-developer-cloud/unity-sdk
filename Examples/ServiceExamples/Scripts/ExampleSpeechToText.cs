@@ -26,8 +26,11 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleSpeechToText : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
 
     private SpeechToText _speechToText;

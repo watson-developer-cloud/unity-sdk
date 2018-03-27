@@ -29,8 +29,11 @@ using UnityEngine.UI;
 /// </summary>
 public class ExampleStreamingSplitSamples : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
 
     /// <summary>

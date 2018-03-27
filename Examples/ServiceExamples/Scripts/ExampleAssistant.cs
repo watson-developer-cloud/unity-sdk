@@ -27,13 +27,18 @@ using UnityEngine;
 
 public class ExampleAssistant : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
+    [SerializeField]
     private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
     private string _createdWorkspaceId;
 
     private Assistant _service;
+    [SerializeField]
     private string _assistantVersionDate = "2017-05-26";
 
     private fsSerializer _serializer = new fsSerializer();

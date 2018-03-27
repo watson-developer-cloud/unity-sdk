@@ -24,12 +24,16 @@ using UnityEngine;
 
 public class ExampleDiscovery : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
-    private Discovery _discovery;
+    [SerializeField]
     private string _discoveryVersionDate = "2016-12-01";
+
+    private Discovery _discovery;
 
     private string _createdEnvironmentID;
     private string _configurationJsonPath;
