@@ -71,3 +71,4 @@ Docs/publishing-release.md.meta
 *.html.meta
 *.md.meta
 *.txt.meta
+*.ps1.meta
