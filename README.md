@@ -243,34 +243,4 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
 [ibm_cloud_registration]: http://console.bluemix.net/registration
 [get_unity]: https://unity3d.com/get-unity
-
-[speech_to_text]: https://console.bluemix.net/docs/services/speech-to-text/index.html
-[text_to_speech]: https://console.bluemix.net/docs/services/text-to-speech/index.html
-[language_translator]: https://console.bluemix.net/docs/services/language-translator/index.html
-[dialog]: https://console.bluemix.net/docs/services/dialog/index.html
-[natural_language_classifier]: https://console.bluemix.net/docs/services/natural-language-classifier/natural-language-classifier-overview.html
-
-[alchemy_language]: http://www.alchemyapi.com/products/alchemylanguage
-[alchemyData_news]: http://www.ibm.com/watson/developercloud/alchemy-data-news.html
-[sentiment_analysis]: http://www.alchemyapi.com/products/alchemylanguage/sentiment-analysis
-[tone_analyzer]: https://console.bluemix.net/docs/services/tone-analyzer/index.html
-[tradeoff_analytics]: https://console.bluemix.net/docs/services/tradeoff-analytics/index.html
-[conversation]: https://console.bluemix.net/docs/services/conversation/index.html
-[visual_recognition]: https://console.bluemix.net/docs/services/visual-recognition/index.html
-[personality_insights]: https://console.bluemix.net/docs/services/personality-insights/index.html
-[conversation_tooling]: https://www.ibmwatsonconversation.com
-[retrieve_and_rank]: https://console.bluemix.net/docs/services/retrieve-and-rank/index.html
-[discovery]: https://console.bluemix.net/docs/services/discovery/index.html
-[document_conversion]: https://console.bluemix.net/docs/services/document-conversion/index.html
-[expressive_ssml]: https://console.bluemix.net/docs/services/text-to-speech/http.html#expressive
-[ssml]: https://console.bluemix.net/docs/services/text-to-speech/SSML.html
-[discovery-query]: https://console.bluemix.net/docs/services/discovery/using.html
-[natural_language_understanding]: https://www.ibm.com/watson/services/natural-language-understanding/
-[nlu_models]: https://console.bluemix.net/docs/services/natural-language-understanding/customizing.html
-[nlu_entities]: https://console.bluemix.net/docs/services/natural-language-understanding/entity-types.html
-[nlu_relations]: https://console.bluemix.net/docs/services/natural-language-understanding/relations.html
-
-[dialog_service]: https://console.bluemix.net/docs/services/dialog/index.html
-[dialog_migration]: https://console.bluemix.net/docs/services/conversation/index.html
-[conversation_service]: https://console.bluemix.net/docs/services/conversation/index.html
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/
