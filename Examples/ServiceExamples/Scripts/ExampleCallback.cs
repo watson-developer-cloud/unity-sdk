@@ -27,6 +27,7 @@ namespace IBM.Watson.DeveloperCloud.Examples
 {
     public class ExampleCallback : MonoBehaviour
     {
+        #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
         [SerializeField]
         private string _conversationUsername;
         [SerializeField]
@@ -42,6 +43,7 @@ namespace IBM.Watson.DeveloperCloud.Examples
         private string _discoveryPassword;
         [SerializeField]
         private string _discoveryUrl;
+        #endregion
 
         void Start()
         {

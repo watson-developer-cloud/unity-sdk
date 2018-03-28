@@ -26,6 +26,7 @@ using UnityEngine;
 
 public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _username;
     [SerializeField]
@@ -34,6 +35,7 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
     private string _url;
     [SerializeField]
     private string _versionDate;
+    #endregion
 
     NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
 

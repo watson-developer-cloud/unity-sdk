@@ -26,6 +26,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleConversation : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _username;
     [SerializeField]
@@ -36,6 +37,7 @@ public class ExampleConversation : MonoBehaviour
     private string _workspaceId;
     [SerializeField]
     private string _versionDate;
+    #endregion
 
     private Conversation _conversation;
 

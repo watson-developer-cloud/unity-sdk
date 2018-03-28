@@ -27,6 +27,7 @@ using UnityEngine;
 
 public class ExampleAssistant : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _username;
     [SerializeField]
@@ -37,6 +38,8 @@ public class ExampleAssistant : MonoBehaviour
     private string _versionDate;
     [SerializeField]
     private string _workspaceId;
+    #endregion
+
     private string _createdWorkspaceId;
 
     private Assistant _service;

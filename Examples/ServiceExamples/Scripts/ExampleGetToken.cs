@@ -25,6 +25,7 @@ using UnityEngine;
 
 public class ExampleGetToken : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _conversationUsername;
     [SerializeField]
@@ -35,6 +36,7 @@ public class ExampleGetToken : MonoBehaviour
     private string _conversationWorkspaceId;
     [SerializeField]
     private string _conversationVersionDate;
+    #endregion
 
     private AuthenticationToken _authenticationToken;
     private bool _receivedAuthToken = false;

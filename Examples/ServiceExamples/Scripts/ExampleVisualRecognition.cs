@@ -29,12 +29,14 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _apikey;
     [SerializeField]
     private string _url;
     [SerializeField]
     private string _versionDate;
+    #endregion
 
     private VisualRecognition _visualRecognition;
 

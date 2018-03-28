@@ -25,6 +25,7 @@ using System.Collections.Generic;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _username;
     [SerializeField]
@@ -33,6 +34,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
     private string _url;
     [SerializeField]
     private string _versionDate;
+    #endregion
 
     private ToneAnalyzer _toneAnalyzer;
 

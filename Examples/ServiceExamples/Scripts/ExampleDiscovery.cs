@@ -24,6 +24,7 @@ using UnityEngine;
 
 public class ExampleDiscovery : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [SerializeField]
     private string _username;
     [SerializeField]
@@ -32,6 +33,7 @@ public class ExampleDiscovery : MonoBehaviour
     private string _url;
     [SerializeField]
     private string _versionDate;
+    #endregion
 
     private Discovery _discovery;
 
