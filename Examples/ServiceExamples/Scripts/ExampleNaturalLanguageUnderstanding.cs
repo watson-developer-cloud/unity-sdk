@@ -27,13 +27,13 @@ using UnityEngine;
 public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
     [SerializeField]
-    private string _versionDate = "2017-02-27";
+    private string _versionDate;
 
     NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
 

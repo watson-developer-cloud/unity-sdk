@@ -27,15 +27,15 @@ using IBM.Watson.DeveloperCloud.Connection;
 public class ExampleConversation : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
     [SerializeField]
-    private string _workspaceId = null;
+    private string _workspaceId;
     [SerializeField]
-    private string _conversationVersionDate = "2017-05-26";
+    private string _versionDate;
 
     private Conversation _conversation;
 
@@ -53,7 +53,7 @@ public class ExampleConversation : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _conversation = new Conversation(credentials);
-        _conversation.VersionDate = _conversationVersionDate;
+        _conversation.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

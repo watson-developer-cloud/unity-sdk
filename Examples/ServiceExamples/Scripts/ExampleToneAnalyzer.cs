@@ -26,13 +26,13 @@ using System.Collections.Generic;
 public class ExampleToneAnalyzer : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
     [SerializeField]
-    private string _toneAnalyzerVersionDate = "2017-05-26";
+    private string _versionDate;
 
     private ToneAnalyzer _toneAnalyzer;
 
@@ -47,7 +47,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _toneAnalyzer = new ToneAnalyzer(credentials);
-        _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
+        _toneAnalyzer.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

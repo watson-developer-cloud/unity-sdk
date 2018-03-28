@@ -30,11 +30,11 @@ using UnityEngine.UI;
 public class ExampleStreamingSplitSamples : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
 
     /// <summary>
     /// Text field to display the results of streaming.

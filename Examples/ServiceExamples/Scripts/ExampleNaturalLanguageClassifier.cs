@@ -33,11 +33,11 @@ using System;
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
 
     private NaturalLanguageClassifier naturalLanguageClassifier;
 

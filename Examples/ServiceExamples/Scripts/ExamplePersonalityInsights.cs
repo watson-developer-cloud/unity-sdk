@@ -26,13 +26,13 @@ using System.Collections.Generic;
 public class ExamplePersonalityInsights : MonoBehaviour
 {
     [SerializeField]
-    private string _username = null;
+    private string _username;
     [SerializeField]
-    private string _password = null;
+    private string _password;
     [SerializeField]
-    private string _url = null;
+    private string _url;
     [SerializeField]
-    private string _personalityInsightsVersionDate = "2017-05-26";
+    private string _versionDate;
 
 
     private PersonalityInsights _personalityInsights;
@@ -51,7 +51,7 @@ public class ExamplePersonalityInsights : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _personalityInsights = new PersonalityInsights(credentials);
-        _personalityInsights.VersionDate = _personalityInsightsVersionDate;
+        _personalityInsights.VersionDate = _versionDate;
 
         _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
