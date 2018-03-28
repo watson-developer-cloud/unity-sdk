@@ -34,7 +34,7 @@ public class ExampleAssistant : MonoBehaviour
     [SerializeField]
     private string _url = null;
     [SerializeField]
-    private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
+    private string _workspaceId = null;
     private string _createdWorkspaceId;
 
     private Assistant _service;
