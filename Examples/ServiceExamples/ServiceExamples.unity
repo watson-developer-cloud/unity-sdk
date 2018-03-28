@@ -140,6 +140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 852d029fa9fc2ad43a8ce3838c3fb70b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
 --- !u!4 &85803342
 Transform:
   m_ObjectHideFlags: 0
@@ -398,6 +402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5294a7b05214c5690d02420b87a821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _apikey: 
+  _url: 
 --- !u!4 &748186941
 Transform:
   m_ObjectHideFlags: 0
@@ -441,7 +447,7 @@ MonoBehaviour:
   _username: 
   _password: 
   _url: 
-  _personalityInsightsVersionDate: 2017-05-26
+  _versionDate: 
 --- !u!4 &854511685
 Transform:
   m_ObjectHideFlags: 0
@@ -482,6 +488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87040e721f2394a4a9f444ecbaf9d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _workspaceId: 
+  _versionDate: 
 --- !u!4 &859102724
 Transform:
   m_ObjectHideFlags: 0
@@ -522,6 +533,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb388f597c08df24c887d05de5ae2ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &1053617511
 Transform:
   m_ObjectHideFlags: 0
@@ -565,7 +579,7 @@ MonoBehaviour:
   _username: 
   _password: 
   _url: 
-  _toneAnalyzerVersionDate: 2017-05-26
+  _versionDate: 
 --- !u!4 &1073418924
 Transform:
   m_ObjectHideFlags: 0
@@ -692,6 +706,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46efb6361e73cf47b69febdae951658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _apikey: 
+  _url: 
 --- !u!4 &1310649320
 Transform:
   m_ObjectHideFlags: 0
@@ -735,6 +751,7 @@ MonoBehaviour:
   _username: 
   _password: 
   _url: 
+  _versionDate: 
 --- !u!4 &1646373637
 Transform:
   m_ObjectHideFlags: 0
@@ -777,6 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _apikey: 
   _url: 
+  _versionDate: 
 --- !u!4 &1713392459
 Transform:
   m_ObjectHideFlags: 0
@@ -873,6 +891,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c93a3595292dc6479dfb6e7c721838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _conversationUsername: 
+  _conversationPassword: 
+  _conversationUrl: https://gateway.watsonplatform.net/conversation/api
+  _workspaceId: 
+  _discoveryUsername: 
+  _discoveryPassword: 
+  _discoveryUrl: https://gateway.watsonplatform.net/discovery/api
 --- !u!1 &2118312579
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,8 +928,8 @@ MonoBehaviour:
   _username: 
   _password: 
   _url: 
+  _versionDate: 
   _workspaceId: 
-  _assistantVersionDate: 2017-05-26
 --- !u!4 &2118312581
 Transform:
   m_ObjectHideFlags: 0
