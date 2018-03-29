@@ -60,20 +60,16 @@ The credentials for each service contain either a `username`, `password` and end
 
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-* [Alchemy Language](/Scripts/Services/AlchemyAPI/v1) **Deprecated**
 * [Assistant](/Scripts/Services/Assistant/v1)
 * [Conversation](/Scripts/Services/Conversation/v1)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Document Conversion](/Scripts/Services/DocumentConversion/v1) **Deprecated**
 * [Language Translator](/Scripts/Services/LanguageTranslator/v2)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
 * [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Retrieve and Rank](/Scripts/Services/RetrieveAndRank/v1) **Deprecated**
 * [Speech to Text](/Scripts/Services/SpeechToText/v1)
 * [Text to Speech](/Scripts/Services/TextToSpeech/v1)
 * [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
-* [Tradeoff Analytics](/Scripts/Services/TradeoffAnalytics/v1) **Deprecated**
 * [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
 
 ## Authentication
