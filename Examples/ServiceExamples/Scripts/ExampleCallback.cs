@@ -27,14 +27,23 @@ namespace IBM.Watson.DeveloperCloud.Examples
 {
     public class ExampleCallback : MonoBehaviour
     {
-        private string _conversationUsername = "";
-        private string _conversationPassword = "";
-        private string _conversationUrl = "https://gateway.watsonplatform.net/conversation/api";
-        private string _workspaceId = "";
+        #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+        [SerializeField]
+        private string _conversationUsername;
+        [SerializeField]
+        private string _conversationPassword;
+        [SerializeField]
+        private string _conversationUrl;
+        [SerializeField]
+        private string _workspaceId;
 
-        private string _discoveryUsername = "";
-        private string _discoveryPassword = "";
-        private string _discoveryUrl = "https://gateway.watsonplatform.net/discovery/api";
+        [SerializeField]
+        private string _discoveryUsername;
+        [SerializeField]
+        private string _discoveryPassword;
+        [SerializeField]
+        private string _discoveryUrl;
+        #endregion
 
         void Start()
         {
@@ -49,7 +58,7 @@ namespace IBM.Watson.DeveloperCloud.Examples
             Credentials discoveryCredentials = new Credentials(_discoveryUsername, _discoveryPassword, _discoveryUrl);
             Discovery discovery = new Discovery(discoveryCredentials);
             discovery.VersionDate = "2016-12-01";
-            
+
             //  Call with generic callbacks
             conversation.Message(OnSuccess, OnFail, _workspaceId, "");
             discovery.GetEnvironments(OnSuccess, OnFail);

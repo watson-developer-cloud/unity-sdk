@@ -25,13 +25,18 @@ using System.Collections.Generic;
 
 public class ExamplePersonalityInsights : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    [SerializeField]
+    private string _versionDate;
+    #endregion
 
     private PersonalityInsights _personalityInsights;
-    private string _personalityInsightsVersionDate = "2017-05-26";
 
     private string _testString = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
     private string _dataPath;
@@ -47,7 +52,7 @@ public class ExamplePersonalityInsights : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _personalityInsights = new PersonalityInsights(credentials);
-        _personalityInsights.VersionDate = _personalityInsightsVersionDate;
+        _personalityInsights.VersionDate = _versionDate;
 
         _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
