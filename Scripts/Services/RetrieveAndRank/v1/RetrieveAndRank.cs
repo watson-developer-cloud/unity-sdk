@@ -122,6 +122,8 @@ namespace IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1
         /// <param name="credentials">The service credentials</param>
         public RetrieveAndRank(Credentials credentials)
         {
+            Log.Warning("RetrieveAndRank", "The Retrieve and Rank service has been deprecated. Please use the Discovery service.");
+
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
             {
                 Credentials = credentials;

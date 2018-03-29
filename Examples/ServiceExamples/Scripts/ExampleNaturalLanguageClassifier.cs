@@ -32,9 +32,14 @@ using System;
 
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    #endregion
 
     private NaturalLanguageClassifier naturalLanguageClassifier;
 

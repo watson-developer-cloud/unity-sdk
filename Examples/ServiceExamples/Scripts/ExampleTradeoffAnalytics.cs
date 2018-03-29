@@ -25,10 +25,13 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleTradeoffAnalytics : MonoBehaviour
 {
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
+
     TradeoffAnalytics _tradeoffAnalytics;
 
     private bool _GetDillemaTested = false;

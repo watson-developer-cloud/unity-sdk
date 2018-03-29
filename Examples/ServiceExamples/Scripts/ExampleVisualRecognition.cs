@@ -29,11 +29,16 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleVisualRecognition : MonoBehaviour
 {
-    private string _apikey = null;
-    private string _url = null;
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _apikey;
+    [SerializeField]
+    private string _url;
+    [SerializeField]
+    private string _versionDate;
+    #endregion
 
     private VisualRecognition _visualRecognition;
-    private string _visualRecognitionVersionDate = "2016-05-20";
 
     private string _classifierID = "";
     private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
@@ -64,7 +69,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         Credentials credentials = new Credentials(_apikey, _url);
 
         _visualRecognition = new VisualRecognition(credentials);
-        _visualRecognition.VersionDate = _visualRecognitionVersionDate;
+        _visualRecognition.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

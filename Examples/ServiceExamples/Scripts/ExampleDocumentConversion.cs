@@ -26,10 +26,13 @@ using System.Collections.Generic;
 public class ExampleDocumentConversion : MonoBehaviour
 {
     private DocumentConversion _documentConversion;
+    [SerializeField]
     private string _username = null;
+    [SerializeField]
     private string _password = null;
+    [SerializeField]
     private string _url = null;
-    
+
     private string _examplePath;
     private string _conversionTarget = ConversionTarget.NormalizedHtml;
     private bool _convertDocumentTested = false;

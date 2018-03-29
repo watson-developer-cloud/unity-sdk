@@ -71,6 +71,8 @@ namespace IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1
         #region Constructor
         public TradeoffAnalytics(Credentials credentials)
         {
+            Log.Warning("TradeoffAnalytics", "The TradeoffAnalytics service has been deprecated.");
+
             if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
             {
                 Credentials = credentials;
