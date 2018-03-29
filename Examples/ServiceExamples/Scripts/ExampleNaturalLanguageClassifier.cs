@@ -58,6 +58,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     private string _classifierToDelete;
 #endif
     private bool _classifyTested = false;
+    private bool _classifyCollectionTested = false;
 
     void Start()
     {
@@ -126,6 +127,31 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
                 yield return null;
         }
 
+        //  Classify Collection
+        ClassifyCollectionInput classifyCollectionInput = new ClassifyCollectionInput()
+        {
+            collection = new List<ClassifyInput>()
+                {
+                    new ClassifyInput()
+                    {
+                        text = "Is it hot outside?"
+                    },
+                    new ClassifyInput()
+                    {
+                        text = "Is it going to rain?"
+                    }
+                }
+        };
+
+        if (_areAnyClassifiersAvailable)
+        {
+            if (!naturalLanguageClassifier.ClassifyCollection(OnClassifyCollection, OnFail, _classifierId, classifyCollectionInput))
+                Log.Debug("ExampleNaturalLanguageClassifier.ClassifyCollection()", "Failed to classify!");
+
+            while (!_classifyCollectionTested)
+                yield return null;
+        }
+
         Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "Natural language classifier examples complete.");
     }
 
@@ -177,6 +203,12 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}", _classifierToDelete, success, customData["json"].ToString());
     }
 #endif
+
+    private void OnClassifyCollection(ClassificationCollection result, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleNaturalLanguageClassifier.OnClassifyCollection()", "Natural Language Classifier - Classify Collection Response: {0}", customData["json"].ToString());
+        _classifyCollectionTested = true;
+    }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {
