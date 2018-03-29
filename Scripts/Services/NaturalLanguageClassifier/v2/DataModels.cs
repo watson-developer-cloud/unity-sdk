@@ -17,6 +17,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
@@ -173,7 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         /// <summary>
         /// The submitted phrases.
         /// </summary>
-        public ClassifyInput[] collection { get; set; }
+        public List<ClassifyInput> collection { get; set; }
     }
 
     [fsObject]

@@ -57,6 +57,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _classifierToDelete;
 #endif
         private bool _classifyTested = false;
+        private bool _classifyCollectionTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -163,6 +164,31 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     yield return null;
             }
 
+            //  Classify Collection
+            ClassifyCollectionInput classifyCollectionInput = new ClassifyCollectionInput()
+            {
+                collection = new List<ClassifyInput>()
+                {
+                    new ClassifyInput()
+                    {
+                        text = "Is it hot outside?"
+                    },
+                    new ClassifyInput()
+                    {
+                        text = "Is it going to rain?"
+                    }
+                }
+            };
+
+            if (_areAnyClassifiersAvailable)
+            {
+                if(!naturalLanguageClassifier.ClassifyCollection(OnClassifyCollection, OnFail, _classifierId, classifyCollectionInput))
+                    Log.Debug("ExampleNaturalLanguageClassifier.ClassifyCollection()", "Failed to classify!");
+
+                while (!_classifyCollectionTested)
+                    yield return null;
+            }
+
             Log.Debug("TestNaturalLanguageClassifier.RunTest()", "Natural language classifier examples complete.");
 
             yield break;
@@ -220,6 +246,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test(success);
         }
 #endif
+
+        private void OnClassifyCollection(ClassificationCollection result, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleNaturalLanguageClassifier.OnClassifyCollection()", "Natural Language Classifier - Classify Collection Response: {0}", customData["json"].ToString());
+            Test(result != null);
+            _classifyCollectionTested = true;
+        }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
