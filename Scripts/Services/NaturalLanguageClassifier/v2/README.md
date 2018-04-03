@@ -62,6 +62,36 @@ private void OnClassify(ClassifyResult result, Dictionary<string, object> custom
 }
 ```
 
+### Classifying A Collection of text
+The status must be Available before you can use the classifier to classify calls. Use GET /classifiers/{classifier_id} to retrieve the status.
+```cs
+private void ClassifyCollection()
+{
+    ClassifyCollectionInput classifyCollectionInput = new ClassifyCollectionInput()
+    {
+        collection = new List<ClassifyInput>()
+        {
+            new ClassifyInput()
+            {
+                text = <text-to-classify>
+            },
+            new ClassifyInput()
+            {
+                text = <text-to-classify>
+            }
+        }
+    };
+
+    if (!naturalLanguageClassifier.ClassifyCollection(OnClassify, OnFail, <classifier-id>, classifyCollectionInput))
+        Log.Debug("ExampleNaturalLanguageClassifier.ClassifyCollection()", "Failed to classify!");
+}
+
+private void OnClassifyCollection(ClassificationCollection result, Dictionary<string, object> customData)
+{
+    Log.Debug("ExampleNaturalLanguageClassifier.OnClassifyCollection()", "Natural Language Classifier - Classify Collection Response: {0}", customData["json"].ToString());
+}
+```
+
 
 
 

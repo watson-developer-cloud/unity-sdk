@@ -17,6 +17,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using FullSerializer;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
@@ -126,4 +127,62 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             }
         }
     };
+
+    /// <summary>
+    /// This result object is returned by the ClassifyCollection() method.
+    /// </summary>
+    [fsObject]
+    public class ClassificationCollection
+    {
+        /// <summary>
+        /// The submitted phrase.
+        /// </summary>
+        public string text { get; set; }
+        /// <summary>
+        /// The class with the highest confidence. 
+        /// </summary>
+        public string top_class { get; set; }
+        /// <summary>
+        /// An array of up to ten class-confidence pairs sorted in descending order of confidence.
+        /// </summary>
+        public Class[] classes { get; set; }
+
+        /// <summary>
+        /// Helper function to return the top confidence value of all the returned classes.
+        /// </summary>
+        public double topConfidence
+        {
+            get
+            {
+                double fTop = 0.0;
+                if (classes != null)
+                {
+                    foreach (var c in classes)
+                        fTop = Math.Max(c.confidence, fTop);
+                }
+                return fTop;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The input for ClassifyCollection request.
+    /// </summary>
+    [fsObject]
+    public class ClassifyCollectionInput
+    {
+        /// <summary>
+        /// The submitted phrases.
+        /// </summary>
+        public List<ClassifyInput> collection { get; set; }
+    }
+
+    [fsObject]
+    public class ClassifyInput
+    {
+        /// <summary>
+        /// The submitted phrase.
+        /// </summary>
+        public string text { get; set; }
+    }
 }
