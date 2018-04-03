@@ -562,7 +562,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.Function = "/" + classifierId + "/classify_collection";
             req.Headers["Content-Type"] = "application/json";
 
-            req.Send = Encoding.UTF8.GetBytes(Json.Serialize(body));
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            req.Send = Encoding.UTF8.GetBytes(data.ToString());
 
             return connector.Send(req);
         }
