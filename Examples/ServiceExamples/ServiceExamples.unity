@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311926, g: 0.38073996, b: 0.35872692, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -140,6 +140,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 852d029fa9fc2ad43a8ce3838c3fb70b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
 --- !u!4 &85803342
 Transform:
   m_ObjectHideFlags: 0
@@ -180,6 +184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068b8c76641e04cb98498e273fdba9ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &473286774
 Transform:
   m_ObjectHideFlags: 0
@@ -220,6 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33458a9d3f434f2889ac182de6fa097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &525603455
 Transform:
   m_ObjectHideFlags: 0
@@ -260,6 +270,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa6d70b6b4ffa645b2c81a9745faccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &659829313
 Transform:
   m_ObjectHideFlags: 0
@@ -389,6 +402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5294a7b05214c5690d02420b87a821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _apikey: 
+  _url: 
 --- !u!4 &748186941
 Transform:
   m_ObjectHideFlags: 0
@@ -412,7 +427,7 @@ GameObject:
   - component: {fileID: 854511685}
   - component: {fileID: 854511684}
   m_Layer: 0
-  m_Name: ExamplePersonalityInsightsV3
+  m_Name: ExamplePersonalityInsights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -429,6 +444,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2e3d3910ea1bd46b55eb5943a057f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
 --- !u!4 &854511685
 Transform:
   m_ObjectHideFlags: 0
@@ -469,6 +488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87040e721f2394a4a9f444ecbaf9d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _workspaceId: 
+  _versionDate: 
 --- !u!4 &859102724
 Transform:
   m_ObjectHideFlags: 0
@@ -509,6 +533,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb388f597c08df24c887d05de5ae2ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &1053617511
 Transform:
   m_ObjectHideFlags: 0
@@ -549,6 +576,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4dd8308135b04c28945ad3e8489aa7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
 --- !u!4 &1073418924
 Transform:
   m_ObjectHideFlags: 0
@@ -589,6 +620,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26bb17691cf8f4f44ad0b84e5d240b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &1160237480
 Transform:
   m_ObjectHideFlags: 0
@@ -629,6 +663,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad04eacf696634a8398e0edcb39a9f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &1194016996
 Transform:
   m_ObjectHideFlags: 0
@@ -669,6 +706,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46efb6361e73cf47b69febdae951658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _apikey: 
+  _url: 
 --- !u!4 &1310649320
 Transform:
   m_ObjectHideFlags: 0
@@ -709,6 +748,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bd480466fdc154fa059d91ab9b79a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
 --- !u!4 &1646373637
 Transform:
   m_ObjectHideFlags: 0
@@ -749,6 +792,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e385580aba14ae58cfdb1b5246dce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _apikey: 
+  _url: 
+  _versionDate: 
 --- !u!4 &1713392459
 Transform:
   m_ObjectHideFlags: 0
@@ -789,6 +835,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd939a6f78384e5898a22dda7832b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
 --- !u!4 &1740459833
 Transform:
   m_ObjectHideFlags: 0
@@ -842,6 +891,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c93a3595292dc6479dfb6e7c721838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _conversationUsername: 
+  _conversationPassword: 
+  _conversationUrl: https://gateway.watsonplatform.net/conversation/api
+  _workspaceId: 
+  _discoveryUsername: 
+  _discoveryPassword: 
+  _discoveryUrl: https://gateway.watsonplatform.net/discovery/api
 --- !u!1 &2118312579
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,6 +925,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9848745df680ac7438f802aac3f4b8f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _username: 
+  _password: 
+  _url: 
+  _versionDate: 
+  _workspaceId: 
 --- !u!4 &2118312581
 Transform:
   m_ObjectHideFlags: 0

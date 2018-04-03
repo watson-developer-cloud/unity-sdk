@@ -1193,7 +1193,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     results.Add(result);
                 }
 
-                return new SpeechRecognitionEvent(results.ToArray());
+                SpeechRecognitionEvent speechRecognitionEvent = new SpeechRecognitionEvent(results.ToArray());
+                int resultIndex;
+                if (int.TryParse(resp["result_index"].ToString(), out resultIndex))
+                    speechRecognitionEvent.result_index = resultIndex;
+
+                return speechRecognitionEvent;
             }
             catch (Exception e)
             {

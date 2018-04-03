@@ -32,6 +32,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _username = null;
         private string _password = null;
         private fsSerializer _serializer = new fsSerializer();
+        private string _versionDate = "2017-02-27";
         //private string _token = "<authentication-token>";
 
         NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
@@ -90,6 +91,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //};
 
             _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
+            _naturalLanguageUnderstanding.VersionDate = _versionDate;
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "attempting to get models...");
             if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))

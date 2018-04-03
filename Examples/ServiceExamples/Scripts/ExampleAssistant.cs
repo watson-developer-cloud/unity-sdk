@@ -27,14 +27,22 @@ using UnityEngine;
 
 public class ExampleAssistant : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    [SerializeField]
+    private string _versionDate;
+    [SerializeField]
+    private string _workspaceId;
+    #endregion
+
     private string _createdWorkspaceId;
 
     private Assistant _service;
-    private string _assistantVersionDate = "2017-05-26";
 
     private fsSerializer _serializer = new fsSerializer();
 
@@ -153,7 +161,7 @@ public class ExampleAssistant : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _service = new Assistant(credentials);
-        _service.VersionDate = _assistantVersionDate;
+        _service.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

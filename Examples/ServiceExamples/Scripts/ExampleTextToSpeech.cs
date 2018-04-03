@@ -25,10 +25,15 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleTextToSpeech : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    #endregion
+
     TextToSpeech _textToSpeech;
     string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
