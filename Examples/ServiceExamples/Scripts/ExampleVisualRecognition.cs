@@ -78,7 +78,7 @@ public class ExampleVisualRecognition : MonoBehaviour
     {
         //          Get all classifiers
         Log.Debug("ExampleVisualRecognition.Examples()", "Attempting to get all classifiers");
-        if (!_visualRecognition.GetClassifiers(OnGetClassifiers, OnFail))
+        if (!_visualRecognition.GetClassifiersBrief(OnGetClassifiers, OnFail))
             Log.Debug("ExampleVisualRecognition.GetClassifiers()", "Failed to get all classifiers!");
 
         while (!_getClassifiersTested)
@@ -161,7 +161,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         Log.Debug("ExampleVisualRecognition.Examples()", "Visual Recogition tests complete");
     }
 
-    private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, Dictionary<string, object> customData)
+    private void OnGetClassifiers(ClassifiersBrief classifiers, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnGetClassifiers()", "VisualRecognition - GetClassifiers Response: {0}", customData["json"].ToString());
 
@@ -197,26 +197,26 @@ public class ExampleVisualRecognition : MonoBehaviour
     }
 #endif
 
-    private void OnClassifyGet(ClassifyTopLevelMultiple classify, Dictionary<string, object> customData)
+    private void OnClassifyGet(ClassifiedImages classify, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnClassifyGet()", "{0}", customData["json"].ToString());
         _classifyGetTested = true;
 
     }
 
-    private void OnClassifyPost(ClassifyTopLevelMultiple classify, Dictionary<string, object> customData)
+    private void OnClassifyPost(ClassifiedImages classify, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnClassifyPost()", "{0}", customData["json"].ToString());
         _classifyPostTested = true;
     }
 
-    private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, Dictionary<string, object> customData)
+    private void OnDetectFacesGet(DetectedFaces multipleImages, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnDetectFacesGet()", "{0}", customData["json"].ToString());
         _detectFacesGetTested = true;
     }
 
-    private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, Dictionary<string, object> customData)
+    private void OnDetectFacesPost(DetectedFaces multipleImages, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnDetectFacesPost()", "{0}", customData["json"].ToString());
         _detectFacesPostTested = true;
