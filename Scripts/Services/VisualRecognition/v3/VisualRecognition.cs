@@ -49,14 +49,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const string ServiceId = "VisualRecognitionV3";
         private const string ClassifyEndpoint = "/v3/classify";
         private const string DetectFacesEndpoint = "/v3/detect_faces";
-        private const string RecognizeTextEndpoint = "/v3/recognize_text";
         private const string ClassifiersEndpoint = "/v3/classifiers";
-        private const string CollectionsEndpoint = "/v3/collections";
-        private const string CollectionEndpoint = "/v3/collections/{0}";
-        private const string ImagesEndpoint = "/v3/collections/{0}/images";
-        private const string ImageEndpoint = "/v3/collections/{0}/images/{1}";
-        private const string MetadataEndpoint = "/v3/collections/{0}/images/{1}/metadata";
-        private const string FindSimilarEndpoint = "/v3/collections/{0}/find_similar";
+        private const string CoreMLEndpoint = "/v3/classifiers/{0}/core_ml_model";
         private string _apikey = null;
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
@@ -1143,6 +1137,92 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 if (((DeleteClassifierReq)req).FailCallback != null)
                     ((DeleteClassifierReq)req).FailCallback(resp.Error, customData);
             }
+        }
+        #endregion
+
+        #region Get Core ML Model
+        public bool GetCoreMLModel(SuccessCallback<byte[]> successCallback, FailCallback failCallback, string classifierID, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(_apikey))
+                _apikey = Credentials.ApiKey;
+            if (string.IsNullOrEmpty(_apikey))
+                throw new WatsonException("No API Key was found!");
+            if (string.IsNullOrEmpty(classifierID))
+                throw new ArgumentNullException("A classifierID is required for GetCoreMLModel!");
+
+            GetCoreMLModelRequest req = new GetCoreMLModelRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            req.Parameters["api_key"] = _apikey;
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = GetCoreMLModelResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CoreMLEndpoint, classifierID));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// The Get Core ML Model request.
+        /// </summary>
+        public class GetCoreMLModelRequest : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<byte[]> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void GetCoreMLModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Dictionary<string, object> customData = ((GetCoreMLModelRequest)req).CustomData;
+
+            if (resp.Success)
+            {
+                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
+                byte[] result = resp.Data;
+
+                if (((GetCoreMLModelRequest)req).SuccessCallback != null)
+                    ((GetCoreMLModelRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetCoreMLModelRequest)req).FailCallback != null)
+                    ((GetCoreMLModelRequest)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        public void DownloadCoreMLModel(string classifierId, string filepath)
+        {
+            Dictionary<string, object> customData = new Dictionary<string, object>();
+            customData.Add("filepath", filepath);
+            customData.Add("classifierId", classifierId);
+            GetCoreMLModel(OnDownloadCoreMLModelSuccess, OnDownloadCoreMLModelFail, classifierId, customData);
+        }
+
+        private void OnDownloadCoreMLModelSuccess(byte[] resp, Dictionary<string, object> customData)
+        {
+            File.WriteAllBytes(customData["filepath"].ToString() + Path.DirectorySeparatorChar + customData["classifierId"].ToString() + ".mlmodel", resp);
+        }
+
+        private void OnDownloadCoreMLModelFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("VisualRecognition.OnDownloadCoreMLModelFail()", "Error received: {0}", error.ToString());
         }
         #endregion
 
