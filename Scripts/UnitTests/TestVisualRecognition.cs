@@ -43,7 +43,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private string _classifierID = "";
         private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
-        //private string _imageTextURL = "http://i.stack.imgur.com/ZS6nH.png";
 
 #if DELETE_TRAINED_CLASSIFIER
         private string _classifierToDelete;
@@ -61,6 +60,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _classifyPostTested = false;
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
+        private bool _getCoreMLModelTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -110,7 +110,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //          Get all classifiers
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get all classifiers");
-            if (!_visualRecognition.GetClassifiers(OnGetClassifiers, OnFail))
+            if (!_visualRecognition.GetClassifiersBrief(OnGetClassifiers, OnFail))
                 Log.Debug("TestVisualRecognition.GetClassifiers()", "Failed to get all classifiers!");
 
             while (!_getClassifiersTested)
@@ -135,6 +135,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 Log.Debug("TestVisualRecognition.GetClassifier()", "Failed to get classifier!");
 
             while (!_getClassifierTested)
+                yield return null;
+
+            //  Download Core ML Model
+            Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
+            if(!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
+                Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
+            while (!_getCoreMLModelTested)
                 yield return null;
 #endif
 
@@ -195,7 +202,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetClassifiers(GetClassifiersTopLevelBrief classifiers, Dictionary<string, object> customData)
+        private void OnGetClassifiers(ClassifiersBrief classifiers, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnGetClassifiers()", "VisualRecognition - GetClassifiers Response: {0}", customData["json"].ToString());
             Test(classifiers != null);
@@ -203,7 +210,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 #if DELETE_TRAINED_CLASSIFIER
-        private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
+        private void OnGetClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", customData["json"].ToString());
             Test(classifier != null);
@@ -221,7 +228,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #endif
 
 #if TRAIN_CLASSIFIER
-        private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
+        private void OnTrainClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnTrainClassifier()", "VisualRecognition - TrainClassifier Response: {0}", customData["json"].ToString());
 
@@ -234,7 +241,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 #endif
 
-        private void OnClassifyGet(ClassifyTopLevelMultiple classify, Dictionary<string, object> customData)
+        private void OnClassifyGet(ClassifiedImages classify, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnClassifyGet()", "VisualRecognition - ClassifyGet Response: {0}", customData["json"].ToString());
             Test(classify != null);
@@ -242,25 +249,31 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         }
 
-        private void OnClassifyPost(ClassifyTopLevelMultiple classify, Dictionary<string, object> customData)
+        private void OnClassifyPost(ClassifiedImages classify, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnClassifyPost()", "VisualRecognition - ClassifyPost Response: {0}", customData["json"].ToString());
             Test(classify != null);
             _classifyPostTested = true;
         }
 
-        private void OnDetectFacesGet(FacesTopLevelMultiple multipleImages, Dictionary<string, object> customData)
+        private void OnDetectFacesGet(DetectedFaces multipleImages, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnDetectFacesGet()", "VisualRecognition - DetectFacesGet Response: {0}", customData["json"].ToString());
             Test(multipleImages != null);
             _detectFacesGetTested = true;
         }
 
-        private void OnDetectFacesPost(FacesTopLevelMultiple multipleImages, Dictionary<string, object> customData)
+        private void OnDetectFacesPost(DetectedFaces multipleImages, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnDetectFacesPost()", "VisualRecognition - DetectFacesPost Response: {0}", customData["json"].ToString());
             Test(multipleImages != null);
             _detectFacesPostTested = true;
+        }
+
+        private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
+        {
+            Test(resp != null);
+            _getCoreMLModelTested = true;
         }
 
         #region Delay

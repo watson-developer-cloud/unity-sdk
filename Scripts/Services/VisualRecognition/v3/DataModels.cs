@@ -23,8 +23,12 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Holds multiple classifications.
     /// </summary>
     [fsObject]
-    public class ClassifyTopLevelMultiple
+    public class ClassifiedImages
     {
+        /// <summary>
+        /// The number of custom classes identified in the images.
+        /// </summary>
+        public int custom_classes { get; set; }
         /// <summary>
         /// The number of images processed.
         /// </summary>
@@ -32,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// Array of classified images.
         /// </summary>
-        public ClassifyTopLevelSingle[] images { get; set; }
+        public ClassifiedImage[] images { get; set; }
         /// <summary>
         /// Array of warnings.
         /// </summary>
@@ -43,7 +47,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// One classification.
     /// </summary>
     [fsObject]
-    public class ClassifyTopLevelSingle
+    public class ClassifiedImage
     {
         /// <summary>
         /// The source URL.
@@ -60,18 +64,18 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// The error.
         /// </summary>
-        public ErrorInfoNoCode error { get; set; }
+        public ErrorInfo error { get; set; }
         /// <summary>
         /// The classification results.
         /// </summary>
-        public ClassifyPerClassifier[] classifiers { get; set; }
+        public ClassifierResult[] classifiers { get; set; }
     }
 
     /// <summary>
     /// One classifier.
     /// </summary>
     [fsObject]
-    public class ClassifyPerClassifier
+    public class ClassifierResult
     {
         /// <summary>
         /// The name.
@@ -138,7 +142,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Multiple faces.
     /// </summary>
     [fsObject]
-    public class FacesTopLevelMultiple
+    public class DetectedFaces
     {
         /// <summary>
         /// Number of images processed.
@@ -147,7 +151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// Array of face classifications.
         /// </summary>
-        public FacesTopLevelSingle[] images { get; set; }
+        public ImageWithFaces[] images { get; set; }
         /// <summary>
         /// Warning info.
         /// </summary>
@@ -158,7 +162,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// One face classification.
     /// </summary>
     [fsObject]
-    public class FacesTopLevelSingle
+    public class ImageWithFaces
     {
         /// <summary>
         /// The source URL.
@@ -175,182 +179,64 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// The error.
         /// </summary>
-        public ErrorInfoNoCode error { get; set; }
+        public ErrorInfo error { get; set; }
         /// <summary>
         /// The face results.
         /// </summary>
-        public OneFaceResult[] faces { get; set; }
+        public Face[] faces { get; set; }
     }
 
     /// <summary>
     /// One face result.
     /// </summary>
     [fsObject]
-    public class OneFaceResult
+    public class Face
     {
         /// <summary>
         /// The face age.
         /// </summary>
-        public Age age { get; set; }
+        public FaceAge age { get; set; }
         /// <summary>
         /// The face gender.
         /// </summary>
-        public Gender gender { get; set; }
+        public FaceGender gender { get; set; }
         /// <summary>
         /// The face location in pixels.
         /// </summary>
         public FaceLocation face_location { get; set; }
-        /// <summary>
-        /// The face identity.
-        /// </summary>
-        public Identity identity { get; set; }
-    }
-
-    /// <summary>
-    /// Detect faces parameters.
-    /// </summary>
-    [fsObject]
-    public class DetectFacesParameters
-    {
-        /// <summary>
-        /// The face URL.
-        /// </summary>
-        public string url { get; set; }
-    }
-    #endregion
-
-    #region Recognize Text
-    /// <summary>
-    /// Mulitple text pages.
-    /// </summary>
-    [fsObject]
-    public class TextRecogTopLevelMultiple
-    {
-        /// <summary>
-        /// Number of images processed.
-        /// </summary>
-        public int images_processed { get; set; }
-        /// <summary>
-        /// Array of text image classifications.
-        /// </summary>
-        public TextRecogTopLevelSingle[] images { get; set; }
-        /// <summary>
-        /// The warnings.
-        /// </summary>
-        public WarningInfo[] warnings { get; set; }
-    }
-
-    /// <summary>
-    /// One text page.
-    /// </summary>
-    [fsObject]
-    public class TextRecogTopLevelSingle
-    {
-        /// <summary>
-        /// The source URL.
-        /// </summary>
-        public string source_url { get; set; }
-        /// <summary>
-        /// The resolved URL.
-        /// </summary>
-        public string resolved_url { get; set; }
-        /// <summary>
-        /// The image.
-        /// </summary>
-        public string image { get; set; }
-        /// <summary>
-        /// The error.
-        /// </summary>
-        public ErrorInfoNoCode error { get; set; }
-        /// <summary>
-        /// The text.
-        /// </summary>
-        public string text { get; set; }
-        /// <summary>
-        /// The words.
-        /// </summary>
-        public TextRecogOneWord[] words { get; set; }
-    }
-
-    /// <summary>
-    /// One word.
-    /// </summary>
-    [fsObject]
-    public class TextRecogOneWord
-    {
-        /// <summary>
-        /// The word.
-        /// </summary>
-        public string word { get; set; }
-        /// <summary>
-        /// The word location in pixels.
-        /// </summary>
-        public Location location { get; set; }
-        /// <summary>
-        /// The classification score.
-        /// </summary>
-        public double score { get; set; }
-        /// <summary>
-        /// The line number.
-        /// </summary>
-        public double line_number { get; set; }
-    }
-
-    /// <summary>
-    /// Word location.
-    /// </summary>
-    [fsObject]
-    public class Location
-    {
-        /// <summary>
-        /// The location width.
-        /// </summary>
-        public double width { get; set; }
-        /// <summary>
-        /// The location height.
-        /// </summary>
-        public double height { get; set; }
-        /// <summary>
-        /// The location left.
-        /// </summary>
-        public double left { get; set; }
-        /// <summary>
-        /// The loction top.
-        /// </summary>
-        public double top { get; set; }
-    }
-
-    /// <summary>
-    /// Recognize text parameters.
-    /// </summary>
-    [fsObject]
-    public class RecognizeTextParameters
-    {
-        /// <summary>
-        /// The URL.
-        /// </summary>
-        public string url { get; set; }
     }
     #endregion
 
     #region Classifiers
     /// <summary>
-    /// Classifiers breif.
+    /// Classifiers.
     /// </summary>
     [fsObject]
-    public class GetClassifiersTopLevelBrief
+    public class ClassifiersBrief
     {
         /// <summary>
         /// Array of classifiers.
         /// </summary>
-        public GetClassifiersPerClassifierBrief[] classifiers { get; set; }
+        public ClassifierBrief[] classifiers { get; set; }
     }
 
     /// <summary>
-    /// Classifier breif.
+    /// Classifiers.
     /// </summary>
     [fsObject]
-    public class GetClassifiersPerClassifierBrief
+    public class ClassifiersVerbose
+    {
+        /// <summary>
+        /// Array of classifiers.
+        /// </summary>
+        public ClassifierVerbose[] classifiers { get; set; }
+    }
+
+    /// <summary>
+    /// Classifier brief.
+    /// </summary>
+    [fsObject]
+    public class ClassifierBrief
     {
         /// <summary>
         /// The classifier identifier.
@@ -366,7 +252,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Classifier verbose.
     /// </summary>
     [fsObject]
-    public class GetClassifiersPerClassifierVerbose
+    public class ClassifierVerbose
     {
         /// <summary>
         /// The classifier identifier.
@@ -385,6 +271,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         public string status { get; set; }
         /// <summary>
+        /// Whether the classifier can be downloaded as a Core ML model after the training status is ready.
+        /// </summary>
+        public bool core_ml_enabled { get; set; }
+        /// <summary>
         /// The classifier explanation.
         /// </summary>
         public string explanation { get; set; }
@@ -396,6 +286,14 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// Array of classes.
         /// </summary>
         public Class[] classes { get; set; }
+        /// <summary>
+        /// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Returned when verbose=true. Might not be returned by some requests. Identical to updated and retained for backward compatibility. 
+        /// </summary>
+        public string retrained { get; set; }
+        /// <summary>
+        /// Date and time in Coordinated Universal Time (UTC) that the classifier was most recently updated. The field matches either retrained or created. Returned when verbose=true. Might not be returned by some requests.
+        /// </summary>
+        public string updated { get; set; }
     }
 
     /// <summary>
@@ -409,172 +307,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// </summary>
         [fsProperty("class")]
         public string _class { get; set; }
-    }
-    #endregion
-
-    #region Similarity Search
-    /// <summary>
-    /// Collecitons response object.
-    /// </summary>
-    [fsObject]
-    public class GetCollections
-    {
-        /// <summary>
-        /// Array of collections.
-        /// </summary>
-        public CreateCollection[] collections;
-    }
-
-    /// <summary>
-    /// A collection.
-    /// </summary>
-    [fsObject]
-    public class CreateCollection
-    {
-        /// <summary>
-        /// The ID of the new collection.
-        /// </summary>
-        public string collection_id { get; set; }
-        /// <summary>
-        /// The ID of the new collection.
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
-        /// The ID of the new collection.
-        /// </summary>
-        public string created { get; set; }
-        /// <summary>
-        /// The ID of the new collection.
-        /// </summary>
-        public int images { get; set; }
-        /// <summary>
-        /// The status of collection creation. Returns available when the collection is available to add images, and unavailable when the collection is being created or trained.
-        /// </summary>
-        public string status { get; set; }
-        /// <summary>
-        /// The number of images possible in the collection. Each collection can contain 1000000 images.
-        /// </summary>
-        public string capacity { get; set; }
-    }
-
-    /// <summary>
-    /// Collections brief object.
-    /// </summary>
-    [fsObject]
-    public class GetCollectionImages
-    {
-        /// <summary>
-        /// Array of collections.
-        /// </summary>
-        public GetCollectionsBrief[] images { get; set; }
-    }
-
-    /// <summary>
-    /// Collection brief object.
-    /// </summary>
-    [fsObject]
-    public class GetCollectionsBrief
-    {
-        /// <summary>
-        /// The unique ID of the image. Save this to add or remove it from the collection.
-        /// </summary>
-        public string image_id { get; set; }
-        /// <summary>
-        /// Date the image was added to the collection.
-        /// </summary>
-        public string created { get; set; }
-        /// <summary>
-        /// File name of the image.
-        /// </summary>
-        public string image_file { get; set; }
-        /// <summary>
-        /// Metadat JSON object (key value pairs).
-        /// </summary>
-        public object metadata { get; set; }
-    }
-
-    /// <summary>
-    /// The collections config
-    /// </summary>
-    [fsObject]
-    public class CollectionsConfig
-    {
-        /// <summary>
-        /// Array of collection images config.
-        /// </summary>
-        public CollectionImagesConfig[] images { get; set; }
-        /// <summary>
-        /// The number of images processed in this call.
-        /// </summary>
-        public int images_processed { get; set; }
-    }
-
-    /// <summary>
-    /// The collection config.
-    /// </summary>
-    [fsObject]
-    public class CollectionImagesConfig
-    {
-        /// <summary>
-        /// The unique ID of the image. Save this to add or remove it from the collection.
-        /// </summary>
-        public string image_id { get; set; }
-        /// <summary>
-        /// Date the image was added to the collection.
-        /// </summary>
-        public string created { get; set; }
-        /// <summary>
-        /// File name of the image.
-        /// </summary>
-        public string image_file { get; set; }
-        /// <summary>
-        /// Metadat JSON object (key value pairs).
-        /// </summary>
-        public object metadata { get; set; }
-    }
-
-    /// <summary>
-    /// Similar images result.
-    /// </summary>
-    [fsObject]
-    public class SimilarImagesConfig
-    {
-        /// <summary>
-        /// The similar images.
-        /// </summary>
-        public SimilarImageConfig[] similar_images { get; set; }
-        /// <summary>
-        /// The number of images processed in this call.
-        /// </summary>
-        public int images_processed { get; set; }
-    }
-
-    /// <summary>
-    /// Similar image result.
-    /// </summary>
-    [fsObject]
-    public class SimilarImageConfig
-    {
-        /// <summary>
-        /// The unique ID of the image. Save this to add or remove it from the collection.
-        /// </summary>
-        public string image_id { get; set; }
-        /// <summary>
-        /// Date the image was added to the collection.
-        /// </summary>
-        public string created { get; set; }
-        /// <summary>
-        /// File name of the image.
-        /// </summary>
-        public string image_file { get; set; }
-        /// <summary>
-        /// Metadat JSON object (key value pairs).
-        /// </summary>
-        public object metadata { get; set; }
-        /// <summary>
-        /// Confidence in the match.
-        /// </summary>
-        public float score { get; set; }
     }
     #endregion
 
@@ -599,7 +331,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Error info.
     /// </summary>
     [fsObject]
-    public class ErrorInfoNoCode
+    public class ErrorInfo
     {
         /// <summary>
         /// The error identifier.
@@ -615,7 +347,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Age of the face.
     /// </summary>
     [fsObject]
-    public class Age
+    public class FaceAge
     {
         /// <summary>
         /// The minimum age.
@@ -635,7 +367,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     /// Gender of the face.
     /// </summary>
     [fsObject]
-    public class Gender
+    public class FaceGender
     {
         /// <summary>
         /// The gener.
@@ -669,26 +401,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// The face location top.
         /// </summary>
         public double top { get; set; }
-    }
-
-    /// <summary>
-    /// Identity of the face.
-    /// </summary>
-    [fsObject]
-    public class Identity
-    {
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public string name { get; set; }
-        /// <summary>
-        /// The identity classification score.
-        /// </summary>
-        public double score { get; set; }
-        /// <summary>
-        /// The identity classification type hierarchy.
-        /// </summary>
-        public string type_hierarchy { get; set; }
     }
     #endregion
 }
