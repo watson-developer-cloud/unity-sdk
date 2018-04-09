@@ -25,12 +25,18 @@ using System.Collections.Generic;
 
 public class ExampleLanguageTranslator : MonoBehaviour
 {
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    #endregion
+
     private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
     private string _pharseToIdentify = "Hola, donde esta la bibliteca?";
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-
+    
     private LanguageTranslator _languageTranslator;
     private string _baseModelName = "en-es";
     private string _customModelName = "Texan";

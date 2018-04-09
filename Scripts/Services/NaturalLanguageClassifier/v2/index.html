@@ -125,41 +125,68 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb4-8" data-line-number="8">{</a>
 <a class="sourceLine" id="cb4-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnClassify()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Classify Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb4-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="classifying-a-collection-of-text">Classifying A Collection of text</h3>
+<p>The status must be Available before you can use the classifier to classify calls. Use GET /classifiers/{classifier_id} to retrieve the status.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">ClassifyCollection</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    ClassifyCollectionInput classifyCollectionInput = <span class="kw">new</span> <span class="fu">ClassifyCollectionInput</span>()</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    {</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">        collection = <span class="kw">new</span> List&lt;ClassifyInput&gt;()</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">        {</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">            <span class="kw">new</span> <span class="fu">ClassifyInput</span>()</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">            {</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">                text = &lt;text-to-classify&gt;</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">            },</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">            <span class="kw">new</span> <span class="fu">ClassifyInput</span>()</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">            {</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">                text = &lt;text-to-classify&gt;</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">            }</a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">        }</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">    };</a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">    <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">ClassifyCollection</span>(OnClassify, OnFail, &lt;classifier-id&gt;, classifyCollectionInput))</a>
+<a class="sourceLine" id="cb5-19" data-line-number="19">        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.ClassifyCollection()&quot;</span>, <span class="st">&quot;Failed to classify!&quot;</span>);</a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">}</a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnClassifyCollection</span>(ClassificationCollection result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb5-23" data-line-number="23">{</a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnClassifyCollection()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Classify Collection Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">}</a></code></pre></div>
 <h3 id="training-a-new-classifier">Training A New Classifier</h3>
 <p>Sends data to create and train a classifier and returns information about the new classifier.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">TrainClassifier</span>()</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">TrainClassifier</span>(&lt;classifier-name&gt;, &lt;classifier-language&gt;, &lt;training-data&gt;, OnTrainClassifier))</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.TrainClassifier()&quot;</span>, <span class="st">&quot;Failed to train clasifier!&quot;</span>);</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">}</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnTrainClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnTrainClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Train Classifier: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">}</a></code></pre></div>
-<h3 id="getting-information-about-a-classifier">Getting Information About A Classifier</h3>
-<p>Returns status and other information about a classifier</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetClassifier</span>()</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">TrainClassifier</span>()</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">{</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">GetClassifier</span>(&lt;classifier-id&gt;, OnGetClassifier))</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.GetClassifier()&quot;</span>, <span class="st">&quot;Failed to get classifier {0}!&quot;</span>, classifierId);</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">TrainClassifier</span>(&lt;classifier-name&gt;, &lt;classifier-language&gt;, &lt;training-data&gt;, OnTrainClassifier))</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.TrainClassifier()&quot;</span>, <span class="st">&quot;Failed to train clasifier!&quot;</span>);</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnTrainClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb6-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnGetClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Get Classifier {0}: {1}&quot;</span>, classifier.<span class="fu">classifier_id</span>, data);</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnTrainClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Train Classifier: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb6-10" data-line-number="10">}</a></code></pre></div>
-<h3 id="deleting-a-classifier">Deleting A Classifier</h3>
-<p>Deletes a classifier</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteClassifier</span>()</a>
+<h3 id="getting-information-about-a-classifier">Getting Information About A Classifier</h3>
+<p>Returns status and other information about a classifier</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetClassifier</span>()</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">{</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">DeleteClassifer</span>(&lt;classifier-id&gt;, OnDeleteTrainedClassifier))</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.DeleteClassifier()&quot;</span>, <span class="st">&quot;Failed to delete clasifier {0}!&quot;</span>, &lt;classifier-id&gt;);</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">GetClassifier</span>(&lt;classifier-id&gt;, OnGetClassifier))</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.GetClassifier()&quot;</span>, <span class="st">&quot;Failed to get classifier {0}!&quot;</span>, classifierId);</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteTrainedClassifier</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb7-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}&quot;</span>, &lt;classifier-id&gt;, success, data);</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnGetClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Get Classifier {0}: {1}&quot;</span>, classifier.<span class="fu">classifier_id</span>, data);</a>
 <a class="sourceLine" id="cb7-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="deleting-a-classifier">Deleting A Classifier</h3>
+<p>Deletes a classifier</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteClassifier</span>()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">DeleteClassifer</span>(&lt;classifier-id&gt;, OnDeleteTrainedClassifier))</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.DeleteClassifier()&quot;</span>, <span class="st">&quot;Failed to delete clasifier {0}!&quot;</span>, &lt;classifier-id&gt;);</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteTrainedClassifier</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}&quot;</span>, &lt;classifier-id&gt;, success, data);</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">}</a></code></pre></div>
 </body>
 </html>

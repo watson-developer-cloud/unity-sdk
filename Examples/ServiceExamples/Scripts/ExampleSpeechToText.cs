@@ -26,9 +26,14 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 public class ExampleSpeechToText : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    #endregion
 
     private SpeechToText _speechToText;
 
@@ -695,6 +700,6 @@ public class ExampleSpeechToText : MonoBehaviour
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {
-        Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
+        Log.Error("ExampleSpeechToText.OnFail()", "Error received: {0}", error.ToString());
     }
 }
