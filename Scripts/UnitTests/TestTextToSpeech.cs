@@ -199,9 +199,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Get Customization Words
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a customization's words");
-            string customIdentifierToGetWords = "1476ea80-5355-4911-ac99-ba39162a2d34";
-            if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, OnFail, customIdentifierToGetWords))
-                Log.Debug("TestTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", customIdentifierToGetWords);
+            if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, OnFail, _createdCustomizationId))
+                Log.Debug("TestTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", _createdCustomizationId);
             while (!_getCustomizationWordsTested)
                 yield return null;
 
