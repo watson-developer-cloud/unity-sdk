@@ -1,5 +1,18 @@
 Change Log
 ==========
+## Version 2.2.0
+_2018-04-09_
+* New: Updated Visual Recognition with Core ML support ([4182](https://zenhub.innovate.ibm.com/app/workspace/o/watson/developer-experience/issues/4182), [357](https://github.com/watson-developer-cloud/unity-sdk/pull/357)).
+* New: Abstract Classify Collections operation in Natural Language Classifier ([4223](https://github.ibm.com/Watson/developer-experience/issues/4223), [355](https://github.com/watson-developer-cloud/unity-sdk/pull/355))
+* Removed: Tradeoff Analytics ([352](https://github.com/watson-developer-cloud/unity-sdk/pull/352))
+* Removed: Retrieve and Rank ([352](https://github.com/watson-developer-cloud/unity-sdk/pull/352))
+* Removed: Document Conversion ([352](https://github.com/watson-developer-cloud/unity-sdk/pull/352))
+* Removed: Alchemy API ([350](https://github.com/watson-developer-cloud/unity-sdk/pull/350))
+* Fixed: Added `result_index` to Speech to Text response ([347](https://github.com/watson-developer-cloud/unity-sdk/issues/347), [349](https://github.com/watson-developer-cloud/unity-sdk/pull/349))
+* Enhanced: Made credentials, url and versionDates accessible in the inspector in all examples ([342](https://github.com/watson-developer-cloud/unity-sdk/issues/342), [351](https://github.com/watson-developer-cloud/unity-sdk/pull/351))
+* Fixed: Created new branch for asset store releases with better documentation ([341](https://github.com/watson-developer-cloud/unity-sdk/issues/341), [asset-store-release](https://github.com/watson-developer-cloud/unity-sdk/tree/asset-store-release)) and list of files to remove from an asset store release ([Wiki](https://github.com/watson-developer-cloud/unity-sdk/wiki/Asset-Store-Release))
+* Fixed: Platform specific compilation for Unity Web Request ([335](https://github.com/watson-developer-cloud/unity-sdk/issues/335), [346](https://github.com/watson-developer-cloud/unity-sdk/pull/346))
+* Fixed: Speech to Text - Do not send keywords if they are not provided ([336](https://github.com/watson-developer-cloud/unity-sdk/issues/336), [340](https://github.com/watson-developer-cloud/unity-sdk/pull/340)).
 
 ## Version 2.1.0
 _2018-03-06_
