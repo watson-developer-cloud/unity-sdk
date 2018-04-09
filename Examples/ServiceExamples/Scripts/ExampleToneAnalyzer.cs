@@ -25,12 +25,18 @@ using System.Collections.Generic;
 
 public class ExampleToneAnalyzer : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    [SerializeField]
+    private string _versionDate;
+    #endregion
+
     private ToneAnalyzer _toneAnalyzer;
-    private string _toneAnalyzerVersionDate = "2017-05-26";
 
     private string _stringToTestTone = "This service enables people to discover and understand, and revise the impact of tone in their content. It uses linguistic analysis to detect and interpret emotional, social, and language cues found in text.";
     private bool _analyzeToneTested = false;
@@ -43,7 +49,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _toneAnalyzer = new ToneAnalyzer(credentials);
-        _toneAnalyzer.VersionDate = _toneAnalyzerVersionDate;
+        _toneAnalyzer.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }

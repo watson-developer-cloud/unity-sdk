@@ -24,12 +24,18 @@ using UnityEngine;
 
 public class ExampleDiscovery : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _username;
+    [SerializeField]
+    private string _password;
+    [SerializeField]
+    private string _url;
+    [SerializeField]
+    private string _versionDate;
+    #endregion
+
     private Discovery _discovery;
-    private string _discoveryVersionDate = "2016-12-01";
 
     private string _createdEnvironmentID;
     private string _configurationJsonPath;
@@ -73,7 +79,7 @@ public class ExampleDiscovery : MonoBehaviour
         Credentials credentials = new Credentials(_username, _password, _url);
 
         _discovery = new Discovery(credentials);
-        _discovery.VersionDate = _discoveryVersionDate;
+        _discovery.VersionDate = _versionDate;
         _configurationJsonPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/exampleConfigurationData.json";
         _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
@@ -406,6 +412,6 @@ public class ExampleDiscovery : MonoBehaviour
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {
-        Log.Error("ExampleAlchemyLanguage.OnFail()", "Error received: {0}", error.ToString());
+        Log.Error("ExampleDiscovery.OnFail()", "Error received: {0}", error.ToString());
     }
 }

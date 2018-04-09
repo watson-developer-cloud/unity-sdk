@@ -25,14 +25,21 @@ using UnityEngine;
 
 public class ExampleGetToken : MonoBehaviour
 {
-    private string _username = null;
-    private string _password = null;
-    private string _url = null;
-    private string _workspaceId = null;
+    #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [SerializeField]
+    private string _conversationUsername;
+    [SerializeField]
+    private string _conversationPassword;
+    [SerializeField]
+    private string _conversationUrl;
+    [SerializeField]
+    private string _conversationWorkspaceId;
+    [SerializeField]
+    private string _conversationVersionDate;
+    #endregion
 
     private AuthenticationToken _authenticationToken;
     private bool _receivedAuthToken = false;
-    private string _conversationVersionDate = "2017-05-26";
 
     void Start ()
     {
@@ -43,7 +50,7 @@ public class ExampleGetToken : MonoBehaviour
     private IEnumerator Example()
     {
         //  Get token
-        if (!Utility.GetToken(OnGetToken, _url, _username, _password))
+        if (!Utility.GetToken(OnGetToken, _conversationUrl, _conversationUsername, _conversationPassword))
             Log.Debug("ExampleGetToken.GetToken()", "Failed to get token.");
 
         while (!_receivedAuthToken)
@@ -71,13 +78,13 @@ public class ExampleGetToken : MonoBehaviour
         Credentials credentials = new Credentials()
         {
             AuthenticationToken = _authenticationToken.Token,
-            Url = _url
+            Url = _conversationUrl
         };
 
         Conversation conversation = new Conversation(credentials);
         conversation.VersionDate = _conversationVersionDate;
 
-        conversation.Message(OnMessage, OnFail, _workspaceId, "hello");
+        conversation.Message(OnMessage, OnFail, _conversationWorkspaceId, "hello");
     }
 
     private void OnMessage(object resp, Dictionary<string, object> customData)
