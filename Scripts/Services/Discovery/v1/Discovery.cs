@@ -188,6 +188,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetEnvironmentsResponse result = new GetEnvironmentsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEnvironmentsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -313,6 +314,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Environment result = new Environment();
             fsData data = null;
             Dictionary<string, object> customData = ((AddEnvironmentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -409,6 +411,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Environment result = new Environment();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEnvironmentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -506,6 +509,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteEnvironmentResponse result = new DeleteEnvironmentResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteEnvironmentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -607,6 +611,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetConfigurationsResponse result = new GetConfigurationsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetConfigurationsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -743,6 +748,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Configuration result = new Configuration();
             fsData data = null;
             Dictionary<string, object> customData = ((AddConfigurationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -842,6 +848,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Configuration result = new Configuration();
             fsData data = null;
             Dictionary<string, object> customData = ((GetConfigurationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -942,6 +949,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteConfigurationResponse result = new DeleteConfigurationResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteConfigurationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1133,6 +1141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             TestDocument result = new TestDocument();
             fsData data = null;
             Dictionary<string, object> customData = ((PreviewConfigurationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1235,6 +1244,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetCollectionsResponse result = new GetCollectionsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCollectionsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1367,6 +1377,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CollectionRef result = new CollectionRef();
             fsData data = null;
             Dictionary<string, object> customData = ((AddCollectionRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1466,6 +1477,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Collection result = new Collection();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCollectionRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1566,6 +1578,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteCollectionResponse result = new DeleteCollectionResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteCollectionRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1665,6 +1678,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetFieldsResponse result = new GetFieldsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetFieldsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1949,6 +1963,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DocumentAccepted result = new DocumentAccepted();
             fsData data = null;
             Dictionary<string, object> customData = ((AddDocumentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2052,6 +2067,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteDocumentResponse result = new DeleteDocumentResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteDocumentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2154,6 +2170,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DocumentStatus result = new DocumentStatus();
             fsData data = null;
             Dictionary<string, object> customData = ((GetDocumentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2432,6 +2449,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DocumentAccepted result = new DocumentAccepted();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateDocumentRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2561,6 +2579,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryResponse result = new QueryResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

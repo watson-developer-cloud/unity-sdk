@@ -256,6 +256,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             object result = null;
             string data = "";
             Dictionary<string, object> customData = ((MessageReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

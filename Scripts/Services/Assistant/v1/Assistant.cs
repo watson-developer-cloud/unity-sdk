@@ -163,6 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             MessageResponse result = new MessageResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -185,8 +186,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
-
-            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -261,6 +260,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Workspace result = new Workspace();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateWorkspaceRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -355,6 +355,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteWorkspaceRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -452,6 +453,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             WorkspaceExport result = new WorkspaceExport();
             fsData data = null;
             Dictionary<string, object> customData = ((GetWorkspaceRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -558,6 +560,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             WorkspaceCollection result = new WorkspaceCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListWorkspacesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -656,6 +659,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Workspace result = new Workspace();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateWorkspaceRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -752,6 +756,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Intent result = new Intent();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateIntentRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -847,6 +852,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteIntentRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -945,6 +951,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             IntentExport result = new IntentExport();
             fsData data = null;
             Dictionary<string, object> customData = ((GetIntentRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1055,6 +1062,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             IntentCollection result = new IntentCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListIntentsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1153,6 +1161,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Intent result = new Intent();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateIntentRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1250,6 +1259,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Example result = new Example();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateExampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1346,6 +1356,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteExampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1443,6 +1454,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Example result = new Example();
             fsData data = null;
             Dictionary<string, object> customData = ((GetExampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1551,6 +1563,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ExampleCollection result = new ExampleCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListExamplesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1650,6 +1663,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Example result = new Example();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateExampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1746,6 +1760,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Counterexample result = new Counterexample();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateCounterexampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1841,6 +1856,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteCounterexampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1938,6 +1954,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Counterexample result = new Counterexample();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCounterexampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2046,6 +2063,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CounterexampleCollection result = new CounterexampleCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListCounterexamplesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2144,6 +2162,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Counterexample result = new Counterexample();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateCounterexampleRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2240,6 +2259,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Entity result = new Entity();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateEntityRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2335,6 +2355,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteEntityRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2435,6 +2456,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             EntityExport result = new EntityExport();
             fsData data = null;
             Dictionary<string, object> customData = ((GetEntityRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2545,6 +2567,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             EntityCollection result = new EntityCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListEntitiesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2643,6 +2666,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Entity result = new Entity();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateEntityRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2740,6 +2764,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Value result = new Value();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateValueRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2836,6 +2861,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteValueRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2937,6 +2963,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ValueExport result = new ValueExport();
             fsData data = null;
             Dictionary<string, object> customData = ((GetValueRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3048,6 +3075,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ValueCollection result = new ValueCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListValuesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3147,6 +3175,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Value result = new Value();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateValueRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3245,6 +3274,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Synonym result = new Synonym();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateSynonymRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3342,6 +3372,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteSynonymRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3441,6 +3472,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Synonym result = new Synonym();
             fsData data = null;
             Dictionary<string, object> customData = ((GetSynonymRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3550,6 +3582,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             SynonymCollection result = new SynonymCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListSynonymsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3650,6 +3683,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             Synonym result = new Synonym();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateSynonymRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3746,6 +3780,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DialogNode result = new DialogNode();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateDialogNodeRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3841,6 +3876,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteDialogNodeRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3938,6 +3974,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DialogNode result = new DialogNode();
             fsData data = null;
             Dictionary<string, object> customData = ((GetDialogNodeRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4045,6 +4082,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DialogNodeCollection result = new DialogNodeCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListDialogNodesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4143,6 +4181,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DialogNode result = new DialogNode();
             fsData data = null;
             Dictionary<string, object> customData = ((UpdateDialogNodeRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4247,6 +4286,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             LogCollection result = new LogCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListAllLogsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4351,6 +4391,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             LogCollection result = new LogCollection();
             fsData data = null;
             Dictionary<string, object> customData = ((ListLogsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

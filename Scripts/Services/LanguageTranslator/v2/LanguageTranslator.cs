@@ -208,6 +208,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             Translations result = new Translations();
             fsData data = null;
             Dictionary<string, object> customData = ((TranslateReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -335,6 +336,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             TranslationModels result = new TranslationModels();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelsReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -428,6 +430,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             TranslationModel result = new TranslationModel();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -586,6 +589,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             TranslationModel result = new TranslationModel();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateModelRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -679,6 +683,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             DeleteModelResult result = new DeleteModelResult();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteModelReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -770,6 +775,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             Languages result = new Languages();
             fsData data = null;
             Dictionary<string, object> customData = ((GetLanguagesReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -867,6 +873,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             IdentifiedLanguages result = new IdentifiedLanguages();
             fsData data = null;
             Dictionary<string, object> customData = ((IdentifyReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

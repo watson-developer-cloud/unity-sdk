@@ -316,6 +316,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifiedImages result = null;
             fsData data = null;
             Dictionary<string, object> customData = ((ClassifyReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -512,6 +513,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectedFaces result = null;
             fsData data = null;
             Dictionary<string, object> customData = ((DetectFacesReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -615,6 +617,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifiersBrief result = new ClassifiersBrief();
             fsData data = null;
             Dictionary<string, object> customData = ((GetClassifiersBriefReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -716,6 +719,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifiersVerbose result = new ClassifiersVerbose();
             fsData data = null;
             Dictionary<string, object> customData = ((GetClassifiersVerboseReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -816,6 +820,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifierVerbose result = new ClassifierVerbose();
             fsData data = null;
             Dictionary<string, object> customData = ((GetClassifierReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -984,6 +989,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifierVerbose result = new ClassifierVerbose();
             fsData data = null;
             Dictionary<string, object> customData = ((TrainClassifierReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1194,6 +1200,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void OnDeleteClassifierResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteClassifierReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1268,6 +1275,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private void GetCoreMLModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((GetCoreMLModelRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

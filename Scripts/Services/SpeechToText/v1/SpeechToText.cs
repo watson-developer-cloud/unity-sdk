@@ -347,6 +347,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             ModelSet result = new ModelSet();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -442,6 +443,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Model result = new Model();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -956,6 +958,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             SpeechRecognitionEvent result = null;
             fsData data = null;
             Dictionary<string, object> customData = ((RecognizeRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1291,6 +1294,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Customizations result = new Customizations();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomizationsReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1401,6 +1405,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CustomizationID result = new CustomizationID();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1497,6 +1502,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnDeleteCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1574,6 +1580,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Customization result = new Customization();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1682,6 +1689,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnTrainCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((TrainCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1760,6 +1768,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnResetCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((ResetCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1838,6 +1847,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnUpgradeCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((UpgradeCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -1916,6 +1926,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Corpora result = new Corpora();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomCorporaReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2017,6 +2028,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             Corpus result = new Corpus();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomCorpusReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2116,6 +2128,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnDeleteCustomCorpusResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteCustomCorpusRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2200,6 +2213,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnAddCustomCorpusResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((AddCustomCorpusRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2279,6 +2293,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             WordsList result = new WordsList();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomWordsReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2474,6 +2489,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnAddCustomWordsResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((AddCustomWordsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2554,6 +2570,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnDeleteCustomWordResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteCustomWordRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2634,6 +2651,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             WordData result = new WordData();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomWordReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2729,6 +2747,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AcousticCustomizations result = new AcousticCustomizations();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomAcousticModelsReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2838,6 +2857,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CustomizationID result = new CustomizationID();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateAcousticCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2933,6 +2953,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnDeleteAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteAcousticCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3008,6 +3029,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AcousticCustomization result = new AcousticCustomization();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomAcousticModelReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3111,6 +3133,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnTrainAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((TrainAcousticCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3188,6 +3211,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnResetAcousticCustomizationResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((ResetAcousticCustomizationRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3263,6 +3287,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AudioResources result = new AudioResources();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomAcousticResourcesReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3362,6 +3387,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnDeleteAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteAcousticResourceRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3440,6 +3466,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AudioListing result = new AudioListing();
             fsData data = null;
             Dictionary<string, object> customData = ((GetCustomAcousticResourceReq)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3551,6 +3578,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private void OnAddAcousticResourceResp(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((AddAcousticResourceRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

@@ -201,6 +201,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             Profile result = new Profile();
             fsData data = null;
             Dictionary<string, object> customData = ((GetProfileRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

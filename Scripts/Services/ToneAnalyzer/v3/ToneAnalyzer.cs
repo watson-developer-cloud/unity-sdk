@@ -176,6 +176,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             ToneAnalyzerResponse result = new ToneAnalyzerResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetToneAnalyzerRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
