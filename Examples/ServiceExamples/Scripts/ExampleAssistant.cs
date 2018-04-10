@@ -109,53 +109,6 @@ public class ExampleAssistant : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-        
-        Runnable.Run(GetCredentials());
-    }
-
-    private IEnumerator GetCredentials()
-    {
-        //Credentials credentials = new Credentials(_username, _password, _url);
-
-        #region Get Credentials via internal service
-        VcapCredentials vcapCredentials = new VcapCredentials();
-        fsData data = null;
-
-        string result = null;
-
-        var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-        var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-        var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
-
-        using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
-        {
-            while (!simpleGet.IsComplete)
-                yield return null;
-
-            result = simpleGet.Result;
-        }
-
-        //  Add in a parent object because Unity does not like to deserialize root level collection types.
-        result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
-
-        //  Convert json to fsResult
-        fsResult r = fsJsonParser.Parse(result, out data);
-        if (!r.Succeeded)
-            throw new WatsonException(r.FormattedMessages);
-
-        //  Convert fsResult to VcapCredentials
-        object obj = vcapCredentials;
-        r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-        if (!r.Succeeded)
-            throw new WatsonException(r.FormattedMessages);
-
-        //  Set credentials from imported credntials
-        Credential credential = vcapCredentials.VCAP_SERVICES["conversation"];
-        _username = credential.Username.ToString();
-        _password = credential.Password.ToString();
-        _url = credential.Url.ToString();
-        //_workspaceId = credential.WorkspaceId.ToString();
-        #endregion
 
         //  Create credential and instantiate service
         Credentials credentials = new Credentials(_username, _password, _url);
