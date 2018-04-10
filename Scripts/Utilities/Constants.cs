@@ -53,7 +53,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Name for creating custom headers in CustomData.
             /// </summary>
-            public const string CUSTOM_HEADERS = "custom_header";
+            public const string CUSTOM_REQUEST_HEADERS = "request_headers";
+            /// <summary>
+            /// Name for accessing response headers in CustomData.
+            /// </summary>
+            public const string RESPONSE_HEADERS = "response_headers";
         }
 
         /// <summary>

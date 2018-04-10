@@ -121,9 +121,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_HEADERS))
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_HEADERS] as Dictionary<string, string>)
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -185,6 +185,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {

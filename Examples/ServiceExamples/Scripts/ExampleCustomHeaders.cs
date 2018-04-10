@@ -68,15 +68,34 @@ public class ExampleCustomHeaders : MonoBehaviour
         //  Add to the header dictionary
         customHeaders.Add("X-Watson-Metadata", "customer_id=some-customer-id");
         //  Add the header dictionary to the custom data object
-        customData.Add(Constants.String.CUSTOM_HEADERS, customHeaders);
+        customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+
+        if (customData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+        {
+            Log.Debug("ExampleCustomHeader.Start()", "Custom Request headers:");
+            foreach (KeyValuePair<string, string> kvp in customData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+            {
+                Log.Debug("ExampleCustomHeader.Start()", "\t{0}: {1}", kvp.Key, kvp.Value);
+            }
+        }
 
         //  Call service using custom data object
-        _service.Message(OnMessage, OnFail, _assistantWorkspaceId, messageRequest, customData:customData);
+        _service.Message(OnMessage, OnFail, _assistantWorkspaceId, messageRequest, customData: customData);
     }
 
     private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleCustomHeader.OnMessage()", "Response: {0}", customData["json"].ToString());
+
+        if (customData.ContainsKey(Constants.String.RESPONSE_HEADERS))
+        {
+            Log.Debug("ExampleCustomHeader.OnMessage()", "Response headers:");
+
+            foreach (KeyValuePair<string, string> kvp in customData[Constants.String.RESPONSE_HEADERS] as Dictionary<string, string>)
+            {
+                Log.Debug("ExampleCustomHeader.OnMessage()", "\t{0}: {1}", kvp.Key, kvp.Value);
+            }
+        }
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
