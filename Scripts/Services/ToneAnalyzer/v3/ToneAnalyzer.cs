@@ -137,6 +137,13 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = GetToneAnalyzerResponse;
 
             Dictionary<string, string> upload = new Dictionary<string, string>();

@@ -163,6 +163,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnClassifyResp;
             req.Headers["Accepted-Language"] = acceptLanguage;
             req.Parameters["api_key"] = _apikey;
@@ -256,6 +263,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnClassifyResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
@@ -369,6 +383,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["url"] = url;
@@ -447,6 +468,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
@@ -548,6 +576,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
@@ -642,6 +677,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
@@ -738,6 +780,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.Parameters["verbose"] = true;
@@ -890,6 +939,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnTrainClassifierResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
@@ -1053,6 +1109,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnTrainClassifierResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
@@ -1097,6 +1160,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
@@ -1158,6 +1228,13 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = GetCoreMLModelResponse;

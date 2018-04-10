@@ -121,6 +121,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnGetClassifiersResp;
 
             return connector.Send(req);
@@ -208,6 +215,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnGetClassifierResp;
 
             return connector.Send(req);
@@ -305,6 +319,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnTrainClassifierResp;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["training_metadata"] = new RESTConnector.Form(Encoding.UTF8.GetBytes(Json.Serialize(trainingMetaData)));
@@ -395,6 +416,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnDeleteClassifierResp;
             req.Delete = true;
 
@@ -464,6 +492,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnClassifyResp;
             req.Function = "/" + classifierId + "/classify";
             req.Headers["Content-Type"] = "application/json";
@@ -558,6 +593,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnClassifyCollectionResp;
             req.Function = "/" + classifierId + "/classify_collection";
             req.Headers["Content-Type"] = "application/json";
