@@ -50,6 +50,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             public const string Version = "watson-apis-unity-sdk/2.2.0";
             /// <exclude />
             public const string DebugDispalyQuality = "Quality: {0}";
+            /// <summary>
+            /// Name for creating custom headers in CustomData.
+            /// </summary>
+            public const string CUSTOM_HEADERS = "custom_header";
         }
 
         /// <summary>
