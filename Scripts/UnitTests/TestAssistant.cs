@@ -149,7 +149,7 @@ namespace Assets.Watson.Scripts.UnitTests
             //_workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, "https://gateway.watsonplatform.net/assistant/api");
+            Credentials credentials = new Credentials(_username, _password, _url);
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
