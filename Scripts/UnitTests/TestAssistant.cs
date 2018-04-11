@@ -33,7 +33,7 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
+        private string _workspaceId = null;
         private string _createdWorkspaceId;
 
         private Assistant _service;
@@ -110,11 +110,10 @@ namespace Assets.Watson.Scripts.UnitTests
 
             string result = null;
 
-            var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-            var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-            var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
+            var ghCredentialsUrl = Environment.GetEnvironmentVariable("GH_CREDENTIALS_URL");
+            var ghCredentialsToken = Environment.GetEnvironmentVariable("GH_CREDENTIALS_TOKEN");
 
-            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
+            using (SimpleGet simpleGet = new SimpleGet(url: ghCredentialsUrl, token: ghCredentialsToken))
             {
                 while (!simpleGet.IsComplete)
                     yield return null;
@@ -137,11 +136,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["conversation"];
+            Credential credential = vcapCredentials.VCAP_SERVICES["assistant"];
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
-            //_workspaceId = credential.WorkspaceId.ToString();
+            _workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);

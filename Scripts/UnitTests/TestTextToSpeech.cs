@@ -70,11 +70,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             string result = null;
 
-            var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-            var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-            var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
+            var ghCredentialsUrl = Environment.GetEnvironmentVariable("GH_CREDENTIALS_URL");
+            var ghCredentialsToken = Environment.GetEnvironmentVariable("GH_CREDENTIALS_TOKEN");
 
-            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
+            using (SimpleGet simpleGet = new SimpleGet(url: ghCredentialsUrl, token: ghCredentialsToken))
             {
                 while (!simpleGet.IsComplete)
                     yield return null;

@@ -1306,7 +1306,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
     }
 
-    public class SimpleGet: IDisposable
+    public class SimpleGet : IDisposable
     {
         public string Result { get; set; }
         public bool IsComplete { get; set; }
@@ -1314,11 +1314,12 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private string _url = null;
         private string _username = null;
         private string _password = null;
+        private string _token = null;
         private bool _disposed = false;
 
-        public SimpleGet(string url, string username = null, string password = null)
+        public SimpleGet(string url, string username = null, string password = null, string token = null)
         {
-			IsComplete = false;
+            IsComplete = false;
 
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url is required for SimpleGet()");
@@ -1328,6 +1329,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
                 _username = username;
             if (!string.IsNullOrEmpty(password))
                 _password = password;
+            if (!string.IsNullOrEmpty(token))
+                _token = token;
 
             Runnable.Run(GetRequest());
         }
@@ -1339,8 +1342,21 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(_url))
             {
-                string authorization = Utility.CreateAuthorization(_username, _password);
-                unityWebRequest.SetRequestHeader("Authorization", authorization);
+                string authorization = null;
+
+                if(!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+                {
+                    authorization = Utility.CreateAuthorization(_username, _password);
+                }
+                else if(!string.IsNullOrEmpty(_token))
+                {
+                    authorization = _token;
+                }
+                
+                if(!string.IsNullOrEmpty(authorization))
+                    unityWebRequest.SetRequestHeader("Authorization", authorization);
+
+                unityWebRequest.SetRequestHeader("Accept", "application/vnd.github.v3.raw");
 
 #if UNITY_5_6 || UNITY_2017_1
                 yield return unityWebRequest.Send();
