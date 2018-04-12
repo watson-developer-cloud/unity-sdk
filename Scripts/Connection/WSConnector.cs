@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 #if !NETFX_CORE
-using WebSocketSharp;
+using UnitySDK.WebSocketSharp;
 #else
 using System;
 using System.Threading.Tasks;
@@ -366,9 +366,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private void OnWSMessage(object sender, MessageEventArgs e)
         {
             Message msg = null;
-            if (e.Opcode == Opcode.Text)
+            if (e.IsText)
                 msg = new TextMessage(e.Data);
-            else if (e.Opcode == Opcode.Binary)
+            else if (e.IsBinary)
                 msg = new BinaryMessage(e.RawData);
 
             lock (_receiveQueue)

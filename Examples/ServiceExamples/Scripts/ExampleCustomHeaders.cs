@@ -40,7 +40,6 @@ public class ExampleCustomHeaders : MonoBehaviour
     #endregion
 
     private Assistant _service;
-    private fsSerializer _serializer = new fsSerializer();
     private string _inputString = "Turn on the winshield wipers";
 
     void Start()

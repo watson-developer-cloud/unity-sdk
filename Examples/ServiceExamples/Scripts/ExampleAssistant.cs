@@ -43,9 +43,7 @@ public class ExampleAssistant : MonoBehaviour
     private string _createdWorkspaceId;
 
     private Assistant _service;
-
-    private fsSerializer _serializer = new fsSerializer();
-
+    
     private string _inputString = "Turn on the winshield wipers";
 
     private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
