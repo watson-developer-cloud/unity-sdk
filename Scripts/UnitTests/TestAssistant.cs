@@ -41,7 +41,11 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private fsSerializer _serializer = new fsSerializer();
 
-        private string _inputString = "Turn on the winshield wipers";
+        private string _inputString = "Hello";
+        private string _conversationString0 = "unlock the door";
+        private string _conversationString1 = "turn on the ac";
+        private string _conversationString2 = "turn down the radio";
+        private static string _lastIntent = null;
 
         private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private static string _createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
@@ -56,6 +60,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _createdExample = "untiyExample";
         private static string _dialogNodeName = "untiyDialognode";
         private static string _dialogNodeDesc = "Unity SDK Integration test dialog node";
+        private static Dictionary<string, object> _context = null;
 
         private bool _listWorkspacesTested = false;
         private bool _createWorkspaceTested = false;
@@ -184,10 +189,42 @@ namespace Assets.Watson.Scripts.UnitTests
             input.Add("text", _inputString);
             MessageRequest messageRequest = new MessageRequest()
             {
-                Input = input,
-                AlternateIntents = true
+                Input = input
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest);
+            while (!_messageTested)
+                yield return null;
+            _messageTested = false;
+
+            input["text"] = _conversationString0;
+            MessageRequest messageRequest0 = new MessageRequest()
+            {
+                Input = input,
+                Context = _context
+            };
+            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest0);
+            while (!_messageTested)
+                yield return null;
+            _messageTested = false;
+
+            input["text"] = _conversationString1;
+            MessageRequest messageRequest1 = new MessageRequest()
+            {
+                Input = input,
+                Context = _context
+            };
+            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest1);
+            while (!_messageTested)
+                yield return null;
+            _messageTested = false;
+
+            input["text"] = _conversationString2;
+            MessageRequest messageRequest2 = new MessageRequest()
+            {
+                Input = input,
+                Context = _context
+            };
+            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest2);
             while (!_messageTested)
                 yield return null;
 
@@ -658,9 +695,46 @@ namespace Assets.Watson.Scripts.UnitTests
             _listIntentsTested = true;
         }
 
-        private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
+        private void OnMessage(object response, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
+
+            //  Convert resp to fsdata
+            fsData fsdata = null;
+            fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            //  Convert fsdata to MessageResponse
+            MessageResponse messageResponse = new MessageResponse();
+            object obj = messageResponse;
+            r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
+
+            //  Set context for next round of messaging
+            object tempContext = null;
+            (response as Dictionary<string, object>).TryGetValue("context", out tempContext);
+
+            if (tempContext != null)
+                _context = tempContext as Dictionary<string, object>;
+            else
+                Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
+
+            //  Get intent
+            object tempIntentsObj = null;
+            (response as Dictionary<string, object>).TryGetValue("intents", out tempIntentsObj);
+            object tempIntentObj = (tempIntentsObj as List<object>)[0];
+            object tempIntent = null;
+            (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
+            string intent = tempIntent.ToString();
+
+            Test(_lastIntent != intent);
+            _lastIntent = intent;
+
+            //messageResponse.Intents != _lastIntent;
+            //_lastIntent = messageResponse.Intents;
+
             _messageTested = true;
         }
 
