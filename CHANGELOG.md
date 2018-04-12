@@ -1,5 +1,9 @@
 Change Log
 ==========
+## Version 2.2.1
+_2018-04-12_
+* Fixed: Serialization/Deserialization of generic object in the `assistant` service([361](https://github.com/watson-developer-cloud/unity-sdk/issues/361), [363](https://github.com/watson-developer-cloud/unity-sdk/pull/363)).
+
 ## Version 2.2.0
 _2018-04-09_
 * New: Updated Visual Recognition with Core ML support ([4182](https://zenhub.innovate.ibm.com/app/workspace/o/watson/developer-experience/issues/4182), [357](https://github.com/watson-developer-cloud/unity-sdk/pull/357)).
