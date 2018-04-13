@@ -501,7 +501,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="callback">All recognize results are passed to this callback.</param>
         /// <param name="speakerLabelCallback">Speaker label goes through this callback if it arrives separately from recognize result.</param>
         /// <returns>Returns true on success, false on failure.</returns>
-        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null)
+        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null, Dictionary<string, object> customData = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -509,6 +509,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 return false;
             if (!CreateListenConnector())
                 return false;
+
+            Dictionary<string, string> customHeaders = null;
+            if (customData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in customData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    customHeaders.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            if (customHeaders != null && _listenSocket != null)
+                _listenSocket.Headers = customHeaders;
 
             _isListening = true;
             _listenCallback = callback;
