@@ -37,7 +37,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
     public interface IAssistant
     {
-        bool Message(SuccessCallback<MessageResponse> successCallback, FailCallback failCallback, string workspaceId, MessageRequest request = null, bool? nodesVisitedDetails = null, Dictionary<string, object> customData = null);
+        bool Message(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceId, MessageRequest request = null, bool? nodesVisitedDetails = null, Dictionary<string, object> customData = null);
         bool CreateWorkspace(SuccessCallback<Workspace> successCallback, FailCallback failCallback, CreateWorkspace properties = null, Dictionary<string, object> customData = null);
 
         bool DeleteWorkspace(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceId, Dictionary<string, object> customData = null);

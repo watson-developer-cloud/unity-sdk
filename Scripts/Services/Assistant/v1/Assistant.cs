@@ -22,6 +22,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
+using MiniJSON;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
@@ -108,14 +109,39 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="request">The message to be sent. This includes the user's input, along with optional intents, entities, and context from the last response. (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog nodes that were visited during processing of the message. (optional, default to false)</param>
-        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw json output from the REST call will be passed in this object as the value of the 'json' key.</string></param>
-        public bool Message(SuccessCallback<MessageResponse> successCallback, FailCallback failCallback, string workspaceId, MessageRequest request = null, bool? nodesVisitedDetails = null, Dictionary<string, object> customData = null)
+        public bool Message(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceId, MessageRequest request = null, bool? nodesVisitedDetails = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+
+            IDictionary<string, string> requestDict = new Dictionary<string, string>();
+            if (request.Context != null)
+                requestDict.Add("context", Json.Serialize(request.Context));
+            if (request.Input != null)
+                requestDict.Add("input", Json.Serialize(request.Input));
+            if(request.AlternateIntents != null)
+                requestDict.Add("alternate_intents", Json.Serialize(request.AlternateIntents));
+            if (request.Entities != null)
+                requestDict.Add("entities", Json.Serialize(request.Entities));
+            if (request.Intents != null)
+                requestDict.Add("intents", Json.Serialize(request.Intents));
+            if (request.Output != null)
+                requestDict.Add("output", Json.Serialize(request.Output));
+
+            int iterator = 0;
+            StringBuilder stringBuilder = new StringBuilder("{");
+            foreach (KeyValuePair<string, string> property in requestDict)
+            {
+                string delimeter = iterator < requestDict.Count - 1 ? "," : "";
+                stringBuilder.Append(string.Format("\"{0}\": {1}{2}", property.Key, property.Value, delimeter));
+                iterator++;
+            }
+            stringBuilder.Append("}");
+
+            string stringToSend = stringBuilder.ToString();
 
             MessageRequestObj req = new MessageRequestObj();
             req.SuccessCallback = successCallback;
@@ -130,9 +156,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
-            fsData data = null;
-            _serializer.TrySerialize(request.Input, out data);
-            req.Send = Encoding.UTF8.GetBytes(data.ToString());
+            req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = OnMessageResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/message", workspaceId));
@@ -147,7 +171,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             /// <summary>
             /// The success callback.
             /// </summary>
-            public SuccessCallback<MessageResponse> SuccessCallback { get; set; }
+            public SuccessCallback<object> SuccessCallback { get; set; }
             /// <summary>
             /// The fail callback.
             /// </summary>
@@ -160,8 +184,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            MessageResponse result = new MessageResponse();
-            fsData data = null;
+            object result = null;
+            string data = "";
             Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
@@ -169,15 +193,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             {
                 try
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
+                    //  For deserializing into a generic object
+                    data = Encoding.UTF8.GetString(resp.Data);
+                    result = Json.Deserialize(data);
                     customData.Add("json", data);
                 }
                 catch (Exception e)
