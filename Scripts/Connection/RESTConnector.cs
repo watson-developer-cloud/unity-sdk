@@ -628,7 +628,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
 #if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}, _thread:{1}", url, _thread);
+                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}", url);
 #endif
 
                 URL = url;

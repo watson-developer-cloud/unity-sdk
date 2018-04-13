@@ -21,6 +21,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if ENABLE_RUNNABLE_DEBUGGING
+using IBM.Watson.DeveloperCloud.Logging;
+#endif
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
