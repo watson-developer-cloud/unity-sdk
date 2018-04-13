@@ -757,7 +757,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             {
                 WSConnector.TextMessage tm = (WSConnector.TextMessage)msg;
                 Dictionary<string, object> customData = new Dictionary<string, object>();
-                customData.Add("json", tm.Text);
+                customData.Add(Constants.String.JSON, tm.Text);
+                if(tm.Headers != null && tm.Headers.Count > 0)
+                    customData.Add(Constants.String.RESPONSE_HEADERS, tm.Headers);
+
                 IDictionary json = Json.Deserialize(tm.Text) as IDictionary;
                 if (json != null)
                 {

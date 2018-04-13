@@ -15,14 +15,12 @@
 *
 */
 
-using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,43 +62,43 @@ public class ExampleCustomHeaders : MonoBehaviour
         LogSystem.InstallDefaultReactors();
 
 
-        //#region http custom headers
-        ////  Create credential and instantiate Assistant service
-        //Credentials assistantCredentials = new Credentials(_assistantUsername, _assistantPassword, _assistantUrl);
+        #region http custom headers
+        //  Create credential and instantiate Assistant service
+        Credentials assistantCredentials = new Credentials(_assistantUsername, _assistantPassword, _assistantUrl);
 
-        //_assistant = new Assistant(assistantCredentials);
-        //_assistant.VersionDate = _assistantVersionDate;
+        _assistant = new Assistant(assistantCredentials);
+        _assistant.VersionDate = _assistantVersionDate;
 
-        //Dictionary<string, object> input = new Dictionary<string, object>();
-        //input.Add("text", _inputString);
-        //MessageRequest messageRequest = new MessageRequest()
-        //{
-        //    Input = input,
-        //    AlternateIntents = true
-        //};
+        Dictionary<string, object> input = new Dictionary<string, object>();
+        input.Add("text", _inputString);
+        MessageRequest messageRequest = new MessageRequest()
+        {
+            Input = input,
+            AlternateIntents = true
+        };
 
-        ////  Create customData object
-        //Dictionary<string, object> assistantCustomData = new Dictionary<string, object>();
-        ////  Create a dictionary of custom headers
-        //Dictionary<string, string> assistantCustomHeaders = new Dictionary<string, string>();
-        ////  Add to the header dictionary
-        //assistantCustomHeaders.Add("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
-        ////  Add the header dictionary to the custom data object
-        //assistantCustomData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, assistantCustomHeaders);
+        //  Create customData object
+        Dictionary<string, object> assistantCustomData = new Dictionary<string, object>();
+        //  Create a dictionary of custom headers
+        Dictionary<string, string> assistantCustomHeaders = new Dictionary<string, string>();
+        //  Add to the header dictionary
+        assistantCustomHeaders.Add("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
+        //  Add the header dictionary to the custom data object
+        assistantCustomData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, assistantCustomHeaders);
 
-        ////  Logging what we will send
-        //if (assistantCustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
-        //{
-        //    Log.Debug("ExampleCustomHeader.Start()", "Assistant custom request headers:");
-        //    foreach (KeyValuePair<string, string> kvp in assistantCustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-        //    {
-        //        Log.Debug("ExampleCustomHeader.Start()", "\t{0}: {1}", kvp.Key, kvp.Value);
-        //    }
-        //}
+        //  Logging what we will send
+        if (assistantCustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+        {
+            Log.Debug("ExampleCustomHeader.Start()", "Assistant custom request headers:");
+            foreach (KeyValuePair<string, string> kvp in assistantCustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+            {
+                Log.Debug("ExampleCustomHeader.Start()", "\t{0}: {1}", kvp.Key, kvp.Value);
+            }
+        }
 
-        ////  Call service using custom data object
-        //_assistant.Message(OnMessage, OnFail, _assistantWorkspaceId, messageRequest, customData: assistantCustomData);
-        //#endregion
+        //  Call service using custom data object
+        _assistant.Message(OnMessage, OnFail, _assistantWorkspaceId, messageRequest, customData: assistantCustomData);
+        #endregion
 
         #region websocket custom headers
         //  Websocket custom headers
@@ -128,8 +126,7 @@ public class ExampleCustomHeaders : MonoBehaviour
             }
         }
 
-        //  Call service using custom data object
-        //_speechToText.StartListening(OnRecognize, customData: speechToTextCustomData);
+        //  Call service using custom data object (see Active)
         Active = true;
 
         StartRecording();

@@ -91,9 +91,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Constructor for a BinaryMessage object.
             /// </summary>
             /// <param name="data">The binary data to send as a message.</param>
-            public BinaryMessage(byte[] data)
+            /// <param name="headers">The response headers.</param>
+            public BinaryMessage(byte[] data, Dictionary<string, string> headers = null)
             {
                 Data = data;
+                Headers = headers;
             }
 
             #region Public Properties
@@ -101,6 +103,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Binary payload.
             /// </summary>
             public byte[] Data { get; set; }
+            /// <summary>
+            /// The response headers
+            /// </summary>
+            public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
         /// <summary>
@@ -112,9 +118,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Constructor for a TextMessage object.
             /// </summary>
             /// <param name="text">The string of the text to send as a message.</param>
-            public TextMessage(string text)
+            /// <param name="headers">The response headers.</param>
+            public TextMessage(string text, Dictionary<string, string> headers = null)
             {
                 Text = text;
+                Headers = headers;
             }
 
             #region Public Properties
@@ -122,6 +130,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Text payload.
             /// </summary>
             public string Text { get; set; }
+            /// <summary>
+            /// The response headers
+            /// </summary>
+            public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
         #endregion
@@ -367,9 +379,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         {
             Message msg = null;
             if (e.IsText)
-                msg = new TextMessage(e.Data);
+                msg = new TextMessage(e.Data, e.Headers);
             else if (e.IsBinary)
-                msg = new BinaryMessage(e.RawData);
+                msg = new BinaryMessage(e.RawData, e.Headers);
 
             lock (_receiveQueue)
                 _receiveQueue.Enqueue(msg);

@@ -58,6 +58,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Name for accessing response headers in CustomData.
             /// </summary>
             public const string RESPONSE_HEADERS = "response_headers";
+            /// <summary>
+            /// Name for accessing json.
+            /// </summary>
+            public const string JSON = "json";
         }
 
         /// <summary>
