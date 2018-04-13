@@ -153,10 +153,9 @@ public class ExampleCustomHeaders : MonoBehaviour
 
     private void OnRecognize(SpeechRecognitionEvent results, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleCustomHeader.OnRecognize()", "Response: {0}", customData["json"].ToString());
-
         if (customData != null)
         {
+            Log.Debug("ExampleCustomHeader.OnRecognize()", "Response: {0}", customData["json"].ToString());
             if (customData.ContainsKey(Constants.String.RESPONSE_HEADERS))
             {
                 Log.Debug("ExampleCustomHeader.OnRecognize()", "Response headers:");

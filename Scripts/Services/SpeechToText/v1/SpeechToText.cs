@@ -485,13 +485,13 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// This callback object is used by the Recognize() and StartListening() methods.
         /// </summary>
         /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(SpeechRecognitionEvent results);
+        public delegate void OnRecognize(SpeechRecognitionEvent results, Dictionary<string, object> customData = null);
 
         /// <summary>
         /// This callback object is used by the RecognizeSpeaker() method.
         /// </summary>
         /// <param name="speakerRecognitionEvent">Array of speaker label results.</param>
-        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent);
+        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent, Dictionary<string, object> customData = null);
 
         /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
@@ -510,7 +510,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             if (!CreateListenConnector())
                 return false;
 
-            Dictionary<string, string> customHeaders = null;
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
             if (customData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach (KeyValuePair<string, string> kvp in customData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -756,7 +756,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             if (msg is WSConnector.TextMessage)
             {
                 WSConnector.TextMessage tm = (WSConnector.TextMessage)msg;
-
+                Dictionary<string, object> customData = new Dictionary<string, object>();
+                customData.Add("json", tm.Text);
                 IDictionary json = Json.Deserialize(tm.Text) as IDictionary;
                 if (json != null)
                 {
@@ -771,7 +772,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                             //    SendStart();
 
                             if (_listenCallback != null)
-                                _listenCallback(results);
+                                _listenCallback(results, customData);
                             else
                                 StopListening();            // automatically stop listening if our callback is destroyed.
                         }
