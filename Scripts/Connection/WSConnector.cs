@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 #if !NETFX_CORE
-using WebSocketSharp;
+using UnitySDK.WebSocketSharp;
 #else
 using System;
 using System.Threading.Tasks;
@@ -91,9 +91,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Constructor for a BinaryMessage object.
             /// </summary>
             /// <param name="data">The binary data to send as a message.</param>
-            public BinaryMessage(byte[] data)
+            /// <param name="headers">The response headers.</param>
+            public BinaryMessage(byte[] data, Dictionary<string, string> headers = null)
             {
                 Data = data;
+                Headers = headers;
             }
 
             #region Public Properties
@@ -101,6 +103,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Binary payload.
             /// </summary>
             public byte[] Data { get; set; }
+            /// <summary>
+            /// The response headers
+            /// </summary>
+            public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
         /// <summary>
@@ -112,9 +118,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Constructor for a TextMessage object.
             /// </summary>
             /// <param name="text">The string of the text to send as a message.</param>
-            public TextMessage(string text)
+            /// <param name="headers">The response headers.</param>
+            public TextMessage(string text, Dictionary<string, string> headers = null)
             {
                 Text = text;
+                Headers = headers;
             }
 
             #region Public Properties
@@ -122,6 +130,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// Text payload.
             /// </summary>
             public string Text { get; set; }
+            /// <summary>
+            /// The response headers
+            /// </summary>
+            public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
         #endregion
@@ -300,58 +312,58 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
-		private void SendMessages()
-		{
-			try
-			{
-				WebSocket ws = null;
+        private void SendMessages()
+        {
+            try
+            {
+                WebSocket ws = null;
 
-				ws = new WebSocket(URL);
-				//if (Headers != null)
-				//    ws.Headers = Headers;
-				if (Authentication != null)
-					ws.SetCredentials(Authentication.Username, Authentication.Password, true);
-				ws.OnOpen += OnWSOpen;
-				ws.OnClose += OnWSClose;
-				ws.OnError += OnWSError;
-				ws.OnMessage += OnWSMessage;
-				ws.Connect();
+                ws = new WebSocket(URL);
+                if (Headers != null)
+                    ws.CustomHeaders = Headers;
+                if (Authentication != null)
+                    ws.SetCredentials(Authentication.Username, Authentication.Password, true);
+                ws.OnOpen += OnWSOpen;
+                ws.OnClose += OnWSClose;
+                ws.OnError += OnWSError;
+                ws.OnMessage += OnWSMessage;
+                ws.Connect();
 
-				while (_connectionState == ConnectionState.CONNECTED)
-				{
-					_sendEvent.WaitOne(50);
+                while (_connectionState == ConnectionState.CONNECTED)
+                {
+                    _sendEvent.WaitOne(50);
 
-					Message msg = null;
-					lock (_sendQueue)
-					{
-						if (_sendQueue.Count > 0)
-							msg = _sendQueue.Dequeue();
-					}
+                    Message msg = null;
+                    lock (_sendQueue)
+                    {
+                        if (_sendQueue.Count > 0)
+                            msg = _sendQueue.Dequeue();
+                    }
 
-					while (msg != null)
-					{
-						if (msg is TextMessage)
-							ws.Send(((TextMessage)msg).Text);
-						else if (msg is BinaryMessage)
-							ws.Send(((BinaryMessage)msg).Data);
+                    while (msg != null)
+                    {
+                        if (msg is TextMessage)
+                            ws.Send(((TextMessage)msg).Text);
+                        else if (msg is BinaryMessage)
+                            ws.Send(((BinaryMessage)msg).Data);
 
-						msg = null;
-						lock (_sendQueue)
-						{
-							if (_sendQueue.Count > 0)
-								msg = _sendQueue.Dequeue();
-						}
-					}
-				}
+                        msg = null;
+                        lock (_sendQueue)
+                        {
+                            if (_sendQueue.Count > 0)
+                                msg = _sendQueue.Dequeue();
+                        }
+                    }
+                }
 
-				ws.Close();
-			}
-			catch (System.Exception e)
-			{
-				_connectionState = ConnectionState.DISCONNECTED;
-				Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
-			}
-		}
+                ws.Close();
+            }
+            catch (System.Exception e)
+            {
+                _connectionState = ConnectionState.DISCONNECTED;
+                Log.Error("WSConnector", "Caught WebSocket exception: {0}", e.ToString());
+            }
+        }
 
         private void OnWSOpen(object sender, System.EventArgs e)
         {
@@ -366,10 +378,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private void OnWSMessage(object sender, MessageEventArgs e)
         {
             Message msg = null;
-            if (e.Opcode == Opcode.Text)
-                msg = new TextMessage(e.Data);
-            else if (e.Opcode == Opcode.Binary)
-                msg = new BinaryMessage(e.RawData);
+            if (e.IsText)
+                msg = new TextMessage(e.Data, e.Headers);
+            else if (e.IsBinary)
+                msg = new BinaryMessage(e.RawData, e.Headers);
 
             lock (_receiveQueue)
                 _receiveQueue.Enqueue(msg);

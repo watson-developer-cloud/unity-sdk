@@ -76,13 +76,13 @@ To get started with the Watson Services in Unity, click on each service below to
 Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
 
 ```cs
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 
 void Start()
 {
     Credentials credentials = new Credentials(<username>, <password>, <url>);
-    Conversation _conversation = new Conversation(credentials);
+    Assistant _assistant = new Assistant(credentials);
 }
 ```
 
@@ -105,7 +105,7 @@ Success and failure callbacks are required. You can specify the return type in t
 private void Example()
 {
     //  Call with sepcific callbacks
-    conversation.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
+    assistant.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
     discovery.GetEnvironments(OnGetEnvironments, OnFail);
 }
 
@@ -139,7 +139,7 @@ Since the success callback signature is generic and the failure callback always 
 private void Example()
 {
     //  Call with generic callbacks
-    conversation.Message(OnSuccess, OnMessageFail, "<workspace-id>", "");
+    assistant.Message(OnSuccess, OnMessageFail, "<workspace-id>", "");
     discovery.GetEnvironments(OnSuccess, OnFail);
 }
 
@@ -164,7 +164,7 @@ void Example()
 {
     Dictionary<string, object> customData = new Dictionary<string, object>();
     customData.Add("foo", "bar");
-    conversation.Message(OnSuccess, OnFail, "<workspace-id>", "", customData);
+    assistant.Message(OnSuccess, OnFail, "<workspace-id>", "", customData);
 }
 
 //  Generic success callback
@@ -181,13 +181,54 @@ private void OnFail(RESTConnector.Error error, Dictionary<string, object> custom
 }
 ```
 
+## Custom Request Headers
+You can send custom request headers by adding them to the `customData` object.
+
+```cs
+void Example()
+{
+    //  Create customData object
+    Dictionary<string, object> customData = new Dictionary<string, object>();
+    //  Create a dictionary of custom headers
+    Dictionary<string, string> customHeaders = new Dictionary<string, string>();
+    //  Add to the header dictionary
+    customHeaders.Add("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
+    //  Add the header dictionary to the custom data object
+    customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+
+    assistant.Message(OnSuccess, OnFail, "<workspace-id>", customData: customData);
+}
+```
+
+## Response Headers
+You can get responseheaders in the `customData` object in the callback.
+
+```cs
+void Example()
+{
+    assistant.Message(OnMessage, OnFail, "<workspace-id>");
+}
+
+private void OnMessage(object resp, Dictionary<string, object> customData)
+{
+    //  List all headers in the response headers object
+    if (customData.ContainsKey(Constants.String.RESPONSE_HEADERS))
+    {
+        foreach (KeyValuePair<string, string> kvp in customData[Constants.String.RESPONSE_HEADERS] as Dictionary<string, string>)
+        {
+            Log.Debug("ExampleCustomHeader.OnMessage()", "{0}: {1}", kvp.Key, kvp.Value);
+        }
+    }
+}
+```
+
 ## Authentication Tokens
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
 
 You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
 
 ```cs
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 
 void Start()
@@ -196,7 +237,7 @@ void Start()
     {
         AuthenticationToken = <authentication-token>
     };
-    Conversation _conversation = new Conversation(credentials);
+    Assistant _assistant = new Assistant(credentials);
 }
 ```
 
