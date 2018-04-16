@@ -1,5 +1,9 @@
 Change Log
 ==========
+## Version 2.2.2
+* New: Send custom request headers and access response headers via `customData` object ([#4310](https://github.ibm.com/Watson/developer-experience/issues/4310), [#362](https://github.com/watson-developer-cloud/unity-sdk/pull/362)).
+* Fixed: Unresolved errors hidden by `#ifdef` ([#368](https://github.com/watson-developer-cloud/unity-sdk/issues/368), [#369](https://github.com/watson-developer-cloud/unity-sdk/pull/369))
+
 ## Version 2.2.1
 _2018-04-12_
 * Fixed: Serialization/Deserialization of generic object in the `assistant` service([361](https://github.com/watson-developer-cloud/unity-sdk/issues/361), [363](https://github.com/watson-developer-cloud/unity-sdk/pull/363)).
