@@ -218,7 +218,7 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
         yield break;
     }
 
-    private void OnRecognize(SpeechRecognitionEvent result)
+    private void OnRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
     {
         if (result != null && result.results.Length > 0)
         {
@@ -252,7 +252,7 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
         }
     }
 
-    private void OnRecognizeSpeaker(SpeakerRecognitionEvent result)
+    private void OnRecognizeSpeaker(SpeakerRecognitionEvent result, Dictionary<string, object> customData)
     {
         if (result != null)
         {
