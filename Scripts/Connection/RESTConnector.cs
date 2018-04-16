@@ -84,6 +84,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The http response code from the server
             /// </summary>
             public long HttpResponseCode { get; set; }
+            /// <summary>
+            /// The response headers
+            /// </summary>
+            public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
 
@@ -524,6 +528,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         resp.Error = error;
                     }
 
+                    resp.Headers = www.responseHeaders;
+
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
 
                     // if the response is over a threshold, then log with status instead of debug
@@ -563,6 +569,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     resp.Error = deleteReq.Error;
                     resp.HttpResponseCode = deleteReq.HttpResponseCode;
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+                    resp.Headers = deleteReq.ResponseHeaders;
                     if (req.OnResponse != null)
                         req.OnResponse(req, resp);
                 }
@@ -624,11 +631,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public long HttpResponseCode { get; set; }
             public byte[] Data { get; set; }
             public Error Error { get; set; }
+            public Dictionary<string, string> ResponseHeaders { get; set; }
 
             public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
 #if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}, _thread:{1}", url, _thread);
+                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}", url);
 #endif
 
                 URL = url;
@@ -673,6 +681,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT;
                 HttpResponseCode = deleteReq.responseCode;
+                ResponseHeaders = deleteReq.GetResponseHeaders();
                 Data = deleteReq.downloadHandler.data;
                 Error = error;
                 IsComplete = true;

@@ -144,6 +144,13 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = GetProfileResponse;
 
             req.Parameters["raw_scores"] = raw_scores.ToString();
@@ -194,6 +201,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             Profile result = new Profile();
             fsData data = null;
             Dictionary<string, object> customData = ((GetProfileRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
