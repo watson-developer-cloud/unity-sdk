@@ -133,7 +133,7 @@ public class ExampleCustomHeaders : MonoBehaviour
         #endregion
     }
 
-    private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
+    private void OnMessage(object response, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleCustomHeader.OnMessage()", "Response: {0}", customData["json"].ToString());
 
