@@ -699,7 +699,7 @@ public class ExampleAssistant : MonoBehaviour
         object tempIntent = null;
         (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
         string intent = tempIntent.ToString();
-
+		Log.Debug("ExampleConversation.OnMessage()", "intent: {0}", intent);
         _messageTested = true;
     }
 
