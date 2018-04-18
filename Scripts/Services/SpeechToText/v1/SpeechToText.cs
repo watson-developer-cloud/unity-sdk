@@ -510,6 +510,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             if (!CreateListenConnector())
                 return false;
 
+			if (customData == null)
+				customData = new Dictionary<string, object>();
+			
             Dictionary<string, string> customHeaders = new Dictionary<string, string>();
             if (customData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
