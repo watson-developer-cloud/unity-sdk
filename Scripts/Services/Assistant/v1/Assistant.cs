@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <param name="credentials">The service credentials.</param>
         public Assistant(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }

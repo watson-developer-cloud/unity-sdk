@@ -208,9 +208,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public static WSConnector CreateConnector(Credentials credentials, string function, string args)
         {
             WSConnector connector = new WSConnector();
-            if (credentials.HasAuthorizationToken())
+            if (credentials.HasWatsonAuthenticationToken())
             {
-                args += "&watson-token=" + credentials.AuthenticationToken;
+                args += "&watson-token=" + credentials.WatsonAuthenticationToken;
             }
             else if (credentials.HasCredentials())
             {

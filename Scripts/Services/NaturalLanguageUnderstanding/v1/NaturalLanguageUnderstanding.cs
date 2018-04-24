@@ -84,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         #region Constructor
         public NaturalLanguageUnderstanding(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
             {
                 Credentials = credentials;
             }

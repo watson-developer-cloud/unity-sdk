@@ -264,7 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="credentials">The service credentials.</param>
         public SpeechToText(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
             {
                 Credentials = credentials;
             }
@@ -944,8 +944,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             req.Parameters["smart_formatting"] = SmartFormatting;
             req.Parameters["speaker_labels"] = SpeakerLabels;
             req.Parameters["timestamps"] = EnableTimestamps ? "true" : "false";
-            if (Credentials.HasAuthorizationToken())
-                req.Parameters["watson-token"] = Credentials.AuthenticationToken;
+            if (Credentials.HasWatsonAuthenticationToken())
+                req.Parameters["watson-token"] = Credentials.WatsonAuthenticationToken;
             if (WordAlternativesThreshold != null)
                 req.Parameters["word_alternatives_threshold"] = WordAlternativesThreshold;
             req.Parameters["word_confidence"] = EnableWordConfidence ? "true" : "false";

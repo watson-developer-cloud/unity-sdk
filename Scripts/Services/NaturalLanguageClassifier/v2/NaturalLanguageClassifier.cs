@@ -38,7 +38,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         #region Constructor
         public NaturalLanguageClassifier(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
             {
                 Credentials = credentials;
             }

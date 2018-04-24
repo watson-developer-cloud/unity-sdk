@@ -327,9 +327,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 if (headers == null)
                     throw new ArgumentNullException("headers");
 
-                if (Authentication.HasAuthorizationToken())
+                if (Authentication.HasWatsonAuthenticationToken())
                 {
-                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.AuthenticationToken);
+                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.WatsonAuthenticationToken);
                 }
                 else if (Authentication.HasCredentials())
                 {

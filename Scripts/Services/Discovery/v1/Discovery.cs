@@ -102,7 +102,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="credentials">The service credentials.</param>
         public Discovery(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
             {
                 Credentials = credentials;
             }

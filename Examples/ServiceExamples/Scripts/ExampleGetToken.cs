@@ -77,7 +77,7 @@ public class ExampleGetToken : MonoBehaviour
     {
         Credentials credentials = new Credentials()
         {
-            AuthenticationToken = _authenticationToken.Token,
+            WatsonAuthenticationToken = _authenticationToken.Token,
             Url = _conversationUrl
         };
 

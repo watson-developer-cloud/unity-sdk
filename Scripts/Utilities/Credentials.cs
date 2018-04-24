@@ -43,13 +43,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public string ApiKey { get; set; }
         /// <summary>
-        /// The autheentication token
+        /// The Watson authentication token
         /// </summary>
-        public string AuthenticationToken
+        public string WatsonAuthenticationToken
         {
-            get { return _authenticationToken; }
-            set { _authenticationToken = value; }
+            get { return _watsonAuthenticationToken; }
+            set { _watsonAuthenticationToken = value; }
         }
+        private string _watsonAuthenticationToken;
         /// <summary>
         /// The service endpoint.
         /// </summary>
@@ -109,9 +110,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Do we have an authentication token?
         /// </summary>
         /// <returns>True if the class has a Authentication Token</returns>
-        public bool HasAuthorizationToken()
+        public bool HasWatsonAuthenticationToken()
         {
-            return !string.IsNullOrEmpty(AuthenticationToken);
+            return !string.IsNullOrEmpty(WatsonAuthenticationToken);
         }
 
         /// <summary>
