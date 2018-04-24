@@ -107,14 +107,16 @@ You can also authenticate a service using IAM authentication. You can either sup
 ```cs
 void Start()
 {
-    //  Create IAM token options and supply the apikey
+    //  Create IAM token options and supply the apikey. 
+    //  Alternatively you can supply an access token.
     TokenOptions iamTokenOptions = new TokenOptions()
     {
         IamApiKey = "<iam-api-key>"
     };
 
     //  Create credentials using the IAM token options
-     _credentials = new Credentials(iamTokenOptions, "<service-url>", OnGetToken, OnFail);
+     _credentials = new Credentials(iamTokenOptions, "<service-url");
+     _credentials.GetToken(OnGetToken, OnFail);
 }
 
 private void OnGetToken(IamTokenData tokenData, Dictionary<string, object> customData)
