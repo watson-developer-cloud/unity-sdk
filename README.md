@@ -105,7 +105,7 @@ void Start()
 You can also authenticate a service using IAM authentication. You can either supply a valid access token in the `iamTokenOptions` or get an access token using an `apikey`.
 
 ```cs
-void Start()
+void IEnumerator TokenExample()
 {
     //  Create IAM token options and supply the apikey. 
     //  Alternatively you can supply an access token.
@@ -116,16 +116,11 @@ void Start()
 
     //  Create credentials using the IAM token options
      _credentials = new Credentials(iamTokenOptions, "<service-url");
-     _credentials.GetToken(OnGetToken, OnFail);
-}
+    while (!_credentials.HasIamTokenData())
+        yield return null;
 
-private void OnGetToken(IamTokenData tokenData, Dictionary<string, object> customData)
-{
-    //  Instantiate the service and supply the credentials
     _assistant = new Assistant(_credentials);
     _assistant.VersionDate = "2018-02-16";
-
-    //  Call the service
     _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
 }
 

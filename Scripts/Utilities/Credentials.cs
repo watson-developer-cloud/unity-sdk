@@ -35,7 +35,6 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private IamTokenData _iamTokenData;
         private string _iamApiKey;
         private string _userAcessToken;
-        private SuccessCallback<IamTokenData> _onGetTokenCallback;
         #endregion
         
         #region Public Fields
@@ -149,6 +148,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
             if (!string.IsNullOrEmpty(iamTokenOptions.IamAccessToken))
                 this._userAcessToken = iamTokenOptions.IamAccessToken;
+
+            GetToken();
         }
         #endregion
 
@@ -162,39 +163,33 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// 3. If this class is managing tokens and the token has expired, refresh it
         /// 4. If this class is managing tokens and has a valid token stored, send it
         /// </summary>
-        /// <param name="successCallback">The success callback.</param>
-        /// <param name="failCallback">The fail callback.</param>
-        /// <param name="customData">Dictionary of custom data.</param>
-        public void GetToken(SuccessCallback<IamTokenData> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
+        public void GetToken()
         {
-            _onGetTokenCallback = successCallback;
-
             if (!string.IsNullOrEmpty(_userAcessToken))
             {
                 // 1. use user-managed token
-                OnGetToken(new IamTokenData() { AccessToken = _userAcessToken }, customData);
+                OnGetToken(new IamTokenData() { AccessToken = _userAcessToken }, new Dictionary<string, object>());
             }
             else if (!string.IsNullOrEmpty(_iamTokenData.AccessToken) || IsRefreshTokenExpired())
             {
                 // 2. request an initial token
-                RequestIamToken(OnGetToken, failCallback, customData);
+                RequestIamToken(OnGetToken, OnGetTokenFail);
             }
             else if (IsTokenExpired())
             {
                 // 3. refresh a token
-                RefreshIamToken(OnGetToken, failCallback, customData);
+                RefreshIamToken(OnGetToken, OnGetTokenFail);
             }
             else
             {
                 //  4. use valid managed token
-                OnGetToken(new IamTokenData() { AccessToken = _iamTokenData.AccessToken }, customData);
+                OnGetToken(new IamTokenData() { AccessToken = _iamTokenData.AccessToken }, new Dictionary<string, object>());
             }
         }
 
         private void OnGetToken(IamTokenData iamTokenData, Dictionary<string, object> customData)
         {
             SaveTokenInfo(iamTokenData);
-            _onGetTokenCallback(iamTokenData, customData);
         }
 
         private void OnGetTokenFail(RESTConnector.Error error, Dictionary<string, object> customData)

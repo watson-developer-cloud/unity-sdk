@@ -282,6 +282,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
             RESTConnector connector = new RESTConnector();
             connector.URL = credentials.Url + function;
             connector.Authentication = credentials;
+            if (connector.Authentication.HasIamTokenData())
+                connector.Authentication.GetToken();
 
             return connector;
         }

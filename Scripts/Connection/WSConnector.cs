@@ -219,6 +219,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
             else if (credentials.HasIamTokenData())
             {
+                credentials.GetToken();
                 connector.Headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("Bearer {0}", credentials.IamAccessToken));
             }
 
