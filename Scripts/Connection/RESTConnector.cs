@@ -335,6 +335,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, Authentication.CreateAuthorization());
                 }
+                else if(Authentication.HasIamTokenData())
+                {
+                    headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("bearer {0}", Authentication.IamAccessToken));
+                }
             }
 
             if (Headers != null)

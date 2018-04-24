@@ -16,6 +16,8 @@
 */
 
 using FullSerializer;
+using IBM.Watson.DeveloperCloud.Connection;
+using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,7 +30,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
     public class Credentials
     {
         #region Private Data
-        private string _authenticationToken;
+        private TokenManager _tokenManager;
+        TokenManager.SuccessCallback<IamTokenData> _successCallback;
         #endregion
         /// <summary>
         /// The user name.
@@ -42,6 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// The Api Key.
         /// </summary>
         public string ApiKey { get; set; }
+        
         /// <summary>
         /// The Watson authentication token
         /// </summary>
@@ -56,6 +60,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// The IAM access token.
+        /// </summary>
+        public string IamAccessToken { get; set; }
+
+        /// <summary>
+        /// IAM token data.
+        /// </summary>
+        public IamTokenData TokenData
+        {
+            set
+            {
+                _tokenData = value;
+                if (!string.IsNullOrEmpty(_tokenData.AccessToken))
+                    IamAccessToken = _tokenData.AccessToken;
+            }
+        }
+        private IamTokenData _tokenData = null;
+        
         /// <summary>
         /// Constructor that takes the URL. Used for token authentication.
         /// </summary>
@@ -78,14 +101,36 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Constructor that takes an authentication token created by the user or an ApiKey. If providing an ApiKey 
-        /// set useApiKey to true.
+        /// Constructor that takes an authentication token created by the user or an ApiKey. 
         /// </summary>
         /// <param name="url">The service endpoint.</param>
         public Credentials(string apiKey, string url = null)
         {
             ApiKey = apiKey;
             Url = url;
+        }
+
+        /// <summary>
+        /// Constructor that takes IAM token options.
+        /// </summary>
+        /// <param name="IamTokenOptions"></param>
+        public Credentials(TokenOptions IamTokenOptions, string serviceUrl, TokenManager.SuccessCallback<IamTokenData> successCallback, TokenManager.FailCallback failCallback, Dictionary<string, object> customData = null)
+        {
+            _successCallback = successCallback;
+            Url = serviceUrl;
+            _tokenManager = new TokenManager(IamTokenOptions);
+            _tokenManager.GetToken(OnGetToken, failCallback, customData);
+        }
+
+        private void OnGetToken(IamTokenData iamTokenData, Dictionary<string, object> customData)
+        {
+            TokenData = iamTokenData;
+            _successCallback(iamTokenData, customData);
+        }
+
+        private void OnGetTokenFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Debug("Credentials.OnGetTokenFail();", "Failed to get IAM Token: {0}", error.ToString());
         }
 
         /// <summary>
@@ -122,6 +167,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public bool HasApiKey()
         {
             return !string.IsNullOrEmpty(ApiKey);
+        }
+
+        /// <summary>
+        /// Do we have a HasIamTokenData?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasIamTokenData()
+        {
+            return _tokenData != null;
         }
     }
 
