@@ -86,7 +86,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region Constructor
         public PersonalityInsights(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }

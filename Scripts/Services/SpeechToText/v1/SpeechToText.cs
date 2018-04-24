@@ -264,7 +264,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <param name="credentials">The service credentials.</param>
         public SpeechToText(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }

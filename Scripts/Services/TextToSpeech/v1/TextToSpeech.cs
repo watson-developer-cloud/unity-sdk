@@ -132,7 +132,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         #region Constructor
         public TextToSpeech(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }

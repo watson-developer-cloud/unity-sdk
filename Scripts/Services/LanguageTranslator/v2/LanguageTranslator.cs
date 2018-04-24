@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         #region Constructor
         public LanguageTranslator(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }

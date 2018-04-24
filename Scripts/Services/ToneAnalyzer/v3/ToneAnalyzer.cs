@@ -85,7 +85,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
         #region Constructor
         public ToneAnalyzer(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }
