@@ -581,7 +581,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     public class EmotionOptions
     {
         /// <summary>
-        /// Set this to false to hide document-level emotion results
+        /// Show document-level emotion results.
         /// </summary>
         public bool? document { get; set; }
         /// <summary>
@@ -702,7 +702,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     public class SentimentOptions
     {
         /// <summary>
-        /// Set this to false to hide document-level sentiment results
+        /// Show document-level sentiment result.
         /// </summary>
         public bool? document { get; set; }
         /// <summary>
