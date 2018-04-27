@@ -44,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
     /// </summary>
     public class WSConnector
     {
-#region Public Types
+        #region Public Types
         /// <summary>
         /// Callback for a connector event.
         /// </summary>
@@ -101,7 +101,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Headers = headers;
             }
 
-#region Public Properties
+            #region Public Properties
             /// <summary>
             /// Binary payload.
             /// </summary>
@@ -110,7 +110,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The response headers
             /// </summary>
             public Dictionary<string, string> Headers { get; set; }
-#endregion
+            #endregion
         };
         /// <summary>
         /// TextMessage is used for sending text messages (e.g. JSON, XML)
@@ -128,7 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Headers = headers;
             }
 
-#region Public Properties
+            #region Public Properties
             /// <summary>
             /// Text payload.
             /// </summary>
@@ -137,11 +137,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The response headers
             /// </summary>
             public Dictionary<string, string> Headers { get; set; }
-#endregion
+            #endregion
         };
-#endregion
+        #endregion
 
-#region Public Properties
+        #region Public Properties
         /// <summary>
         /// This delegate is invoked when the connection is closed.
         /// </summary>
@@ -166,9 +166,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return _connectionState; } set { _connectionState = value; } }
-#endregion
+        #endregion
 
-#region Private Data
+        #region Private Data
         private ConnectionState _connectionState = ConnectionState.CLOSED;
 #if !NETFX_CORE
         private Thread _sendThread = null;
@@ -180,7 +180,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private AutoResetEvent _receiveEvent = new AutoResetEvent(false);
         private Queue<Message> _receiveQueue = new Queue<Message>();
         private int _receiverRoutine = 0;
-#endregion
+        #endregion
 
         /// <summary>
         /// Helper function to convert a HTTP/HTTPS url into a WS/WSS URL.
@@ -247,7 +247,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             return connector;
         }
 
-#region Public Functions
+        #region Public Functions
         /// <summary>
         /// This function sends the given message object.
         /// </summary>
@@ -299,9 +299,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             // setting the state to closed will make the SendThread automatically exit.
             _connectionState = ConnectionState.CLOSED;
         }
-#endregion
+        #endregion
 
-#region Private Functions
+        #region Private Functions
         private IEnumerator ProcessReceiveQueue()
         {
             while (_connectionState == ConnectionState.CONNECTED
@@ -332,9 +332,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (OnClose != null)
                 OnClose(this);
         }
-#endregion
+        #endregion
 
-#region Threaded Functions
+        #region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
         private void SendMessages()
@@ -529,6 +529,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
         }
 #endif
-#endregion
+        #endregion
     }
 }
