@@ -421,7 +421,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             _connectionState = ConnectionState.DISCONNECTED;
         }
 #else
-                private async Task SendMessagesAsync()
+        private async Task SendMessagesAsync()
         {
             try
             {
