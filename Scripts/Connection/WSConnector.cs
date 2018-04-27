@@ -22,8 +22,10 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Authentication;
 using System.Threading;
+#if UNITY_2018_2_OR_NEWER
+using System.Security.Authentication;
+#endif
 
 #if !NETFX_CORE
 using UnitySDK.WebSocketSharp;
@@ -42,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
     /// </summary>
     public class WSConnector
     {
-        #region Public Types
+#region Public Types
         /// <summary>
         /// Callback for a connector event.
         /// </summary>
@@ -99,7 +101,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Headers = headers;
             }
 
-            #region Public Properties
+#region Public Properties
             /// <summary>
             /// Binary payload.
             /// </summary>
@@ -108,7 +110,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The response headers
             /// </summary>
             public Dictionary<string, string> Headers { get; set; }
-            #endregion
+#endregion
         };
         /// <summary>
         /// TextMessage is used for sending text messages (e.g. JSON, XML)
@@ -126,7 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Headers = headers;
             }
 
-            #region Public Properties
+#region Public Properties
             /// <summary>
             /// Text payload.
             /// </summary>
@@ -135,11 +137,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The response headers
             /// </summary>
             public Dictionary<string, string> Headers { get; set; }
-            #endregion
+#endregion
         };
-        #endregion
+#endregion
 
-        #region Public Properties
+#region Public Properties
         /// <summary>
         /// This delegate is invoked when the connection is closed.
         /// </summary>
@@ -164,9 +166,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return _connectionState; } set { _connectionState = value; } }
-        #endregion
+#endregion
 
-        #region Private Data
+#region Private Data
         private ConnectionState _connectionState = ConnectionState.CLOSED;
 #if !NETFX_CORE
         private Thread _sendThread = null;
@@ -178,7 +180,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private AutoResetEvent _receiveEvent = new AutoResetEvent(false);
         private Queue<Message> _receiveQueue = new Queue<Message>();
         private int _receiverRoutine = 0;
-        #endregion
+#endregion
 
         /// <summary>
         /// Helper function to convert a HTTP/HTTPS url into a WS/WSS URL.
@@ -187,6 +189,23 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <returns>The fixed up URL.</returns>
         public static string FixupURL(string URL)
         {
+#if UNITY_2018_2_OR_NEWER
+            //  Use standard endpoints since 2018.2 supports TLS 1.2
+            if (URL.StartsWith("http://stream."))
+                URL = URL.Replace("http://stream.", "ws://stream.");
+            else if (URL.StartsWith("https://stream."))
+                URL = URL.Replace("https://stream.", "wss://stream.");
+            else if (URL.StartsWith("http://stream-tls10."))
+                URL = URL.Replace("http://stream-tls10.", "ws://stream.");
+            else if (URL.StartsWith("https://stream-tls10."))
+                URL = URL.Replace("https://stream-tls10.", "wss://stream.");
+            else if (URL.StartsWith("http://stream-fra."))
+                URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
+            else if (URL.StartsWith("https://stream-fra."))
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
+#else
+            //  Redirect to TLS 1.0 endpoints. 
+            //  Note frankfurt endpoint does not support TLS 1.0.
             if (URL.StartsWith("http://stream."))
                 URL = URL.Replace("http://stream.", "ws://stream-tls10.");
             else if (URL.StartsWith("https://stream."))
@@ -199,6 +218,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
             else if (URL.StartsWith("https://stream-fra."))
                 URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
+#endif
 
             return URL;
         }
@@ -227,7 +247,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             return connector;
         }
 
-        #region Public Functions
+#region Public Functions
         /// <summary>
         /// This function sends the given message object.
         /// </summary>
@@ -279,9 +299,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             // setting the state to closed will make the SendThread automatically exit.
             _connectionState = ConnectionState.CLOSED;
         }
-        #endregion
+#endregion
 
-        #region Private Functions
+#region Private Functions
         private IEnumerator ProcessReceiveQueue()
         {
             while (_connectionState == ConnectionState.CONNECTED
@@ -312,9 +332,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (OnClose != null)
                 OnClose(this);
         }
-        #endregion
+#endregion
 
-        #region Threaded Functions
+#region Threaded Functions
         // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
         private void SendMessages()
@@ -332,7 +352,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
+#if UNITY_2018_2_OR_NEWER
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+#endif
                 ws.Connect();
 
                 while (_connectionState == ConnectionState.CONNECTED)
@@ -399,7 +421,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             _connectionState = ConnectionState.DISCONNECTED;
         }
 #else
-        private async Task SendMessagesAsync()
+                private async Task SendMessagesAsync()
         {
             try
             {
@@ -507,6 +529,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
         }
 #endif
-        #endregion
+#endregion
     }
 }
