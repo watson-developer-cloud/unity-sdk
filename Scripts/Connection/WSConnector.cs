@@ -22,6 +22,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Threading;
 
 #if !NETFX_CORE
@@ -194,6 +195,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("http://stream-tls10.", "ws://stream-tls10.");
             else if (URL.StartsWith("https://stream-tls10."))
                 URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
+            else if (URL.StartsWith("http://stream-fra."))
+                URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
+            else if (URL.StartsWith("https://stream-fra."))
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
 
             return URL;
         }
@@ -327,6 +332,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
+                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
                 ws.Connect();
 
                 while (_connectionState == ConnectionState.CONNECTED)
