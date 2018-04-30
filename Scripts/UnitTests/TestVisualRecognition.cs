@@ -52,6 +52,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if TRAIN_CLASSIFIER
         private bool _trainClassifierTested = false;
         private bool _getClassifierTested = false;
+        private bool _getCoreMLModelTested = false;
 #endif
 #if DELETE_TRAINED_CLASSIFIER
         private bool _deleteClassifierTested = false;
@@ -60,7 +61,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _classifyPostTested = false;
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
-        private bool _getCoreMLModelTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -269,11 +269,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _detectFacesPostTested = true;
         }
 
+#if TRAIN_CLASSIFIER
         private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
         {
             Test(resp != null);
             _getCoreMLModelTested = true;
         }
+#endif
 
         #region Delay
 #if DELETE_TRAINED_CLASSIFIER

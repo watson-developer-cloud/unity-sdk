@@ -174,7 +174,7 @@ private void OnGetClassifiers(ClassifiersBrief classifiers, Dictionary<string, o
 }
 
 #if DELETE_TRAINED_CLASSIFIER
-    private void OnGetClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
+    private void OnGetClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", customData["json"].ToString());
         _getClassifierTested = true;
@@ -190,7 +190,7 @@ private void OnGetClassifiers(ClassifiersBrief classifiers, Dictionary<string, o
 #endif
 
 #if TRAIN_CLASSIFIER
-    private void OnTrainClassifier(GetClassifiersPerClassifierVerbose classifier, Dictionary<string, object> customData)
+    private void OnTrainClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleVisualRecognition.OnTrainClassifier()", "{0}", customData["json"].ToString());
 

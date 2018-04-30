@@ -134,6 +134,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.OnResponse = OnAnalyzeResponse;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -171,6 +178,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             AnalysisResults result = new AnalysisResults();
             fsData data = null;
             Dictionary<string, object> customData = ((AnalyzeRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -228,6 +236,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
 
@@ -259,6 +274,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             ListModelsResults result = new ListModelsResults();
             fsData data = null;
             Dictionary<string, object> customData = ((GetModelsRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -319,6 +335,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnDeleteModelResponse;
             req.Delete = true;
@@ -349,6 +372,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             Dictionary<string, object> customData = ((DeleteModelRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
