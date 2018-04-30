@@ -45,6 +45,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
     public class WSConnector
     {
         #region Public Types
+        public const string AUTHENTICATION_AUTHORIZATION_HEADER = "Authorization";
         /// <summary>
         /// Callback for a connector event.
         /// </summary>
@@ -233,13 +234,18 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public static WSConnector CreateConnector(Credentials credentials, string function, string args)
         {
             WSConnector connector = new WSConnector();
-            if (credentials.HasAuthorizationToken())
+            if (credentials.HasWatsonAuthenticationToken())
             {
-                args += "&watson-token=" + credentials.AuthenticationToken;
+                args += "&watson-token=" + credentials.WatsonAuthenticationToken;
             }
             else if (credentials.HasCredentials())
             {
                 connector.Authentication = credentials;
+            }
+            else if (credentials.HasIamTokenData())
+            {
+                credentials.GetToken();
+                connector.Headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("Bearer {0}", credentials.IamAccessToken));
             }
 
             connector.URL = FixupURL(credentials.Url) + function + args;
