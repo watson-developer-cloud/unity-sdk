@@ -655,10 +655,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="environmentID">The environment identifier.</param>
-        /// <param name="configurationJsonPath">The path to the configuration json file.</param>
+        /// <param name="configJson">The configuration json.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool AddConfiguration(SuccessCallback<Configuration> successCallback, FailCallback failCallback, string environmentID, string configurationJsonPath, Dictionary<string, object> customData = null)
+        public bool AddConfiguration(SuccessCallback<Configuration> successCallback, FailCallback failCallback, string environmentID, string configJson, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -666,14 +666,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(environmentID))
                 throw new ArgumentNullException("environmentID");
-            if (string.IsNullOrEmpty(configurationJsonPath))
+            if (string.IsNullOrEmpty(configJson))
                 throw new ArgumentNullException("configurationJsonPath");
 
             byte[] configJsonData;
 
             try
             {
-                configJsonData = Encoding.UTF8.GetBytes(File.ReadAllText(configurationJsonPath));
+                configJsonData = Encoding.UTF8.GetBytes(configJson);
             }
             catch (Exception e)
             {
