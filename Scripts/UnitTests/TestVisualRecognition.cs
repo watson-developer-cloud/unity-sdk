@@ -26,7 +26,6 @@ using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
-using System;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
@@ -70,17 +69,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             fsData data = null;
 
             string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            var ghCredentialsUrl = Environment.GetEnvironmentVariable("GH_CREDENTIALS_URL");
-            var ghCredentialsToken = Environment.GetEnvironmentVariable("GH_CREDENTIALS_TOKEN");
-
-            using (SimpleGet simpleGet = new SimpleGet(url: ghCredentialsUrl, token: ghCredentialsToken))
-            {
-                while (!simpleGet.IsComplete)
-                    yield return null;
-
-                result = simpleGet.Result;
-            }
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -97,8 +92,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"];
-            _apikey = credential.Apikey.ToString();
+            Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"][0].Credentials;
+            _apikey = credential.ApiKey.ToString();
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service

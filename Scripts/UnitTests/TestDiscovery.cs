@@ -80,17 +80,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             fsData data = null;
 
             string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            var ghCredentialsUrl = System.Environment.GetEnvironmentVariable("GH_CREDENTIALS_URL");
-            var ghCredentialsToken = System.Environment.GetEnvironmentVariable("GH_CREDENTIALS_TOKEN");
-
-            using (SimpleGet simpleGet = new SimpleGet(url: ghCredentialsUrl, token: ghCredentialsToken))
-            {
-                while (!simpleGet.IsComplete)
-                    yield return null;
-
-                result = simpleGet.Result;
-            }
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -107,7 +103,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["discovery"];
+            Credential credential = vcapCredentials.VCAP_SERVICES["discovery"][0].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
