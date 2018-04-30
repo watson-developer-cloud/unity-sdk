@@ -23,6 +23,9 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+#if UNITY_2018_2_OR_NEWER
+using System.Security.Authentication;
+#endif
 
 #if !NETFX_CORE
 using UnitySDK.WebSocketSharp;
@@ -187,6 +190,23 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <returns>The fixed up URL.</returns>
         public static string FixupURL(string URL)
         {
+#if UNITY_2018_2_OR_NEWER
+            //  Use standard endpoints since 2018.2 supports TLS 1.2
+            if (URL.StartsWith("http://stream."))
+                URL = URL.Replace("http://stream.", "ws://stream.");
+            else if (URL.StartsWith("https://stream."))
+                URL = URL.Replace("https://stream.", "wss://stream.");
+            else if (URL.StartsWith("http://stream-tls10."))
+                URL = URL.Replace("http://stream-tls10.", "ws://stream.");
+            else if (URL.StartsWith("https://stream-tls10."))
+                URL = URL.Replace("https://stream-tls10.", "wss://stream.");
+            else if (URL.StartsWith("http://stream-fra."))
+                URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
+            else if (URL.StartsWith("https://stream-fra."))
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
+#else
+            //  Redirect to TLS 1.0 endpoints. 
+            //  Note frankfurt endpoint does not support TLS 1.0.
             if (URL.StartsWith("http://stream."))
                 URL = URL.Replace("http://stream.", "ws://stream-tls10.");
             else if (URL.StartsWith("https://stream."))
@@ -195,6 +215,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("http://stream-tls10.", "ws://stream-tls10.");
             else if (URL.StartsWith("https://stream-tls10."))
                 URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
+            else if (URL.StartsWith("http://stream-fra."))
+                URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
+            else if (URL.StartsWith("https://stream-fra."))
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
+#endif
 
             return URL;
         }
@@ -333,6 +358,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
+#if UNITY_2018_2_OR_NEWER
+                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+#endif
                 ws.Connect();
 
                 while (_connectionState == ConnectionState.CONNECTED)
