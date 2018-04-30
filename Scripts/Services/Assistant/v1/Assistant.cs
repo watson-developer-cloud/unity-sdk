@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <param name="credentials">The service credentials.</param>
         public Assistant(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }
@@ -83,23 +83,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 throw new WatsonException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
-
-        //#region Callback delegates
-        ///// <summary>
-        ///// Success callback delegate.
-        ///// </summary>
-        ///// <typeparam name="T">Type of the returned object.</typeparam>
-        ///// <param name="response">The returned object.</param>
-        ///// <param name="customData">user defined custom data including raw json.</param>
-        //public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        ///// <summary>
-        ///// Fail callback delegate.
-        ///// </summary>
-        ///// <param name="error">The error object.</param>
-        ///// <param name="customData">User defined custom data</param>
-        //public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
-        //#endregion
 
         /// <summary>
         /// Get a response to a user's input.    There is no rate limit for this operation. 

@@ -92,10 +92,46 @@ For services that authenticate using an apikey, you can instantiate the service 
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 
+private Assistant _assistant;
+private Credentials _credentials = null;
+
 void Start()
 {
     Credentials credentials = new Credentials(<apikey>, <url>);
     VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
+```
+
+You can also authenticate a service using IAM authentication. You can either supply a valid access token in the `iamTokenOptions` or get an access token using an `apikey`.
+
+```cs
+void IEnumerator TokenExample()
+{
+    //  Create IAM token options and supply the apikey. 
+    //  Alternatively you can supply an access token.
+    TokenOptions iamTokenOptions = new TokenOptions()
+    {
+        IamApiKey = "<iam-api-key>"
+    };
+
+    //  Create credentials using the IAM token options
+     _credentials = new Credentials(iamTokenOptions, "<service-url");
+    while (!_credentials.HasIamTokenData())
+        yield return null;
+
+    _assistant = new Assistant(_credentials);
+    _assistant.VersionDate = "2018-02-16";
+    _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
+}
+
+private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+{
+    Log.Debug("OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Debug("OnFail()", "Failed: {0}", error.ToString());
 }
 ```
 
