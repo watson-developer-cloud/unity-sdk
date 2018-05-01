@@ -577,17 +577,58 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         public int limit { get; set; }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(EmotionOptionsConverter))]
     public class EmotionOptions
     {
         /// <summary>
-        /// Set this to false to hide document-level emotion results
+        /// Show document-level emotion results.
         /// </summary>
-        public bool document { get; set; }
+        public bool? document { get; set; }
         /// <summary>
         /// Emotion results will be returned for each target string that is found in the document
         /// </summary>
         public string[] targets { get; set; }
+    }
+
+    public class EmotionOptionsConverter : fsConverter
+    {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(EmotionOptions);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            EmotionOptions emotionOptions = (EmotionOptions)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (emotionOptions.document != null)
+            {
+                sm_Serializer.TrySerialize(emotionOptions.document, out tempData);
+                serialization.Add("document", tempData);
+            }
+
+            if (emotionOptions.targets != null)
+            {
+                sm_Serializer.TrySerialize(emotionOptions.targets, out tempData);
+                serialization.Add("targets", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
     }
 
     [fsObject]
@@ -657,17 +698,58 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         public bool entities { get; set; }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(SentimentOptionsConverter))]
     public class SentimentOptions
     {
         /// <summary>
-        /// Set this to false to hide document-level sentiment results
+        /// Show document-level sentiment result.
         /// </summary>
-        public bool document { get; set; }
+        public bool? document { get; set; }
         /// <summary>
         /// Sentiment results will be returned for each target string that is found in the document
         /// </summary>
         public string[] targets { get; set; }
+    }
+
+    public class SentimentOptionsConverter : fsConverter
+    {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(SentimentOptions);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            SentimentOptions sentimentOptions = (SentimentOptions)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (sentimentOptions.document != null)
+            {
+                sm_Serializer.TrySerialize(sentimentOptions.document, out tempData);
+                serialization.Add("document", tempData);
+            }
+
+            if (sentimentOptions.targets != null)
+            {
+                sm_Serializer.TrySerialize(sentimentOptions.targets, out tempData);
+                serialization.Add("targets", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
     }
 
     [fsObject]
