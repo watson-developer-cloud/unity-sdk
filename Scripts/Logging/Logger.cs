@@ -213,6 +213,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
 #if UNITY_EDITOR || NETFX_CORE
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
+            LogSystem.InstallDefaultReactors();
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.DEBUG, subSystem, string.Format(messageFmt, args));
