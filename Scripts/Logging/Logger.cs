@@ -113,6 +113,16 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// Returns the singleton instance of the Logger object.
         /// </summary>
         public static LogSystem Instance { get { return Singleton<LogSystem>.Instance; } }
+
+        /// <summary>
+        /// Expose the status of installed default refactors.
+        /// User can get the status, and set the status.
+        /// </summary>
+        public static bool InstalledDefaultReactors
+        {
+            get { return _bInstalledDefaultReactors; }
+            set { _bInstalledDefaultReactors = value; }
+        }
         #endregion
 
         #region Private Data
@@ -213,6 +223,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
 #if UNITY_EDITOR || NETFX_CORE
         public static void Debug(string subSystem, string messageFmt, params object[] args)
         {
+			if(!LogSystem.InstalledDefaultReactors)
+                System.Console.WriteLine("Call LogSystem.InstallDefaultReactors() prior to logging to see the output of Log.Debug(), Log.Status(), Log.Warning(), Log.Error() and Log.Critical().");            
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.DEBUG, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.DEBUG, subSystem, string.Format(messageFmt, args));
@@ -232,6 +244,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Status(string subSystem, string messageFmt, params object[] args)
         {
+            if(!LogSystem.InstalledDefaultReactors)
+                System.Console.WriteLine("Call LogSystem.InstallDefaultReactors() prior to logging to see the output of Log.Debug(), Log.Status(), Log.Warning(), Log.Error() and Log.Critical().");
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.STATUS, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.STATUS, subSystem, string.Format(messageFmt, args));
@@ -245,6 +259,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Warning(string subSystem, string messageFmt, params object[] args)
         {
+            if(!LogSystem.InstalledDefaultReactors)
+                System.Console.WriteLine("Call LogSystem.InstallDefaultReactors() prior to logging to see the output of Log.Debug(), Log.Status(), Log.Warning(), Log.Error() and Log.Critical().");
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.WARNING, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.WARNING, subSystem, string.Format(messageFmt, args));
@@ -258,6 +274,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Error(string subSystem, string messageFmt, params object[] args)
         {
+            if(!LogSystem.InstalledDefaultReactors)
+                System.Console.WriteLine("Call LogSystem.InstallDefaultReactors() prior to logging to see the output of Log.Debug(), Log.Status(), Log.Warning(), Log.Error() and Log.Critical().");
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.ERROR, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.ERROR, subSystem, string.Format(messageFmt, args));
@@ -271,6 +289,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         /// <param name="args">Formatting arguments.</param>
         public static void Critical(string subSystem, string messageFmt, params object[] args)
         {
+            if(!LogSystem.InstalledDefaultReactors)
+                System.Console.WriteLine("Call LogSystem.InstallDefaultReactors() prior to logging to see the output of Log.Debug(), Log.Status(), Log.Warning(), Log.Error() and Log.Critical().");
             LogSystem.Instance.ProcessLog(new LogRecord(LogLevel.CRITICAL, subSystem, messageFmt, args));
 #if !NETFX_CORE
             System.Console.WriteLine("[{0}][{1}]: {2}", LogLevel.CRITICAL, subSystem, string.Format(messageFmt, args));
