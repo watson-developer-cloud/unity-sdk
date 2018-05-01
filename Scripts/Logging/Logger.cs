@@ -115,7 +115,8 @@ namespace IBM.Watson.DeveloperCloud.Logging
         public static LogSystem Instance { get { return Singleton<LogSystem>.Instance; } }
 
         /// <summary>
-        /// Get or set the status of installed default refactors.
+        /// Expose the status of installed default refactors.
+        /// User can get the status, and set the status.
         /// </summary>
         public static bool InstalledDefaultReactors
         {
@@ -159,7 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Logging
                 Application.logMessageReceived += UnityLogCallback;
             }
         }
-        
+
         static void UnityLogCallback(string condition, string stacktrace, LogType type)
         {
             if (type == LogType.Exception)
