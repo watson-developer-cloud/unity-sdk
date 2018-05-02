@@ -13,7 +13,7 @@ if [ $? = 0 ] ; then
   if[$? = 0] ; then
     echo "Unzip of $FILENAME succeeded!"
     echo "Attempting to move $FILENAME to test project"
-    mv $DIRECTORY_NAME/Assets/UnityTestTools Travis/UnityTestProject/Assets/
+    mv $DIRECTORY_NAME/Assets/UnityTestTools Travis/watson-unity-sdk-project/Assets/
     if[$? = 0]; then
       echo "Move $FILENAME to test project succeed!"
       exit 0

@@ -8,8 +8,8 @@ echo "Attempting to build $project for Windows..."
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/Travis/UnityTestProject/windowsBuild.log \
-  -projectPath $(pwd)/Travis/UnityTestProject \
+  -logFile $(pwd)/Travis/watson-unity-sdk-project/windowsBuild.log \
+  -projectPath $(pwd)/Travis/watson-unity-sdk-project \
   -executemethod RunTravisBuild.Windows \
   -quit
 if [ $? = 0 ] ; then
@@ -20,15 +20,15 @@ else
 fi
 
 echo 'Logs from build'
-cat $(pwd)/Travis/UnityTestProject/windowsBuild.log
+cat $(pwd)/Travis/watson-unity-sdk-project/windowsBuild.log
 
 echo "Attempting to build $project for OS X..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/Travis/UnityTestProject/osxBuild.log \
-  -projectPath $(pwd)/Travis/UnityTestProject \
+  -logFile $(pwd)/Travis/watson-unity-sdk-project/osxBuild.log \
+  -projectPath $(pwd)/Travis/watson-unity-sdk-project \
   -executemethod RunTravisBuild.OSX \
   -quit
 if [ $? = 0 ] ; then
@@ -39,7 +39,7 @@ else
 fi
 
 echo 'Logs from build'
-cat $(pwd)/Travis/UnityTestProject/osxBuild.log
+cat $(pwd)/Travis/watson-unity-sdk-project/osxBuild.log
 
 if [ $ERROR_CODE = 0 ] ; then
   echo "BUILDS SUCCEEDED! Exited with $ERROR_CODE"

@@ -1,17 +1,10 @@
 #! /bin/sh
-project="unity-sdk-travis"
+echo "Attempting to create directory for empty project Travis/watson-unity-sdk-project..."
+mkdir -p Travis
 
-echo "Attempting to create directory for empty project Travis/UnityTestProject..."
-mkdir -p Travis/UnityTestProject
+echo "Attempting to add project"
+git clone https://github.com/mediumTaj/watson-unity-sdk-project.git Travis/watson-unity-sdk-project
 
-echo "Attempting to create an empty project into Travis/UnityTestProject...."
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
-  -batchmode \
-  -nographics \
-  -silent-crashes \
-  -logFile $(pwd)/createProject.log \
-  -createProject $(pwd)/Travis/UnityTestProject \
-  -quit
 if [ $? = 0 ] ; then
   echo "Project creation COMPLETED! Exited with $?"
   exit 0

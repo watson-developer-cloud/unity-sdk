@@ -5,7 +5,7 @@ set -e
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
   echo '$TRAVIS_PULL_REQUEST is false, running tests'
 echo "Attempting to create Streaming Assets directory..."
-mkdir -p Travis/UnityTestProject/Assets/StreamingAssets/
+mkdir -p Travis/watson-unity-sdk-project/Assets/StreamingAssets/
 
 echo "Attempting to run UnitySDK integration Tests..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
@@ -13,7 +13,7 @@ echo "Attempting to run UnitySDK integration Tests..."
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/integrationTests.log \
-  -projectPath $(pwd)/Travis/UnityTestProject \
+  -projectPath $(pwd)/Travis/watson-unity-sdk-project \
   -executemethod IBM.Watson.DeveloperCloud.Editor.TravisIntegrationTests.RunTests \
   -quit
 if [ $? = 0 ] ; then

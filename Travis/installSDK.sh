@@ -13,9 +13,9 @@ fi
 
 
 echo "Attempting to install Watson Developer Cloud Unity SDK into the test project..."
-mkdir -p Travis/UnityTestProject/Assets/Watson/
-git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/UnityTestProject/Assets/Watson/
-#git clone -b feature-97-integrationTesting --single-branch https://github.com/watson-developer-cloud/unity-sdk.git Travis/UnityTestProject/Assets/Watson/
+mkdir -p Travis/watson-unity-sdk-project/Assets/Watson/
+git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson/
+#git clone -b feature-97-integrationTesting --single-branch https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson/
 
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
@@ -29,13 +29,13 @@ if [ $? = 0 ] ; then
     exit 1
   fi
 
-  echo "Attempting to create Travis/UnityTestProject/Assets/Scripts/Editor/"
-  mkdir -p Travis/UnityTestProject/Assets/Scripts/Editor/
+  echo "Attempting to create Travis/watson-unity-sdk-project/Assets/Scripts/Editor/"
+  mkdir -p Travis/watson-unity-sdk-project/Assets/Scripts/Editor/
   if [ $? = 0 ] ; then
-    echo "Creating Travis/UnityTestProject/Assets/Scripts/Editor/ SUCCEEDED! Exited with $?"
+    echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ SUCCEEDED! Exited with $?"
 
     echo "Attempting to move integration tests script..."
-    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisIntegrationTests.cs
+    mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/TravisIntegrationTests.cs
     if [ $? = 0 ] ; then
       echo "Moving travis integration tests script SUCCEEDED! Exited with $?"
       exit 0
@@ -44,7 +44,7 @@ if [ $? = 0 ] ; then
       exit 1
     fi
   else
-    echo "Creating Travis/UnityTestProject/Assets/Scripts/Editor/ FAILED! EXITED WITH $?"
+    echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ FAILED! EXITED WITH $?"
   fi
 else
   echo "WDC Unity SDK install FAILED! Exited with $?"
