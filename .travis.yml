@@ -10,10 +10,12 @@ before_install:
 install:
 - ./Travis/installUnity.sh
 before_script:
+- chmod a+x ./Travis/startUnity.sh
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
 - chmod a+x ./Travis/runTests.sh
 - chmod a+x ./Travis/build.sh
+- ./Travis/startUnity.sh
 script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
