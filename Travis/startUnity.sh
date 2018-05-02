@@ -8,9 +8,9 @@ echo "Start Unity log"
 cat $(pwd)/startUnity.log
 
 if [ $? = 0 ] ; then
-    echo "Moving travis integration tests script SUCCEEDED! Exited with $?"
+    echo "Starting Unity SUCCEEDED! Exited with $?"
     exit 0
 else
-    echo "Moving travis integration tests script FAILED! Exited with $?"
+    echo "Starting Unity FAILED! Exited with $?"
     exit 1
 fi
