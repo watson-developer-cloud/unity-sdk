@@ -26,7 +26,7 @@ install() {
  fi
 
  echo "Installing "`basename "$package"`
- sudo installer -dumplog -package $packagePath -target /
+ sudo -S installer -dumplog -package $packagePath -target / -verbose
 }
 
 if [ ! -d "Unity" ] ; then
