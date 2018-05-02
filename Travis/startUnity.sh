@@ -4,6 +4,7 @@ echo "Attempting to start Unity"
 sleep 30
 sudo killall Unity
 
+echo "Start Unity log"
 cat $(pwd)/startUnity.log
 
 if [ $? = 0 ] ; then
@@ -12,3 +13,4 @@ if [ $? = 0 ] ; then
 else
     echo "Moving travis integration tests script FAILED! Exited with $?"
     exit 1
+fi
