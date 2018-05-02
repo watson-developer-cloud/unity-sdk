@@ -11,6 +11,7 @@ echo "Attempting to run UnitySDK integration Tests..."
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \
+  -silent-crashes \
   -logFile $(pwd)/integrationTests.log \
   -projectPath $(pwd)/Travis/UnityTestProject \
   -executemethod IBM.Watson.DeveloperCloud.Editor.TravisIntegrationTests.RunTests \
