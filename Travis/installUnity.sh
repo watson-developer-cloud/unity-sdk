@@ -2,9 +2,9 @@
 
 set -e
 
-BASE_URL=https://netstorage.unity3d.com/unity
-HASH=46dda1414e51
-VERSION=2017.2.0f3
+BASE_URL=https://download.unity3d.com/download_unity
+HASH=52d9cb89b362
+VERSION=2017.4.2f2
 
 download() {
  file=$1
