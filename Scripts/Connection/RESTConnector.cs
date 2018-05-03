@@ -693,6 +693,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 IsComplete = true;
             }
         };
-        #endregion
+#endregion
     }
 }

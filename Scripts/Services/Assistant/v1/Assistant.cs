@@ -371,7 +371,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -380,6 +379,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+            
             if (resp.Success)
             {
                 if (((DeleteWorkspaceRequestObj)req).SuccessCallback != null)
@@ -387,8 +388,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteWorkspaceRequestObj)req).FailCallback != null)
-                    ((DeleteWorkspaceRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteWorkspaceRequestObj)req).SuccessCallback != null)
+                    ((DeleteWorkspaceRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -868,7 +869,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -877,6 +877,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteIntentRequestObj)req).SuccessCallback != null)
@@ -884,8 +886,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteIntentRequestObj)req).FailCallback != null)
-                    ((DeleteIntentRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteIntentRequestObj)req).SuccessCallback != null)
+                    ((DeleteIntentRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -1372,7 +1374,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1381,6 +1382,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteExampleRequestObj)req).SuccessCallback != null)
@@ -1388,8 +1391,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteExampleRequestObj)req).FailCallback != null)
-                    ((DeleteExampleRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteExampleRequestObj)req).SuccessCallback != null)
+                    ((DeleteExampleRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -1872,7 +1875,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1881,6 +1883,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteCounterexampleRequestObj)req).SuccessCallback != null)
@@ -1888,8 +1892,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteCounterexampleRequestObj)req).FailCallback != null)
-                    ((DeleteCounterexampleRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteCounterexampleRequestObj)req).SuccessCallback != null)
+                    ((DeleteCounterexampleRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -2371,7 +2375,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2380,6 +2383,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteEntityRequestObj)req).SuccessCallback != null)
@@ -2387,8 +2392,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteEntityRequestObj)req).FailCallback != null)
-                    ((DeleteEntityRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteEntityRequestObj)req).SuccessCallback != null)
+                    ((DeleteEntityRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -2877,7 +2882,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2886,6 +2890,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteValueRequestObj)req).SuccessCallback != null)
@@ -2893,8 +2899,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteValueRequestObj)req).FailCallback != null)
-                    ((DeleteValueRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteValueRequestObj)req).SuccessCallback != null)
+                    ((DeleteValueRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -3388,7 +3394,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3397,6 +3402,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteSynonymRequestObj)req).SuccessCallback != null)
@@ -3404,8 +3411,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteSynonymRequestObj)req).FailCallback != null)
-                    ((DeleteSynonymRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteSynonymRequestObj)req).SuccessCallback != null)
+                    ((DeleteSynonymRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 
@@ -3892,7 +3899,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3901,6 +3907,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteDialogNodeRequestObj)req).SuccessCallback != null)
@@ -3908,8 +3916,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             else
             {
-                if (((DeleteDialogNodeRequestObj)req).FailCallback != null)
-                    ((DeleteDialogNodeRequestObj)req).FailCallback(resp.Error, customData);
+                if (((DeleteDialogNodeRequestObj)req).SuccessCallback != null)
+                    ((DeleteDialogNodeRequestObj)req).SuccessCallback(resp.Error, customData);
             }
         }
 

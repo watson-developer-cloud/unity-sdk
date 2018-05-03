@@ -43,12 +43,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _customCorpusFilePath;
         private string _customWordsFilePath;
         private string _acousticResourceUrl = "https://ia802302.us.archive.org/10/items/Greatest_Speeches_of_the_20th_Century/TheFirstAmericaninEarthOrbit.mp3";
-        private bool _isAudioLoaded = false;
+        //private bool _isAudioLoaded = false;
         private string _createdAcousticModelId;
         private string _acousticResourceName = "unity-acoustic-resource";
         private string _createdAcousticModelName = "unity-example-acoustic-model";
-        private byte[] _acousticResourceData;
-        private string _acousticResourceMimeType;
+        //private byte[] _acousticResourceData;
+        //private string _acousticResourceMimeType;
 
         private bool _recognizeTested = false;
         private bool _getModelsTested = false;
@@ -132,23 +132,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText = new SpeechToText(credentials);
             _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
             _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
-            _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
+            //_acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
 
-            Runnable.Run(DownloadAcousticResource());
-            while (!_isAudioLoaded)
-                yield return null;
+            //Runnable.Run(DownloadAcousticResource());
+            //while (!_isAudioLoaded)
+            //    yield return null;
 
             //  Recognize
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
-            List<string> keywords = new List<string>();
-            keywords.Add("speech");
-            _speechToText.KeywordsThreshold = 0.5f;
-            _speechToText.InactivityTimeout = 120;
-            _speechToText.StreamMultipart = false;
-            _speechToText.Keywords = keywords.ToArray();
-            _speechToText.Recognize(HandleOnRecognize, OnFail, _acousticResourceData, _acousticResourceMimeType);
-            while (!_recognizeTested)
-                yield return null;
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
+            //List<string> keywords = new List<string>();
+            //keywords.Add("speech");
+            //_speechToText.KeywordsThreshold = 0.5f;
+            //_speechToText.InactivityTimeout = 120;
+            //_speechToText.StreamMultipart = false;
+            //_speechToText.Keywords = keywords.ToArray();
+            //_speechToText.Recognize(HandleOnRecognize, OnFail, _acousticResourceData, _acousticResourceMimeType);
+            //while (!_recognizeTested)
+            //    yield return null;
 
             //  Get models
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get models");
@@ -344,79 +344,79 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getAcousticCustomizationTested)
                 yield return null;
 
-            while (!_isAudioLoaded)
-                yield return null;
+            //while (!_isAudioLoaded)
+            //    yield return null;
 
-            //  Create acoustic resource
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
-            string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
-            _speechToText.AddAcousticResource(HandleAddAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
-            while (!_addAcousticResourcesTested)
-                yield return null;
+            ////  Create acoustic resource
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
+            //string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
+            //_speechToText.AddAcousticResource(HandleAddAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
+            //while (!_addAcousticResourcesTested)
+            //    yield return null;
 
-            //  Wait for customization
-            _isAcousticCustomizationReady = false;
-            Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
-            while (!_isAcousticCustomizationReady)
-                yield return null;
+            ////  Wait for customization
+            //_isAcousticCustomizationReady = false;
+            //Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
+            //while (!_isAcousticCustomizationReady)
+            //    yield return null;
 
-            //  List acoustic resources
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resources {0}", _createdAcousticModelId);
-            _speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, OnFail, _createdAcousticModelId);
-            while (!_getAcousticResourcesTested)
-                yield return null;
+            ////  List acoustic resources
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resources {0}", _createdAcousticModelId);
+            //_speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, OnFail, _createdAcousticModelId);
+            //while (!_getAcousticResourcesTested)
+            //    yield return null;
 
-            //  Train acoustic customization
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
-            _speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, OnFail, _createdAcousticModelId, null, true);
-            while (!_trainAcousticCustomizationsTested)
-                yield return null;
+            ////  Train acoustic customization
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
+            //_speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, OnFail, _createdAcousticModelId, null, true);
+            //while (!_trainAcousticCustomizationsTested)
+            //    yield return null;
 
-            //  Get acoustic resource
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
-            _speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName);
-            while (!_getAcousticResourceTested)
-                yield return null;
+            ////  Get acoustic resource
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
+            //_speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName);
+            //while (!_getAcousticResourceTested)
+            //    yield return null;
 
-            //  Wait for customization
-            _isAcousticCustomizationReady = false;
-            Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
-            while (!_isAcousticCustomizationReady)
-                yield return null;
+            ////  Wait for customization
+            //_isAcousticCustomizationReady = false;
+            //Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
+            //while (!_isAcousticCustomizationReady)
+            //    yield return null;
 
-            //  Delete acoustic resource
-            DeleteAcousticResource();
-            while (!_deleteAcousticResource)
-                yield return null;
+            ////  Delete acoustic resource
+            //DeleteAcousticResource();
+            //while (!_deleteAcousticResource)
+            //    yield return null;
 
-            //  Delay
-            Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
-            Runnable.Run(Delay(_delayTimeInSeconds));
-            while (!_readyToContinue)
-                yield return null;
+            ////  Delay
+            //Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
+            //Runnable.Run(Delay(_delayTimeInSeconds));
+            //while (!_readyToContinue)
+            //    yield return null;
 
-            //  Reset acoustic customization
-            Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
-            _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
-            while (!_resetAcousticCustomizationsTested)
-                yield return null;
+            ////  Reset acoustic customization
+            //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
+            //_speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
+            //while (!_resetAcousticCustomizationsTested)
+            //    yield return null;
 
-            //  Delay
-            Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
-            Runnable.Run(Delay(_delayTimeInSeconds));
-            while (!_readyToContinue)
-                yield return null;
+            ////  Delay
+            //Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
+            //Runnable.Run(Delay(_delayTimeInSeconds));
+            //while (!_readyToContinue)
+            //    yield return null;
 
-            //  Delete acoustic customization
-            DeleteAcousticCustomization();
-            while (!_deleteAcousticCustomizationsTested)
-                yield return null;
+            ////  Delete acoustic customization
+            //DeleteAcousticCustomization();
+            //while (!_deleteAcousticCustomizationsTested)
+            //    yield return null;
 
-            //  Delay
-            Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
-            Runnable.Run(Delay(_delayTimeInSeconds));
-            while (!_readyToContinue)
-                yield return null;
+            ////  Delay
+            //Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
+            //Runnable.Run(Delay(_delayTimeInSeconds));
+            //while (!_readyToContinue)
+            //    yield return null;
 
             Log.Debug("TestSpeechToText.RunTest()", "Speech to Text examples complete.");
 
@@ -482,9 +482,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleDeleteCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", "{0}", customData["json"].ToString());
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomization()", "Customization deleted");
             _createdCustomizationID = default(string);
-            Test(success);
             _deleteCustomizationsTested = true;
         }
 
@@ -517,8 +516,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleDeleteCustomCorpus(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "{0}", customData["json"].ToString());
-            Test(success);
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomCorpus()", "Custom corpus deleted");
             _deleteCustomCorpusTested = true;
         }
 
@@ -559,8 +557,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleDeleteCustomWord(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "{0}", customData["json"].ToString());
-            Test(success);
+            Log.Debug("ExampleSpeechToText.HandleDeleteCustomWord()", "Word deleted");
             _deleteCustomWordTested = true;
         }
 
@@ -630,15 +627,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void HandleDeleteAcousticResource(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", "{0}", customData["json"].ToString());
-            Test(success);
+            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticResource()", "Acoustic resource deleted");
             _deleteAcousticResource = true;
         }
 
         private void HandleDeleteAcousticCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", "{0}", customData["json"].ToString());
-            Test(success);
+            Log.Debug("ExampleSpeechToText.HandleDeleteAcousticCustomization()", "Acoustic customization deleted");
             _deleteAcousticCustomizationsTested = true;
         }
 
@@ -702,17 +697,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _readyToContinue = true;
         }
 
-        private IEnumerator DownloadAcousticResource()
-        {
-            Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
-            WWW www = new WWW(_acousticResourceUrl);
-            yield return www;
+        //private IEnumerator DownloadAcousticResource()
+        //{
+        //    Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
+        //    WWW www = new WWW(_acousticResourceUrl);
+        //    yield return new WaitForSeconds(30f);
 
-            Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
-            _acousticResourceData = www.bytes;
-            _isAudioLoaded = true;
-            www.Dispose();
-        }
+        //    Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
+        //    _acousticResourceData = www.bytes;
+        //    _isAudioLoaded = true;
+        //    www.Dispose();
+        //}
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {

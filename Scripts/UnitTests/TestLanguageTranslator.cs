@@ -162,7 +162,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteModel(DeleteModelResult deleteModelResult, Dictionary<string, object> customData)
         {
-            Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", customData["json"].ToString());
+            Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Model deleted");
             _customLanguageModelId = null;
             Test(deleteModelResult != null);
             _deleteModelTested = true;

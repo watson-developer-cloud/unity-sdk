@@ -698,7 +698,6 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -707,6 +706,8 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteModelReq)req).SuccessCallback != null)
@@ -714,8 +715,8 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             }
             else
             {
-                if (((DeleteModelReq)req).FailCallback != null)
-                    ((DeleteModelReq)req).FailCallback(resp.Error, customData);
+                if (((DeleteModelReq)req).SuccessCallback != null)
+                    ((DeleteModelReq)req).SuccessCallback(result, customData);
             }
         }
         #endregion

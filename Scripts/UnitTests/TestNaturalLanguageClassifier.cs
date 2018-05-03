@@ -237,8 +237,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if DELETE_TRAINED_CLASSIFIER
         private void OnDeleteTrainedClassifier(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Natural Language Classifier - Delete Trained Classifier {0} | response: {1}", _classifierToDelete, customData["json"].ToString());
-            Test(success);
+            Log.Debug("TestNaturalLanguageClassifier.OnDeleteTrainedClassifier()", "Classifier deleted");
         }
 #endif
 

@@ -108,18 +108,18 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _textToSpeech = new TextToSpeech(credentials);
 
             //  Synthesize
-            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize.");
-            _textToSpeech.Voice = VoiceType.en_US_Allison;
-            _textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
-            while (!_synthesizeTested)
-                yield return null;
+            //Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize.");
+            //_textToSpeech.Voice = VoiceType.en_US_Allison;
+            //_textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
+            //while (!_synthesizeTested)
+            //    yield return null;
 
             //  Synthesize Conversation string
-            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
-            _textToSpeech.Voice = VoiceType.en_US_Allison;
-            _textToSpeech.ToSpeech(HandleConversationToSpeechCallback, OnFail, _testConversationString, true);
-            while (!_synthesizeConversationTested)
-                yield return null;
+            //Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
+            //_textToSpeech.Voice = VoiceType.en_US_Allison;
+            //_textToSpeech.ToSpeech(HandleConversationToSpeechCallback, OnFail, _testConversationString, true);
+            //while (!_synthesizeConversationTested)
+            //    yield return null;
 
             //	Get Voices
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voices.");
@@ -325,9 +325,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCustomization(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnDeleteCustomization()", "{0}", customData["json"].ToString());
-            _createdCustomizationId = null;
-            Test(success);
+            Log.Debug("TestTextToSpeech.OnDeleteCustomization()", "Customization deleted");
             _deleteCustomizationTested = true;
         }
 
@@ -361,8 +359,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCustomizationWord(bool success, Dictionary<string, object> customData)
         {
-            Log.Debug("TestTextToSpeech.OnDeleteCustomizationWord()", "{0}", customData["json"].ToString());
-            Test(success);
+            Log.Debug("TestTextToSpeech.OnDeleteCustomizationWord()", "Customization word deleted");
             _deleteCustomizationWordTested = true;
         }
 

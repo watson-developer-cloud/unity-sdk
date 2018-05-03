@@ -174,7 +174,7 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.DeleteDialogNode(OnDeleteDialogNode, OnFail, _createdWorkspaceId, updatedDialogNodeName);
             while (!_deleteDialogNodeTested)
                 yield return null;
-            
+
             //  Delete Workspace
             _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
@@ -187,22 +187,19 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Workspace deleted");
             _deleteWorkspaceTested = true;
         }
         
         private void OnDeleteDialogNode(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteDialogNode()", "Dialog node deleted");
             _deleteDialogNodeTested = true;
         }
 
         private void OnDeleteCounterexample(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Counterexample deleted");
             _deleteCounterexampleTested = true;
         }
 

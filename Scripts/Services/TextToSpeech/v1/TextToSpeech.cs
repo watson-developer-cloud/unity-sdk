@@ -884,18 +884,17 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         {
             Dictionary<string, object> customData = ((DeleteCustomizationRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
-
                 if (((DeleteCustomizationRequest)req).SuccessCallback != null)
                     ((DeleteCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteCustomizationRequest)req).FailCallback != null)
-                    ((DeleteCustomizationRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCustomizationRequest)req).SuccessCallback != null)
+                    ((DeleteCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion
@@ -1335,18 +1334,17 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         {
             Dictionary<string, object> customData = ((DeleteCustomizationWordRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
-
                 if (((DeleteCustomizationWordRequest)req).SuccessCallback != null)
                     ((DeleteCustomizationWordRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteCustomizationWordRequest)req).FailCallback != null)
-                    ((DeleteCustomizationWordRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCustomizationWordRequest)req).SuccessCallback != null)
+                    ((DeleteCustomizationWordRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion

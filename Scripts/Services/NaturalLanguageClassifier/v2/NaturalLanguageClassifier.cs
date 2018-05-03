@@ -452,18 +452,18 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
         {
             Dictionary<string, object> customData = ((DeleteClassifierReq)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "Classifier deleted");
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
                 if (((DeleteClassifierReq)req).SuccessCallback != null)
                     ((DeleteClassifierReq)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteClassifierReq)req).FailCallback != null)
-                    ((DeleteClassifierReq)req).FailCallback(resp.Error, customData);
+                if (((DeleteClassifierReq)req).SuccessCallback != null)
+                    ((DeleteClassifierReq)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion

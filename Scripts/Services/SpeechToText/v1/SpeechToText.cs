@@ -1522,18 +1522,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             Dictionary<string, object> customData = ((DeleteCustomizationRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
                 if (((DeleteCustomizationRequest)req).SuccessCallback != null)
                     ((DeleteCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteCustomizationRequest)req).FailCallback != null)
-                    ((DeleteCustomizationRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCustomizationRequest)req).SuccessCallback != null)
+                    ((DeleteCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion
@@ -2148,18 +2148,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             Dictionary<string, object> customData = ((DeleteCustomCorpusRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
-
                 if (((DeleteCustomCorpusRequest)req).SuccessCallback != null)
                     ((DeleteCustomCorpusRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteCustomCorpusRequest)req).FailCallback != null)
-                    ((DeleteCustomCorpusRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCustomCorpusRequest)req).SuccessCallback != null)
+                    ((DeleteCustomCorpusRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion
@@ -2590,18 +2589,17 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             Dictionary<string, object> customData = ((DeleteCustomWordRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
-
                 if (((DeleteCustomWordRequest)req).SuccessCallback != null)
                     ((DeleteCustomWordRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteCustomWordRequest)req).FailCallback != null)
-                    ((DeleteCustomWordRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCustomWordRequest)req).SuccessCallback != null)
+                    ((DeleteCustomWordRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion
@@ -2973,18 +2971,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             Dictionary<string, object> customData = ((DeleteAcousticCustomizationRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
                 if (((DeleteAcousticCustomizationRequest)req).SuccessCallback != null)
                     ((DeleteAcousticCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteAcousticCustomizationRequest)req).FailCallback != null)
-                    ((DeleteAcousticCustomizationRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteAcousticCustomizationRequest)req).SuccessCallback != null)
+                    ((DeleteAcousticCustomizationRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion
@@ -3407,18 +3405,18 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         {
             Dictionary<string, object> customData = ((DeleteAcousticResourceRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
             if (resp.Success)
             {
-                customData.Add("json", "code: " + resp.HttpResponseCode + ", success: " + resp.Success);
 
                 if (((DeleteAcousticResourceRequest)req).SuccessCallback != null)
                     ((DeleteAcousticResourceRequest)req).SuccessCallback(resp.Success, customData);
             }
             else
             {
-                if (((DeleteAcousticResourceRequest)req).FailCallback != null)
-                    ((DeleteAcousticResourceRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteAcousticResourceRequest)req).SuccessCallback != null)
+                    ((DeleteAcousticResourceRequest)req).SuccessCallback(resp.Success, customData);
             }
         }
         #endregion

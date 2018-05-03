@@ -450,7 +450,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteDocument(DeleteDocumentResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteDocument()", "Discovery - Delete document Response: deleted:{0}", customData["json"].ToString());
+            Log.Debug("TestDiscovery.OnDeleteDocument()", "Deleted document");
 
             _createdDocumentID = default(string);
             Test(resp != null);
@@ -460,7 +460,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteCollection(DeleteCollectionResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", customData["json"].ToString());
+            Log.Debug("TestDiscovery.OnDeleteCollection()", "Deleted Collection");
 
             _createdCollectionID = default(string);
             Test(resp != null);
@@ -470,7 +470,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteConfiguration(DeleteConfigurationResponse resp, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteConfiguration()", "Discovery - Delete configuration Response: deleted:{0}", customData["json"].ToString());
+            Log.Debug("TestDiscovery.OnDeleteConfiguration()", "Deleted Configuration");
 
             _createdConfigurationID = default(string);
             Test(resp != null);

@@ -524,7 +524,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -533,6 +532,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteEnvironmentRequest)req).SuccessCallback != null)
@@ -540,8 +541,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             else
             {
-                if (((DeleteEnvironmentRequest)req).FailCallback != null)
-                    ((DeleteEnvironmentRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteEnvironmentRequest)req).SuccessCallback != null)
+                    ((DeleteEnvironmentRequest)req).SuccessCallback(result, customData);
             }
         }
         #endregion
@@ -964,7 +965,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -973,6 +973,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteConfigurationRequest)req).SuccessCallback != null)
@@ -980,8 +982,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             else
             {
-                if (((DeleteConfigurationRequest)req).FailCallback != null)
-                    ((DeleteConfigurationRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteConfigurationRequest)req).SuccessCallback != null)
+                    ((DeleteConfigurationRequest)req).SuccessCallback(result, customData);
             }
         }
         #endregion
@@ -1593,7 +1595,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1602,6 +1603,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteCollectionRequest)req).SuccessCallback != null)
@@ -1609,8 +1612,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             else
             {
-                if (((DeleteCollectionRequest)req).FailCallback != null)
-                    ((DeleteCollectionRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteCollectionRequest)req).SuccessCallback != null)
+                    ((DeleteCollectionRequest)req).SuccessCallback(result, customData);
             }
         }
         #endregion
@@ -2082,7 +2085,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2091,6 +2093,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
 
+            customData.Add("json", data);
+
             if (resp.Success)
             {
                 if (((DeleteDocumentRequest)req).SuccessCallback != null)
@@ -2098,8 +2102,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             else
             {
-                if (((DeleteDocumentRequest)req).FailCallback != null)
-                    ((DeleteDocumentRequest)req).FailCallback(resp.Error, customData);
+                if (((DeleteDocumentRequest)req).SuccessCallback != null)
+                    ((DeleteDocumentRequest)req).SuccessCallback(result, customData);
             }
         }
         #endregion

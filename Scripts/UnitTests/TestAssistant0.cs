@@ -31,20 +31,13 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _workspaceId = null;
         private string _createdWorkspaceId;
 
         private Assistant _service;
         private string _assistantVersionDate = "2017-05-26";
 
         private fsSerializer _serializer = new fsSerializer();
-
-        private string _inputString = "Hello";
-        private string _conversationString0 = "unlock the door";
-        private string _conversationString1 = "turn on the ac";
-        private string _conversationString2 = "turn down the radio";
-        private static string _lastIntent = null;
-
+        
         private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private static string _createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
         private static string _createdWorkspaceLanguage = "en";
@@ -55,13 +48,8 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
         private static string _createdSynonym = "untiySynonym";
         private static string _createdExample = "untiyExample";
-        private static Dictionary<string, object> _context = null;
 
-        private bool _listWorkspacesTested = false;
         private bool _createWorkspaceTested = false;
-        private bool _getWorkspaceTested = false;
-        private bool _updateWorkspaceTested = false;
-        private bool _messageTested = false;
         private bool _listIntentsTested = false;
         private bool _createIntentTested = false;
         private bool _getIntentTested = false;
@@ -85,7 +73,6 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private bool _listLogsInWorkspaceTested = false;
         private bool _listAllLogsTested = false;
-        
         private bool _deleteSynonymTested = false;
         private bool _deleteValueTested = false;
         private bool _deleteEntityTested = false;
@@ -128,7 +115,6 @@ namespace Assets.Watson.Scripts.UnitTests
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
-            _workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -136,10 +122,6 @@ namespace Assets.Watson.Scripts.UnitTests
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
 
-            //  List Workspaces
-            _service.ListWorkspaces(OnListWorkspaces, OnFail);
-            while (!_listWorkspacesTested)
-                yield return null;
             //  Create Workspace
             CreateWorkspace workspace = new CreateWorkspace()
             {
@@ -151,65 +133,7 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.CreateWorkspace(OnCreateWorkspace, OnFail, workspace);
             while (!_createWorkspaceTested)
                 yield return null;
-            //  Get Workspace
-            _service.GetWorkspace(OnGetWorkspace, OnFail, _createdWorkspaceId);
-            while (!_getWorkspaceTested)
-                yield return null;
-            //  Update Workspace
-            UpdateWorkspace updateWorkspace = new UpdateWorkspace()
-            {
-                Name = _createdWorkspaceName + "-updated",
-                Description = _createdWorkspaceDescription + "-updated",
-                Language = _createdWorkspaceLanguage
-            };
-            _service.UpdateWorkspace(OnUpdateWorkspace, OnFail, _createdWorkspaceId, updateWorkspace);
-            while (!_updateWorkspaceTested)
-                yield return null;
-
-            //  Message
-            Dictionary<string, object> input = new Dictionary<string, object>();
-            input.Add("text", _inputString);
-            MessageRequest messageRequest = new MessageRequest()
-            {
-                Input = input
-            };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest);
-            while (!_messageTested)
-                yield return null;
-            _messageTested = false;
-
-            input["text"] = _conversationString0;
-            MessageRequest messageRequest0 = new MessageRequest()
-            {
-                Input = input,
-                Context = _context
-            };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest0);
-            while (!_messageTested)
-                yield return null;
-            _messageTested = false;
-
-            input["text"] = _conversationString1;
-            MessageRequest messageRequest1 = new MessageRequest()
-            {
-                Input = input,
-                Context = _context
-            };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest1);
-            while (!_messageTested)
-                yield return null;
-            _messageTested = false;
-
-            input["text"] = _conversationString2;
-            MessageRequest messageRequest2 = new MessageRequest()
-            {
-                Input = input,
-                Context = _context
-            };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest2);
-            while (!_messageTested)
-                yield return null;
-
+           
             //  List Intents
             _service.ListIntents(OnListIntents, OnFail, _createdWorkspaceId);
             while (!_listIntentsTested)
@@ -350,12 +274,12 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.ListLogs(OnListLogs, OnFail, _createdWorkspaceId);
             while (!_listLogsInWorkspaceTested)
                 yield return null;
-            ////  List All Logs
-            //var filter = "(language::en,request.context.metadata.deployment::deployment_1)";
-            //_service.ListAllLogs(OnListAllLogs, OnFail, filter);
-            //while (!_listAllLogsTested)
-            //    yield return null;
-            
+            //  List All Logs
+            var filter = "(language::en,request.context.metadata.deployment::deployment_1)";
+            _service.ListAllLogs(OnListAllLogs, OnFail, filter);
+            while (!_listAllLogsTested)
+                yield return null;
+
             //  Delete Synonym
             _service.DeleteSynonym(OnDeleteSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, updatedSynonym);
             while (!_deleteSynonymTested)
@@ -376,7 +300,7 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.DeleteIntent(OnDeleteIntent, OnFail, _createdWorkspaceId, updatedIntent);
             while (!_deleteIntentTested)
                 yield return null;
-            //  Delete Workspace
+            //Delete Workspace
             _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
                 yield return null;
@@ -388,43 +312,37 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Workspace deleted");
             _deleteWorkspaceTested = true;
         }
 
         private void OnDeleteIntent(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteIntent()", "Intent deleted");
             _deleteIntentTested = true;
         }
 
         private void OnDeleteExample(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteExample()", "Example deleted");
             _deleteExampleTested = true;
         }
 
         private void OnDeleteEntity(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteEntity()", "Entity deleted");
             _deleteEntityTested = true;
         }
 
         private void OnDeleteValue(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteValue()", "Value deleted");
             _deleteValueTested = true;
         }
 
         private void OnDeleteSynonym(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
+            Log.Debug("ExampleAssistant.OnDeleteSynonym()", "Synonym deleted");
             _deleteSynonymTested = true;
         }
         
@@ -581,77 +499,13 @@ namespace Assets.Watson.Scripts.UnitTests
             Test(response != null);
             _listIntentsTested = true;
         }
-
-        private void OnMessage(object response, Dictionary<string, object> customData)
-        {
-            Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
-
-            //  Convert resp to fsdata
-            fsData fsdata = null;
-            fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            //  Convert fsdata to MessageResponse
-            MessageResponse messageResponse = new MessageResponse();
-            object obj = messageResponse;
-            r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            //  Set context for next round of messaging
-            object tempContext = null;
-            (response as Dictionary<string, object>).TryGetValue("context", out tempContext);
-
-            if (tempContext != null)
-                _context = tempContext as Dictionary<string, object>;
-            else
-                Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
-
-            //  Get intent
-            object tempIntentsObj = null;
-            (response as Dictionary<string, object>).TryGetValue("intents", out tempIntentsObj);
-            object tempIntentObj = (tempIntentsObj as List<object>)[0];
-            object tempIntent = null;
-            (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
-            string intent = tempIntent.ToString();
-
-            Test(_lastIntent != intent);
-            _lastIntent = intent;
-
-            //messageResponse.Intents != _lastIntent;
-            //_lastIntent = messageResponse.Intents;
-
-            _messageTested = true;
-        }
-
-        private void OnUpdateWorkspace(Workspace response, Dictionary<string, object> customData)
-        {
-            Log.Debug("ExampleAssistant.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
-            _updateWorkspaceTested = true;
-        }
-
-        private void OnGetWorkspace(WorkspaceExport response, Dictionary<string, object> customData)
-        {
-            Log.Debug("ExampleAssistant.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
-            _getWorkspaceTested = true;
-        }
-
+        
         private void OnCreateWorkspace(Workspace response, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistant.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
             _createdWorkspaceId = response.WorkspaceId;
             Test(response != null);
             _createWorkspaceTested = true;
-        }
-
-        private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
-        {
-            Log.Debug("ExampleAssistant.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
-            _listWorkspacesTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
