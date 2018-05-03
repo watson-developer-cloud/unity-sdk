@@ -52,7 +52,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
             if (kv[0] == "ProjectName")
             {
               ProjectToTest = kv.Length > 1 ? kv[1] : "";
-              Log.Status("RunUnitTest", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
+              Log.Status("RunUnitTest", "AutoLaunchOptions ProjectToTest:{0}", ProjectToTest);
               break;
             }
           }
