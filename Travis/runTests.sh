@@ -3,9 +3,7 @@
 set -e
 
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-    echo '$TRAVIS_PULL_REQUEST is false, running tests'
-  # echo "Attempting to create Streaming Assets directory..."
-  # mkdir -p Travis/watson-unity-sdk-project/Assets/StreamingAssets/
+  echo '$TRAVIS_PULL_REQUEST is false, running tests'
 
   echo "Attempting to run UnitySDK integration Tests..."
   /Applications/Unity/Unity.app/Contents/MacOS/Unity \
