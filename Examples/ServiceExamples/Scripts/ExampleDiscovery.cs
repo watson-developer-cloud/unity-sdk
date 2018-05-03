@@ -38,7 +38,7 @@ public class ExampleDiscovery : MonoBehaviour
 
     private Discovery _discovery;
 
-    private string _createdEnvironmentID;
+    //private string _createdEnvironmentID;
     private string _configurationJson = "{\"name\":\"IBM News {guid}\",\"description\":\"A configuration useful for ingesting IBM press releases. Safe to delete.\",\"conversions\":{\"html\":{\"exclude_tags_keep_content\":[\"span\"],\"exclude_content\":{\"xpaths\":[\"/home\"]}},\"segment\":{\"enabled\":true,\"selector_tags\":[\"h1\",\"h2\"]},\"json_normalizations\":[{\"operation\":\"move\",\"source_field\":\"extracted_metadata.title\",\"destination_field\":\"metadata.title\"},{\"operation\":\"move\",\"source_field\":\"extracted_metadata.author\",\"destination_field\":\"metadata.author\"},{\"operation\":\"remove\",\"source_field\":\"extracted_metadata\"}]},\"enrichments\":[{\"enrichment\":\"natural_language_understanding\",\"source_field\":\"title\",\"destination_field\":\"enriched_title\",\"options\":{\"features\":{\"keywords\":{\"sentiment\":true,\"emotion\":false,\"limit\":50},\"entities\":{\"sentiment\":true,\"emotion\":false,\"limit\":50,\"mentions\":true,\"mention_types\":true,\"sentence_locations\":true,\"model\":\"WKS-model-id\"},\"sentiment\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"emotion\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"categories\":{},\"concepts\":{\"limit\":8},\"semantic_roles\":{\"entities\":true,\"keywords\":true,\"limit\":50},\"relations\":{\"model\":\"WKS-model-id\"}}}},{\"enrichment\":\"elements\",\"source_field\":\"html\",\"destination_field\":\"enriched_html\",\"options\":{\"model\":\"contract\"}}],\"normalizations\":[{\"operation\":\"move\",\"source_field\":\"metadata.title\",\"destination_field\":\"title\"},{\"operation\":\"move\",\"source_field\":\"metadata.author\",\"destination_field\":\"author\"},{\"operation\":\"move\",\"source_field\":\"alchemy_enriched_text.language\",\"destination_field\":\"language\"},{\"operation\":\"remove\",\"source_field\":\"html\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.status\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.text\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.language\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.model\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.status\"},{\"operation\":\"remove_nulls\"}]}";
     private string _environmentId;
     private string _filePathToIngest;
@@ -52,7 +52,7 @@ public class ExampleDiscovery : MonoBehaviour
 
     private bool _getEnvironmentsTested = false;
     private bool _getEnvironmentTested = false;
-    private bool _addEnvironmentTested = false;
+    //private bool _addEnvironmentTested = false;
     private bool _getConfigurationsTested = false;
     private bool _getConfigurationTested = false;
     private bool _addConfigurationTested = false;
@@ -68,7 +68,7 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _deleteDocumentTested = false;
     private bool _deleteCollectionTested = false;
     private bool _deleteConfigurationTested = false;
-    private bool _deleteEnvironmentTested = false;
+    //private bool _deleteEnvironmentTested = false;
     private bool _isEnvironmentReady = false;
     private bool _readyToContinue = false;
     private float _waitTime = 10f;
@@ -322,12 +322,12 @@ public class ExampleDiscovery : MonoBehaviour
         _getEnvironmentTested = true;
     }
 
-    private void OnAddEnvironment(Environment resp, Dictionary<string, object> customData)
-    {
-        Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", customData["json"].ToString());
-        _createdEnvironmentID = resp.environment_id;
-        _addEnvironmentTested = true;
-    }
+    //private void OnAddEnvironment(Environment resp, Dictionary<string, object> customData)
+    //{
+    //    Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", customData["json"].ToString());
+    //    _createdEnvironmentID = resp.environment_id;
+    //    _addEnvironmentTested = true;
+    //}
 
     private void OnGetConfigurations(GetConfigurationsResponse resp, Dictionary<string, object> customData)
     {
@@ -423,13 +423,13 @@ public class ExampleDiscovery : MonoBehaviour
         _deleteConfigurationTested = true;
     }
 
-    private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
-    {
-        Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", customData["json"].ToString());
-        _createdEnvironmentID = default(string);
+    //private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
+    //{
+    //    Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", customData["json"].ToString());
+    //    _createdEnvironmentID = default(string);
 
-        _deleteEnvironmentTested = true;
-    }
+    //    _deleteEnvironmentTested = true;
+    //}
 
     private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
     {

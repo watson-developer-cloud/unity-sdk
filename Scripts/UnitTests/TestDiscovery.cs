@@ -53,7 +53,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private bool _getEnvironmentsTested = false;
         private bool _getEnvironmentTested = false;
-        private bool _addEnvironmentTested = false;
+        //private bool _addEnvironmentTested = false;
         private bool _getConfigurationsTested = false;
         private bool _getConfigurationTested = false;
         private bool _addConfigurationTested = false;
@@ -69,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteDocumentTested = false;
         private bool _deleteCollectionTested = false;
         private bool _deleteConfigurationTested = false;
-        private bool _deleteEnvironmentTested = false;
+        //private bool _deleteEnvironmentTested = false;
         private bool _isEnvironmentReady = false;
         private bool _readyToContinue = false;
 
@@ -478,15 +478,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _deleteConfigurationTested = true;
         }
 
-        private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestDiscovery.OnDeleteEnvironment()", "Discovery - Delete environment Response: deleted:{0}", customData["json"].ToString());
+        //private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
+        //{
+        //    Log.Debug("TestDiscovery.OnDeleteEnvironment()", "Discovery - Delete environment Response: deleted:{0}", customData["json"].ToString());
 
-            _environmentId = default(string);
-            Test(resp != null);
+        //    _environmentId = default(string);
+        //    Test(resp != null);
 
-            _deleteEnvironmentTested = true;
-        }
+        //    _deleteEnvironmentTested = true;
+        //}
 
         private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
         {
