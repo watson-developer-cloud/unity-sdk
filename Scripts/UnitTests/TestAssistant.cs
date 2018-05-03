@@ -758,7 +758,6 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
             Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
         }
     }
