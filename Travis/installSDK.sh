@@ -43,6 +43,16 @@ if [ $? = 0 ] ; then
       echo "Moving travis integration tests script FAILED! Exited with $?"
       exit 1
     fi
+
+    echo "Attempting to move build script..."
+    mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/RunTravisBuild.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/RunTravisBuild.cs
+    if [ $? = 0 ] ; then
+      echo "Moving move build script SUCCEEDED! Exited with $?"
+      exit 0
+    else
+      echo "Moving move build script FAILED! Exited with $?"
+      exit 1
+    fi
   else
     echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ FAILED! EXITED WITH $?"
   fi
