@@ -25,7 +25,7 @@ if [ $? = 0 ] ; then
     echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ SUCCEEDED! Exited with $?"
 
     echo "Attempting to move Travis build script..."
-    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisBuild.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisBuild.cs
+    mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/TravisBuild.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/TravisBuild.cs
     if [ $? = 0 ] ; then
       echo "Moving travis build script SUCCEEDED! Exited with $?"
       exit 0
@@ -35,7 +35,7 @@ if [ $? = 0 ] ; then
     fi
 
     echo "Attempting to move integration tests script..."
-    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisIntegrationTests.cs
+    mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/TravisIntegrationTests.cs
     if [ $? = 0 ] ; then
       echo "Moving travis integration tests script SUCCEEDED! Exited with $?"
       exit 0
