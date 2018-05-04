@@ -9,7 +9,7 @@ echo "Attempting to build $project for Windows..."
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/Travis/watson-unity-sdk-project/windowsBuild.log \
-  -projectPath $(pwd)/Travis/watson-unity-sdk-project \
+  -projectPath $(pwd)/watson-unity-sdk-project \
   -executemethod RunTravisBuild.Windows \
   -quit
 if [ $? = 0 ] ; then
