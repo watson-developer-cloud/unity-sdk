@@ -33,7 +33,7 @@ namespace IBM.Watson.DeveloperCloud.Editor
       Log.Debug("TravisIntegrationTests.RunTests()", "***** Running Integration tests!");
 
 #if UNITY_EDITOR
-      Runnable.EnableRunnableInEditor();
+      //Runnable.EnableRunnableInEditor();
 #endif
       string ProjectToTest = "";
 #if !NETFX_CORE

@@ -232,7 +232,7 @@ public static class RunUnitTest
     static public void All()
     {
 #if UNITY_EDITOR
-        Runnable.EnableRunnableInEditor();
+        //Runnable.EnableRunnableInEditor();
 #endif
         string ProjectToTest = "";
 #if !NETFX_CORE
@@ -270,7 +270,7 @@ public static class RunUnitTest
     [MenuItem("Watson/Run All UnitTests", false, 50)]
     static public void AllNoQuit()
     {
-        Runnable.EnableRunnableInEditor();
+        //Runnable.EnableRunnableInEditor();
 
         IBM.Watson.DeveloperCloud.Editor.UnitTestManager instance = IBM.Watson.DeveloperCloud.Editor.UnitTestManager.Instance;
         instance.OnTestCompleteCallback = OnTestsComplete;
