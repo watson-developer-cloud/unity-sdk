@@ -20,39 +20,49 @@ git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
 
-  # echo "Attempting to remove TravisIntegrationTests from Travis directory..."
-  # rm Travis/watson-unity-sdk-project/Assets/Watson/Travis/TravisIntegrationTests.cs
-  # if [ $? = 0 ] ; then
-  #   echo "Removing travis build script SUCCEEDED! Exited with $?"
-  # else
-  #   echo "Removing travis build script FAILED! Exited with $?"
-  #   exit 1
-  # fi
+  echo "Attempting to remove TravisBuild from Travis directory..."
+  rm Travis/TravisBuild.cs
+  if [ $? = 0 ] ; then
+    echo "Removing travis build script SUCCEEDED! Exited with $?"
+  else
+    echo "Removing travis build script FAILED! Exited with $?"
+    exit 1
+  fi
+
+  echo "Attempting to remove TravisIntegrationTests from Travis directory..."
+  rm Travis/TravisIntegrationTests.cs
+  if [ $? = 0 ] ; then
+    echo "Removing travis build script SUCCEEDED! Exited with $?"
+  else
+    echo "Removing travis build script FAILED! Exited with $?"
+    exit 1
+  fi
 
   echo "Attempting to create Travis/watson-unity-sdk-project/Assets/Scripts/Editor/"
   mkdir -p Travis/watson-unity-sdk-project/Assets/Scripts/Editor/
   if [ $? = 0 ] ; then
     echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ SUCCEEDED! Exited with $?"
 
+    echo "Attempting to move Travis build script..."
+    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisBuild.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisBuild.cs
+    if [ $? = 0 ] ; then
+      echo "Moving travis build script SUCCEEDED! Exited with $?"
+      exit 0
+    else
+      echo "Moving travis build script FAILED! Exited with $?"
+      exit 1
+    fi
+
     echo "Attempting to move integration tests script..."
-    mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/TravisIntegrationTests.cs
+    mv Travis/UnityTestProject/Assets/Watson/Travis/TravisIntegrationTests.cs Travis/UnityTestProject/Assets/Scripts/Editor/TravisIntegrationTests.cs
     if [ $? = 0 ] ; then
       echo "Moving travis integration tests script SUCCEEDED! Exited with $?"
-
-      echo "Attempting to move build script..."
-      mv Travis/watson-unity-sdk-project/Assets/Watson/Travis/RunTravisBuild.cs Travis/watson-unity-sdk-project/Assets/Scripts/Editor/RunTravisBuild.cs
-      if [ $? = 0 ] ; then
-        echo "Moving move build script SUCCEEDED! Exited with $?"
-        exit 0
-      else
-        echo "Moving move build script FAILED! Exited with $?"
-        exit 1
-      fi
-
+      exit 0
     else
       echo "Moving travis integration tests script FAILED! Exited with $?"
       exit 1
     fi
+    
   else
     echo "Creating Travis/watson-unity-sdk-project/Assets/Scripts/Editor/ FAILED! EXITED WITH $?"
   fi
