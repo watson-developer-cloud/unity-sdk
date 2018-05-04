@@ -13,8 +13,8 @@ fi
 
 echo "Attempting to install Watson Developer Cloud Unity SDK into the test project..."
 mkdir -p Travis/watson-unity-sdk-project/Assets
-git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson
-#git clone -b feature-97-integrationTesting --single-branch https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson/
+# git clone https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson
+git clone -b $TRAVIS_BRANCH --single-branch https://github.com/watson-developer-cloud/unity-sdk.git Travis/watson-unity-sdk-project/Assets/Watson
 
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
