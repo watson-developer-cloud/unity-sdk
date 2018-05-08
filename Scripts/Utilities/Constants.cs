@@ -65,9 +65,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// URL for IBM Cloud onboarding
             /// </summary>
-            public const string IBM_CLOUD_URL = "http://console.bluemix.net";
+            public const string IBM_CLOUD_URL = "http://console.bluemix.net/registration";
             /// <summary>
-            /// Tracking for onboarding through Unity Asset Store
+            /// Tracking for onboarding
             /// </summary>
             public const string TRACKING_QUERY_PARAM = "cm_mmc=Display_UnitySDK-_-Developer_Innovation-_-WW_WW-_-unity_sdk_watson_dw";
         }
