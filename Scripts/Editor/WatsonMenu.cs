@@ -38,6 +38,15 @@ namespace IBM.Watson.DeveloperCloud.Editor
             Application.OpenURL("https://watson-developer-cloud.github.io/unity-sdk/");
         }
         
+        [MenuItem("Watson/Signup for IBM Cloud", false, 101)]
+        private static void SignupForIBMCloud()
+        {
+            PlayerPrefs.SetInt(WAS_IBM_CLOUD_SIGNUP_PROMPTED, 1);
+            PlayerPrefs.Save();
+
+            IBMCloudSignup.OpenIBMCloudWebsite();
+        }
+        
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
