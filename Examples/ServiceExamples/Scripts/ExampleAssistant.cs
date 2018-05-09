@@ -690,7 +690,7 @@ public class ExampleAssistant : MonoBehaviour
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;
         else
-            Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
+            Log.Debug("ExampleAssistant.OnMessage()", "Failed to get context");
 
         //  Get intent
         object tempIntentsObj = null;
@@ -699,6 +699,8 @@ public class ExampleAssistant : MonoBehaviour
         object tempIntent = null;
         (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
         string intent = tempIntent.ToString();
+
+        Log.Debug("ExampleAssistant.OnMessage()", "intent: {0}", intent);
 
         _messageTested = true;
     }

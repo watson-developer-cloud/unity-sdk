@@ -50,7 +50,7 @@ public class ExampleGetToken : MonoBehaviour
     private IEnumerator Example()
     {
         //  Get token
-        if (!Utility.GetToken(OnGetToken, _conversationUrl, _conversationUsername, _conversationPassword))
+        if (!Utility.GetWatsonToken(OnGetWatsonToken, _conversationUrl, _conversationUsername, _conversationPassword))
             Log.Debug("ExampleGetToken.GetToken()", "Failed to get token.");
 
         while (!_receivedAuthToken)
@@ -60,14 +60,14 @@ public class ExampleGetToken : MonoBehaviour
         Message();
     }
 
-    private void OnGetToken(AuthenticationToken authenticationToken, string customData)
+    private void OnGetWatsonToken(AuthenticationToken authenticationToken, string customData)
     {
         _authenticationToken = authenticationToken;
         Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
         _receivedAuthToken = true;
     }
 
-    private IEnumerator GetTokenTimeRemaining(float time)
+    private IEnumerator GetWatsonTokenTimeRemaining(float time)
     {
         yield return new WaitForSeconds(time);
         Log.Debug("ExampleGetToken.GetTokenTimeRemaining()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
@@ -77,7 +77,7 @@ public class ExampleGetToken : MonoBehaviour
     {
         Credentials credentials = new Credentials()
         {
-            AuthenticationToken = _authenticationToken.Token,
+            WatsonAuthenticationToken = _authenticationToken.Token,
             Url = _conversationUrl
         };
 
@@ -92,7 +92,7 @@ public class ExampleGetToken : MonoBehaviour
         Log.Debug("ExampleGetToken.OnMessage()", "message response: {0}", customData);
 
         //  Check token time remaining
-        Runnable.Run(GetTokenTimeRemaining(0f));
+        Runnable.Run(GetWatsonTokenTimeRemaining(0f));
     }
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {

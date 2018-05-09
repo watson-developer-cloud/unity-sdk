@@ -282,6 +282,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
             RESTConnector connector = new RESTConnector();
             connector.URL = credentials.Url + function;
             connector.Authentication = credentials;
+            if (connector.Authentication.HasIamTokenData())
+                connector.Authentication.GetToken();
 
             return connector;
         }
@@ -327,13 +329,17 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 if (headers == null)
                     throw new ArgumentNullException("headers");
 
-                if (Authentication.HasAuthorizationToken())
+                if (Authentication.HasWatsonAuthenticationToken())
                 {
-                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.AuthenticationToken);
+                    headers.Add(AUTHENTICATION_TOKEN_AUTHORIZATION_HEADER, Authentication.WatsonAuthenticationToken);
                 }
                 else if (Authentication.HasCredentials())
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, Authentication.CreateAuthorization());
+                }
+                else if(Authentication.HasIamTokenData())
+                {
+                    headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("Bearer {0}", Authentication.IamAccessToken));
                 }
             }
 
