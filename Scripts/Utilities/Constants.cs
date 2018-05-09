@@ -69,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Tracking for onboarding
             /// </summary>
-            public const string TRACKING_QUERY_PARAM = "cm_mmc=Display_UnitySDK-_-Developer_Innovation-_-WW_WW-_-unity_sdk_watson_dw";
+            public const string TRACKING_QUERY_PARAM = "cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity";
         }
 
         /// <summary>
