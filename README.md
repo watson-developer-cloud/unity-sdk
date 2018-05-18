@@ -93,9 +93,6 @@ For services that authenticate using an apikey, you can instantiate the service 
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 
-private Assistant _assistant;
-private Credentials _credentials = null;
-
 void Start()
 {
     Credentials credentials = new Credentials(<apikey>, <url>);
