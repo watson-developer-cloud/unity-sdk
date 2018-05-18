@@ -70,6 +70,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteConfigurationTested = false;
         private bool _deleteEnvironmentTested = false;
         private bool _isEnvironmentReady = false;
+        private bool _deleteUserDataTested = false;
         private bool _readyToContinue = false;
 
         public override IEnumerator RunTest()
@@ -298,6 +299,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _createdEnvironmentID))
                 Log.Debug("TestDiscovery.DeleteEnvironment()", "Failed to delete environment");
             while (!_deleteEnvironmentTested)
+
+            //  Delete User Data
+            _discovery.DeleteUserData(OnDeleteUserData, OnFail, "test-unity-user-id");
+            while (!_deleteUserDataTested)
                 yield return null;
 
             if (!string.IsNullOrEmpty(_createdEnvironmentID))
@@ -497,6 +502,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestDiscovery.OnQuery()", "Discovery - Query Response: {0}", customData["json"].ToString());
             Test(resp != null);
             _queryTested = true;
+        }
+
+        private void OnDeleteUserData(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            _deleteUserDataTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
