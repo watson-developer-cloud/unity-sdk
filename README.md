@@ -1,5 +1,6 @@
 # Watson APIs Unity SDK
 [![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
+[![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
 Use this SDK to build Watson-powered applications in Unity.
 
@@ -91,9 +92,6 @@ For services that authenticate using an apikey, you can instantiate the service 
 ```cs
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
-
-private Assistant _assistant;
-private Credentials _credentials = null;
 
 void Start()
 {
