@@ -84,6 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/conversation/api";
         private string _versionDate;
+        private fsSerializer _serializer = new fsSerializer();
         #endregion
 
         #region Constructor
@@ -295,6 +296,108 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Dialog Nodes
+        #endregion
+
+        #region Delete User Data
+        /// <summary>
+        /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
+        /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
+        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
+        /// <returns><see cref="object" />object</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw json output from the REST call will be passed in this object as the value of the 'json' key.</string></param>
+        public bool DeleteUserData(SuccessCallback<object> successCallback, FailCallback failCallback, string customerId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customerId))
+                throw new ArgumentNullException("customerId");
+
+            DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["customer_id"] = customerId;
+            req.Parameters["version"] = VersionDate;
+            req.Delete = true;
+
+            req.OnResponse = OnDeleteUserDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteUserDataRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteUserDataRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Conversation.OnDeleteUserDataResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((DeleteUserDataRequestObj)req).SuccessCallback != null)
+                    ((DeleteUserDataRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteUserDataRequestObj)req).FailCallback != null)
+                    ((DeleteUserDataRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
         #endregion
 
         #region IWatsonService implementation

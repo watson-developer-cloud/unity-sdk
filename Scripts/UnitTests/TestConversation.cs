@@ -41,6 +41,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private Dictionary<string, object> _context = null;
         private int _questionCount = -1;
         private bool _waitingForResponse = true;
+        private bool _deleteUserDataTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -137,6 +138,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (_waitingForResponse)
                 yield return null;
 
+            //  Delete User Data
+            _conversation.DeleteUserData(OnDeleteUserData, OnFail, "test-unity-user-id");
+            while (!_deleteUserDataTested)
+                yield return null;
+
             Log.Debug("TestConversation.RunTest()", "Conversation examples complete.");
 
             yield break;
@@ -185,6 +191,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Test(messageResponse != null);
             _waitingForResponse = false;
+        }
+
+        private void OnDeleteUserData(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            _deleteUserDataTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

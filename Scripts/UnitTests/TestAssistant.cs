@@ -103,6 +103,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private bool _deleteExampleTested = false;
         private bool _deleteIntentTested = false;
         private bool _deleteWorkspaceTested = false;
+        private bool _deleteUserDataTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -454,6 +455,10 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
                 yield return null;
+            //  Delete User Data
+            _service.DeleteUserData(OnDeleteUserData, OnFail, "test-unity-user-id");
+            while (!_deleteUserDataTested)
+                yield return null;
 
             Log.Debug("TestAssistant.RunTest()", "Assistant examples complete.");
 
@@ -506,6 +511,12 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
             _deleteCounterexampleTested = true;
+        }
+        
+        private void OnDeleteUserData(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            _deleteUserDataTested = true;
         }
 
         private void OnUpdateCounterexample(Counterexample response, Dictionary<string, object> customData)
