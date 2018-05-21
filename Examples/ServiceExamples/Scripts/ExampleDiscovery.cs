@@ -52,7 +52,6 @@ public class ExampleDiscovery : MonoBehaviour
 
     private bool _getEnvironmentsTested = false;
     private bool _getEnvironmentTested = false;
-    private bool _addEnvironmentTested = false;
     private bool _getConfigurationsTested = false;
     private bool _getConfigurationTested = false;
     private bool _addConfigurationTested = false;
@@ -68,7 +67,6 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _deleteDocumentTested = false;
     private bool _deleteCollectionTested = false;
     private bool _deleteConfigurationTested = false;
-    private bool _deleteEnvironmentTested = false;
     private bool _isEnvironmentReady = false;
     private bool _readyToContinue = false;
     private float _waitTime = 10f;
@@ -96,13 +94,6 @@ public class ExampleDiscovery : MonoBehaviour
             Log.Debug("TestDiscovery.GetEnvironments()", "Failed to get environments");
         while (!_getEnvironmentsTested)
             yield return null;
-
-        //  AddEnvironment
-        //Log.Debug("TestDiscovery.RunTest()", "Attempting to add environment");
-        //if (!_discovery.AddEnvironment(OnAddEnvironment, OnFail, "unity-testing-AddEnvironment-do-not-delete-until-active", "Testing addEnvironment in Unity SDK. Please do not delete this environment until the status is 'active'", 1))
-        //    Log.Debug("TestDiscovery.AddEnvironment()", "Failed to add environment");
-        //while (!_addEnvironmentTested)
-        //    yield return null;
 
         //  Wait for environment to be ready
         Runnable.Run(CheckEnvironmentState(0f));
@@ -254,22 +245,6 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_isEnvironmentReady)
             yield return null;
 
-        //_readyToContinue = false;
-        //  Delete Environment
-        //Log.Debug("TestDiscovery.RunTest()", "Attempting to delete environment {0}", _environmentId);
-        //if (!_discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _environmentId))
-        //    Log.Debug("TestDiscovery.DeleteEnvironment()", "Failed to delete environment");
-        //while (!_deleteEnvironmentTested)
-        //    yield return null;
-
-        //if (!string.IsNullOrEmpty(_environmentId))
-        //{
-        //    if (!_discovery.GetEnvironment(OnGetEnvironment, OnFail, _environmentId))
-        //    {
-        //        _discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _environmentId);
-        //    }
-        //}
-
         Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
     }
 
@@ -320,13 +295,6 @@ public class ExampleDiscovery : MonoBehaviour
         Log.Debug("ExampleDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", customData["json"].ToString());
         _environmentId = resp.environment_id;
         _getEnvironmentTested = true;
-    }
-
-    private void OnAddEnvironment(Environment resp, Dictionary<string, object> customData)
-    {
-        Log.Debug("ExampleDiscovery.OnAddEnvironment()", "Discovery - AddEnvironment Response: {0}", customData["json"].ToString());
-        _createdEnvironmentID = resp.environment_id;
-        _addEnvironmentTested = true;
     }
 
     private void OnGetConfigurations(GetConfigurationsResponse resp, Dictionary<string, object> customData)
@@ -421,14 +389,6 @@ public class ExampleDiscovery : MonoBehaviour
         _environmentId = default(string);
 
         _deleteConfigurationTested = true;
-    }
-
-    private void OnDeleteEnvironment(DeleteEnvironmentResponse resp, Dictionary<string, object> customData)
-    {
-        Log.Debug("ExampleDiscovery.OnDeleteEnvironment()", "Discovery - DeleteEnvironment Response: deleted:{0}", customData["json"].ToString());
-        _createdEnvironmentID = default(string);
-
-        _deleteEnvironmentTested = true;
     }
 
     private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
