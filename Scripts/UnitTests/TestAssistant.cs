@@ -105,6 +105,8 @@ namespace Assets.Watson.Scripts.UnitTests
         private bool _deleteWorkspaceTested = false;
         private bool _deleteUserDataTested = false;
 
+        private string _unitySdkTestCustomerID = "unity-sdk-test-customer-id";
+
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
@@ -178,14 +180,22 @@ namespace Assets.Watson.Scripts.UnitTests
             while (!_updateWorkspaceTested)
                 yield return null;
 
-            //  Message
+            //  Message with customerID
+            //  Create customData object
+            Dictionary<string, object> customData = new Dictionary<string, object>();
+            //  Create a dictionary of custom headers
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
+            //  Add to the header dictionary
+            customHeaders.Add("X-Watson-Metadata", "customer_id=" + _unitySdkTestCustomerID);
+            //  Add the header dictionary to the custom data object
+            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
             Dictionary<string, object> input = new Dictionary<string, object>();
             input.Add("text", _inputString);
             MessageRequest messageRequest = new MessageRequest()
             {
                 Input = input
             };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest);
+            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest, null, customData);
             while (!_messageTested)
                 yield return null;
             _messageTested = false;
@@ -456,7 +466,7 @@ namespace Assets.Watson.Scripts.UnitTests
             while (!_deleteWorkspaceTested)
                 yield return null;
             //  Delete User Data
-            _service.DeleteUserData(OnDeleteUserData, OnFail, "test-unity-user-id");
+            _service.DeleteUserData(OnDeleteUserData, OnFail, _unitySdkTestCustomerID);
             while (!_deleteUserDataTested)
                 yield return null;
 
@@ -769,8 +779,10 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
-            Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
+            if (customData["json"] != null)
+                Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
+            if(error != null)
+                Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
