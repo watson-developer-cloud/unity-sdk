@@ -22,10 +22,8 @@ using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using FullSerializer;
-using System.IO;
-using System;
 using IBM.Watson.DeveloperCloud.Connection;
-
+using System.IO;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
@@ -33,7 +31,7 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
+        private string _workspaceId = null;
         private string _createdWorkspaceId;
 
         private Assistant _service;
@@ -115,18 +113,13 @@ namespace Assets.Watson.Scripts.UnitTests
             fsData data = null;
 
             string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-            var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-            var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
-
-            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
-            {
-                while (!simpleGet.IsComplete)
-                    yield return null;
-
-                result = simpleGet.Result;
-            }
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -143,11 +136,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["conversation"];
+            Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
-            //_workspaceId = credential.WorkspaceId.ToString();
+            _workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);

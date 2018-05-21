@@ -449,7 +449,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="imageData">ByteArray of image data.</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, byte[] imageData = default(byte[]), Dictionary<string, object> customData = null)
+        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, byte[] imageData, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -479,12 +479,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.OnResponse = OnDetectFacesResp;
             req.Parameters["api_key"] = _apikey;
             req.Parameters["version"] = VersionDate;
-
-            if (imageData != null)
-            {
-                req.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-                req.Send = imageData;
-            }
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            req.Forms["images_file"] = new RESTConnector.Form(imageData);
 
             return connector.Send(req);
         }
