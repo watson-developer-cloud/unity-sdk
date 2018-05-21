@@ -316,6 +316,6 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
-[ibm_cloud_registration]: http://console.bluemix.net/registration
+[ibm_cloud_registration]: http://console.bluemix.net/registration?cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/

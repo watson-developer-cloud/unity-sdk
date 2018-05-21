@@ -62,6 +62,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// Name for accessing json.
             /// </summary>
             public const string JSON = "json";
+            /// <summary>
+            /// URL for IBM Cloud onboarding
+            /// </summary>
+            public const string IBM_CLOUD_URL = "http://console.bluemix.net/registration";
+            /// <summary>
+            /// Tracking for onboarding
+            /// </summary>
+            public const string TRACKING_QUERY_PARAM = "cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity";
         }
 
         /// <summary>
