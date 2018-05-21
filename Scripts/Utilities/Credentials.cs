@@ -396,7 +396,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             float fractionOfTtl = 0.8f;
             long? timeToLive = _iamTokenData.ExpiresIn;
             long? expireTime = _iamTokenData.Expiration;
-            long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long currentTime = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
 
             double? refreshTime = expireTime - (timeToLive * (1.0 - fractionOfTtl));
             return refreshTime < currentTime;
@@ -417,7 +418,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             };
 
             long sevenDays = 7 * 24 * 3600;
-            long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long currentTime = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
             long? newTokenTime = _iamTokenData.Expiration + sevenDays;
             return newTokenTime < currentTime;
         }
