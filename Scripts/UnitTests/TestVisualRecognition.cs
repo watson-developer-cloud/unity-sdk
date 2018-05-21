@@ -16,9 +16,9 @@
 */
 
 //  Uncomment to train a new classifier
-//#define TRAIN_CLASSIFIER
+#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-//#define DELETE_TRAINED_CLASSIFIER
+#define DELETE_TRAINED_CLASSIFIER
 
 using UnityEngine;
 using System.Collections;
@@ -26,7 +26,6 @@ using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using FullSerializer;
-using System;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
@@ -62,6 +61,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
 
+        private bool _isClassifierReady = false;
+
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
@@ -70,18 +71,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             fsData data = null;
 
             string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-            var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-            var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
-
-            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
-            {
-                while (!simpleGet.IsComplete)
-                    yield return null;
-
-                result = simpleGet.Result;
-            }
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -98,8 +94,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["visual_recognition"];
-            _apikey = credential.Apikey.ToString();
+            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk")[0].Credentials;
+            _apikey = credential.ApiKey.ToString();
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
@@ -117,13 +113,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
 #if TRAIN_CLASSIFIER
+            _isClassifierReady = false;
             //          Train classifier
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to train classifier");
             string positiveExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_positive_examples.zip";
             string negativeExamplesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/negative_examples.zip";
             Dictionary<string, string> positiveExamples = new Dictionary<string, string>();
             positiveExamples.Add("giraffe", positiveExamplesPath);
-            if (!_visualRecognition.TrainClassifier(OnTrainClassifier, OnFail, "unity-test-classifier-example", positiveExamples, negativeExamplesPath))
+            if (!_visualRecognition.TrainClassifier(OnTrainClassifier, OnFail, "unity-test-classifier-ok-to-delete", positiveExamples, negativeExamplesPath))
                 Log.Debug("TestVisualRecognition.TrainClassifier()", "Failed to train classifier!");
 
             while (!_trainClassifierTested)
@@ -137,15 +134,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getClassifierTested)
                 yield return null;
 
-            //  Download Core ML Model
-            Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
-            if(!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
-                Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
-            while (!_getCoreMLModelTested)
-                yield return null;
+            ////  Download Core ML Model
+            //Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
+            //if(!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
+            //    Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
+            //while (!_getCoreMLModelTested)
+            //    yield return null;
 #endif
 
-            //          Classify get
+            //  Classify get
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get classify via URL");
             if (!_visualRecognition.Classify(_imageURL, OnClassifyGet, OnFail))
                 Log.Debug("TestVisualRecognition.Classify()", "Classify image failed!");
@@ -153,7 +150,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_classifyGetTested)
                 yield return null;
 
-            //          Classify post image
+            //  Classify post image
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to classify via image on file system");
             string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
             string[] owners = { "IBM", "me" };
@@ -164,7 +161,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_classifyPostTested)
                 yield return null;
 
-            //          Detect faces get
+            //  Detect faces get
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via URL");
             if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail))
                 Log.Debug("TestVisualRecognition.DetectFaces()", "Detect faces failed!");
@@ -172,7 +169,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_detectFacesGetTested)
                 yield return null;
 
-            //          Detect faces post image
+            //  Detect faces post image
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via image");
             string faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
             if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath))
@@ -181,13 +178,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_detectFacesPostTested)
                 yield return null;
 
-
 #if DELETE_TRAINED_CLASSIFIER
-            #region Delay
-            Runnable.Run(Delay(_delayTime));
-            while (_isWaitingForDelay)
+            Runnable.Run(IsClassifierReady(_classifierToDelete));
+            while (!_isClassifierReady)
                 yield return null;
-            #endregion
 
             //          Delete classifier by ID
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to delete classifier");
@@ -277,27 +271,48 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getCoreMLModelTested = true;
         }
 #endif
-
-        #region Delay
+        
 #if DELETE_TRAINED_CLASSIFIER
-        //  Introducing a delay because of a known issue with Visual Recognition where newly created classifiers 
-        //  will disappear without being deleted if a delete is attempted less than ~10 seconds after creation.
-        private float _delayTime = 15f;
-        private bool _isWaitingForDelay = false;
-
-        private IEnumerator Delay(float delayTime)
+        #region Is Classifier Ready
+        //  Checking if classifier is ready before deletion due to a known bug in the Visual Recognition service where
+        //  if a classifier is deleted before it is `ready` or `failed` the classifier will still exist in object storage
+        //  but will be inaccessable to the user.
+        private IEnumerator IsClassifierReady(string classifierId)
         {
-            _isWaitingForDelay = true;
-            Log.Debug("TestVisualRecognition.Delay()", "Delaying for {0} seconds....", delayTime);
-            yield return new WaitForSeconds(delayTime);
-            _isWaitingForDelay = false;
+            Log.Debug("TestVisualRecognition.IsClassifierReady()", "Checking if classifier is ready in 15 seconds...");
+
+            yield return new WaitForSeconds(15f);
+
+            Dictionary<string, object> customData = new Dictionary<string, object>();
+            customData.Add("classifierId", classifierId);
+            if (!_visualRecognition.GetClassifier(OnCheckIfClassifierIsReady, OnFailCheckingIfClassifierIsReady, classifierId))
+                IsClassifierReady(classifierId);
         }
-#endif
+        
+        private void OnCheckIfClassifierIsReady(ClassifierVerbose response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestVisualRecognition.IsClassifierReady()", "Classifier status is {0}", response.status);
+
+            if (response.status == "ready" || response.status == "failed")
+            {
+                _isClassifierReady = true;
+            }
+            else
+            {
+
+                Runnable.Run(IsClassifierReady(response.classifier_id));
+            }
+        }
+        private void OnFailCheckingIfClassifierIsReady(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            IsClassifierReady(_classifierToDelete);
+        }
         #endregion
+#endif
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Error("ExampleRetrieveAndRank.OnFail()", "Error received: {0}", error.ToString());
+            Log.Error("TestVisualRecognition.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
