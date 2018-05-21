@@ -36,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private string _iamApiKey;
         private string _userAcessToken;
         #endregion
-        
+
         #region Public Fields
         /// <summary>
         /// The user name.
@@ -83,7 +83,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         private IamTokenData _tokenData = null;
         #endregion
-        
+
         #region Callback delegates
         /// <summary>
         /// Success callback delegate.
@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="customData">User defined custom data</param>
         public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
         #endregion
-        
+
         #region Constructors
         /// <summary>
         /// Constructor that takes the URL. Used for token authentication.
@@ -197,7 +197,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             Log.Debug("Credentials.OnGetTokenFail();", "Failed to get IAM Token: {0}", error.ToString());
         }
         #endregion
-        
+
         #region Request Token
         /// <summary>
         /// Request an IAM token using an API key.
@@ -379,6 +379,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
+        #region Token Operations
         /// <summary>
         /// Check if currently stored token is expired.
         /// 
@@ -396,7 +397,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             float fractionOfTtl = 0.8f;
             long? timeToLive = _iamTokenData.ExpiresIn;
             long? expireTime = _iamTokenData.Expiration;
-            long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long currentTime = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
 
             double? refreshTime = expireTime - (timeToLive * (1.0 - fractionOfTtl));
             return refreshTime < currentTime;
@@ -417,7 +419,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             };
 
             long sevenDays = 7 * 24 * 3600;
-            long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long currentTime = (int)(System.DateTime.UtcNow - epochStart).TotalSeconds;
             long? newTokenTime = _iamTokenData.Expiration + sevenDays;
             return newTokenTime < currentTime;
         }
@@ -445,6 +448,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             _userAcessToken = iamAccessToken;
         }
+        #endregion
 
         /// <summary>
         /// Create basic authentication header data for REST requests.
@@ -492,12 +496,42 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
     }
 
+    /// <summary>
+    /// Vcap credentials object.
+    /// </summary>
     [fsObject]
     public class VcapCredentials
     {
-		public Dictionary<string, Credential> VCAP_SERVICES { get; set; }
+        /// <summary>
+        /// List of credentials by service name.
+        /// </summary>
+        [fsProperty("VCAP_SERVICES")]
+        public Dictionary<string, List<VcapCredential>> VCAP_SERVICES { get; set; }
+
+        /// <summary>
+        /// Gets a credential by name.
+        /// </summary>
+        /// <param name="name">Name of requested credential</param>
+        /// <returns>A List of credentials who's names match the request name.</returns>
+        public List<VcapCredential> GetCredentialByname(string name)
+        {
+            List<VcapCredential> credentialsList = new List<VcapCredential>();
+            foreach(KeyValuePair<string, List<VcapCredential>> kvp in VCAP_SERVICES)
+            {
+                foreach(VcapCredential credential in kvp.Value)
+                {
+                    if (credential.Name == name)
+                        credentialsList.Add(credential);
+                }
+            }
+
+            return credentialsList;
+        }
     }
 
+    /// <summary>
+    /// The Credential to a single service.
+    /// </summary>
     [fsObject]
     public class VcapCredential
     {
@@ -511,6 +545,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public Credential Credentials { get; set; }
     }
 
+    /// <summary>
+    /// The Credentials.
+    /// </summary>
     [fsObject]
     public class Credential
     {
@@ -523,11 +560,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         [fsProperty("workspace_id")]
         public string WorkspaceId { get; set; }
         [fsProperty("api_key")]
-        public string Apikey { get; set; }
-        [fsProperty("note")]
-        public string Note { get; set; }
+        public string ApiKey { get; set; }
+        [fsProperty("apikey")]
+        public string IamApikey { get; set; }
     }
 
+    /// <summary>
+    /// IAM token options.
+    /// </summary>
     [fsObject]
     public class TokenOptions
     {
@@ -539,6 +579,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string IamUrl { get; set; }
     }
 
+    /// <summary>
+    /// IAM Token data.
+    /// </summary>
     [fsObject]
     public class IamTokenData
     {
