@@ -33,7 +33,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _username = null;
         private string _password = null;
         private fsSerializer _serializer = new fsSerializer();
-        //private string _token = "<authentication-token>";
 
         private Discovery _discovery;
         private string _discoveryVersionDate = "2016-12-01";
@@ -110,13 +109,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
-
-            //  Or authenticate using token
-            //Credentials credentials = new Credentials(_url)
-            //{
-            //    AuthenticationToken = _token
-            //};
-
+            
             _discovery = new Discovery(credentials);
             _discovery.VersionDate = _discoveryVersionDate;
             _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
@@ -268,33 +261,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_deleteConfigurationTested)
                 yield return null;
 
-            //  Delay
-            Log.Debug("TestDiscovery.RunTest()", "Delaying delete environment for 10 sec");
-            Runnable.Run(Delay(_waitTime));
-            while (!_readyToContinue)
-                yield return null;
-
-            _isEnvironmentReady = false;
-            Runnable.Run(CheckEnvironmentState(_waitTime));
-            while (!_isEnvironmentReady)
-                yield return null;
-
-            _readyToContinue = false;
-
             //  Delete User Data
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete user data.");
             _discovery.DeleteUserData(OnDeleteUserData, OnFail, "test-unity-user-id");
             while (!_deleteUserDataTested)
                 yield return null;
 
-            if (!string.IsNullOrEmpty(_createdEnvironmentID))
-            {
-                if (!_discovery.GetEnvironment(OnGetEnvironment, OnFail, _createdEnvironmentID))
-                {
-                    _discovery.DeleteEnvironment(OnDeleteEnvironment, OnFail, _createdEnvironmentID);
-                }
-            }
-
-            Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
+            Log.Debug("TestDiscovery.RunTest()", "Discovery unit tests complete.");
 
             yield break;
         }
@@ -471,6 +444,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnDeleteUserData(object response, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _deleteUserDataTested = true;
         }
 

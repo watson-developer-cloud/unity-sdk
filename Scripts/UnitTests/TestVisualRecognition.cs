@@ -51,7 +51,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if TRAIN_CLASSIFIER
         private bool _trainClassifierTested = false;
         private bool _getClassifierTested = false;
-        private bool _getCoreMLModelTested = false;
+        //private bool _getCoreMLModelTested = false;
 #endif
 #if DELETE_TRAINED_CLASSIFIER
         private bool _deleteClassifierTested = false;
@@ -265,11 +265,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
 
 #if TRAIN_CLASSIFIER
-        private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
-        {
-            Test(resp != null);
-            _getCoreMLModelTested = true;
-        }
+        //private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
+        //{
+        //    Test(resp != null);
+        //    _getCoreMLModelTested = true;
+        //}
 #endif
         
 #if DELETE_TRAINED_CLASSIFIER
