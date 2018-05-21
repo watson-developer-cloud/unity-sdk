@@ -304,7 +304,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         }
         private void OnFailCheckingIfClassifierIsReady(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            IsClassifierReady(customData["classifierId"].ToString());
+            IsClassifierReady(_classifierToDelete);
         }
         #endregion
 #endif
