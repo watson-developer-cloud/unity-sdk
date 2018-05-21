@@ -285,7 +285,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Dictionary<string, object> customData = new Dictionary<string, object>();
             customData.Add("classifierId", classifierId);
-            _visualRecognition.GetClassifier(OnCheckIfClassifierIsReady, OnFailCheckingIfClassifierIsReady, classifierId);
+            if (!_visualRecognition.GetClassifier(OnCheckIfClassifierIsReady, OnFailCheckingIfClassifierIsReady, classifierId))
+                IsClassifierReady(classifierId);
         }
         
         private void OnCheckIfClassifierIsReady(ClassifierVerbose response, Dictionary<string, object> customData)
