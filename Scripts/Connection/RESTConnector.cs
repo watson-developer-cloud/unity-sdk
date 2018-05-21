@@ -43,6 +43,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public const string AUTHENTICATION_AUTHORIZATION_HEADER = "Authorization";
         public const long HTTP_STATUS_OK = 200;
         public const long HTTP_STATUS_CREATED = 201;
+        public const long HTTP_STATUS_ACCEPTED = 202;
         public const long HTTP_STATUS_NO_CONTENT = 204;
         #region Public Types
         /// <summary>
@@ -481,6 +482,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             {
                                 case HTTP_STATUS_OK:
                                 case HTTP_STATUS_CREATED:
+                                case HTTP_STATUS_ACCEPTED:
                                     bError = false;
                                     break;
                                 default:
@@ -685,7 +687,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     };
                 }
 
-                Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT;
+                Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT || deleteReq.responseCode == HTTP_STATUS_ACCEPTED;
                 HttpResponseCode = deleteReq.responseCode;
                 ResponseHeaders = deleteReq.GetResponseHeaders();
                 Data = deleteReq.downloadHandler.data;
