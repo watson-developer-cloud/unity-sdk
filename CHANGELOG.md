@@ -1,5 +1,14 @@
 Change Log
 ==========
+## Version 2.2.3
+_2018-05-21_
+* New: Abstract `DeleteUserData()` for Assistant, Conversation and Discovery ([#387](https://github.com/watson-developer-cloud/unity-sdk/pull/387)).
+* Fixed: Replaced `ToUnixTimeInSeconds()` with dotnet 3.5 equivalent ([#382](https://github.com/watson-developer-cloud/unity-sdk/issues/382), [#386](https://github.com/watson-developer-cloud/unity-sdk/pull/386)).
+* New: Get credentials for testing from internal github repo ([#4333](https://github.ibm.com/Watson/developer-experience/issues/4333), [#364](https://github.com/watson-developer-cloud/unity-sdk/pull/364)).
+* New: Warn user to `InstallDefaultReactors()` ([#328](https://github.com/watson-developer-cloud/unity-sdk/issues/328), [#380](https://github.com/watson-developer-cloud/unity-sdk/pull/380)).
+* New: Revised WSConnector for TLS 1.2 support in upcoming Unity release ([#4230](https://github.ibm.com/Watson/developer-experience/issues/4230), [#379](https://github.com/watson-developer-cloud/unity-sdk/pull/379)).
+* New: Added support for IAM authentication ([#4291](https://github.ibm.com/Watson/developer-experience/issues/4291), [#377](https://github.com/watson-developer-cloud/unity-sdk/pull/377)).
+
 ## Version 2.2.2
 * New: Send custom request headers and access response headers via `customData` object ([#4310](https://github.ibm.com/Watson/developer-experience/issues/4310), [#362](https://github.com/watson-developer-cloud/unity-sdk/pull/362)).
 * Fixed: Unresolved errors hidden by `#ifdef` ([#368](https://github.com/watson-developer-cloud/unity-sdk/issues/368), [#369](https://github.com/watson-developer-cloud/unity-sdk/pull/369))
