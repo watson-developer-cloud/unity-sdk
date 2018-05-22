@@ -1,5 +1,6 @@
 # Watson APIs Unity SDK
 [![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
+[![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
 Use this SDK to build Watson-powered applications in Unity.
 
@@ -96,6 +97,39 @@ void Start()
 {
     Credentials credentials = new Credentials(<apikey>, <url>);
     VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
+```
+
+You can also authenticate a service using IAM authentication. You can either supply a valid access token in the `iamTokenOptions` or get an access token using an `apikey`.
+
+```cs
+void IEnumerator TokenExample()
+{
+    //  Create IAM token options and supply the apikey. 
+    //  Alternatively you can supply an access token.
+    TokenOptions iamTokenOptions = new TokenOptions()
+    {
+        IamApiKey = "<iam-api-key>"
+    };
+
+    //  Create credentials using the IAM token options
+     _credentials = new Credentials(iamTokenOptions, "<service-url");
+    while (!_credentials.HasIamTokenData())
+        yield return null;
+
+    _assistant = new Assistant(_credentials);
+    _assistant.VersionDate = "2018-02-16";
+    _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
+}
+
+private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+{
+    Log.Debug("OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Debug("OnFail()", "Failed: {0}", error.ToString());
 }
 ```
 
@@ -282,6 +316,6 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
-[ibm_cloud_registration]: http://console.bluemix.net/registration
+[ibm_cloud_registration]: http://console.bluemix.net/registration?cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/

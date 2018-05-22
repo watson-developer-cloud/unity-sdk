@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <param name="credentials">The service credentials.</param>
         public Assistant(Credentials credentials)
         {
-            if (credentials.HasCredentials() || credentials.HasAuthorizationToken())
+            if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
             }
@@ -83,23 +83,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 throw new WatsonException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
-
-        //#region Callback delegates
-        ///// <summary>
-        ///// Success callback delegate.
-        ///// </summary>
-        ///// <typeparam name="T">Type of the returned object.</typeparam>
-        ///// <param name="response">The returned object.</param>
-        ///// <param name="customData">user defined custom data including raw json.</param>
-        //public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        ///// <summary>
-        ///// Fail callback delegate.
-        ///// </summary>
-        ///// <param name="error">The error object.</param>
-        ///// <param name="customData">User defined custom data</param>
-        //public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
-        //#endregion
 
         /// <summary>
         /// Get a response to a user's input.    There is no rate limit for this operation. 
@@ -196,7 +179,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     //  For deserializing into a generic object
                     data = Encoding.UTF8.GetString(resp.Data);
                     result = Json.Deserialize(data);
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -204,6 +186,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -292,8 +276,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -301,6 +283,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -387,8 +371,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -396,6 +378,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -485,8 +469,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -494,6 +476,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -592,8 +576,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -601,6 +583,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -691,8 +675,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -700,6 +682,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -788,8 +772,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -797,6 +779,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -884,8 +868,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -893,6 +875,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -983,8 +967,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -992,6 +974,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1094,8 +1078,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1103,6 +1085,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1193,8 +1177,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1202,6 +1184,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1291,8 +1275,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1300,6 +1282,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1388,8 +1372,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1397,6 +1379,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1486,8 +1470,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1495,6 +1477,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1595,8 +1579,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1604,6 +1586,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1695,8 +1679,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1704,6 +1686,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1792,8 +1776,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1801,6 +1783,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1888,8 +1872,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1897,6 +1879,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -1986,8 +1970,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -1995,6 +1977,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2095,8 +2079,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2104,6 +2086,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2194,8 +2178,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2203,6 +2185,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2291,8 +2275,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2300,6 +2282,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2387,8 +2371,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2396,6 +2378,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2488,8 +2472,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2497,6 +2479,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2599,8 +2583,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2608,6 +2590,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2698,8 +2682,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2707,6 +2689,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2796,8 +2780,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2805,6 +2787,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2893,8 +2877,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -2902,6 +2884,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -2995,8 +2979,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3004,6 +2986,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3107,8 +3091,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3116,6 +3098,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3207,8 +3191,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3216,6 +3198,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3306,8 +3290,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3315,6 +3297,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3404,8 +3388,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3413,6 +3395,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3504,8 +3488,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3513,6 +3495,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3614,8 +3598,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3623,6 +3605,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3715,8 +3699,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3724,6 +3706,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3812,8 +3796,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3821,6 +3803,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -3908,8 +3892,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -3917,6 +3899,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4006,8 +3990,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -4015,6 +3997,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4114,8 +4098,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -4123,6 +4105,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4213,8 +4197,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -4222,6 +4204,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4318,8 +4302,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -4327,6 +4309,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4423,8 +4407,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
                 }
                 catch (Exception e)
                 {
@@ -4432,6 +4414,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     resp.Success = false;
                 }
             }
+
+            customData.Add("json", data);
 
             if (resp.Success)
             {
@@ -4444,6 +4428,108 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     ((ListLogsRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
+
+        #region Delete User Data
+        /// <summary>
+        /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
+        /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
+        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
+        /// <returns><see cref="object" />object</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw json output from the REST call will be passed in this object as the value of the 'json' key.</string></param>
+        public bool DeleteUserData(SuccessCallback<object> successCallback, FailCallback failCallback, string customerId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customerId))
+                throw new ArgumentNullException("customerId");
+
+            DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["customer_id"] = customerId;
+            req.Parameters["version"] = VersionDate;
+            req.Delete = true;
+
+            req.OnResponse = OnDeleteUserDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteUserDataRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteUserDataRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Assistant.OnDeleteUserDataResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((DeleteUserDataRequestObj)req).SuccessCallback != null)
+                    ((DeleteUserDataRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteUserDataRequestObj)req).FailCallback != null)
+                    ((DeleteUserDataRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
 
         #region IWatsonService Interface
         /// <exclude />

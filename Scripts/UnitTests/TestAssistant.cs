@@ -22,10 +22,8 @@ using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.Logging;
 using FullSerializer;
-using System.IO;
-using System;
 using IBM.Watson.DeveloperCloud.Connection;
-
+using System.IO;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
@@ -33,7 +31,7 @@ namespace Assets.Watson.Scripts.UnitTests
     {
         private string _username = null;
         private string _password = null;
-        private string _workspaceId = "b42ee794-c019-4a0d-acd2-9e4d1d016767";
+        private string _workspaceId = null;
         private string _createdWorkspaceId;
 
         private Assistant _service;
@@ -105,6 +103,9 @@ namespace Assets.Watson.Scripts.UnitTests
         private bool _deleteExampleTested = false;
         private bool _deleteIntentTested = false;
         private bool _deleteWorkspaceTested = false;
+        private bool _deleteUserDataTested = false;
+
+        private string _unitySdkTestCustomerID = "unity-sdk-test-customer-id";
 
         public override IEnumerator RunTest()
         {
@@ -114,18 +115,13 @@ namespace Assets.Watson.Scripts.UnitTests
             fsData data = null;
 
             string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            var vcapUrl = Environment.GetEnvironmentVariable("VCAP_URL");
-            var vcapUsername = Environment.GetEnvironmentVariable("VCAP_USERNAME");
-            var vcapPassword = Environment.GetEnvironmentVariable("VCAP_PASSWORD");
-
-            using (SimpleGet simpleGet = new SimpleGet(vcapUrl, vcapUsername, vcapPassword))
-            {
-                while (!simpleGet.IsComplete)
-                    yield return null;
-
-                result = simpleGet.Result;
-            }
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -142,11 +138,11 @@ namespace Assets.Watson.Scripts.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.VCAP_SERVICES["conversation"];
+            Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
-            //_workspaceId = credential.WorkspaceId.ToString();
+            _workspaceId = credential.WorkspaceId.ToString();
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
@@ -184,14 +180,22 @@ namespace Assets.Watson.Scripts.UnitTests
             while (!_updateWorkspaceTested)
                 yield return null;
 
-            //  Message
+            //  Message with customerID
+            //  Create customData object
+            Dictionary<string, object> customData = new Dictionary<string, object>();
+            //  Create a dictionary of custom headers
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
+            //  Add to the header dictionary
+            customHeaders.Add("X-Watson-Metadata", "customer_id=" + _unitySdkTestCustomerID);
+            //  Add the header dictionary to the custom data object
+            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
             Dictionary<string, object> input = new Dictionary<string, object>();
             input.Add("text", _inputString);
             MessageRequest messageRequest = new MessageRequest()
             {
                 Input = input
             };
-            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest);
+            _service.Message(OnMessage, OnFail, _workspaceId, messageRequest, null, customData);
             while (!_messageTested)
                 yield return null;
             _messageTested = false;
@@ -461,6 +465,10 @@ namespace Assets.Watson.Scripts.UnitTests
             _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
                 yield return null;
+            //  Delete User Data
+            _service.DeleteUserData(OnDeleteUserData, OnFail, _unitySdkTestCustomerID);
+            while (!_deleteUserDataTested)
+                yield return null;
 
             Log.Debug("TestAssistant.RunTest()", "Assistant examples complete.");
 
@@ -513,6 +521,12 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
             _deleteCounterexampleTested = true;
+        }
+        
+        private void OnDeleteUserData(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            _deleteUserDataTested = true;
         }
 
         private void OnUpdateCounterexample(Counterexample response, Dictionary<string, object> customData)
@@ -765,8 +779,10 @@ namespace Assets.Watson.Scripts.UnitTests
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
-            Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
+            if (customData["json"] != null)
+                Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
+            if(error != null)
+                Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }

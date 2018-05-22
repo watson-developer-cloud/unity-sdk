@@ -113,5 +113,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         bool ListAllLogs(SuccessCallback<LogCollection> successCallback, FailCallback failCallback, string filter, string sort = null, long? pageLimit = null, string cursor = null, Dictionary<string, object> customData = null);
 
         bool ListLogs(SuccessCallback<LogCollection> successCallback, FailCallback failCallback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null, Dictionary<string, object> customData = null);
+
+        bool DeleteUserData(SuccessCallback<object> successCallback, FailCallback failCallback, string customerId, Dictionary<string, object> customData = null);
     }
 }

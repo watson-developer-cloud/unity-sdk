@@ -2,8 +2,8 @@
 
 set -e
 
-# if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-#   echo '$TRAVIS_PULL_REQUEST is false, running tests'
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+  echo '$TRAVIS_PULL_REQUEST is false, running tests'
 echo "Attempting to create Streaming Assets directory..."
 mkdir -p Travis/UnityTestProject/Assets/StreamingAssets/
 
@@ -27,6 +27,6 @@ else
   cat $(pwd)/integrationTests.log
   exit 1
 fi
-# else
-#   echo '$TRAVIS_PULL_REQUEST is not false ($TRAVIS_PULL_REQUEST), skipping tests'
-# fi
+else
+  echo '$TRAVIS_PULL_REQUEST is not false ($TRAVIS_PULL_REQUEST), skipping tests'
+fi
