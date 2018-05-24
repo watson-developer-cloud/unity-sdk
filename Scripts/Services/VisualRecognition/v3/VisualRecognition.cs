@@ -54,7 +54,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private string _apikey = null;
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
-        private string _url = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private string _url = "https://gateway-a.watsonplatform.net/visual-recognition/api";
         private string _versionDate;
         #endregion
 
