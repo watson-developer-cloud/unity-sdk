@@ -141,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public Credentials(TokenOptions iamTokenOptions, string serviceUrl)
         {
             Url = serviceUrl;
-            _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.ng.bluemix.net/identity/token";
+            _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
             _iamTokenData = new IamTokenData();
 
             if (!string.IsNullOrEmpty(iamTokenOptions.IamApiKey))
@@ -153,8 +153,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             GetToken();
         }
         #endregion
-
-
+        
         #region Get Token
         /// <summary>
         /// This function sends an access token back through a callback. The source of the token
