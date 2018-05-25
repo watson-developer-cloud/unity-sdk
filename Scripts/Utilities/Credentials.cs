@@ -124,13 +124,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Constructor that takes an authentication token created by the user or an ApiKey. 
+        /// Constructor that takes an authentication token created by the user or an ApiKey.
+        /// If no URL is set then default to the non-IAM Visual Recognition endpoint.
         /// </summary>
         /// <param name="url">The service endpoint.</param>
         public Credentials(string apiKey, string url = null)
         {
             ApiKey = apiKey;
-            Url = url;
+            Url = !string.IsNullOrEmpty(url) ? url : "https://gateway-a.watsonplatform.net/visual-recognition/api";
         }
 
         /// <summary>
