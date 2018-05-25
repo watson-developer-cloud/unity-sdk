@@ -109,7 +109,9 @@ void IEnumerator TokenExample()
     //  Alternatively you can supply an access token.
     TokenOptions iamTokenOptions = new TokenOptions()
     {
-        IamApiKey = "<iam-api-key>"
+        IamApiKey = "<iam-api-key>",
+        IamAccessToken = "<iam-access-token>",
+        IamUrl = "<service-url>"
     };
 
     //  Create credentials using the IAM token options
@@ -131,6 +133,21 @@ private void OnFail(RESTConnector.Error error, Dictionary<string, object> custom
 {
     Log.Debug("OnFail()", "Failed: {0}", error.ToString());
 }
+```
+
+### Authentication for Visual Recognition
+Note there are different endpoints for authenticating a Visual Recognition instance depending on if you are authenticating using IAM or apikey. 
+
+If you are authenticating using an apikey
+
+```cs
+_visualRecognition.Url = "https://gateway-a.watsonplatform.net/visual-recognition/api";
+
+```
+
+If you are authenticating using IAM
+```cs
+_visualRecognition.Url = "https://gateway.watsonplatform.net/visual-recognition/api";
 ```
 
 ## Callbacks
