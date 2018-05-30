@@ -487,12 +487,30 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Do we have a HasIamTokenData?
+        /// Do we have IamTokenData?
         /// </summary>
         /// <returns></returns>
         public bool HasIamTokenData()
         {
             return _tokenData != null;
+        }
+
+        /// <summary>
+        /// Do we have an IAM apikey?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasIamApikey()
+        {
+            return !string.IsNullOrEmpty(_iamApiKey);
+        }
+
+        /// <summary>
+        /// Do we have an IAM authentication token?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasIamAuthorizationToken()
+        {
+            return !string.IsNullOrEmpty(_userAcessToken);
         }
     }
 
@@ -563,6 +581,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string ApiKey { get; set; }
         [fsProperty("apikey")]
         public string IamApikey { get; set; }
+        [fsProperty("iam_url")]
+        public string IamUrl { get; set; }
     }
 
     /// <summary>
