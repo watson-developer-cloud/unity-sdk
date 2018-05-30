@@ -146,7 +146,7 @@ namespace Assets.Watson.Scripts.UnitTests
             TokenOptions tokenOptions = new TokenOptions()
             {
                 IamApiKey = credential.IamApikey,
-                IamUrl = credential.IamUrl
+                IamUrl = "https://iam.stage1.bluemix.net/identity/token"
             };
 
             Credentials credentials = new Credentials(tokenOptions, credential.Url);
