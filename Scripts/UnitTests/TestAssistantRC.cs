@@ -14,6 +14,8 @@
 * limitations under the License.
 *
 */
+//  Uncomment to test RC
+//#define TEST_RC
 
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +29,8 @@ using System.IO;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
-    class TestAssistant : UnitTest
+#if TEST_RC
+    class TestAssistantRC : UnitTest
     {
         private string _username = null;
         private string _password = null;
@@ -35,7 +38,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _createdWorkspaceId;
 
         private Assistant _service;
-        private string _assistantVersionDate = "2017-05-26";
+        private string _assistantVersionDate = "2018-02-16";
 
         private fsSerializer _serializer = new fsSerializer();
 
@@ -138,14 +141,20 @@ namespace Assets.Watson.Scripts.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
-            _username = credential.Username.ToString();
-            _password = credential.Password.ToString();
-            _url = credential.Url.ToString();
+            Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk-iam")[0].Credentials;
+            //  Create credential and instantiate service
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = credential.IamApikey,
+                IamUrl = credential.IamUrl
+            };
+
+            Credentials credentials = new Credentials(tokenOptions, credential.Url);
             _workspaceId = credential.WorkspaceId.ToString();
 
-            //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, _url);
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
@@ -785,4 +794,5 @@ namespace Assets.Watson.Scripts.UnitTests
                 Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
         }
     }
+#endif
 }
