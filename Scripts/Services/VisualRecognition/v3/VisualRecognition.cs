@@ -51,7 +51,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         private const string DetectFacesEndpoint = "/v3/detect_faces";
         private const string ClassifiersEndpoint = "/v3/classifiers";
         private const string CoreMLEndpoint = "/v3/classifiers/{0}/core_ml_model";
-        private string _apikey = null;
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/visual-recognition/api";
@@ -103,14 +102,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #region Constructor
         public VisualRecognition(Credentials credentials)
         {
-            if (credentials.HasApiKey())
+            if (!credentials.HasApiKey() && !credentials.HasIamApikey() && !credentials.HasIamAuthorizationToken())
             {
-                Credentials = credentials;
+                throw new WatsonException("Please provide either an apikey, iamApikey or iamAuthorizationToken to authenticate the service.");
             }
-            else
+
+            if (string.IsNullOrEmpty(credentials.Url))
             {
-                throw new WatsonException("Please provide an apikey to use the Visual Recognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                credentials.Url = Url;
             }
+
+            Credentials = credentials;
         }
         #endregion
 
@@ -148,10 +150,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
 
@@ -163,16 +161,17 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnClassifyResp;
             req.Headers["Accepted-Language"] = acceptLanguage;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
             if (owners != default(string[]))
@@ -202,10 +201,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
 
@@ -249,10 +244,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to classify!");
 
@@ -263,15 +254,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnClassifyResp;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "multipart/form-data";
             req.Headers["Accept"] = "application/json";
@@ -371,10 +363,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, DetectFacesEndpoint);
             if (connector == null)
@@ -384,15 +372,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnDetectFacesResp;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
 
@@ -415,10 +404,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(imagePath))
                 throw new ArgumentNullException("Define an image path to classify!");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             byte[] imageData = null;
             if (imagePath != default(string))
@@ -455,10 +440,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (imageData == null)
                 throw new ArgumentNullException("Image data is required to DetectFaces!");
 
@@ -469,15 +450,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnDetectFacesResp;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["images_file"] = new RESTConnector.Form(imageData);
@@ -561,10 +543,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint);
             if (connector == null)
@@ -574,14 +552,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersBriefResp;
@@ -663,10 +642,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint);
             if (connector == null)
@@ -676,14 +651,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersBriefResp;
@@ -767,10 +743,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
@@ -780,14 +752,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Parameters["verbose"] = true;
             req.OnResponse = OnGetClassifierResp;
@@ -872,10 +845,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamples == null)
@@ -923,10 +892,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count < 2 && negativeExamplesData == null)
@@ -940,15 +905,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnTrainClassifierResp;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
@@ -1008,7 +974,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     resp.Success = false;
                 }
             }
-            
+
             if (resp.Success)
             {
                 if (((TrainClassifierReq)req).SuccessCallback != null)
@@ -1040,10 +1006,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamples.Count == 0 && string.IsNullOrEmpty(negativeExamplesPath))
@@ -1094,10 +1056,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierName))
                 throw new ArgumentNullException("ClassifierName");
             if (positiveExamplesData.Count == 0 && negativeExamplesData == null)
@@ -1111,15 +1069,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             req.OnResponse = OnTrainClassifierResp;
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["name"] = new RESTConnector.Form(classifierName);
@@ -1149,10 +1108,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("classifierId");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ClassifiersEndpoint + "/" + classifierId);
             if (connector == null)
@@ -1162,14 +1117,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
             req.Delete = true;
@@ -1220,10 +1176,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(_apikey))
-                _apikey = Credentials.ApiKey;
-            if (string.IsNullOrEmpty(_apikey))
-                throw new WatsonException("No API Key was found!");
             if (string.IsNullOrEmpty(classifierID))
                 throw new ArgumentNullException("A classifierID is required for GetCoreMLModel!");
 
@@ -1231,14 +1183,15 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Parameters["api_key"] = _apikey;
+            if (Credentials.HasApiKey())
+                req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = GetCoreMLModelResponse;
 
