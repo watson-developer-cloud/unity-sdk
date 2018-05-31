@@ -53,7 +53,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _createdValue = "untiyuntiyalue";
         private static string _createdIntent = "untiyIntent";
         private static string _createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
-        private static string _createdCounterExampleText = "untiyExample text";
+        private static string _createdCounterExampleText = "untiyExampleText";
         private static string _createdSynonym = "untiySynonym";
         private static string _createdExample = "untiyExample";
         private static string _dialogNodeName = "untiyDialognode";

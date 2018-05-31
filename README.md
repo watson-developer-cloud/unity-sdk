@@ -135,21 +135,6 @@ private void OnFail(RESTConnector.Error error, Dictionary<string, object> custom
 }
 ```
 
-### Authentication for Visual Recognition
-Note there are different endpoints for authenticating a Visual Recognition instance depending on if you are authenticating using IAM or apikey. 
-
-If you are authenticating using an apikey
-
-```cs
-_visualRecognition.Url = "https://gateway-a.watsonplatform.net/visual-recognition/api";
-
-```
-
-If you are authenticating using IAM
-```cs
-_visualRecognition.Url = "https://gateway.watsonplatform.net/visual-recognition/api";
-```
-
 ## Callbacks
 Success and failure callbacks are required. You can specify the return type in the callback.  
 ```cs
