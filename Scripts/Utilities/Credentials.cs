@@ -124,13 +124,14 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Constructor that takes an authentication token created by the user or an ApiKey. 
+        /// Constructor that takes an authentication token created by the user or an ApiKey.
+        /// If no URL is set then default to the non-IAM Visual Recognition endpoint.
         /// </summary>
         /// <param name="url">The service endpoint.</param>
         public Credentials(string apiKey, string url = null)
         {
             ApiKey = apiKey;
-            Url = url;
+            Url = !string.IsNullOrEmpty(url) ? url : "https://gateway-a.watsonplatform.net/visual-recognition/api";
         }
 
         /// <summary>
@@ -140,7 +141,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public Credentials(TokenOptions iamTokenOptions, string serviceUrl)
         {
             Url = serviceUrl;
-            _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.ng.bluemix.net/identity/token";
+            _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
             _iamTokenData = new IamTokenData();
 
             if (!string.IsNullOrEmpty(iamTokenOptions.IamApiKey))
@@ -152,8 +153,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             GetToken();
         }
         #endregion
-
-
+        
         #region Get Token
         /// <summary>
         /// This function sends an access token back through a callback. The source of the token
@@ -487,12 +487,30 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
 
         /// <summary>
-        /// Do we have a HasIamTokenData?
+        /// Do we have IamTokenData?
         /// </summary>
         /// <returns></returns>
         public bool HasIamTokenData()
         {
             return _tokenData != null;
+        }
+
+        /// <summary>
+        /// Do we have an IAM apikey?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasIamApikey()
+        {
+            return !string.IsNullOrEmpty(_iamApiKey);
+        }
+
+        /// <summary>
+        /// Do we have an IAM authentication token?
+        /// </summary>
+        /// <returns></returns>
+        public bool HasIamAuthorizationToken()
+        {
+            return !string.IsNullOrEmpty(_userAcessToken);
         }
     }
 
@@ -563,6 +581,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string ApiKey { get; set; }
         [fsProperty("apikey")]
         public string IamApikey { get; set; }
+        [fsProperty("iam_url")]
+        public string IamUrl { get; set; }
     }
 
     /// <summary>
