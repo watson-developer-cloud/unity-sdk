@@ -27,7 +27,7 @@ using System.IO;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
-    class TestAssistant : UnitTest
+    class TestAssistantCF : UnitTest
     {
         private string _username = null;
         private string _password = null;
@@ -35,7 +35,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _createdWorkspaceId;
 
         private Assistant _service;
-        private string _assistantVersionDate = "2017-05-26";
+        private string _assistantVersionDate = "2018-02-16";
 
         private fsSerializer _serializer = new fsSerializer();
 
@@ -53,7 +53,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _createdValue = "untiyuntiyalue";
         private static string _createdIntent = "untiyIntent";
         private static string _createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
-        private static string _createdCounterExampleText = "untiyExample text";
+        private static string _createdCounterExampleText = "untiyExampleText";
         private static string _createdSynonym = "untiySynonym";
         private static string _createdExample = "untiyExample";
         private static string _dialogNodeName = "untiyDialognode";

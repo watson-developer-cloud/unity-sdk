@@ -109,7 +109,9 @@ void IEnumerator TokenExample()
     //  Alternatively you can supply an access token.
     TokenOptions iamTokenOptions = new TokenOptions()
     {
-        IamApiKey = "<iam-api-key>"
+        IamApiKey = "<iam-api-key>",
+        IamAccessToken = "<iam-access-token>",
+        IamUrl = "<service-url>"
     };
 
     //  Create credentials using the IAM token options
