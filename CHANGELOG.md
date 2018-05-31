@@ -1,5 +1,12 @@
 Change Log
 ==========
+## Version 2.3.0
+_2018-05-31_
+* New: IAM support in Visual Recognition.
+* Fixed: Use non-region specific url for IamUrl.
+* Fixed: Authenticating with apikey sets the service url to `gateway-a`.
+* New: Abstract `DeleteUserData()` for Speech to Text and Text to Speech.
+
 ## Version 2.2.3
 _2018-05-21_
 * New: Abstract `DeleteUserData()` for Assistant, Conversation and Discovery ([#387](https://github.com/watson-developer-cloud/unity-sdk/pull/387)).
