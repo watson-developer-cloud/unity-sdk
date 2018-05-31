@@ -16,9 +16,9 @@
 */
 
 //  Uncomment to train a new classifier
-#define TRAIN_CLASSIFIER
+//#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-#define DELETE_TRAINED_CLASSIFIER
+//#define DELETE_TRAINED_CLASSIFIER
 
 using UnityEngine;
 using System.Collections;
@@ -32,13 +32,13 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestVisualRecognition : UnitTest
+    public class TestVisualRecognitionCF : UnitTest
     {
         private string _apikey;
         private fsSerializer _serializer = new fsSerializer();
 
         private VisualRecognition _visualRecognition;
-        private string _visualRecognitionVersionDate = "2016-05-20";
+        private string _visualRecognitionVersionDate = "2018-03-19";
 
         private string _classifierID = "";
         private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
@@ -51,7 +51,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 #if TRAIN_CLASSIFIER
         private bool _trainClassifierTested = false;
         private bool _getClassifierTested = false;
-        //private bool _getCoreMLModelTested = false;
+        private bool _getCoreMLModelTested = false;
 #endif
 #if DELETE_TRAINED_CLASSIFIER
         private bool _deleteClassifierTested = false;
@@ -133,13 +133,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             while (!_getClassifierTested)
                 yield return null;
-
-            ////  Download Core ML Model
-            //Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
-            //if(!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
-            //    Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
-            //while (!_getCoreMLModelTested)
-            //    yield return null;
 #endif
 
             //  Classify get
@@ -183,7 +176,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isClassifierReady)
                 yield return null;
 
-            //          Delete classifier by ID
+            //  Download Core ML Model
+            Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
+            if (!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
+                Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
+            while (!_getCoreMLModelTested)
+                yield return null;
+
+            //  Delete classifier by ID
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to delete classifier");
             if (!_visualRecognition.DeleteClassifier(OnDeleteClassifier, OnFail, _classifierToDelete))
                 Log.Debug("TestVisualRecognition.DeleteClassifier()", "Failed to delete classifier!");
@@ -264,14 +264,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _detectFacesPostTested = true;
         }
 
-#if TRAIN_CLASSIFIER
-        //private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
-        //{
-        //    Test(resp != null);
-        //    _getCoreMLModelTested = true;
-        //}
+#if DELETE_TRAINED_CLASSIFIER
+        private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
+        {
+            Test(resp != null);
+            _getCoreMLModelTested = true;
+        }
 #endif
-        
+
 #if DELETE_TRAINED_CLASSIFIER
         #region Is Classifier Ready
         //  Checking if classifier is ready before deletion due to a known bug in the Visual Recognition service where
@@ -288,7 +288,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (!_visualRecognition.GetClassifier(OnCheckIfClassifierIsReady, OnFailCheckingIfClassifierIsReady, classifierId))
                 IsClassifierReady(classifierId);
         }
-        
+
         private void OnCheckIfClassifierIsReady(ClassifierVerbose response, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.IsClassifierReady()", "Classifier status is {0}", response.status);
