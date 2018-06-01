@@ -89,6 +89,8 @@ void Start()
 
 For services that authenticate using an apikey, you can instantiate the service instance using a `Credential` object with an `apikey` and `url`.
 
+**Important**: Instantiation with `apikey` works only with Visual Recognition service instances created before May 23, 2018. Visual Recognition instances created after May 22 use IAM.
+
 ```cs
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
