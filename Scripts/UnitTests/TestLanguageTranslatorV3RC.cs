@@ -18,7 +18,7 @@
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestLanguageTranslator : UnitTest
+    public class TestLanguageTranslatorV3RC : UnitTest
     {
         private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
         private string _username = null;
@@ -48,6 +48,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteModelTested = false;
         private bool _identifyTested = false;
         private bool _getLanguagesTested = false;
+        private string _versionDate = "2018-05-01";
 
         public override IEnumerator RunTest()
         {
@@ -80,21 +81,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("language-translator-sdk")[0].Credentials;
-            _username = credential.Username.ToString();
-            _password = credential.Password.ToString();
+            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-iam-staging")[0].Credentials;
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, _url);
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = credential.IamApikey,
+                IamUrl = credential.IamUrl
+            };
 
-            //  Or authenticate using token
-            //Credentials credentials = new Credentials(_url)
-            //{
-            //    AuthenticationToken = _token
-            //};
+            Credentials credentials = new Credentials(tokenOptions, credential.Url);
 
-            _languageTranslator = new LanguageTranslator(credentials);
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+
+            _languageTranslator = new LanguageTranslator(_versionDate, credentials);
 
             _forcedGlossaryFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/glossary.tmx";
 
