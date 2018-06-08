@@ -97,6 +97,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
+
+                if (string.IsNullOrEmpty(credentials.Url))
+                {
+                    credentials.Url = Url;
+                }
             }
             else
             {
