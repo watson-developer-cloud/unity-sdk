@@ -74,6 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         #region Constructor
         public LanguageTranslator(Credentials credentials)
         {
+            Log.Warning("LanguageTranslatorV2", "Language Translator v2 is being deprecated. Please use Language Translator V3.");
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
