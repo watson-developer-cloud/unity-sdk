@@ -33,15 +33,30 @@ using System;
 public class ExampleNaturalLanguageClassifier : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/natural-language-classifier/api\"")]
+    [SerializeField]
+    private string _serviceUrl;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
+    [SerializeField]
+    private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
     [SerializeField]
     private string _username;
+    [Tooltip("The authentication password.")]
     [SerializeField]
     private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
     [SerializeField]
-    private string _url;
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
-    private NaturalLanguageClassifier naturalLanguageClassifier;
+    private NaturalLanguageClassifier _service;
 
     private string _classifierId = "";
     private List<string> _classifierIds = new List<string>();
@@ -63,11 +78,39 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+        Runnable.Run(CreateService());
+    }
 
+    private IEnumerator CreateService()
+    {
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
 
-        naturalLanguageClassifier = new NaturalLanguageClassifier(credentials);
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new NaturalLanguageClassifier(credentials);
 
         Runnable.Run(Examples());
     }
@@ -75,7 +118,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Get classifiers
-        if (!naturalLanguageClassifier.GetClassifiers(OnGetClassifiers, OnFail))
+        if (!_service.GetClassifiers(OnGetClassifiers, OnFail))
             Log.Debug("ExampleNaturalLanguageClassifier.GetClassifiers()", "Failed to get classifiers!");
 
         while (!_getClassifiersTested)
@@ -89,7 +132,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
             //  Get each classifier
             foreach (string classifierId in _classifierIds)
             {
-                if (!naturalLanguageClassifier.GetClassifier(OnGetClassifier, OnFail, classifierId))
+                if (!_service.GetClassifier(OnGetClassifier, OnFail, classifierId))
                     Log.Debug("ExampleNaturalLanguageClassifier.GetClassifier()", "Failed to get classifier {0}!", classifierId);
             }
 
@@ -104,7 +147,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 #if TRAIN_CLASSIFIER
         string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
         var trainingContent = File.ReadAllText(dataPath);
-        if (!naturalLanguageClassifier.TrainClassifier(OnTrainClassifier, OnFail, _classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent))
+        if (!_service.TrainClassifier(OnTrainClassifier, OnFail, _classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent))
             Log.Debug("ExampleNaturalLanguageClassifier.TrainClassifier()", "Failed to train clasifier!");
 
         while (!_trainClassifierTested)
@@ -113,14 +156,14 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
 #if DELETE_TRAINED_CLASSIFIER
         if (!string.IsNullOrEmpty(_classifierToDelete))
-            if (!naturalLanguageClassifier.DeleteClassifer(OnDeleteTrainedClassifier, OnFail, _classifierToDelete))
+            if (!_service.DeleteClassifer(OnDeleteTrainedClassifier, OnFail, _classifierToDelete))
                 Log.Debug("ExampleNaturalLanguageClassifier.DeleteClassifer()", "Failed to delete clasifier {0}!", _classifierToDelete);
 #endif
 
         //  Classify
         if (_areAnyClassifiersAvailable)
         {
-            if (!naturalLanguageClassifier.Classify(OnClassify, OnFail, _classifierId, _inputString))
+            if (!_service.Classify(OnClassify, OnFail, _classifierId, _inputString))
                 Log.Debug("ExampleNaturalLanguageClassifier.Classify()", "Failed to classify!");
 
             while (!_classifyTested)
@@ -145,7 +188,7 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
         if (_areAnyClassifiersAvailable)
         {
-            if (!naturalLanguageClassifier.ClassifyCollection(OnClassifyCollection, OnFail, _classifierId, classifyCollectionInput))
+            if (!_service.ClassifyCollection(OnClassifyCollection, OnFail, _classifierId, classifyCollectionInput))
                 Log.Debug("ExampleNaturalLanguageClassifier.ClassifyCollection()", "Failed to classify!");
 
             while (!_classifyCollectionTested)

@@ -30,18 +30,27 @@ using UnityEngine.UI;
 public class ExampleStreamingSplitSamples : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://stream.watsonplatform.net/speech-to-text/api\"")]
+    [SerializeField]
+    private string _serviceUrl;
+    [Tooltip("Text field to display the results of streaming.")]
+    public Text ResultsField;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
     [SerializeField]
     private string _username;
+    [Tooltip("The authentication password.")]
     [SerializeField]
     private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
     [SerializeField]
-    private string _url;
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
-
-    /// <summary>
-    /// Text field to display the results of streaming.
-    /// </summary>
-    public Text ResultsField;
 
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
@@ -50,18 +59,47 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
     private int _recordingHZ = 22050;
     private int _sampleSegments = 50;
 
-    private SpeechToText _speechToText;
+    private SpeechToText _service;
 
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+        Runnable.Run(CreateService());
+    }
 
+    private IEnumerator CreateService()
+    {
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
 
-        _speechToText = new SpeechToText(credentials);
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new SpeechToText(credentials);
+        _service.StreamMultipart = true;
+
         Active = true;
-
         StartRecording();
     }
 
@@ -70,28 +108,28 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
     /// </summary>
     public bool Active
     {
-        get { return _speechToText.IsListening; }
+        get { return _service.IsListening; }
         set
         {
-            if (value && !_speechToText.IsListening)
+            if (value && !_service.IsListening)
             {
-                _speechToText.DetectSilence = true;
-                _speechToText.EnableWordConfidence = true;
-                _speechToText.EnableTimestamps = true;
-                _speechToText.SilenceThreshold = 0.01f;
-                _speechToText.MaxAlternatives = 0;
-                _speechToText.EnableInterimResults = true;
-                _speechToText.OnError = OnError;
-                _speechToText.InactivityTimeout = -1;
-                _speechToText.ProfanityFilter = false;
-                _speechToText.SmartFormatting = true;
-                _speechToText.SpeakerLabels = false;
-                _speechToText.WordAlternativesThreshold = null;
-                _speechToText.StartListening(OnRecognize, OnRecognizeSpeaker);
+                _service.DetectSilence = true;
+                _service.EnableWordConfidence = true;
+                _service.EnableTimestamps = true;
+                _service.SilenceThreshold = 0.01f;
+                _service.MaxAlternatives = 0;
+                _service.EnableInterimResults = true;
+                _service.OnError = OnError;
+                _service.InactivityTimeout = -1;
+                _service.ProfanityFilter = false;
+                _service.SmartFormatting = true;
+                _service.SpeakerLabels = false;
+                _service.WordAlternativesThreshold = null;
+                _service.StartListening(OnRecognize, OnRecognizeSpeaker);
             }
-            else if (!value && _speechToText.IsListening)
+            else if (!value && _service.IsListening)
             {
-                _speechToText.StopListening();
+                _service.StopListening();
             }
         }
     }
@@ -186,7 +224,7 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
                 record.Clip.SetData(samples, 0);
 
                 //  Send the newly created AudioData to the service
-                _speechToText.OnListen(record);
+                _service.OnListen(record);
 
                 //  Iterate or reset sampleSegmentNum
                 if (sampleSegmentNum < _sampleSegments - 1)

@@ -27,19 +27,33 @@ using IBM.Watson.DeveloperCloud.Connection;
 public class ExampleConversation : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/conversation/api\"")]
     [SerializeField]
-    private string _username;
-    [SerializeField]
-    private string _password;
-    [SerializeField]
-    private string _url;
+    private string _serviceUrl;
+    [Tooltip("The workspaceId to run the example.")]
     [SerializeField]
     private string _workspaceId;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
     [SerializeField]
     private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
+    [SerializeField]
+    private string _username;
+    [Tooltip("The authentication password.")]
+    [SerializeField]
+    private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
+    [SerializeField]
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
-    private Conversation _conversation;
+    private Conversation _service;
 
     private string[] _questionArray = { "can you turn up the AC", "can you turn on the wipers", "can you turn off the wipers", "can you turn down the ac", "can you unlock the door" };
     private fsSerializer _serializer = new fsSerializer();
@@ -50,19 +64,47 @@ public class ExampleConversation : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+        Runnable.Run(CreateService());
+    }
 
+    private IEnumerator CreateService()
+    {
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
 
-        _conversation = new Conversation(credentials);
-        _conversation.VersionDate = _versionDate;
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new Conversation(credentials);
+        _service.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }
 
     private IEnumerator Examples()
     {
-        if (!_conversation.Message(OnMessage, OnFail, _workspaceId, "hello"))
+        if (!_service.Message(OnMessage, OnFail, _workspaceId, "hello"))
             Log.Debug("ExampleConversation.Message()", "Failed to message!");
 
         while (_waitingForResponse)
@@ -111,7 +153,7 @@ public class ExampleConversation : MonoBehaviour
             context = _context
         };
 
-        if (!_conversation.Message(OnMessage, OnFail, _workspaceId, messageRequest))
+        if (!_service.Message(OnMessage, OnFail, _workspaceId, messageRequest))
             Log.Debug("ExampleConversation.AskQuestion()", "Failed to message!");
     }
 

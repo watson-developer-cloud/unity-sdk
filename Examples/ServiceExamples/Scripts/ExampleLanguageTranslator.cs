@@ -26,18 +26,33 @@ using System.Collections.Generic;
 public class ExampleLanguageTranslator : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/language-translator/api\"")]
+    [SerializeField]
+    private string _serviceUrl;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
+    [SerializeField]
+    private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
     [SerializeField]
     private string _username;
+    [Tooltip("The authentication password.")]
     [SerializeField]
     private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
     [SerializeField]
-    private string _url;
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
     private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
     private string _pharseToIdentify = "Hola, donde esta la bibliteca?";
     
-    private LanguageTranslator _languageTranslator;
+    private LanguageTranslator _service;
     private string _baseModelName = "en-es";
     private string _customModelName = "Texan";
     private string _forcedGlossaryFilePath;
@@ -54,49 +69,77 @@ public class ExampleLanguageTranslator : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-
-        //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
-
-        _languageTranslator = new LanguageTranslator(credentials);
         _forcedGlossaryFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/glossary.tmx";
+        Runnable.Run(CreateService());
+    }
+
+    private IEnumerator CreateService()
+    {
+        //  Create credential and instantiate service
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
+
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new LanguageTranslator(credentials);
 
         Runnable.Run(Examples());
     }
 
     private IEnumerator Examples()
     {
-        if (!_languageTranslator.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es"))
+        if (!_service.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es"))
             Log.Debug("ExampleLanguageTranslator.GetTranslation()", "Failed to translate.");
         while (!_getTranslationTested)
             yield return null;
 
-        if (!_languageTranslator.GetModels(OnGetModels, OnFail))
+        if (!_service.GetModels(OnGetModels, OnFail))
             Log.Debug("ExampleLanguageTranslator.GetModels()", "Failed to get models.");
         while (!_getModelsTested)
             yield return null;
 
-        if (!_languageTranslator.CreateModel(OnCreateModel, OnFail, _baseModelName, _customModelName, _forcedGlossaryFilePath))
+        if (!_service.CreateModel(OnCreateModel, OnFail, _baseModelName, _customModelName, _forcedGlossaryFilePath))
             Log.Debug("ExampleLanguageTranslator.CreateModel()", "Failed to create model.");
         while (!_createModelTested)
             yield return null;
 
-        if (!_languageTranslator.GetModel(OnGetModel, OnFail, _customLanguageModelId))
+        if (!_service.GetModel(OnGetModel, OnFail, _customLanguageModelId))
             Log.Debug("ExampleLanguageTranslator.GetModel()", "Failed to get model.");
         while (!_getModelTested)
             yield return null;
 
-        if (!_languageTranslator.DeleteModel(OnDeleteModel, OnFail, _customLanguageModelId))
+        if (!_service.DeleteModel(OnDeleteModel, OnFail, _customLanguageModelId))
             Log.Debug("ExampleLanguageTranslator.DeleteModel()", "Failed to delete model.");
         while (!_deleteModelTested)
             yield return null;
 
-        if (!_languageTranslator.Identify(OnIdentify, OnFail, _pharseToIdentify))
+        if (!_service.Identify(OnIdentify, OnFail, _pharseToIdentify))
             Log.Debug("ExampleLanguageTranslator.Identify()", "Failed to identify language.");
         while (!_identifyTested)
             yield return null;
 
-        if (!_languageTranslator.GetLanguages(OnGetLanguages, OnFail))
+        if (!_service.GetLanguages(OnGetLanguages, OnFail))
             Log.Debug("ExampleLanguageTranslator.GetLanguages()", "Failed to get languages.");
         while (!_getLanguagesTested)
             yield return null;
