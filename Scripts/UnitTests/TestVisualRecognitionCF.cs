@@ -52,6 +52,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _trainClassifierTested = false;
         private bool _getClassifierTested = false;
         private bool _getCoreMLModelTested = false;
+        private bool _isClassifierReady = false;
 #endif
 #if DELETE_TRAINED_CLASSIFIER
         private bool _deleteClassifierTested = false;
@@ -60,8 +61,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _classifyPostTested = false;
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
-
-        private bool _isClassifierReady = false;
 
         public override IEnumerator RunTest()
         {

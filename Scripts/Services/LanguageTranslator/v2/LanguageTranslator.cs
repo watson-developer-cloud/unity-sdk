@@ -77,6 +77,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
+
+                if (string.IsNullOrEmpty(credentials.Url))
+                {
+                    credentials.Url = Url;
+                }
             }
             else
             {

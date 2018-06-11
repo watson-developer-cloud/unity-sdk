@@ -15,9 +15,9 @@
 *
 */
 //  Uncomment to train a new classifier
-#define TRAIN_CLASSIFIER
+//#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-#define DELETE_TRAINED_CLASSIFIER
+//#define DELETE_TRAINED_CLASSIFIER
 
 using UnityEngine;
 using System.Collections;
@@ -30,16 +30,24 @@ using IBM.Watson.DeveloperCloud.Connection;
 public class ExampleVisualRecognition : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/visual-recognition/ap\"")]
     [SerializeField]
-    private string _apikey;
-    [SerializeField]
-    private string _iamApikey;
-    [SerializeField]
-    private string _url;
-    [SerializeField]
-    private string _iamUrl;
+    private string _serviceUrl;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
     [SerializeField]
     private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The CF apikey (non-iam).")]
+    [SerializeField]
+    private string _apikey;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
+    [SerializeField]
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
     private VisualRecognition _visualRecognition;
@@ -66,14 +74,14 @@ public class ExampleVisualRecognition : MonoBehaviour
     private bool _classifyPostTested = false;
     private bool _detectFacesGetTested = false;
     private bool _detectFacesPostTested = false;
+#if TRAIN_CLASSIFIER
     private bool _getCoreMLModelTested = false;
     private bool _isClassifierReady = false;
+#endif
 
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-
-
         Runnable.Run(CreateService());
     }
 
@@ -83,7 +91,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         if (!string.IsNullOrEmpty(_apikey))
         {
             //  Authenticate using apikey
-            credentials = new Credentials(_apikey, _url);
+            credentials = new Credentials(_apikey, _serviceUrl);
         }
         else if (!string.IsNullOrEmpty(_iamApikey))
         {
@@ -94,11 +102,15 @@ public class ExampleVisualRecognition : MonoBehaviour
                 IamUrl = _iamUrl
             };
 
-            credentials = new Credentials(tokenOptions, _url);
+            credentials = new Credentials(tokenOptions, _serviceUrl);
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
                 yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either CF apikey or IAM apikey to authenticate the service.");
         }
 
         //  Create credential and instantiate service
@@ -270,7 +282,7 @@ public class ExampleVisualRecognition : MonoBehaviour
 #endif
 
 #if DELETE_TRAINED_CLASSIFIER
-    #region Is Classifier Ready
+#region Is Classifier Ready
     //  Checking if classifier is ready before deletion due to a known bug in the Visual Recognition service where
     //  if a classifier is deleted before it is `ready` or `failed` the classifier will still exist in object storage
     //  but will be inaccessable to the user.
@@ -304,7 +316,7 @@ public class ExampleVisualRecognition : MonoBehaviour
     {
         IsClassifierReady(_classifierToDelete);
     }
-    #endregion
+#endregion
 #endif
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

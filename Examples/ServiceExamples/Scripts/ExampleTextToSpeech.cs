@@ -26,15 +26,27 @@ using IBM.Watson.DeveloperCloud.Connection;
 public class ExampleTextToSpeech : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://stream.watsonplatform.net/text-to-speech/api\"")]
+    [SerializeField]
+    private string _serviceUrl;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
     [SerializeField]
     private string _username;
+    [Tooltip("The authentication password.")]
     [SerializeField]
     private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
     [SerializeField]
-    private string _url;
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
-    TextToSpeech _textToSpeech;
+    TextToSpeech _service;
     string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
 
     string _createdCustomizationId;
@@ -61,11 +73,39 @@ public class ExampleTextToSpeech : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+        Runnable.Run(CreateService());
+    }
 
+    private IEnumerator CreateService()
+    {
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
 
-        _textToSpeech = new TextToSpeech(credentials);
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new TextToSpeech(credentials);
 
         Runnable.Run(Examples());
     }
@@ -74,44 +114,44 @@ public class ExampleTextToSpeech : MonoBehaviour
     {
         //  Synthesize
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting synthesize.");
-        _textToSpeech.Voice = VoiceType.en_US_Allison;
-        _textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
+        _service.Voice = VoiceType.en_US_Allison;
+        _service.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
         while (!_synthesizeTested)
             yield return null;
 
         //	Get Voices
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get voices.");
-        _textToSpeech.GetVoices(OnGetVoices, OnFail);
+        _service.GetVoices(OnGetVoices, OnFail);
         while (!_getVoicesTested)
             yield return null;
 
         //	Get Voice
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
-        _textToSpeech.GetVoice(OnGetVoice, OnFail, VoiceType.en_US_Allison);
+        _service.GetVoice(OnGetVoice, OnFail, VoiceType.en_US_Allison);
         while (!_getVoiceTested)
             yield return null;
 
         //	Get Pronunciation
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get pronunciation of {0}", _testWord);
-        _textToSpeech.GetPronunciation(OnGetPronunciation, OnFail, _testWord, VoiceType.en_US_Allison);
+        _service.GetPronunciation(OnGetPronunciation, OnFail, _testWord, VoiceType.en_US_Allison);
         while (!_getPronuciationTested)
             yield return null;
 
         //  Get Customizations
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a list of customizations");
-        _textToSpeech.GetCustomizations(OnGetCustomizations, OnFail);
+        _service.GetCustomizations(OnGetCustomizations, OnFail);
         while (!_getCustomizationsTested)
             yield return null;
 
         //  Create Customization
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to create a customization");
-        _textToSpeech.CreateCustomization(OnCreateCustomization, OnFail, _customizationName, _customizationLanguage, _customizationDescription);
+        _service.CreateCustomization(OnCreateCustomization, OnFail, _customizationName, _customizationLanguage, _customizationDescription);
         while (!_createCustomizationTested)
             yield return null;
 
         //  Get Customization
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a customization");
-        if (!_textToSpeech.GetCustomization(OnGetCustomization, OnFail, _createdCustomizationId))
+        if (!_service.GetCustomization(OnGetCustomization, OnFail, _createdCustomizationId))
             Log.Debug("ExampleTextToSpeech.Examples()", "Failed to get custom voice model!");
         while (!_getCustomizationTested)
             yield return null;
@@ -144,14 +184,14 @@ public class ExampleTextToSpeech : MonoBehaviour
             name = "My updated name"
         };
 
-        if (!_textToSpeech.UpdateCustomization(OnUpdateCustomization, OnFail, _createdCustomizationId, _customVoiceUpdate))
+        if (!_service.UpdateCustomization(OnUpdateCustomization, OnFail, _createdCustomizationId, _customVoiceUpdate))
             Log.Debug("ExampleTextToSpeech.Examples()", "Failed to update customization!");
         while (!_updateCustomizationTested)
             yield return null;
 
         //  Get Customization Words
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get a customization's words");
-        if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, OnFail, _createdCustomizationId))
+        if (!_service.GetCustomizationWords(OnGetCustomizationWords, OnFail, _createdCustomizationId))
             Log.Debug("ExampleTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", _createdCustomizationId);
         while (!_getCustomizationWordsTested)
             yield return null;
@@ -182,7 +222,7 @@ public class ExampleTextToSpeech : MonoBehaviour
             words = wordArrayToAddToCustomization
         };
 
-        if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, OnFail, _createdCustomizationId, wordsToAddToCustomization))
+        if (!_service.AddCustomizationWords(OnAddCustomizationWords, OnFail, _createdCustomizationId, wordsToAddToCustomization))
             Log.Debug("ExampleTextToSpeech.AddCustomizationWords()", "Failed to add words to {0}!", _createdCustomizationId);
         while (!_addCustomizationWordsTested)
             yield return null;
@@ -190,7 +230,7 @@ public class ExampleTextToSpeech : MonoBehaviour
         //  Get Customization Word
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to get the translation of a custom voice model's word.");
         string customIdentifierWord = wordsToUpdateCustomization[0].word;
-        if (!_textToSpeech.GetCustomizationWord(OnGetCustomizationWord, OnFail, _createdCustomizationId, customIdentifierWord))
+        if (!_service.GetCustomizationWord(OnGetCustomizationWord, OnFail, _createdCustomizationId, customIdentifierWord))
             Log.Debug("ExampleTextToSpeech.GetCustomizationWord()", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
         while (!_getCustomizationWordTested)
             yield return null;
@@ -198,14 +238,14 @@ public class ExampleTextToSpeech : MonoBehaviour
         //  Delete Customization Word
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to delete customization word from custom voice model.");
         string wordToDelete = "goodbye";
-        if (!_textToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, OnFail, _createdCustomizationId, wordToDelete))
+        if (!_service.DeleteCustomizationWord(OnDeleteCustomizationWord, OnFail, _createdCustomizationId, wordToDelete))
             Log.Debug("ExampleTextToSpeech.DeleteCustomizationWord()", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
         while (!_deleteCustomizationWordTested)
             yield return null;
 
         //  Delete Customization
         Log.Debug("ExampleTextToSpeech.Examples()", "Attempting to delete a customization");
-        if (!_textToSpeech.DeleteCustomization(OnDeleteCustomization, OnFail, _createdCustomizationId))
+        if (!_service.DeleteCustomization(OnDeleteCustomization, OnFail, _createdCustomizationId))
             Log.Debug("ExampleTextToSpeech.DeleteCustomization()", "Failed to delete custom voice model!");
         while (!_deleteCustomizationTested)
             yield return null;
