@@ -16,11 +16,11 @@
 */
 
 //  Uncomment to train a new classifier
-#define TRAIN_CLASSIFIER
+//#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
-#define DELETE_TRAINED_CLASSIFIER
+//#define DELETE_TRAINED_CLASSIFIER
 //  Uncomment to test RC
-#define TEST_RC
+//#define TEST_RC
 
 using UnityEngine;
 using System.Collections;
