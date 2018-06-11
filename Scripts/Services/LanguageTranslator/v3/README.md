@@ -11,6 +11,19 @@ Before you can send requests to the service it must be instantiated and credenti
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
 
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
+}
+```
+
+
+You can also authenticate the service with an IAM apikey
+```cs
+using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
+using IBM.Watson.DeveloperCloud.Utilities;
+
 IEnumerator CreateService()
 {
     TokenOptions tokenOptions = new TokenOptions()
