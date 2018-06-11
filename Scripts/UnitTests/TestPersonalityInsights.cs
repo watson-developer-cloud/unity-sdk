@@ -57,22 +57,30 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
 
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("personality-insights-sdk")[0].Credentials;
@@ -95,14 +103,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
 
             if (!_personalityInsights.GetProfile(OnGetProfileJson, OnFail, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            {
                 Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
+            }
             while (!_getProfileJsonTested)
+            {
                 yield return null;
+            }
 
             if (!_personalityInsights.GetProfile(OnGetProfileText, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+            {
                 Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
+            }
             while (!_getProfileTextTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("ExamplePersonalityInsights.RunTest()", "Personality insights examples complete.");
 

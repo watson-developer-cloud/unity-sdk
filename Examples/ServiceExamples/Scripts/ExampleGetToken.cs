@@ -51,10 +51,14 @@ public class ExampleGetToken : MonoBehaviour
     {
         //  Get token
         if (!Utility.GetWatsonToken(OnGetWatsonToken, _conversationUrl, _conversationUsername, _conversationPassword))
+        {
             Log.Debug("ExampleGetToken.GetToken()", "Failed to get token.");
+        }
 
         while (!_receivedAuthToken)
+        {
             yield return null;
+        }
 
         //  Use token to authenticate Conversation call
         Message();

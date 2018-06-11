@@ -72,9 +72,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -82,13 +86,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("text-to-speech-sdk")[0].Credentials;
@@ -112,51 +120,67 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _textToSpeech.Voice = VoiceType.en_US_Allison;
             _textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
             while (!_synthesizeTested)
+            {
                 yield return null;
+            }
 
             //  Synthesize Conversation string
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
             _textToSpeech.Voice = VoiceType.en_US_Allison;
             _textToSpeech.ToSpeech(HandleConversationToSpeechCallback, OnFail, _testConversationString, true);
             while (!_synthesizeConversationTested)
+            {
                 yield return null;
+            }
 
-            //	Get Voices
+            // Get Voices
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voices.");
             _textToSpeech.GetVoices(OnGetVoices, OnFail);
             while (!_getVoicesTested)
+            {
                 yield return null;
+            }
 
-            //	Get Voice
+            // Get Voice
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voice {0}.", VoiceType.en_US_Allison);
             _textToSpeech.GetVoice(OnGetVoice, OnFail, VoiceType.en_US_Allison);
             while (!_getVoiceTested)
+            {
                 yield return null;
+            }
 
             //	Get Pronunciation
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get pronunciation of {0}", _testWord);
             _textToSpeech.GetPronunciation(OnGetPronunciation, OnFail, _testWord, VoiceType.en_US_Allison);
             while (!_getPronuciationTested)
+            {
                 yield return null;
+            }
 
             //  Get Customizations
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a list of customizations");
             _textToSpeech.GetCustomizations(OnGetCustomizations, OnFail);
             while (!_getCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Create Customization
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to create a customization");
             _textToSpeech.CreateCustomization(OnCreateCustomization, OnFail, _customizationName, _customizationLanguage, _customizationDescription);
             while (!_createCustomizationTested)
+            {
                 yield return null;
+            }
 
             //  Get Customization
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a customization");
             if (!_textToSpeech.GetCustomization(OnGetCustomization, OnFail, _createdCustomizationId))
                 Log.Debug("TestTextToSpeech.RunTest()", "Failed to get custom voice model!");
             while (!_getCustomizationTested)
+            {
                 yield return null;
+            }
 
             //  Update Customization
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to update a customization");
@@ -187,16 +211,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_textToSpeech.UpdateCustomization(OnUpdateCustomization, OnFail, _createdCustomizationId, _customVoiceUpdate))
+            {
                 Log.Debug("TestTextToSpeech.UpdateCustomization()", "Failed to update customization!");
+            }
             while (!_updateCustomizationTested)
+            {
                 yield return null;
+            }
 
             //  Get Customization Words
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get a customization's words");
             if (!_textToSpeech.GetCustomizationWords(OnGetCustomizationWords, OnFail, _createdCustomizationId))
+            {
                 Log.Debug("TestTextToSpeech.GetCustomizationWords()", "Failed to get {0} words!", _createdCustomizationId);
+            }
             while (!_getCustomizationWordsTested)
+            {
                 yield return null;
+            }
 
             //  Add Customization Words
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to add words to a customization");
@@ -225,32 +257,48 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             };
 
             if (!_textToSpeech.AddCustomizationWords(OnAddCustomizationWords, OnFail, _createdCustomizationId, wordsToAddToCustomization))
+            {
                 Log.Debug("TestTextToSpeech.AddCustomizationWords()", "Failed to add words to {0}!", _createdCustomizationId);
+            }
             while (!_addCustomizationWordsTested)
+            {
                 yield return null;
+            }
 
             //  Get Customization Word
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get the translation of a custom voice model's word.");
             string customIdentifierWord = wordsToUpdateCustomization[0].word;
             if (!_textToSpeech.GetCustomizationWord(OnGetCustomizationWord, OnFail, _createdCustomizationId, customIdentifierWord))
+            {
                 Log.Debug("TestTextToSpeech.GetCustomizationWord()", "Failed to get the translation of {0} from {1}!", customIdentifierWord, _createdCustomizationId);
+            }
             while (!_getCustomizationWordTested)
+            {
                 yield return null;
+            }
 
             //  Delete Customization Word
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to delete customization word from custom voice model.");
             string wordToDelete = "goodbye";
             if (!_textToSpeech.DeleteCustomizationWord(OnDeleteCustomizationWord, OnFail, _createdCustomizationId, wordToDelete))
+            {
                 Log.Debug("TestTextToSpeech.DeleteCustomizationWord()", "Failed to delete {0} from {1}!", wordToDelete, _createdCustomizationId);
+            }
             while (!_deleteCustomizationWordTested)
+            {
                 yield return null;
+            }
 
             //  Delete Customization
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to delete a customization");
             if (!_textToSpeech.DeleteCustomization(OnDeleteCustomization, OnFail, _createdCustomizationId))
+            {
                 Log.Debug("TestTextToSpeech.DeleteCustomization()", "Failed to delete custom voice model!");
+            }
             while (!_deleteCustomizationTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("TestTextToSpeech.RunTest()", "Text to Speech examples complete.");
 

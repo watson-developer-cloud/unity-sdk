@@ -82,7 +82,9 @@ public class ExampleToneAnalyzer : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -99,11 +101,15 @@ public class ExampleToneAnalyzer : MonoBehaviour
     {
         //  Analyze tone
         if (!_service.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
+        {
             Log.Debug("ExampleToneAnalyzer.Examples()", "Failed to analyze!");
+        }
 
         while (!_analyzeToneTested)
+        {
             yield return null;
-
+        }
+        
         Log.Debug("ExampleToneAnalyzer.Examples()", "Tone analyzer examples complete.");
     }
 

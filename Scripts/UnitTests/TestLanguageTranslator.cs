@@ -61,9 +61,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -71,13 +75,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("language-translator-sdk")[0].Credentials;
@@ -99,39 +107,67 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _forcedGlossaryFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/glossary.tmx";
 
             if (!_languageTranslator.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es"))
+            {
                 Log.Debug("TestLanguageTranslator.GetTranslation()", "Failed to translate.");
+            }
             while (!_getTranslationTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.GetModels(OnGetModels, OnFail))
+            {
                 Log.Debug("TestLanguageTranslator.GetModels()", "Failed to get models.");
+            }
             while (!_getModelsTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.CreateModel(OnCreateModel, OnFail, _baseModelName, _customModelName, _forcedGlossaryFilePath))
+            {
                 Log.Debug("TestLanguageTranslator.CreateModel()", "Failed to create model.");
+            }
             while (!_createModelTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.GetModel(OnGetModel, OnFail, _customLanguageModelId))
+            {
                 Log.Debug("TestLanguageTranslator.GetModel()", "Failed to get model.");
+            }
             while (!_getModelTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.DeleteModel(OnDeleteModel, OnFail, _customLanguageModelId))
+            {
                 Log.Debug("TestLanguageTranslator.DeleteModel()", "Failed to delete model.");
+            }
             while (!_deleteModelTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.Identify(OnIdentify, OnFail, _pharseToTranslate))
+            {
                 Log.Debug("TestLanguageTranslator.Identify()", "Failed to identify language.");
+            }
             while (!_identifyTested)
+            {
                 yield return null;
+            }
 
             if (!_languageTranslator.GetLanguages(OnGetLanguages, OnFail))
+            {
                 Log.Debug("TestLanguageTranslator.GetLanguages()", "Failed to get languages.");
+            }
             while (!_getLanguagesTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("TestLanguageTranslator.RunTest()", "Language Translator examples complete.");
 

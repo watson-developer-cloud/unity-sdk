@@ -96,9 +96,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -106,13 +110,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("speech-to-text-sdk")[0].Credentials;
@@ -136,7 +144,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Runnable.Run(DownloadAcousticResource());
             while (!_isAudioLoaded)
+            {
                 yield return null;
+            }
 
             //  Recognize
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to recognize");
@@ -148,80 +158,106 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText.Keywords = keywords.ToArray();
             _speechToText.Recognize(HandleOnRecognize, OnFail, _acousticResourceData, _acousticResourceMimeType);
             while (!_recognizeTested)
+            {
                 yield return null;
+            }
 
             //  Get models
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get models");
             _speechToText.GetModels(HandleGetModels, OnFail);
             while (!_getModelsTested)
+            {
                 yield return null;
+            }
 
             //  Get model
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get model {0}", _modelNameToGet);
             _speechToText.GetModel(HandleGetModel, OnFail, _modelNameToGet);
             while (!_getModelTested)
+            {
                 yield return null;
+            }
 
             //  Get customizations
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get customizations");
             _speechToText.GetCustomizations(HandleGetCustomizations, OnFail);
             while (!_getCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Create customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting create customization");
             _speechToText.CreateCustomization(HandleCreateCustomization, OnFail, "unity-test-customization", "en-US_BroadbandModel", "Testing customization unity");
             while (!_createCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Get customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get customization {0}", _createdCustomizationID);
             _speechToText.GetCustomization(HandleGetCustomization, OnFail, _createdCustomizationID);
             while (!_getCustomizationTested)
+            {
                 yield return null;
+            }
 
             //  Get custom corpora
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom corpora for {0}", _createdCustomizationID);
             _speechToText.GetCustomCorpora(HandleGetCustomCorpora, OnFail, _createdCustomizationID);
             while (!_getCustomCorporaTested)
+            {
                 yield return null;
+            }
 
             //  Add custom corpus
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             string corpusData = File.ReadAllText(_customCorpusFilePath);
             _speechToText.AddCustomCorpus(HandleAddCustomCorpus, OnFail, _createdCustomizationID, _createdCorpusName, true, corpusData);
             while (!_addCustomCorpusTested)
+            {
                 yield return null;
+            }
 
             //  Get custom corpus
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             _speechToText.GetCustomCorpus(HandleGetCustomCorpus, OnFail, _createdCustomizationID, _createdCorpusName);
             while (!_getCustomCorpusTested)
+            {
                 yield return null;
+            }
 
             //  Wait for customization
             Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
             while (!_isCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  Get custom words
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom words.");
             _speechToText.GetCustomWords(HandleGetCustomWords, OnFail, _createdCustomizationID);
             while (!_getCustomWordsTested)
+            {
                 yield return null;
+            }
 
             //  Add custom words from path
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom words in customization {0} using Words json path {1}", _createdCustomizationID, _customWordsFilePath);
             string customWords = File.ReadAllText(_customWordsFilePath);
             _speechToText.AddCustomWords(HandleAddCustomWordsFromPath, OnFail, _createdCustomizationID, customWords);
             while (!_addCustomWordsFromPathTested)
+            {
                 yield return null;
+            }
 
             //  Wait for customization
             _isCustomizationReady = false;
             Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
             while (!_isCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  Add custom words from object
             Words words = new Words();
@@ -249,19 +285,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to add custom words in customization {0} using Words object", _createdCustomizationID);
             _speechToText.AddCustomWords(HandleAddCustomWordsFromObject, OnFail, _createdCustomizationID, words);
             while (!_addCustomWordsFromObjectTested)
+            {
                 yield return null;
+            }
 
             //  Wait for customization
             _isCustomizationReady = false;
             Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
             while (!_isCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  Get custom word
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get custom word {1} in customization {0}", _createdCustomizationID, words.words[0].word);
             _speechToText.GetCustomWord(HandleGetCustomWord, OnFail, _createdCustomizationID, words.words[0].word);
             while (!_getCustomWordTested)
+            {
                 yield return null;
+            }
 
             //  Train customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train customization {0}", _createdCustomizationID);
@@ -273,7 +315,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _isCustomizationReady = false;
             Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
             while (!_isCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  Upgrade customization - not currently implemented in service
             //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to upgrade customization {0}", _createdCustomizationID);
@@ -285,138 +329,184 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
             _speechToText.DeleteCustomWord(HandleDeleteCustomWord, OnFail, _createdCustomizationID, words.words[2].word);
             while (!_deleteCustomWordTested)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             _readyToContinue = false;
             //  Delete custom corpus
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete custom corpus {1} in customization {0}", _createdCustomizationID, _createdCorpusName);
             _speechToText.DeleteCustomCorpus(HandleDeleteCustomCorpus, OnFail, _createdCustomizationID, _createdCorpusName);
             while (!_deleteCustomCorpusTested)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             _readyToContinue = false;
             //  Reset customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset customization {0}", _createdCustomizationID);
             _speechToText.ResetCustomization(HandleResetCustomization, OnFail, _createdCustomizationID);
             while (!_resetCustomizationTested)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             _readyToContinue = false;
             //  Delete customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete customization {0}", _createdCustomizationID);
             _speechToText.DeleteCustomization(HandleDeleteCustomization, OnFail, _createdCustomizationID);
             while (!_deleteCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  List acoustic customizations
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get acoustic customizations");
             _speechToText.GetCustomAcousticModels(HandleGetCustomAcousticModels, OnFail);
             while (!_getAcousticCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Create acoustic customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create acoustic customization");
             _speechToText.CreateAcousticCustomization(HandleCreateAcousticCustomization, OnFail, _createdAcousticModelName);
             while (!_createAcousticCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Get acoustic customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get acoustic customization {0}", _createdAcousticModelId);
             _speechToText.GetCustomAcousticModel(HandleGetCustomAcousticModel, OnFail, _createdAcousticModelId);
             while (!_getAcousticCustomizationTested)
+            {
                 yield return null;
+            }
 
             while (!_isAudioLoaded)
+            {
                 yield return null;
+            }
 
             //  Create acoustic resource
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to create audio resource {1} on {0}", _createdAcousticModelId, _acousticResourceName);
             string mimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
             _speechToText.AddAcousticResource(HandleAddAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName, mimeType, mimeType, true, _acousticResourceData);
             while (!_addAcousticResourcesTested)
+            {
                 yield return null;
+            }
 
             //  Wait for customization
             _isAcousticCustomizationReady = false;
             Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
             while (!_isAcousticCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  List acoustic resources
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resources {0}", _createdAcousticModelId);
             _speechToText.GetCustomAcousticResources(HandleGetCustomAcousticResources, OnFail, _createdAcousticModelId);
             while (!_getAcousticResourcesTested)
+            {
                 yield return null;
+            }
 
             //  Train acoustic customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to train acoustic customization {0}", _createdAcousticModelId);
             _speechToText.TrainAcousticCustomization(HandleTrainAcousticCustomization, OnFail, _createdAcousticModelId, null, true);
             while (!_trainAcousticCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Get acoustic resource
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to get audio resource {1} from {0}", _createdAcousticModelId, _acousticResourceName);
             _speechToText.GetCustomAcousticResource(HandleGetCustomAcousticResource, OnFail, _createdAcousticModelId, _acousticResourceName);
             while (!_getAcousticResourceTested)
+            {
                 yield return null;
+            }
 
             //  Wait for customization
             _isAcousticCustomizationReady = false;
             Runnable.Run(CheckAcousticCustomizationStatus(_createdAcousticModelId));
             while (!_isAcousticCustomizationReady)
+            {
                 yield return null;
+            }
 
             //  Delete acoustic resource
             DeleteAcousticResource();
             while (!_deleteAcousticResource)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic resource for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             //  Reset acoustic customization
             Log.Debug("ExampleSpeechToText.Examples()", "Attempting to reset acoustic customization {0}", _createdAcousticModelId);
             _speechToText.ResetAcousticCustomization(HandleResetAcousticCustomization, OnFail, _createdAcousticModelId);
             while (!_resetAcousticCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete acoustic customization for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             //  Delete acoustic customization
             DeleteAcousticCustomization();
             while (!_deleteAcousticCustomizationsTested)
+            {
                 yield return null;
+            }
 
             //  Delay
             Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying complete for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+            {
                 yield return null;
+            }
 
             Log.Debug("TestSpeechToText.RunTest()", "Speech to Text examples complete.");
 
@@ -659,9 +749,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Log.Debug("ExampleSpeechToText.OnCheckCustomizationStatus()", "Customization status: {0}", customization.status);
                 if (customization.status != "ready" && customization.status != "available")
+                {
                     Runnable.Run(CheckCustomizationStatus(customData["customizationID"].ToString(), 5f));
+                }
                 else
+                {
                     _isCustomizationReady = true;
+                }
             }
             else
             {
@@ -686,9 +780,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Log.Debug("ExampleSpeechToText.CheckAcousticCustomizationStatus()", "Acoustic customization status: {0}", acousticCustomization.status);
                 if (acousticCustomization.status != "ready" && acousticCustomization.status != "available")
+                {
                     Runnable.Run(CheckAcousticCustomizationStatus(customData["customizationID"].ToString(), 5f));
+                }
                 else
+                {
                     _isAcousticCustomizationReady = true;
+                }
             }
             else
             {

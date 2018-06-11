@@ -86,7 +86,9 @@ public class ExamplePersonalityInsights : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -102,14 +104,22 @@ public class ExamplePersonalityInsights : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_service.GetProfile(OnGetProfileJson, OnFail, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+        {
             Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
+        }
         while (!_getProfileJsonTested)
+        {
             yield return null;
+        }
 
         if (!_service.GetProfile(OnGetProfileText, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+        {
             Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
+        }
         while (!_getProfileTextTested)
+        {
             yield return null;
+        }
 
         Log.Debug("ExamplePersonalityInsights.Examples()", "Personality insights examples complete.");
     }

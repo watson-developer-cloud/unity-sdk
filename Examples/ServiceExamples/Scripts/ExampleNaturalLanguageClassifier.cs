@@ -103,7 +103,9 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -119,13 +121,19 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
     {
         //  Get classifiers
         if (!_service.GetClassifiers(OnGetClassifiers, OnFail))
+        {
             Log.Debug("ExampleNaturalLanguageClassifier.GetClassifiers()", "Failed to get classifiers!");
+        }
 
         while (!_getClassifiersTested)
+        {
             yield return null;
+        }
 
         if (_classifierIds.Count == 0)
+        {
             Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "There are no trained classifiers. Please train a classifier...");
+        }
 
         if (_classifierIds.Count > 0)
         {
@@ -133,41 +141,59 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
             foreach (string classifierId in _classifierIds)
             {
                 if (!_service.GetClassifier(OnGetClassifier, OnFail, classifierId))
+                {
                     Log.Debug("ExampleNaturalLanguageClassifier.GetClassifier()", "Failed to get classifier {0}!", classifierId);
+                }
             }
 
             while (!_getClassifierTested)
+            {
                 yield return null;
+            }
         }
 
         if (!_areAnyClassifiersAvailable && _classifierIds.Count > 0)
+        {
             Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "All classifiers are training...");
+        }
 
         //  Train classifier
 #if TRAIN_CLASSIFIER
         string dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/weather_data_train.csv";
         var trainingContent = File.ReadAllText(dataPath);
         if (!_service.TrainClassifier(OnTrainClassifier, OnFail, _classifierName + "/" + DateTime.Now.ToString(), "en", trainingContent))
+        {
             Log.Debug("ExampleNaturalLanguageClassifier.TrainClassifier()", "Failed to train clasifier!");
+        }
 
         while (!_trainClassifierTested)
+        {
             yield return null;
+        }
 #endif
 
 #if DELETE_TRAINED_CLASSIFIER
         if (!string.IsNullOrEmpty(_classifierToDelete))
+        {
             if (!_service.DeleteClassifer(OnDeleteTrainedClassifier, OnFail, _classifierToDelete))
+            {
                 Log.Debug("ExampleNaturalLanguageClassifier.DeleteClassifer()", "Failed to delete clasifier {0}!", _classifierToDelete);
+            }
+        }
 #endif
 
         //  Classify
         if (_areAnyClassifiersAvailable)
         {
             if (!_service.Classify(OnClassify, OnFail, _classifierId, _inputString))
+            {
                 Log.Debug("ExampleNaturalLanguageClassifier.Classify()", "Failed to classify!");
+            }
 
             while (!_classifyTested)
+            {
                 yield return null;
+            }
         }
 
         //  Classify Collection
@@ -189,10 +215,14 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         if (_areAnyClassifiersAvailable)
         {
             if (!_service.ClassifyCollection(OnClassifyCollection, OnFail, _classifierId, classifyCollectionInput))
+            {
                 Log.Debug("ExampleNaturalLanguageClassifier.ClassifyCollection()", "Failed to classify!");
+            }
 
             while (!_classifyCollectionTested)
+            {
                 yield return null;
+            }
         }
 
         Log.Debug("ExampleNaturalLanguageClassifier.Examples()", "Natural language classifier examples complete.");
@@ -203,7 +233,9 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         Log.Debug("ExampleNaturalLanguageClassifier.OnGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", customData["json"].ToString());
 
         foreach (Classifier classifier in classifiers.classifiers)
+        {
             _classifierIds.Add(classifier.classifier_id);
+        }
 
         _getClassifiersTested = true;
     }
@@ -237,7 +269,9 @@ public class ExampleNaturalLanguageClassifier : MonoBehaviour
         }
 
         if (classifier.classifier_id == _classifierIds[_classifierIds.Count - 1])
+        {
             _getClassifierTested = true;
+        }
     }
 
 #if DELETE_TRAINED_CLASSIFIER

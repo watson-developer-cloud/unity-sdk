@@ -83,7 +83,9 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -100,9 +102,13 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
     {
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to get models...");
         if (!_service.GetModels(OnGetModels, OnFail))
+        {
             Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
+        }
         while (!_getModelsTested)
+        {
             yield return null;
+        }
 
         Parameters parameters = new Parameters()
         {
@@ -128,9 +134,13 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to analyze...");
         if (!_service.Analyze(OnAnalyze, OnFail, parameters))
+        {
             Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
+        }
         while (!_analyzeTested)
+        {
             yield return null;
+        }
 
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "Natural language understanding examples complete.");
     }
