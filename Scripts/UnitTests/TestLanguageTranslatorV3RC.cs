@@ -81,7 +81,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-iam-staging")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-sdk-rc-wdc")[0].Credentials;
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
