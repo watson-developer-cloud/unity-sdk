@@ -26,7 +26,7 @@ using System;
 using FullSerializer;
 using System.IO;
 
-namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
+namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
 {
     /// <summary>
     /// This class wraps the Language Translator service.
@@ -62,19 +62,29 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
             }
         }
+
+        private string _versionDate;
+        /// <summary>
+        /// Gets and sets the versionDate of the service.
+        /// </summary>
+        public string VersionDate
+        {
+            get { return _versionDate; }
+            set { _versionDate = value; }
+        }
         #endregion
 
         #region Private Data
-        private const string ServiceId = "LanguageTranslatorV1";
+        private const string ServiceId = "LanguageTranslatorV3";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/language-translator/api";
         #endregion
 
         #region Constructor
-        public LanguageTranslator(Credentials credentials)
+        public LanguageTranslator(string versionDate, Credentials credentials)
         {
-            Log.Warning("LanguageTranslatorV2", "Language Translator v2 is being deprecated. Please use Language Translator V3.");
+            VersionDate = versionDate;
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
@@ -171,11 +181,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (string.IsNullOrEmpty(json))
                 throw new ArgumentNullException("json");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/translate");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/translate");
             if (connector == null)
                 return false;
 
             TranslateReq req = new TranslateReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -292,11 +303,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
             if (connector == null)
                 return false;
 
             GetModelsReq req = new GetModelsReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -394,11 +406,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (string.IsNullOrEmpty(model_id))
                 throw new ArgumentNullException("model_id");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models/");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models/");
             if (connector == null)
                 return false;
 
             GetModelReq req = new GetModelReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -505,6 +518,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 throw new ArgumentNullException("Either a forced glossary, parallel corpus or monolingual corpus is required to create a custom model.");
             
             CreateModelRequest req = new CreateModelRequest();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -567,7 +581,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (monolingualCorpusData != null)
                 req.Forms["monolingual_corpus"] = new RESTConnector.Form(monolingualCorpusData);
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
             if (connector == null)
                 return false;
 
@@ -647,11 +661,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (string.IsNullOrEmpty(model_id))
                 throw new ArgumentNullException("model_id");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/models/");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models/");
             if (connector == null)
                 return false;
 
             DeleteModelReq req = new DeleteModelReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -740,11 +755,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/identifiable_languages");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identifiable_languages");
             if (connector == null)
                 return false;
 
             GetLanguagesReq req = new GetLanguagesReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -835,11 +851,12 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("text");
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v2/identify");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identify");
             if (connector == null)
                 return false;
 
             IdentifyReq req = new IdentifyReq();
+            req.Parameters["version"] = VersionDate;
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;

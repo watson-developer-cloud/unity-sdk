@@ -23,7 +23,7 @@ using System.Collections;
 using IBM.Watson.DeveloperCloud.Connection;
 using System.Collections.Generic;
 
-public class ExampleLanguageTranslator : MonoBehaviour
+public class ExampleLanguageTranslatorV2 : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [Space(10)]
