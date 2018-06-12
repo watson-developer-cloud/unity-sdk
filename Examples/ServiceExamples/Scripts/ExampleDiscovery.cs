@@ -114,7 +114,9 @@ public class ExampleDiscovery : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -132,159 +134,241 @@ public class ExampleDiscovery : MonoBehaviour
         //  Get Environments
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
         if (!_service.GetEnvironments(OnGetEnvironments, OnFail))
+        {
             Log.Debug("TestDiscovery.GetEnvironments()", "Failed to get environments");
+        }
         while (!_getEnvironmentsTested)
+        {
             yield return null;
+        }
 
         //  Wait for environment to be ready
         Runnable.Run(CheckEnvironmentState(0f));
         while (!_isEnvironmentReady)
+        {
             yield return null;
+        }
 
         //  GetEnvironment
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get environment");
         if (!_service.GetEnvironment(OnGetEnvironment, OnFail, _environmentId))
+        {
             Log.Debug("TestDiscovery.GetEnvironment()", "Failed to get environment");
+        }
         while (!_getEnvironmentTested)
+        {
             yield return null;
+        }
 
         //  Get Configurations
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get configurations");
         if (!_service.GetConfigurations(OnGetConfigurations, OnFail, _environmentId))
+        {
             Log.Debug("TestDiscovery.GetConfigurations()", "Failed to get configurations");
+        }
         while (!_getConfigurationsTested)
+        {
             yield return null;
+        }
 
         //  Add Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add configuration");
         if (!_service.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", GUID.Generate().ToString())))
+        {
             Log.Debug("TestDiscovery.AddConfiguration()", "Failed to add configuration");
+        }
         while (!_addConfigurationTested)
+        {
             yield return null;
+        }
 
         //  Get Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get configuration");
         if (!_service.GetConfiguration(OnGetConfiguration, OnFail, _environmentId, _environmentId))
+        {
             Log.Debug("TestDiscovery.GetConfiguration()", "Failed to get configuration");
+        }
         while (!_getConfigurationTested)
+        {
             yield return null;
+        }
 
         //  Preview Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to preview configuration");
         if (!_service.PreviewConfiguration(OnPreviewConfiguration, OnFail, _environmentId, _environmentId, null, _filePathToIngest, _metadata))
+        {
             Log.Debug("TestDiscovery.PreviewConfiguration()", "Failed to preview configuration");
+        }
         while (!_previewConfigurationTested)
+        {
             yield return null;
+        }
 
         //  Get Collections
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get collections");
         if (!_service.GetCollections(OnGetCollections, OnFail, _environmentId))
+        {
             Log.Debug("TestDiscovery.GetCollections()", "Failed to get collections");
+        }
         while (!_getCollectionsTested)
+        {
             yield return null;
+        }
 
         //  Add Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
         if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + GUID.Generate().ToString(), _createdCollectionDescription, _environmentId))
+        {
             Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
+        }
         while (!_addCollectionTested)
+        {
             yield return null;
+        }
 
         //  Get Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get collection");
         if (!_service.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionID))
+        {
             Log.Debug("TestDiscovery.GetCollection()", "Failed to get collection");
+        }
         while (!_getCollectionTested)
+        {
             yield return null;
+        }
 
         if (!_service.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionID))
+        {
             Log.Debug("TestDiscovery.GetFields()", "Failed to get fields");
+        }
         while (!_getFieldsTested)
+        {
             yield return null;
+        }
 
         //  Add Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add document");
         if (!_service.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionID, _documentFilePath, _environmentId, null))
+        {
             Log.Debug("TestDiscovery.AddDocument()", "Failed to add document");
+        }
         while (!_addDocumentTested)
+        {
             yield return null;
+        }
 
         //  Get Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get document");
         if (!_service.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+        {
             Log.Debug("TestDiscovery.GetDocument()", "Failed to get document");
+        }
         while (!_getDocumentTested)
+        {
             yield return null;
+        }
 
         //  Update Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to update document");
         if (!_service.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID, _documentFilePath, _environmentId, null))
+        {
             Log.Debug("TestDiscovery.UpdateDocument()", "Failed to update document");
+        }
         while (!_updateDocumentTested)
+        {
             yield return null;
+        }
 
         //  Query
         Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
         if (!_service.Query(OnQuery, OnFail, _environmentId, _createdCollectionID, null, _query, null, 10, null, 0))
+        {
             Log.Debug("TestDiscovery.Query()", "Failed to query");
+        }
         while (!_queryTested)
+        {
             yield return null;
+        }
 
         //  Delete Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
         if (!_service.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+        {
             Log.Debug("TestDiscovery.DeleteDocument()", "Failed to delete document");
+        }
         while (!_deleteDocumentTested)
+        {
             yield return null;
+        }
 
         //  Delay
         Log.Debug("TestDiscovery.RunTest()", "Delaying delete collection for 10 sec");
         Runnable.Run(Delay(_waitTime));
         while (!_readyToContinue)
+        {
             yield return null;
+        }
 
         _isEnvironmentReady = false;
         Runnable.Run(CheckEnvironmentState(_waitTime));
         while (!_isEnvironmentReady)
+        {
             yield return null;
+        }
 
         _readyToContinue = false;
         //  Delete Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionID);
         if (!_service.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionID))
+        {
             Log.Debug("TestDiscovery.DeleteCollection()", "Failed to delete collection");
+        }
         while (!_deleteCollectionTested)
+        {
             yield return null;
+        }
 
         //  Delay
         Log.Debug("TestDiscovery.RunTest()", "Delaying delete configuration for 10 sec");
         Runnable.Run(Delay(_waitTime));
         while (!_readyToContinue)
+        {
             yield return null;
+        }
 
         _isEnvironmentReady = false;
         Runnable.Run(CheckEnvironmentState(_waitTime));
         while (!_isEnvironmentReady)
+        {
             yield return null;
+        }
 
         _readyToContinue = false;
         //  Delete Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to delete configuration {0}", _environmentId);
         if (!_service.DeleteConfiguration(OnDeleteConfiguration, OnFail, _environmentId, _environmentId))
+        {
             Log.Debug("TestDiscovery.DeleteConfiguration()", "Failed to delete configuration");
+        }
         while (!_deleteConfigurationTested)
+        {
             yield return null;
+        }
 
         //  Delay
         Log.Debug("TestDiscovery.RunTest()", "Delaying delete environment for 10 sec");
         Runnable.Run(Delay(_waitTime));
         while (!_readyToContinue)
+        {
             yield return null;
+        }
 
         _isEnvironmentReady = false;
         Runnable.Run(CheckEnvironmentState(_waitTime));
         while (!_isEnvironmentReady)
+        {
             yield return null;
+        }
 
         Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
     }
@@ -311,7 +395,9 @@ public class ExampleDiscovery : MonoBehaviour
         Log.Debug("TestDiscovery.HandleCheckEnvironmentState()", "Environment {0} is {1}", resp.environment_id, resp.status);
 
         if (resp.status.ToLower() == "active")
+        {
             _isEnvironmentReady = true;
+        }
         else
         {
             Runnable.Run(CheckEnvironmentState(10f));

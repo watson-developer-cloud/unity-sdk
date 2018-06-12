@@ -23,52 +23,52 @@ using IBM.Watson.DeveloperCloud.Logging;
 
 namespace IBM.Watson.DeveloperCloud.Editor
 {
-  /// <summary>
-  /// This class is executed from batch mode during Travis continuous integration.
-  /// </summary>
-  public class TravisIntegrationTests : MonoBehaviour
-  {
-    public static void RunTests()
+    /// <summary>
+    /// This class is executed from batch mode during Travis continuous integration.
+    /// </summary>
+    public class TravisIntegrationTests : MonoBehaviour
     {
-      Log.Debug("TravisIntegrationTests.RunTests()", "***** Running Integration tests!");
+        public static void RunTests()
+        {
+            Log.Debug("TravisIntegrationTests.RunTests()", "***** Running Integration tests!");
 
 #if UNITY_EDITOR
-      Runnable.EnableRunnableInEditor();
+            Runnable.EnableRunnableInEditor();
 #endif
-      string ProjectToTest = "";
+            string ProjectToTest = "";
 #if !NETFX_CORE
-      string[] args = Environment.GetCommandLineArgs();
-      for (int i = 0; i < args.Length; ++i)
-      {
-        if (args[i] == "-packageOptions" && (i + 1) < args.Length)
-        {
-          string[] options = args[i + 1].Split(',');
-          foreach (string option in options)
-          {
-            if (string.IsNullOrEmpty(option))
-              continue;
-
-            string[] kv = option.Split('=');
-            if (kv[0] == "ProjectName")
+            string[] args = Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; ++i)
             {
-              ProjectToTest = kv.Length > 1 ? kv[1] : "";
-              Log.Status("RunUnitTest", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
-              break;
+                if (args[i] == "-packageOptions" && (i + 1) < args.Length)
+                {
+                    string[] options = args[i + 1].Split(',');
+                    foreach (string option in options)
+                    {
+                        if (string.IsNullOrEmpty(option))
+                            continue;
+
+                        string[] kv = option.Split('=');
+                        if (kv[0] == "ProjectName")
+                        {
+                            ProjectToTest = kv.Length > 1 ? kv[1] : "";
+                            Log.Status("RunUnitTest", "AutoLunchOptions ProjectToTest:{0}", ProjectToTest);
+                            break;
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
 #endif
 
-      UnitTestManager.ProjectToTest = ProjectToTest;
-      UnitTestManager instance = UnitTestManager.Instance;
-      instance.QuitOnTestsComplete = true;
-      instance.OnTestCompleteCallback = OnTravisIntegrationTestsComplete;
-      instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
+            UnitTestManager.ProjectToTest = ProjectToTest;
+            UnitTestManager instance = UnitTestManager.Instance;
+            instance.QuitOnTestsComplete = true;
+            instance.OnTestCompleteCallback = OnTravisIntegrationTestsComplete;
+            instance.QueueTests(Utility.FindAllDerivedTypes(typeof(UnitTest)), true);
+        }
+        static void OnTravisIntegrationTestsComplete()
+        {
+            Log.Debug("TravisIntegrationTests.OnTravisIntegrationTestsComplete()", " ***** Integration tests complete!");
+        }
     }
-    static void OnTravisIntegrationTestsComplete()
-    {
-      Log.Debug("TravisIntegrationTests.OnTravisIntegrationTestsComplete()", " ***** Integration tests complete!");
-    }
-  }
 }

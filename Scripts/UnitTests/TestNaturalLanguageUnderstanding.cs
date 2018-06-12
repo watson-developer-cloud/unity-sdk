@@ -51,9 +51,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -61,13 +65,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("natural-language-understanding-sdk")[0].Credentials;
@@ -89,9 +97,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "attempting to get models...");
             if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
+            {
                 Log.Debug("TestNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
+            }
             while (!_getModelsTested)
+            {
                 yield return null;
+            }
 
             Parameters parameters = new Parameters()
             {
@@ -117,9 +129,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "attempting to analyze...");
             if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, parameters))
+            {
                 Log.Debug("TestNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
+            }
             while (!_analyzeTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("TestNaturalLanguageUnderstanding.RunTests()", "Natural language understanding examples complete.");
 

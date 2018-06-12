@@ -89,7 +89,9 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {

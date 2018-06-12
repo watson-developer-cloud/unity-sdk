@@ -122,9 +122,13 @@ namespace Assets.Watson.Scripts.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -132,13 +136,17 @@ namespace Assets.Watson.Scripts.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk-iam")[0].Credentials;
@@ -154,7 +162,9 @@ namespace Assets.Watson.Scripts.UnitTests
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
@@ -162,7 +172,9 @@ namespace Assets.Watson.Scripts.UnitTests
             //  List Workspaces
             _service.ListWorkspaces(OnListWorkspaces, OnFail);
             while (!_listWorkspacesTested)
+            {
                 yield return null;
+            }
             //  Create Workspace
             CreateWorkspace workspace = new CreateWorkspace()
             {
@@ -173,11 +185,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateWorkspace(OnCreateWorkspace, OnFail, workspace);
             while (!_createWorkspaceTested)
+            {
                 yield return null;
+            }
             //  Get Workspace
             _service.GetWorkspace(OnGetWorkspace, OnFail, _createdWorkspaceId);
             while (!_getWorkspaceTested)
+            {
                 yield return null;
+            }
             //  Update Workspace
             UpdateWorkspace updateWorkspace = new UpdateWorkspace()
             {
@@ -187,7 +203,9 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateWorkspace(OnUpdateWorkspace, OnFail, _createdWorkspaceId, updateWorkspace);
             while (!_updateWorkspaceTested)
+            {
                 yield return null;
+            }
 
             //  Message with customerID
             //  Create customData object
@@ -206,7 +224,9 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest, null, customData);
             while (!_messageTested)
+            {
                 yield return null;
+            }
             _messageTested = false;
 
             input["text"] = _conversationString0;
@@ -217,7 +237,9 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest0);
             while (!_messageTested)
+            {
                 yield return null;
+            }
             _messageTested = false;
 
             input["text"] = _conversationString1;
@@ -228,7 +250,9 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest1);
             while (!_messageTested)
+            {
                 yield return null;
+            }
             _messageTested = false;
 
             input["text"] = _conversationString2;
@@ -239,12 +263,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.Message(OnMessage, OnFail, _workspaceId, messageRequest2);
             while (!_messageTested)
+            {
                 yield return null;
+            }
 
             //  List Intents
             _service.ListIntents(OnListIntents, OnFail, _createdWorkspaceId);
             while (!_listIntentsTested)
+            {
                 yield return null;
+            }
             //  Create Intent
             CreateIntent createIntent = new CreateIntent()
             {
@@ -253,11 +281,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateIntent(OnCreateIntent, OnFail, _createdWorkspaceId, createIntent);
             while (!_createIntentTested)
+            {
                 yield return null;
+            }
             //  Get Intent
             _service.GetIntent(OnGetIntent, OnFail, _createdWorkspaceId, _createdIntent);
             while (!_getIntentTested)
+            {
                 yield return null;
+            }
             //  Update Intents
             string updatedIntent = _createdIntent + "-updated";
             string updatedIntentDescription = _createdIntentDescription + "-updated";
@@ -268,12 +300,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateIntent(OnUpdateIntent, OnFail, _createdWorkspaceId, _createdIntent, updateIntent);
             while (!_updateIntentTested)
+            {
                 yield return null;
+            }
 
             //  List Examples
             _service.ListExamples(OnListExamples, OnFail, _createdWorkspaceId, updatedIntent);
             while (!_listExamplesTested)
+            {
                 yield return null;
+            }
             //  Create Examples
             CreateExample createExample = new CreateExample()
             {
@@ -281,11 +317,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateExample(OnCreateExample, OnFail, _createdWorkspaceId, updatedIntent, createExample);
             while (!_createExampleTested)
+            {
                 yield return null;
+            }
             //  Get Example
             _service.GetExample(OnGetExample, OnFail, _createdWorkspaceId, updatedIntent, _createdExample);
             while (!_getExampleTested)
+            {
                 yield return null;
+            }
             //  Update Examples
             string updatedExample = _createdExample + "-updated";
             UpdateExample updateExample = new UpdateExample()
@@ -294,12 +334,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateExample(OnUpdateExample, OnFail, _createdWorkspaceId, updatedIntent, _createdExample, updateExample);
             while (!_updateExampleTested)
+            {
                 yield return null;
+            }
 
             //  List Entities
             _service.ListEntities(OnListEntities, OnFail, _createdWorkspaceId);
             while (!_listEntitiesTested)
+            {
                 yield return null;
+            }
             //  Create Entities
             CreateEntity entity = new CreateEntity()
             {
@@ -308,11 +352,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateEntity(OnCreateEntity, OnFail, _createdWorkspaceId, entity);
             while (!_createEntityTested)
+            {
                 yield return null;
+            }
             //  Get Entity
             _service.GetEntity(OnGetEntity, OnFail, _createdWorkspaceId, _createdEntity);
             while (!_getEntityTested)
+            {
                 yield return null;
+            }
             //  Update Entities
             string updatedEntity = _createdEntity + "-updated";
             string updatedEntityDescription = _createdEntityDescription + "-updated";
@@ -323,12 +371,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateEntity(OnUpdateEntity, OnFail, _createdWorkspaceId, _createdEntity, updateEntity);
             while (!_updateEntityTested)
+            {
                 yield return null;
+            }
 
             //  List Values
             _service.ListValues(OnListValues, OnFail, _createdWorkspaceId, updatedEntity);
             while (!_listValuesTested)
+            {
                 yield return null;
+            }
             //  Create Values
             CreateValue value = new CreateValue()
             {
@@ -336,11 +388,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateValue(OnCreateValue, OnFail, _createdWorkspaceId, updatedEntity, value);
             while (!_createValueTested)
+            {
                 yield return null;
+            }
             //  Get Value
             _service.GetValue(OnGetValue, OnFail, _createdWorkspaceId, updatedEntity, _createdValue);
             while (!_getValueTested)
+            {
                 yield return null;
+            }
             //  Update Values
             string updatedValue = _createdValue + "-updated";
             UpdateValue updateValue = new UpdateValue()
@@ -349,12 +405,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateValue(OnUpdateValue, OnFail, _createdWorkspaceId, updatedEntity, _createdValue, updateValue);
             while (!_updateValueTested)
+            {
                 yield return null;
+            }
 
             //  List Synonyms
             _service.ListSynonyms(OnListSynonyms, OnFail, _createdWorkspaceId, updatedEntity, updatedValue);
             while (!_listSynonymsTested)
+            {
                 yield return null;
+            }
             //  Create Synonyms
             CreateSynonym synonym = new CreateSynonym()
             {
@@ -362,11 +422,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateSynonym(OnCreateSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, synonym);
             while (!_createSynonymTested)
+            {
                 yield return null;
+            }
             //  Get Synonym
             _service.GetSynonym(OnGetSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, _createdSynonym);
             while (!_getSynonymTested)
+            {
                 yield return null;
+            }
             //  Update Synonyms
             string updatedSynonym = _createdSynonym + "-updated";
             UpdateSynonym updateSynonym = new UpdateSynonym()
@@ -375,12 +439,16 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateSynonym(OnUpdateSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, _createdSynonym, updateSynonym);
             while (!_updateSynonymTested)
+            {
                 yield return null;
+            }
 
             //  List Dialog Nodes
             _service.ListDialogNodes(OnListDialogNodes, OnFail, _createdWorkspaceId);
             while (!_listDialogNodesTested)
+            {
                 yield return null;
+            }
             //  Create Dialog Nodes
             CreateDialogNode createDialogNode = new CreateDialogNode()
             {
@@ -389,11 +457,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateDialogNode(OnCreateDialogNode, OnFail, _createdWorkspaceId, createDialogNode);
             while (!_createDialogNodeTested)
+            {
                 yield return null;
+            }
             //  Get Dialog Node
             _service.GetDialogNode(OnGetDialogNode, OnFail, _createdWorkspaceId, _dialogNodeName);
             while (!_getDialogNodeTested)
+            {
                 yield return null;
+            }
             //  Update Dialog Nodes
             string updatedDialogNodeName = _dialogNodeName + "_updated";
             string updatedDialogNodeDescription = _dialogNodeDesc + "_updated";
@@ -404,22 +476,30 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateDialogNode(OnUpdateDialogNode, OnFail, _createdWorkspaceId, _dialogNodeName, updateDialogNode);
             while (!_updateDialogNodeTested)
+            {
                 yield return null;
+            }
 
             //  List Logs In Workspace
             _service.ListLogs(OnListLogs, OnFail, _createdWorkspaceId);
             while (!_listLogsInWorkspaceTested)
+            {
                 yield return null;
+            }
             //  List All Logs
             var filter = "(language::en,request.context.metadata.deployment::deployment_1)";
             _service.ListAllLogs(OnListAllLogs, OnFail, filter);
             while (!_listAllLogsTested)
+            {
                 yield return null;
+            }
 
             //  List Counterexamples
             _service.ListCounterexamples(OnListCounterexamples, OnFail, _createdWorkspaceId);
             while (!_listCounterexamplesTested)
+            {
                 yield return null;
+            }
             //  Create Counterexamples
             CreateCounterexample example = new CreateCounterexample()
             {
@@ -427,11 +507,15 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.CreateCounterexample(OnCreateCounterexample, OnFail, _createdWorkspaceId, example);
             while (!_createCounterexampleTested)
+            {
                 yield return null;
+            }
             //  Get Counterexample
             _service.GetCounterexample(OnGetCounterexample, OnFail, _createdWorkspaceId, _createdCounterExampleText);
             while (!_getCounterexampleTested)
+            {
                 yield return null;
+            }
             //  Update Counterexamples
             string updatedCounterExampleText = _createdCounterExampleText + "-updated";
             UpdateCounterexample updateCounterExample = new UpdateCounterexample()
@@ -440,44 +524,64 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateCounterexample(OnUpdateCounterexample, OnFail, _createdWorkspaceId, _createdCounterExampleText, updateCounterExample);
             while (!_updateCounterexampleTested)
+            {
                 yield return null;
+            }
 
             //  Delete Counterexample
             _service.DeleteCounterexample(OnDeleteCounterexample, OnFail, _createdWorkspaceId, updatedCounterExampleText);
             while (!_deleteCounterexampleTested)
+            {
                 yield return null;
+            }
             //  Delete Dialog Node
             _service.DeleteDialogNode(OnDeleteDialogNode, OnFail, _createdWorkspaceId, updatedDialogNodeName);
             while (!_deleteDialogNodeTested)
+            {
                 yield return null;
+            }
             //  Delete Synonym
             _service.DeleteSynonym(OnDeleteSynonym, OnFail, _createdWorkspaceId, updatedEntity, updatedValue, updatedSynonym);
             while (!_deleteSynonymTested)
+            {
                 yield return null;
+            }
             //  Delete Value
             _service.DeleteValue(OnDeleteValue, OnFail, _createdWorkspaceId, updatedEntity, updatedValue);
             while (!_deleteValueTested)
+            {
                 yield return null;
+            }
             //  Delete Entity
             _service.DeleteEntity(OnDeleteEntity, OnFail, _createdWorkspaceId, updatedEntity);
             while (!_deleteEntityTested)
+            {
                 yield return null;
+            }
             //  Delete Example
             _service.DeleteExample(OnDeleteExample, OnFail, _createdWorkspaceId, updatedIntent, updatedExample);
             while (!_deleteExampleTested)
+            {
                 yield return null;
+            }
             //  Delete Intent
             _service.DeleteIntent(OnDeleteIntent, OnFail, _createdWorkspaceId, updatedIntent);
             while (!_deleteIntentTested)
+            {
                 yield return null;
+            }
             //  Delete Workspace
             _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, _createdWorkspaceId);
             while (!_deleteWorkspaceTested)
+            {
                 yield return null;
+            }
             //  Delete User Data
             _service.DeleteUserData(OnDeleteUserData, OnFail, _unitySdkTestCustomerID);
             while (!_deleteUserDataTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("TestAssistant.RunTest()", "Assistant examples complete.");
 
@@ -726,23 +830,31 @@ namespace Assets.Watson.Scripts.UnitTests
             fsData fsdata = null;
             fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsdata to MessageResponse
             MessageResponse messageResponse = new MessageResponse();
             object obj = messageResponse;
             r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set context for next round of messaging
             object tempContext = null;
             (response as Dictionary<string, object>).TryGetValue("context", out tempContext);
 
             if (tempContext != null)
+            {
                 _context = tempContext as Dictionary<string, object>;
+            }
             else
+            {
                 Log.Debug("ExampleConversation.OnMessage()", "Failed to get context");
+            }
 
             //  Get intent
             object tempIntentsObj = null;
@@ -789,9 +901,13 @@ namespace Assets.Watson.Scripts.UnitTests
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
             if (customData["json"] != null)
+            {
                 Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
-            if(error != null)
+            }
+            if (error != null)
+            {
                 Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
+            }
         }
     }
 #endif

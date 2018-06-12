@@ -77,9 +77,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -87,13 +91,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-iam-sdk")[0].Credentials;
@@ -109,7 +117,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
 
             _visualRecognition = new VisualRecognition(credentials);
             _visualRecognition.VersionDate = _visualRecognitionVersionDate;
@@ -117,10 +127,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //          Get all classifiers
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get all classifiers");
             if (!_visualRecognition.GetClassifiersBrief(OnGetClassifiers, OnFail))
+            {
                 Log.Debug("TestVisualRecognition.GetClassifiers()", "Failed to get all classifiers!");
+            }
 
             while (!_getClassifiersTested)
+            {
                 yield return null;
+            }
 
 #if TRAIN_CLASSIFIER
             _isClassifierReady = false;
@@ -131,27 +145,39 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Dictionary<string, string> positiveExamples = new Dictionary<string, string>();
             positiveExamples.Add("giraffe", positiveExamplesPath);
             if (!_visualRecognition.TrainClassifier(OnTrainClassifier, OnFail, "unity-test-classifier-ok-to-delete", positiveExamples, negativeExamplesPath))
+            {
                 Log.Debug("TestVisualRecognition.TrainClassifier()", "Failed to train classifier!");
+            }
 
             while (!_trainClassifierTested)
+            {
                 yield return null;
+            }
 
             //          Find classifier by ID
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to find classifier by ID");
             if (!_visualRecognition.GetClassifier(OnGetClassifier, OnFail, _classifierID))
+            {
                 Log.Debug("TestVisualRecognition.GetClassifier()", "Failed to get classifier!");
+            }
 
             while (!_getClassifierTested)
+            {
                 yield return null;
+            }
 #endif
 
             //  Classify get
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get classify via URL");
             if (!_visualRecognition.Classify(_imageURL, OnClassifyGet, OnFail))
+            {
                 Log.Debug("TestVisualRecognition.Classify()", "Classify image failed!");
+            }
 
             while (!_classifyGetTested)
+            {
                 yield return null;
+            }
 
             //  Classify post image
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to classify via image on file system");
@@ -159,47 +185,69 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             string[] owners = { "IBM", "me" };
             string[] classifierIDs = { "default", _classifierID };
             if (!_visualRecognition.Classify(OnClassifyPost, OnFail, imagesPath, owners, classifierIDs, 0.5f))
+            {
                 Log.Debug("TestVisualRecognition.Classify()", "Classify image failed!");
+            }
 
             while (!_classifyPostTested)
+            {
                 yield return null;
+            }
 
             //  Detect faces get
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via URL");
             if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail))
+            {
                 Log.Debug("TestVisualRecognition.DetectFaces()", "Detect faces failed!");
+            }
 
             while (!_detectFacesGetTested)
+            {
                 yield return null;
+            }
 
             //  Detect faces post image
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via image");
             string faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
             if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath))
+            {
                 Log.Debug("TestVisualRecognition.DetectFaces()", "Detect faces failed!");
+            }
 
             while (!_detectFacesPostTested)
+            {
                 yield return null;
+            }
 
 #if DELETE_TRAINED_CLASSIFIER
             Runnable.Run(IsClassifierReady(_classifierToDelete));
             while (!_isClassifierReady)
+            {
                 yield return null;
+            }
 
             //  Download Core ML Model
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to get Core ML Model");
             if (!_visualRecognition.GetCoreMLModel(OnGetCoreMLModel, OnFail, _classifierID))
+            {
                 Log.Debug("TestVisualRecognition.GetCoreMLModel()", "Failed to get core ml model!");
+            }
             while (!_getCoreMLModelTested)
+            {
                 yield return null;
+            }
 
             //  Delete classifier by ID
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to delete classifier");
             if (!_visualRecognition.DeleteClassifier(OnDeleteClassifier, OnFail, _classifierToDelete))
+            {
                 Log.Debug("TestVisualRecognition.DeleteClassifier()", "Failed to delete classifier!");
+            }
 
             while (!_deleteClassifierTested)
+            {
                 yield return null;
+            }
 #endif
 
             Log.Debug("TestVisualRecognition.RunTest()", "Visual Recogition tests complete");
@@ -296,7 +344,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Dictionary<string, object> customData = new Dictionary<string, object>();
             customData.Add("classifierId", classifierId);
             if (!_visualRecognition.GetClassifier(OnCheckIfClassifierIsReady, OnFailCheckingIfClassifierIsReady, classifierId))
+            {
                 IsClassifierReady(classifierId);
+            }
         }
 
         private void OnCheckIfClassifierIsReady(ClassifierVerbose response, Dictionary<string, object> customData)
@@ -309,7 +359,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
             else
             {
-
                 Runnable.Run(IsClassifierReady(response.classifier_id));
             }
         }

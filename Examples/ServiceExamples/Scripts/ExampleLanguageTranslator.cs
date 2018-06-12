@@ -95,7 +95,9 @@ public class ExampleLanguageTranslator : MonoBehaviour
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
+            {
                 yield return null;
+            }
         }
         else
         {
@@ -110,39 +112,67 @@ public class ExampleLanguageTranslator : MonoBehaviour
     private IEnumerator Examples()
     {
         if (!_service.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es"))
+        {
             Log.Debug("ExampleLanguageTranslator.GetTranslation()", "Failed to translate.");
+        }
         while (!_getTranslationTested)
+        {
             yield return null;
+        }
 
         if (!_service.GetModels(OnGetModels, OnFail))
+        {
             Log.Debug("ExampleLanguageTranslator.GetModels()", "Failed to get models.");
+        }
         while (!_getModelsTested)
+        {
             yield return null;
+        }
 
         if (!_service.CreateModel(OnCreateModel, OnFail, _baseModelName, _customModelName, _forcedGlossaryFilePath))
+        {
             Log.Debug("ExampleLanguageTranslator.CreateModel()", "Failed to create model.");
+        }
         while (!_createModelTested)
+        {
             yield return null;
+        }
 
         if (!_service.GetModel(OnGetModel, OnFail, _customLanguageModelId))
+        {
             Log.Debug("ExampleLanguageTranslator.GetModel()", "Failed to get model.");
+        }
         while (!_getModelTested)
+        {
             yield return null;
+        }
 
         if (!_service.DeleteModel(OnDeleteModel, OnFail, _customLanguageModelId))
+        {
             Log.Debug("ExampleLanguageTranslator.DeleteModel()", "Failed to delete model.");
+        }
         while (!_deleteModelTested)
+        {
             yield return null;
+        }
 
         if (!_service.Identify(OnIdentify, OnFail, _pharseToIdentify))
+        {
             Log.Debug("ExampleLanguageTranslator.Identify()", "Failed to identify language.");
+        }
         while (!_identifyTested)
+        {
             yield return null;
+        }
 
         if (!_service.GetLanguages(OnGetLanguages, OnFail))
+        {
             Log.Debug("ExampleLanguageTranslator.GetLanguages()", "Failed to get languages.");
+        }
         while (!_getLanguagesTested)
+        {
             yield return null;
+        }
 
         Log.Debug("ExampleLanguageTranslator.Examples()", "Language Translator examples complete.");
     }

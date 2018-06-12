@@ -52,9 +52,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
             if (File.Exists(credentialsFilepath))
+            {
                 result = File.ReadAllText(credentialsFilepath);
+            }
             else
+            {
                 yield break;
+            }
 
             //  Add in a parent object because Unity does not like to deserialize root level collection types.
             result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
@@ -62,13 +66,17 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Convert json to fsResult
             fsResult r = fsJsonParser.Parse(result, out data);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Convert fsResult to VcapCredentials
             object obj = vcapCredentials;
             r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
             if (!r.Succeeded)
+            {
                 throw new WatsonException(r.FormattedMessages);
+            }
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("tone-analyzer-sdk")[0].Credentials;
@@ -90,10 +98,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Analyze tone
             if (!_toneAnalyzer.GetToneAnalyze(OnGetToneAnalyze, OnFail, _stringToTestTone))
+            {
                 Log.Debug("ExampleToneAnalyzer.GetToneAnalyze()", "Failed to analyze!");
+            }
 
             while (!_analyzeToneTested)
+            {
                 yield return null;
+            }
 
             Log.Debug("ExampleToneAnalyzer.RunTest()", "Tone analyzer examples complete.");
 
