@@ -26,17 +26,30 @@ using System.Collections.Generic;
 public class ExamplePersonalityInsights : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/personality-insights/api\"")]
     [SerializeField]
-    private string _username;
-    [SerializeField]
-    private string _password;
-    [SerializeField]
-    private string _url;
+    private string _serviceUrl;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
     [SerializeField]
     private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
+    [SerializeField]
+    private string _username;
+    [Tooltip("The authentication password.")]
+    [SerializeField]
+    private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
+    [SerializeField]
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
-    private PersonalityInsights _personalityInsights;
+    private PersonalityInsights _service;
 
     private string _testString = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
     private string _dataPath;
@@ -47,26 +60,53 @@ public class ExamplePersonalityInsights : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-
-        //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
-
-        _personalityInsights = new PersonalityInsights(credentials);
-        _personalityInsights.VersionDate = _versionDate;
-
         _dataPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/personalityInsights.json";
+        Runnable.Run(CreateService());
+    }
+
+    private IEnumerator CreateService()
+    {
+        //  Create credential and instantiate service
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
+
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new PersonalityInsights(credentials);
+        _service.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }
 
     private IEnumerator Examples()
     {
-        if (!_personalityInsights.GetProfile(OnGetProfileJson, OnFail, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+        if (!_service.GetProfile(OnGetProfileJson, OnFail, _dataPath, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
             Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
         while (!_getProfileJsonTested)
             yield return null;
 
-        if (!_personalityInsights.GetProfile(OnGetProfileText, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
+        if (!_service.GetProfile(OnGetProfileText, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English, ContentType.ApplicationJson, AcceptLanguage.English, true, true, true))
             Log.Debug("ExamplePersonalityInsights.GetProfile()", "Failed to get profile!");
         while (!_getProfileTextTested)
             yield return null;

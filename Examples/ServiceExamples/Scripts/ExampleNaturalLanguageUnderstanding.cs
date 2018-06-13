@@ -27,17 +27,30 @@ using UnityEngine;
 public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
+    [Space(10)]
+    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/natural-language-understanding/api\"")]
     [SerializeField]
-    private string _username;
-    [SerializeField]
-    private string _password;
-    [SerializeField]
-    private string _url;
+    private string _serviceUrl;
+    [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
     [SerializeField]
     private string _versionDate;
+    [Header("CF Authentication")]
+    [Tooltip("The authentication username.")]
+    [SerializeField]
+    private string _username;
+    [Tooltip("The authentication password.")]
+    [SerializeField]
+    private string _password;
+    [Header("IAM Authentication")]
+    [Tooltip("The IAM apikey.")]
+    [SerializeField]
+    private string _iamApikey;
+    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
+    [SerializeField]
+    private string _iamUrl;
     #endregion
 
-    NaturalLanguageUnderstanding _naturalLanguageUnderstanding;
+    NaturalLanguageUnderstanding _service;
 
     private bool _getModelsTested = false;
     private bool _analyzeTested = false;
@@ -45,12 +58,40 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
     void Start()
     {
         LogSystem.InstallDefaultReactors();
+        Runnable.Run(CreateService());
+    }
 
+    private IEnumerator CreateService()
+    {
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+        Credentials credentials = null;
+        if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
+        {
+            //  Authenticate using username and password
+            credentials = new Credentials(_username, _password, _serviceUrl);
+        }
+        else if (!string.IsNullOrEmpty(_iamApikey))
+        {
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = _iamApikey,
+                IamUrl = _iamUrl
+            };
 
-        _naturalLanguageUnderstanding = new NaturalLanguageUnderstanding(credentials);
-        _naturalLanguageUnderstanding.VersionDate = _versionDate;
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
+        }
+        else
+        {
+            throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
+        }
+
+        _service = new NaturalLanguageUnderstanding(credentials);
+        _service.VersionDate = _versionDate;
 
         Runnable.Run(Examples());
     }
@@ -58,7 +99,7 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
     private IEnumerator Examples()
     {
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to get models...");
-        if (!_naturalLanguageUnderstanding.GetModels(OnGetModels, OnFail))
+        if (!_service.GetModels(OnGetModels, OnFail))
             Log.Debug("ExampleNaturalLanguageUnderstanding.GetModels()", "Failed to get models.");
         while (!_getModelsTested)
             yield return null;
@@ -86,7 +127,7 @@ public class ExampleNaturalLanguageUnderstanding : MonoBehaviour
         };
 
         Log.Debug("ExampleNaturalLanguageUnderstanding.Examples()", "attempting to analyze...");
-        if (!_naturalLanguageUnderstanding.Analyze(OnAnalyze, OnFail, parameters))
+        if (!_service.Analyze(OnAnalyze, OnFail, parameters))
             Log.Debug("ExampleNaturalLanguageUnderstanding.Analyze()", "Failed to get models.");
         while (!_analyzeTested)
             yield return null;

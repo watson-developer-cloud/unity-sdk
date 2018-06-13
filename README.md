@@ -64,7 +64,8 @@ To get started with the Watson Services in Unity, click on each service below to
 * [Assistant](/Scripts/Services/Assistant/v1)
 * [Conversation](/Scripts/Services/Conversation/v1)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator](/Scripts/Services/LanguageTranslator/v2)
+* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2)
+* [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
 * [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
@@ -88,6 +89,8 @@ void Start()
 ```
 
 For services that authenticate using an apikey, you can instantiate the service instance using a `Credential` object with an `apikey` and `url`.
+
+**Important**: Instantiation with `apikey` works only with Visual Recognition service instances created before May 23, 2018. Visual Recognition instances created after May 22 use IAM.
 
 ```cs
 using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;

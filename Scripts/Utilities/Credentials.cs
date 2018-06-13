@@ -120,7 +120,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         {
             Username = username;
             Password = password;
-            Url = url;
+            if(!string.IsNullOrEmpty(url))
+                Url = url;
         }
 
         /// <summary>
@@ -138,9 +139,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// Constructor that takes IAM token options.
         /// </summary>
         /// <param name="iamTokenOptions"></param>
-        public Credentials(TokenOptions iamTokenOptions, string serviceUrl)
+        public Credentials(TokenOptions iamTokenOptions, string serviceUrl = null)
         {
-            Url = serviceUrl;
+            if(!string.IsNullOrEmpty(serviceUrl))
+                Url = serviceUrl;
             _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
             _iamTokenData = new IamTokenData();
 

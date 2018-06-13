@@ -20,7 +20,7 @@
 //  Uncommnent to delete the trained classifier
 //#define DELETE_TRAINED_CLASSIFIER
 //  Uncomment to test RC
-//#define TEST_RC
+#define TEST_RC
 
 using UnityEngine;
 using System.Collections;
@@ -96,7 +96,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-iam-sdk")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk-rc")[0].Credentials;
 
             //  Create credential and instantiate service
             TokenOptions tokenOptions = new TokenOptions()
