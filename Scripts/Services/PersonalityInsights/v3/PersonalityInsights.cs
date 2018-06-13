@@ -89,6 +89,11 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
+
+                if (string.IsNullOrEmpty(credentials.Url))
+                {
+                    credentials.Url = Url;
+                }
             }
             else
             {
