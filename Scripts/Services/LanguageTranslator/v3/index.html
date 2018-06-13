@@ -81,14 +81,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <![endif]-->
 </head>
 <body>
-<h1 id="language-translator-v2">Language Translator V2</h1>
-<p><strong>Language Translator V2 is being deprecated - Please use LangaugeTranslator V3</strong></p>
+<h1 id="language-translator-v3">Language Translator V3</h1>
 <p><a href="https://www.ibm.com/watson/services/language-translator/">Language Translator</a> translates text from one language to another. The service offers multiple domain-specific models that you can customize based on your unique terminology and language. Use Language Translator to take news from across the globe and present it in your language, communicate with your customers in their own language, and more.</p>
 <h2 id="usage">Usage</h2>
 <p>Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.</p>
 <h3 id="instantiating-and-authenticating-the-service">Instantiating and authenticating the service</h3>
 <p>Before you can send requests to the service it must be instantiated and credentials must be set.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">LanguageTranslator</span>.<span class="fu">v2</span>;</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">LanguageTranslator</span>.<span class="fu">v3</span>;</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
@@ -97,118 +96,113 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-7" data-line-number="7">    LanguageTranslator _languageTranslator = <span class="kw">new</span> <span class="fu">LanguageTranslator</span>(credentials);</a>
 <a class="sourceLine" id="cb1-8" data-line-number="8">}</a></code></pre></div>
 <p>You can also authenticate the service with an IAM apikey</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">LanguageTranslator</span>.<span class="fu">v2</span>;</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">LanguageTranslator</span>.<span class="fu">v3</span>;</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">IEnumerator <span class="fu">CreateService</span>()</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">{</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">    Runnable.<span class="fu">Run</span>(<span class="fu">CreateService</span>());</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">}</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">IEnumerator <span class="fu">CreateService</span>()</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">{</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">    TokenOptions tokenOptions = <span class="kw">new</span> <span class="fu">TokenOptions</span>()</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">    {</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">        IamApiKey = _iamApikey</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">    };</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(tokenOptions);</a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">    <span class="co">//  Wait for tokendata</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19">    <span class="kw">while</span> (!credentials.<span class="fu">HasIamTokenData</span>())</a>
-<a class="sourceLine" id="cb2-20" data-line-number="20">        <span class="kw">yield</span> <span class="kw">return</span> <span class="kw">null</span>;</a>
-<a class="sourceLine" id="cb2-21" data-line-number="21">        </a>
-<a class="sourceLine" id="cb2-22" data-line-number="22">    LanguageTranslator _languageTranslator = <span class="kw">new</span> <span class="fu">LanguageTranslator</span>(credentials);</a>
-<a class="sourceLine" id="cb2-23" data-line-number="23">}</a></code></pre></div>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    TokenOptions tokenOptions = <span class="kw">new</span> <span class="fu">TokenOptions</span>()</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    {</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">        IamApiKey = _iamApikey</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    };</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(tokenOptions);</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">    <span class="co">//  Wait for tokendata</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">    <span class="kw">while</span> (!credentials.<span class="fu">HasIamTokenData</span>())</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">        <span class="kw">yield</span> <span class="kw">return</span> <span class="kw">null</span>;</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">        </a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">    LanguageTranslator _languageTranslator = <span class="kw">new</span> <span class="fu">LanguageTranslator</span>(<span class="st">&quot;&lt;versionDate&gt;&quot;</span>, credentials);</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">}</a></code></pre></div>
 <h3 id="fail-handler">Fail handler</h3>
 <p>These examples use a common fail handler.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">{</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleLanguageTranslatorV3V3.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">}</a></code></pre></div>
 <h3 id="list-models">List models</h3>
 <p>Lists available models for language translation with option to filter by source or by target language.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModels</span>()</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetModels</span>(OnGetModels, OnFail))</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.GetModels()&quot;</span>, <span class="st">&quot;Failed to get models.&quot;</span>);</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetModels()&quot;</span>, <span class="st">&quot;Failed to get models.&quot;</span>);</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetModels</span>(TranslationModels models, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnGetModels()&quot;</span>, <span class="st">&quot;Language Translator - Get models response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetModels()&quot;</span>, <span class="st">&quot;Language Translator - Get models response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb4-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="create-a-model">Create a model</h3>
-<p>Uploads a TMX glossary file on top of a domain to customize a translation model.Depending on the size of the file, training can range from minutes for a glossary to several hours for a large parallel corpus. Glossary files must be less than 10 MB. The cumulative file size of all uploaded glossary and corpus files is limited to 250 MB.</p>
+<p>Uploads a TMX glossary file on top of a domain to customize a translation model. Depending on the size of the file, training can range from minutes for a glossary to several hours for a large parallel corpus. Glossary files must be less than 10 MB. The cumulative file size of all uploaded glossary and corpus files is limited to 250 MB.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">CreateModel</span>()</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">CreateModel</span>(OnCreateModel, OnFail, &lt;<span class="kw">base</span>-model-name&gt;, &lt;custom-model-name&gt;, &lt;glossary-filepath&gt;))</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.CreateModel()&quot;</span>, <span class="st">&quot;Failed to create model.&quot;</span>);</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.CreateModel()&quot;</span>, <span class="st">&quot;Failed to create model.&quot;</span>);</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb5-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnCreateModel</span>(TranslationModel model, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb5-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnCreateModel()&quot;</span>, <span class="st">&quot;Language Translator - Create model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnCreateModel()&quot;</span>, <span class="st">&quot;Language Translator - Create model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb5-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="get-a-model-details">Get a model details</h3>
 <p>Returns information, including training status, about a specified translation model.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModel</span>()</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetModel</span>(OnGetModel, OnFail, &lt;custom-language-model-id&gt;))</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.GetModel()&quot;</span>, <span class="st">&quot;Failed to get model.&quot;</span>);</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetModel()&quot;</span>, <span class="st">&quot;Failed to get model.&quot;</span>);</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb6-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetModel</span>(TranslationModel model, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb6-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnGetModel()&quot;</span>, <span class="st">&quot;Language Translator - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetModel()&quot;</span>, <span class="st">&quot;Language Translator - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb6-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="delete-a-model">Delete a model</h3>
 <p>Deletes trained translation models.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteModel</span>()</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">DeleteModel</span>(OnDeleteModel, OnFail, &lt;custom-language-model-id&gt;))</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.DeleteModel()&quot;</span>, <span class="st">&quot;Failed to delete model.&quot;</span>);</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.DeleteModel()&quot;</span>, <span class="st">&quot;Failed to delete model.&quot;</span>);</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteModel</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb7-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnDeleteModel()&quot;</span>, <span class="st">&quot;Language Translator - Delete model response: success: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnDeleteModel()&quot;</span>, <span class="st">&quot;Language Translator - Delete model response: success: {0}&quot;</span>, success);</a>
 <a class="sourceLine" id="cb7-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="translate">Translate</h3>
 <p>Translates input text from the source language to the target language.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Translate</span>()</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetTranslation</span>(OnGetTranslation, OnFail, &lt;text-to-translate&gt;, &lt;from-language&gt;, &lt;to-language&gt;))</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.Translate()&quot;</span>, <span class="st">&quot;Failed to translate.&quot;</span>);</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.Translate()&quot;</span>, <span class="st">&quot;Failed to translate.&quot;</span>);</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetTranslation</span>(Translations translation, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb8-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnGetTranslation()&quot;</span>, <span class="st">&quot;Langauge Translator - Translate Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetTranslation()&quot;</span>, <span class="st">&quot;Langauge Translator - Translate Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb8-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="identify-language">Identify language</h3>
 <p>Identify the language in which a text is written.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Identify</span>()</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">Identify</span>(OnIdentify, OnFail, &lt;text-to-identify&gt;))</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.Identify()&quot;</span>, <span class="st">&quot;Failed to identify language.&quot;</span>);</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.Identify()&quot;</span>, <span class="st">&quot;Failed to identify language.&quot;</span>);</a>
 <a class="sourceLine" id="cb9-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb9-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnIdentify</span>(<span class="dt">string</span> lang, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb9-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnIdentify()&quot;</span>, <span class="st">&quot;Language Translator - Identify response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnIdentify()&quot;</span>, <span class="st">&quot;Language Translator - Identify response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb9-10" data-line-number="10">}</a></code></pre></div>
 <h3 id="identifiable-languages">Identifiable languages</h3>
 <p>Return the list of languages it can detect.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetLanguages</span>()</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">{</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetLanguages</span>(OnGetLanguages, OnFail))</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.GetLanguages()&quot;</span>, <span class="st">&quot;Failed to get languages.&quot;</span>);</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetLanguages()&quot;</span>, <span class="st">&quot;Failed to get languages.&quot;</span>);</a>
 <a class="sourceLine" id="cb10-5" data-line-number="5">}</a>
 <a class="sourceLine" id="cb10-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetLanguages</span>(Languages languages, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
 <a class="sourceLine" id="cb10-8" data-line-number="8">{</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV2.OnGetLanguages()&quot;</span>, <span class="st">&quot;Language Translator - Get languages response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetLanguages()&quot;</span>, <span class="st">&quot;Language Translator - Get languages response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
 <a class="sourceLine" id="cb10-10" data-line-number="10">}</a></code></pre></div>
 </body>
 </html>

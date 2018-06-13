@@ -1,5 +1,10 @@
 Change Log
 ==========
+## Version 2.4.0
+_2018-06-12_
+* New: Language Translator v3 support.
+* New: IAM support in examples.
+
 ## Version 2.3.0
 _2018-05-31_
 * New: IAM support in Visual Recognition.
