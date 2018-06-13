@@ -19,6 +19,8 @@
 //#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
 //#define DELETE_TRAINED_CLASSIFIER
+//  Uncomment to test CF
+//#define TEST_CF
 
 using UnityEngine;
 using System.Collections;
@@ -32,6 +34,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
+#if TEST_CF
     public class TestVisualRecognitionCF : UnitTest
     {
         private string _apikey;
@@ -93,7 +96,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk-cf")[0].Credentials;
             _apikey = credential.ApiKey.ToString();
             _url = credential.Url.ToString();
 
@@ -314,4 +317,5 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Error("TestVisualRecognition.OnFail()", "Error received: {0}", error.ToString());
         }
     }
+#endif
 }

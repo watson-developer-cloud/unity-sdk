@@ -30,22 +30,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
     public class TestLanguageTranslatorV3RC : UnitTest
     {
         private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
-        private string _username = null;
-        private string _password = null;
-        //private string _token = "<authentication-token>";
         private fsSerializer _serializer = new fsSerializer();
 
         private LanguageTranslator _languageTranslator;
-        private string _baseModelName = "en-es";
-        private string _customModelName = "Texan";
-        private string _forcedGlossaryFilePath;
-        private string _customLanguageModelId;
 
         private bool _getTranslationTested = false;
         private bool _getModelsTested = false;
-        private bool _createModelTested = false;
         private bool _getModelTested = false;
-        private bool _deleteModelTested = false;
         private bool _identifyTested = false;
         private bool _getLanguagesTested = false;
         private string _versionDate = "2018-05-01";
@@ -81,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-iam-staging")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-sdk-rc-wdc")[0].Credentials;
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
@@ -99,8 +90,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             _languageTranslator = new LanguageTranslator(_versionDate, credentials);
 
-            _forcedGlossaryFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/glossary.tmx";
-
             if (!_languageTranslator.GetTranslation(OnGetTranslation, OnFail, _pharseToTranslate, "en", "es"))
                 Log.Debug("TestLanguageTranslator.GetTranslation()", "Failed to translate.");
             while (!_getTranslationTested)
@@ -111,19 +100,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getModelsTested)
                 yield return null;
 
-            if (!_languageTranslator.CreateModel(OnCreateModel, OnFail, _baseModelName, _customModelName, _forcedGlossaryFilePath))
-                Log.Debug("TestLanguageTranslator.CreateModel()", "Failed to create model.");
-            while (!_createModelTested)
-                yield return null;
-
-            if (!_languageTranslator.GetModel(OnGetModel, OnFail, _customLanguageModelId))
+            if (!_languageTranslator.GetModel(OnGetModel, OnFail, "en-es"))
                 Log.Debug("TestLanguageTranslator.GetModel()", "Failed to get model.");
             while (!_getModelTested)
-                yield return null;
-
-            if (!_languageTranslator.DeleteModel(OnDeleteModel, OnFail, _customLanguageModelId))
-                Log.Debug("TestLanguageTranslator.DeleteModel()", "Failed to delete model.");
-            while (!_deleteModelTested)
                 yield return null;
 
             if (!_languageTranslator.Identify(OnIdentify, OnFail, _pharseToTranslate))
@@ -148,27 +127,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getModelsTested = true;
         }
 
-        private void OnCreateModel(TranslationModel model, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestLanguageTranslator.OnCreateModel()", "Language Translator - Create model response: {0}", customData["json"].ToString());
-            _customLanguageModelId = model.model_id;
-            Test(model != null);
-            _createModelTested = true;
-        }
-
         private void OnGetModel(TranslationModel model, Dictionary<string, object> customData)
         {
             Log.Debug("TestLanguageTranslator.OnGetModel()", "Language Translator - Get model response: {0}", customData["json"].ToString());
             Test(model != null);
             _getModelTested = true;
-        }
-
-        private void OnDeleteModel(DeleteModelResult deleteModelResult, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestLanguageTranslator.OnDeleteModel()", "Language Translator - Delete model response: success: {0}", customData["json"].ToString());
-            _customLanguageModelId = null;
-            Test(deleteModelResult != null);
-            _deleteModelTested = true;
         }
 
         private void OnGetTranslation(Translations translation, Dictionary<string, object> customData)
