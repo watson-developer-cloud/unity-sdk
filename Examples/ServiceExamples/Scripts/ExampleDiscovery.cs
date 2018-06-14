@@ -20,7 +20,6 @@ using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class ExampleDiscovery : MonoBehaviour
@@ -157,7 +156,7 @@ public class ExampleDiscovery : MonoBehaviour
 
         //  Add Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add configuration");
-        if (!_service.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", GUID.Generate().ToString())))
+        if (!_service.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", System.Guid.NewGuid().ToString())))
             Log.Debug("TestDiscovery.AddConfiguration()", "Failed to add configuration");
         while (!_addConfigurationTested)
             yield return null;
@@ -185,7 +184,7 @@ public class ExampleDiscovery : MonoBehaviour
 
         //  Add Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
-        if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + GUID.Generate().ToString(), _createdCollectionDescription, _environmentId))
+        if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _environmentId))
             Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
         while (!_addCollectionTested)
             yield return null;
