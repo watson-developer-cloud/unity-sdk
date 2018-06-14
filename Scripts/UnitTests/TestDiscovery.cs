@@ -24,7 +24,6 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
-using UnityEditor;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -143,7 +142,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Add Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add configuration");
-            if (!_discovery.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", GUID.Generate().ToString())))
+            if (!_discovery.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", System.Guid.NewGuid().ToString())))
                 Log.Debug("TestDiscovery.AddConfiguration()", "Failed to add configuration");
             while (!_addConfigurationTested)
                 yield return null;
@@ -171,7 +170,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Add Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
-            if (!_discovery.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + GUID.Generate().ToString(), _createdCollectionDescription, _createdConfigurationID))
+            if (!_discovery.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationID))
                 Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
             while (!_addCollectionTested)
                 yield return null;
