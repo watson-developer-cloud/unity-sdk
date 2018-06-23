@@ -196,14 +196,30 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("http://stream.", "ws://stream.");
             else if (URL.StartsWith("https://stream."))
                 URL = URL.Replace("https://stream.", "wss://stream.");
+
+            //  Old TLS 1.0 endpoint
             else if (URL.StartsWith("http://stream-tls10."))
                 URL = URL.Replace("http://stream-tls10.", "ws://stream.");
             else if (URL.StartsWith("https://stream-tls10."))
                 URL = URL.Replace("https://stream-tls10.", "wss://stream.");
-            else if (URL.StartsWith("http://stream-fra."))
-                URL = URL.Replace("http://stream-fra.", "ws://stream-fra.");
-            else if (URL.StartsWith("https://stream-fra."))
-                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
+
+            //  Germany
+            else if (URL.StartsWith("http://gateway-fra."))
+                URL = URL.Replace("http://gateway-fra.", "ws://stream-fra.");
+            else if (URL.StartsWith("https://gateway-fra."))
+                URL = URL.Replace("https://gateway-fra.", "wss://stream-fra.");
+
+            //  US East
+            else if (URL.StartsWith("http://gateway-wdc."))
+                URL = URL.Replace("http://gateway-wdc.", "ws://stream.");
+            else if (URL.StartsWith("https://gateway-wdc."))
+                URL = URL.Replace("https://gateway-wdc.", "wss://stream.");
+
+            //  Sydney
+            else if (URL.StartsWith("http://gateway-syd."))
+                URL = URL.Replace("http://gateway-syd.", "ws://stream-syd.");
+            else if (URL.StartsWith("https://gateway-syd."))
+                URL = URL.Replace("https://gateway-syd.", "wss://stream-syd.");
 #else
             //  Redirect to TLS 1.0 endpoints. 
             //  Note frankfurt endpoint does not support TLS 1.0.
