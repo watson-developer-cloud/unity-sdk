@@ -158,7 +158,19 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// <summary>
         /// Headers to pass when making the socket.
         /// </summary>
-        public Dictionary<string, string> Headers { get; set; }
+        private Dictionary<string, string> _headers;
+        public Dictionary<string, string> Headers {
+            get
+            {
+                if (_headers == null)
+                    _headers = new Dictionary<string, string>();
+                return _headers;
+            }
+            set
+            {
+                _headers = value;
+            }
+        }
         /// <summary>
         /// Credentials used to authenticate with the server.
         /// </summary>
