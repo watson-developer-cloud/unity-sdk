@@ -100,7 +100,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
+        private void OnGetToneAnalyze(ToneAnalysis resp, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "Tone Analyzer - Analyze Response: {0}", customData["json"].ToString());
             Test(resp != null);
