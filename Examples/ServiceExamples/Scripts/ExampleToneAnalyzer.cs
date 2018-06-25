@@ -107,7 +107,7 @@ public class ExampleToneAnalyzer : MonoBehaviour
         Log.Debug("ExampleToneAnalyzer.Examples()", "Tone analyzer examples complete.");
     }
 
-    private void OnGetToneAnalyze(ToneAnalyzerResponse resp, Dictionary<string, object> customData)
+    private void OnGetToneAnalyze(ToneAnalysis resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleToneAnalyzer.OnGetToneAnalyze()", "{0}", customData["json"].ToString());
         _analyzeToneTested = true;
