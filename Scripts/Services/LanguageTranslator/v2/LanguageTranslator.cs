@@ -74,7 +74,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         #region Constructor
         public LanguageTranslator(Credentials credentials)
         {
-            Log.Warning("LanguageTranslatorV2", "Language Translator v2 is being deprecated. Please use Language Translator V3.");
+            Log.Warning("LanguageTranslatorV2", "Language Translator v3 is now available. The v2 Language Translator API will no longer be available after July 31, 2018. To take advantage of the latest service enhancements, migrate to the v3 API. View the [Migrating to Language Translator v3](https://console.bluemix.net/docs/services/language-translator/migrating.html) page for more information.");
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
