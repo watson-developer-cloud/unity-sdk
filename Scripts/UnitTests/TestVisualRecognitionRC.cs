@@ -16,9 +16,7 @@
 */
 
 //  Uncomment to train a new classifier
-//#define TRAIN_CLASSIFIER
-//  Uncommnent to delete the trained classifier
-//#define DELETE_TRAINED_CLASSIFIER
+#define TRAIN_DELETE_CLASSIFIER
 //  Uncomment to test RC
 #define TEST_RC
 
@@ -45,25 +43,25 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _classifierID = "";
         private string _imageURL = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Official_portrait_of_Barack_Obama.jpg";
 
-#if DELETE_TRAINED_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
         private string _classifierToDelete;
 #endif
 
         private bool _getClassifiersTested = false;
-#if TRAIN_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
         private bool _trainClassifierTested = false;
         private bool _getClassifierTested = false;
         private bool _getCoreMLModelTested = false;
 #endif
-#if DELETE_TRAINED_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
         private bool _deleteClassifierTested = false;
+        private bool _isClassifierReady = false;
 #endif
         private bool _classifyGetTested = false;
         private bool _classifyPostTested = false;
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
 
-        private bool _isClassifierReady = false;
 
         public override IEnumerator RunTest()
         {
@@ -122,7 +120,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getClassifiersTested)
                 yield return null;
 
-#if TRAIN_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
             _isClassifierReady = false;
             //          Train classifier
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to train classifier");
@@ -181,7 +179,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_detectFacesPostTested)
                 yield return null;
 
-#if DELETE_TRAINED_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
             Runnable.Run(IsClassifierReady(_classifierToDelete));
             while (!_isClassifierReady)
                 yield return null;
@@ -213,32 +211,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getClassifiersTested = true;
         }
 
-#if DELETE_TRAINED_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
         private void OnGetClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnGetClassifier()", "VisualRecognition - GetClassifier Response: {0}", customData["json"].ToString());
             Test(classifier != null);
             _getClassifierTested = true;
         }
-#endif
 
-#if DELETE_TRAINED_CLASSIFIER
         private void OnDeleteClassifier(bool success, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnDeleteClassifier()", "VisualRecognition - DeleteClassifier Response: {0}", success);
             Test(success);
             _deleteClassifierTested = true;
         }
-#endif
 
-#if TRAIN_CLASSIFIER
         private void OnTrainClassifier(ClassifierVerbose classifier, Dictionary<string, object> customData)
         {
             Log.Debug("TestVisualRecognition.OnTrainClassifier()", "VisualRecognition - TrainClassifier Response: {0}", customData["json"].ToString());
 
-#if DELETE_TRAINED_CLASSIFIER
             _classifierToDelete = classifier.classifier_id;
-#endif
+
             _classifierID = classifier.classifier_id;
             Test(classifier != null);
             _trainClassifierTested = true;
@@ -274,15 +267,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _detectFacesPostTested = true;
         }
 
-#if DELETE_TRAINED_CLASSIFIER
+#if TRAIN_DELETE_CLASSIFIER
         private void OnGetCoreMLModel(byte[] resp, Dictionary<string, object> customData)
         {
             Test(resp != null);
             _getCoreMLModelTested = true;
         }
-#endif
 
-#if DELETE_TRAINED_CLASSIFIER
         #region Is Classifier Ready
         //  Checking if classifier is ready before deletion due to a known bug in the Visual Recognition service where
         //  if a classifier is deleted before it is `ready` or `failed` the classifier will still exist in object storage

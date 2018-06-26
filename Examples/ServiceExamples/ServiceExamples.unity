@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0.37311926, g: 0.38073996, b: 0.35872692, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 0
@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -140,10 +140,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 852d029fa9fc2ad43a8ce3838c3fb70b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
-  _versionDate: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &85803342
 Transform:
   m_ObjectHideFlags: 0
@@ -155,7 +157,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &525603453
 GameObject:
@@ -167,7 +169,7 @@ GameObject:
   - component: {fileID: 525603455}
   - component: {fileID: 525603454}
   m_Layer: 0
-  m_Name: ExampleLanguageTranslator
+  m_Name: ExampleLanguageTranslatorV2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -181,12 +183,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 525603453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d33458a9d3f434f2889ac182de6fa097, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d75f17512b67b842859cd865f1f5e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &525603455
 Transform:
   m_ObjectHideFlags: 0
@@ -287,7 +292,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832860416
 GameObject:
@@ -321,6 +326,9 @@ MonoBehaviour:
   _assistantUrl: 
   _assistantWorkspaceId: 
   _assistantVersionDate: 
+  _speechToTextUsername: 
+  _speechToTextPassword: 
+  _speechToTextUrl: 
 --- !u!4 &832860418
 Transform:
   m_ObjectHideFlags: 0
@@ -332,7 +340,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &854511683
 GameObject:
@@ -361,10 +369,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2e3d3910ea1bd46b55eb5943a057f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
-  _versionDate: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &854511685
 Transform:
   m_ObjectHideFlags: 0
@@ -405,11 +415,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87040e721f2394a4a9f444ecbaf9d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _username: 
-  _password: 
-  _url: 
+  _serviceUrl: 
   _workspaceId: 
   _versionDate: 
+  _username: 
+  _password: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &859102724
 Transform:
   m_ObjectHideFlags: 0
@@ -421,7 +433,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1073418922
 GameObject:
@@ -450,10 +462,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4dd8308135b04c28945ad3e8489aa7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
-  _versionDate: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1073418924
 Transform:
   m_ObjectHideFlags: 0
@@ -494,9 +508,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26bb17691cf8f4f44ad0b84e5d240b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
   _username: 
   _password: 
-  _url: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1160237480
 Transform:
   m_ObjectHideFlags: 0
@@ -508,7 +524,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1194016994
 GameObject:
@@ -537,9 +553,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad04eacf696634a8398e0edcb39a9f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1194016996
 Transform:
   m_ObjectHideFlags: 0
@@ -551,7 +570,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1646373635
 GameObject:
@@ -580,10 +599,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bd480466fdc154fa059d91ab9b79a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
-  _versionDate: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1646373637
 Transform:
   m_ObjectHideFlags: 0
@@ -595,7 +616,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1713392457
 GameObject:
@@ -624,9 +645,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e385580aba14ae58cfdb1b5246dce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _apikey: 
-  _url: 
+  _serviceUrl: 
   _versionDate: 
+  _apikey: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1713392459
 Transform:
   m_ObjectHideFlags: 0
@@ -638,7 +661,53 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1724361712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1724361714}
+  - component: {fileID: 1724361713}
+  m_Layer: 0
+  m_Name: ExampleLanguageTranslatorV3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1724361713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1724361712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f930490a8266dd44afb6661b870ded9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _versionDate: 
+  _username: 
+  _password: 
+  _iamApikey: 
+  _iamUrl: 
+--- !u!4 &1724361714
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1724361712}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1740459831
 GameObject:
@@ -667,9 +736,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd939a6f78384e5898a22dda7832b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
   _username: 
   _password: 
-  _url: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &1740459833
 Transform:
   m_ObjectHideFlags: 0
@@ -681,7 +752,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2041722972
 GameObject:
@@ -710,7 +781,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2041722974
 MonoBehaviour:
@@ -757,11 +828,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9848745df680ac7438f802aac3f4b8f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serviceUrl: 
+  _workspaceId: 
+  _versionDate: 
   _username: 
   _password: 
-  _url: 
-  _versionDate: 
-  _workspaceId: 
+  _iamApikey: 
+  _iamUrl: 
 --- !u!4 &2118312581
 Transform:
   m_ObjectHideFlags: 0
