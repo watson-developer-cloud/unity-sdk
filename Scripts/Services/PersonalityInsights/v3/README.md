@@ -9,19 +9,6 @@ For information about the meaning of the models that the service uses to describ
 ## Usage
 The service offers a single `profile` method that accepts up to 20 MB of input data and produces results in JSON or CSV format. The service accepts input in Arabic, English, Japanese, or Spanish and can produce output in a variety of languages.
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    PersonalityInsights _personalityInsights = new PersonalityInsights(credentials);
-}
-```
-
 ### Profile
 Extract personality characteristics based on how a person writes.
 ```cs
