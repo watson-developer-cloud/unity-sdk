@@ -25,7 +25,7 @@ Use this SDK to build Watson-powered applications in Unity.
 ## Before you begin
 Ensure that you have the following prerequisites:
 
-* An IBM Cloud account. If you don't have one, [sign up][ibm_cloud_registration].
+* You need an [IBM Cloud][ibm-cloud-onboarding] account.
 * [Unity][get_unity]. You can use the **free** Personal edition.
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
 
@@ -321,6 +321,6 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
-[ibm_cloud_registration]: http://console.bluemix.net/registration?cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/
+[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
