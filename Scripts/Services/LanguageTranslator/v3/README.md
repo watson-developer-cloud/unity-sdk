@@ -5,54 +5,6 @@
 ## Usage
 Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
-}
-```
-
-
-You can also authenticate the service with an IAM apikey
-```cs
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-IEnumerator CreateService()
-{
-    TokenOptions tokenOptions = new TokenOptions()
-    {
-        IamApiKey = _iamApikey
-    };
-
-    Credentials credentials = new Credentials(tokenOptions);
-
-    //  Wait for tokendata
-    while (!credentials.HasIamTokenData())
-        yield return null;
-        
-    LanguageTranslator _languageTranslator = new LanguageTranslator("<versionDate>", credentials);
-}
-```
-
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleLanguageTranslatorV3V3.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
-
-
 ### List models
 Lists available models for language translation with option to filter by source or by target language.
 ```cs
