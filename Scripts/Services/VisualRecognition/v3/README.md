@@ -4,28 +4,6 @@ The IBM Watson™ [Visual Recognition][visual-recognition] service uses deep lea
 ## Usage
 The IBM Watson™ [Visual Recognition][visual-recognition] service uses deep learning algorithms to identify scenes, objects, and faces in images you upload to the service. You can create and train a custom classifier to identify subjects that suit your needs. You can create and add images to a collection and then search that collection with your own image to find similar images. A valid API Key from Bluemix is required for all calls.
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and api key must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials("<apikey>", "<url>");
-    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
-}
-```
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleVisualRecognition.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
 ### Classify an image
 Upload images or URLs to identify classes by default. To identify custom classifiers, include the classifier_ids or owners parameters. Images must be in .jpeg, or .png format.
 
