@@ -27,7 +27,10 @@ Ensure that you have the following prerequisites:
 
 * You need an [IBM Cloud][ibm-cloud-onboarding] account.
 * [Unity][get_unity]. You can use the **free** Personal edition.
+
+## Configuring Unity
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
+* If using Unity 2018.2 or later you'll need to set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
