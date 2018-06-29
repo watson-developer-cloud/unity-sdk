@@ -25,9 +25,12 @@ Use this SDK to build Watson-powered applications in Unity.
 ## Before you begin
 Ensure that you have the following prerequisites:
 
-* An IBM Cloud account. If you don't have one, [sign up][ibm_cloud_registration].
+* You need an [IBM Cloud][ibm-cloud-onboarding] account.
 * [Unity][get_unity]. You can use the **free** Personal edition.
+
+## Configuring Unity
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
+* If using Unity 2018.2 or later you'll need to set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
@@ -64,7 +67,7 @@ To get started with the Watson Services in Unity, click on each service below to
 * [Assistant](/Scripts/Services/Assistant/v1)
 * [Conversation](/Scripts/Services/Conversation/v1)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2)
+* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2) (deprecated)
 * [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
@@ -75,50 +78,44 @@ To get started with the Watson Services in Unity, click on each service below to
 * [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
 
 ## Authentication
-Before you can use a service, it must be authenticated with the service instance's `username`, `password` and `url`.
+Watson services are migrating to token-based Identity and Access Management (IAM) authentication.
 
+- With some service instances, you authenticate to the API by using **[IAM](#iam)**.
+- In other instances, you authenticate by providing the **[username and password](#username-and-password)** for the service instance.
+- Visual Recognition uses a form of [API key](#api-key) only with instances created before May 23, 2018. Newer instances of Visual Recognition use [IAM](#iam).
+
+### Getting credentials
+To find out which authentication to use, view the service credentials. You find the service credentials for authentication the same way for all Watson services:
+
+1.  Go to the IBM Cloud **[Dashboard][watson-dashboard]** page.
+1.  Either click an existing Watson service instance or click **Create**.
+1.  Click **Show** to view your service credentials.
+1.  Copy the `url` and either `apikey` or `username` and `password`.
+
+In your code, you can use these values in the service constructor or with a method call after instantiating your service.
+
+### IAM
+
+Some services use token-based Identity and Access Management (IAM) authentication. IAM authentication uses a service API key to get an access token that is passed with the call. Access tokens are valid for approximately one hour and must be regenerated.
+
+You supply either an IAM service **API key** or an **access token**:
+
+- Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.
+- Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html). If you want to switch to API key, in a coroutine, override your stored IAM credentials with an IAM API key and yield until the credentials object `HasIamTokenData()` returns `true`.
+
+#### Supplying the IAM API key
 ```cs
-using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    Assistant _assistant = new Assistant(credentials);
-}
-```
-
-For services that authenticate using an apikey, you can instantiate the service instance using a `Credential` object with an `apikey` and `url`.
-
-**Important**: Instantiation with `apikey` works only with Visual Recognition service instances created before May 23, 2018. Visual Recognition instances created after May 22 use IAM.
-
-```cs
-using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<apikey>, <url>);
-    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
-}
-```
-
-You can also authenticate a service using IAM authentication. You can either supply a valid access token in the `iamTokenOptions` or get an access token using an `apikey`.
-
-```cs
-void IEnumerator TokenExample()
+IEnumerator TokenExample()
 {
     //  Create IAM token options and supply the apikey. 
-    //  Alternatively you can supply an access token.
     TokenOptions iamTokenOptions = new TokenOptions()
     {
         IamApiKey = "<iam-api-key>",
-        IamAccessToken = "<iam-access-token>",
         IamUrl = "<service-url>"
     };
 
     //  Create credentials using the IAM token options
-     _credentials = new Credentials(iamTokenOptions, "<service-url");
+    _credentials = new Credentials(iamTokenOptions, "<service-url");
     while (!_credentials.HasIamTokenData())
         yield return null;
 
@@ -137,6 +134,61 @@ private void OnFail(RESTConnector.Error error, Dictionary<string, object> custom
     Log.Debug("OnFail()", "Failed: {0}", error.ToString());
 }
 ```
+
+#### Supplying the access token
+```cs
+void TokenExample()
+{
+    //  Create IAM token options and supply the access token.
+    TokenOptions iamTokenOptions = new TokenOptions()
+    {
+        IamAccessToken = "<iam-access-token>"
+    };
+
+    //  Create credentials using the IAM token options
+     _credentials = new Credentials(iamTokenOptions, "<service-url");
+
+    _assistant = new Assistant(_credentials);
+    _assistant.VersionDate = "2018-02-16";
+    _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
+}
+
+private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+{
+    Log.Debug("OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+}
+
+private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+{
+    Log.Debug("OnFail()", "Failed: {0}", error.ToString());
+}
+```
+
+### Username and password
+```cs
+using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<username>, <password>, <url>);
+    Assistant _assistant = new Assistant(credentials);
+}
+```
+
+### API key
+**Important**: This type of authentication works only with Visual Recognition instances created before May 23, 2018. Newer instances of Visual Recognition use [IAM](#iam).
+```cs
+using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
+using IBM.Watson.DeveloperCloud.Utilities;
+
+void Start()
+{
+    Credentials credentials = new Credentials(<apikey>, <url>);
+    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
+}
+```
+
 
 ## Callbacks
 Success and failure callbacks are required. You can specify the return type in the callback.  
@@ -321,6 +373,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
-[ibm_cloud_registration]: http://console.bluemix.net/registration?cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/
+[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
+[watson-dashboard]: https://console.bluemix.net/dashboard/apps?category=watson

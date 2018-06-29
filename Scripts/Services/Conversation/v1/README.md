@@ -9,28 +9,6 @@ You complete these steps to implement your application:
 
 * Develop your application. You code your application to connect to the Conversation workspace through API calls. You then integrate your app with other systems that you need, including back-end systems and third-party services such as chat services or social media.
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    Conversation _conversation = new Conversation(credentials);
-}
-```
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleConversation.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
 ### Message
 Send a message to the Conversation instance
 ```cs

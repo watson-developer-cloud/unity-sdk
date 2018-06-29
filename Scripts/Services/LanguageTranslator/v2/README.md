@@ -1,64 +1,11 @@
 # Language Translator V2
 
-**Language Translator V2 is being deprecated - Please use LangaugeTranslator V3**
+**Language Translator v3 is now available. The v2 Language Translator API will no longer be available after July 31, 2018. To take advantage of the latest service enhancements, migrate to the v3 API. View the [Migrating to Language Translator v3](https://console.bluemix.net/docs/services/language-translator/migrating.html) page for more information.**
 
 [Language Translator][language_translator] translates text from one language to another. The service offers multiple domain-specific models that you can customize based on your unique terminology and language. Use Language Translator to take news from across the globe and present it in your language, communicate with your customers in their own language, and more.
 
 ## Usage
 Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.
-
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
-}
-```
-
-
-You can also authenticate the service with an IAM apikey
-```cs
-using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Runnable.Run(CreateService());
-}
-
-IEnumerator CreateService()
-{
-    TokenOptions tokenOptions = new TokenOptions()
-    {
-        IamApiKey = _iamApikey
-    };
-
-    Credentials credentials = new Credentials(tokenOptions);
-
-    //  Wait for tokendata
-    while (!credentials.HasIamTokenData())
-        yield return null;
-        
-    LanguageTranslator _languageTranslator = new LanguageTranslator(credentials);
-}
-```
-
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleLanguageTranslatorV2.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
-
 
 ### List models
 Lists available models for language translation with option to filter by source or by target language.

@@ -40,31 +40,6 @@ or the proprietary IBM Symbolic Phonetic Representation (SPR), for example
 
 For more information about customization and about sounds-like and phonetic translations, see [Understanding customization][understanding-customization] and [Using customization][using-customization].
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    TextToSpeech _textToSpeech = new TextToSpeech(credentials);
-}
-```
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleTextToSpeech.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
-
-
-
 ### Get voices
 Retrieves a list of all voices available for use with the service. The information includes the voice's name, language, and gender, among other things. To see information about a specific voice, use the Get a voice method.
 ```cs

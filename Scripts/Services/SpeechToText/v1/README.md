@@ -21,29 +21,6 @@ The Speech to Text API consists of the following groups of related calls:
 
 * Custom words provides an HTTP interface for managing individual words in a custom language model. You can add, list, and delete words from a custom model.
 
-### Instantiating and authenticating the service
-Before you can send requests to the service it must be instantiated and credentials must be set.
-```cs
-using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    SpeechToText _speechToText = new SpeechToText(credentials);
-}
-```
-
-### Fail handler
-These examples use a common fail handler.
-```cs
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleSpeechToText.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
-
 ### Get models
 Retrieves a list of all models available for use with the service. The information includes the name of the model and its minimum sampling rate in Hertz, among other things.
 ```cs
