@@ -107,15 +107,16 @@ You supply either an IAM service **API key** or an **access token**:
 ```cs
 IEnumerator TokenExample()
 {
-    //  Create IAM token options and supply the apikey. 
+    //  Create IAM token options and supply the apikey. IamUrl is the URL used to get the 
+    //  authorization token using the IamApiKey. It defaults to https://iam.bluemix.net/identity/token
     TokenOptions iamTokenOptions = new TokenOptions()
     {
         IamApiKey = "<iam-api-key>",
-        IamUrl = "<service-url>"
+        IamUrl = "<iam-url>"
     };
 
     //  Create credentials using the IAM token options
-    _credentials = new Credentials(iamTokenOptions, "<service-url");
+    _credentials = new Credentials(iamTokenOptions, "<service-url>");
     while (!_credentials.HasIamTokenData())
         yield return null;
 
