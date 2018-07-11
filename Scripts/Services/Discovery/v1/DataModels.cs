@@ -1054,14 +1054,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// An array of credential definitions that were created for this instance.
         /// </summary>
         [fsProperty("credentials")]
-        public List<Credentials> Credentials { get; set; }
+        public List<SourceCredentials> Credentials { get; set; }
     }
 
     [fsObject]
     /// <summary>
     /// Object containing credential information.
     /// </summary>
-    public class Credentials
+    public class SourceCredentials
     {
         /// <summary>
         /// The source that this credentials object connects to.
@@ -1076,19 +1076,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum BOX for box
             /// </summary>
             [EnumMember(Value = "box")]
-            BOX,
+            box,
 
             /// <summary>
             /// Enum SALESFORCE for salesforce
             /// </summary>
             [EnumMember(Value = "salesforce")]
-            SALESFORCE,
+            salesforce,
 
             /// <summary>
             /// Enum SHAREPOINT for sharepoint
             /// </summary>
             [EnumMember(Value = "sharepoint")]
-            SHAREPOINT
+            sharepoint
         }
 
         /// <summary>
@@ -1137,19 +1137,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum OAUTH2 for oauth2
             /// </summary>
             [EnumMember(Value = "oauth2")]
-            OAUTH2,
+            oauth2,
             
             /// <summary>
             /// Enum SAML for saml
             /// </summary>
             [EnumMember(Value = "saml")]
-            SAML,
+            saml,
             
             /// <summary>
             /// Enum USERNAME_PASSWORD for username_password
             /// </summary>
             [EnumMember(Value = "username_password")]
-            USERNAME_PASSWORD
+            username_password
         }
 
         /// <summary>
@@ -1254,7 +1254,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum DELETED for deleted
             /// </summary>
             [EnumMember(Value = "deleted")]
-            DELETED
+            deleted
         }
 
         /// <summary>
@@ -1288,19 +1288,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum BOX for box
             /// </summary>
             [EnumMember(Value = "box")]
-            BOX,
+            box,
 
             /// <summary>
             /// Enum SALESFORCE for salesforce
             /// </summary>
             [EnumMember(Value = "salesforce")]
-            SALESFORCE,
+            salesforce,
 
             /// <summary>
             /// Enum SHAREPOINT for sharepoint
             /// </summary>
             [EnumMember(Value = "sharepoint")]
-            SHAREPOINT
+            sharepoint
         }
 
         /// <summary>
@@ -1439,19 +1439,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum DAILY for daily
             /// </summary>
             [EnumMember(Value = "daily")]
-            DAILY,
+            daily,
 
             /// <summary>
             /// Enum WEEKLY for weekly
             /// </summary>
             [EnumMember(Value = "weekly")]
-            WEEKLY,
+            weekly,
 
             /// <summary>
             /// Enum MONTHLY for monthly
             /// </summary>
             [EnumMember(Value = "monthly")]
-            MONTHLY
+            monthly
         }
 
         /// <summary>
@@ -1500,31 +1500,31 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// Enum RUNNING for running
             /// </summary>
             [EnumMember(Value = "running")]
-            RUNNING,
+            running,
 
             /// <summary>
             /// Enum COMPLETE for complete
             /// </summary>
             [EnumMember(Value = "complete")]
-            COMPLETE,
+            complete,
 
             /// <summary>
             /// Enum COMPLETE_WITH_NOTICES for complete_with_notices
             /// </summary>
             [EnumMember(Value = "complete_with_notices")]
-            COMPLETE_WITH_NOTICES,
+            complete_with_notices,
 
             /// <summary>
             /// Enum STOPPED for stopped
             /// </summary>
             [EnumMember(Value = "stopped")]
-            STOPPED,
+            stopped,
 
             /// <summary>
             /// Enum NOT_CONFIGURED for not_configured
             /// </summary>
             [EnumMember(Value = "not_configured")]
-            NOT_CONFIGURED
+            not_configured
         }
 
         /// <summary>
