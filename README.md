@@ -315,6 +315,9 @@ private void OnMessage(object resp, Dictionary<string, object> customData)
 ```
 
 ## Authentication Tokens
+
+**Authenticating with the `X-Watson-Authorization-Token` header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam) or the [README](#IAM) in the IBM Watson SDK you use.**
+
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
 
 You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
