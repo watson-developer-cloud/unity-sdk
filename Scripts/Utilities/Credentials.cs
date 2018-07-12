@@ -35,6 +35,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private IamTokenData _iamTokenData;
         private string _iamApiKey;
         private string _userAcessToken;
+        private const string APIKEY_AS_USERNAME = "apikey";
         #endregion
 
         #region Public Fields
@@ -118,10 +119,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="url">The service endpoint.</param>
         public Credentials(string username, string password, string url = null)
         {
-            Username = username;
-            Password = password;
-            if(!string.IsNullOrEmpty(url))
-                Url = url;
+            SetCredentials(username, password, url);
         }
 
         /// <summary>
@@ -141,7 +139,35 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <param name="iamTokenOptions"></param>
         public Credentials(TokenOptions iamTokenOptions, string serviceUrl = null)
         {
-            if(!string.IsNullOrEmpty(serviceUrl))
+            SetCredentials(iamTokenOptions, serviceUrl);
+        }
+        #endregion
+
+        #region SetCredentials
+        private void SetCredentials(string username, string password, string url = null)
+        {
+            if (username == APIKEY_AS_USERNAME)
+            {
+                TokenOptions tokenOptions = new TokenOptions()
+                {
+                    IamApiKey = password
+                };
+
+                SetCredentials(tokenOptions, url);
+            }
+            else
+            {
+                Username = username;
+                Password = password;
+            }
+
+            if (!string.IsNullOrEmpty(url))
+                Url = url;
+        }
+
+        private void SetCredentials(TokenOptions iamTokenOptions, string serviceUrl = null)
+        {
+            if (!string.IsNullOrEmpty(serviceUrl))
                 Url = serviceUrl;
             _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
             _iamTokenData = new IamTokenData();
@@ -155,7 +181,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             GetToken();
         }
         #endregion
-        
+
         #region Get Token
         /// <summary>
         /// This function sends an access token back through a callback. The source of the token
@@ -536,9 +562,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public List<VcapCredential> GetCredentialByname(string name)
         {
             List<VcapCredential> credentialsList = new List<VcapCredential>();
-            foreach(KeyValuePair<string, List<VcapCredential>> kvp in VCAP_SERVICES)
+            foreach (KeyValuePair<string, List<VcapCredential>> kvp in VCAP_SERVICES)
             {
-                foreach(VcapCredential credential in kvp.Value)
+                foreach (VcapCredential credential in kvp.Value)
                 {
                     if (credential.Name == name)
                         credentialsList.Add(credential);
