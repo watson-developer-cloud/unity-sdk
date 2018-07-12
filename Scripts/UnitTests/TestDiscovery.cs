@@ -70,6 +70,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteUserDataTested = false;
         private bool _readyToContinue = false;
 
+        private bool _listCredentialsTested = false;
+        private bool _createCredentialsTested = false;
+        private bool _getCredentialTested = false;
+        private bool _deleteCredentialsTested = false;
+        private string _createdCredentialId = null;
+
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
@@ -215,6 +221,44 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_queryTested)
                 yield return null;
 
+            //  List Credentials
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to list credentials");
+            _discovery.ListCredentials(OnListCredentials, OnFail, _environmentId);
+            while (!_listCredentialsTested)
+                yield return null;
+
+            //  Create Credentials
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to create credentials");
+            SourceCredentials credentialsParameter = new SourceCredentials()
+            {
+                SourceType = SourceCredentials.SourceTypeEnum.box,
+                CredentialDetails = new CredentialDetails()
+                {
+                    CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
+                    EnterpriseId = "myEnterpriseId",
+                    ClientId = "myClientId",
+                    ClientSecret = "myClientSecret",
+                    PublicKeyId = "myPublicIdKey",
+                    Passphrase = "myPassphrase",
+                    PrivateKey = "myPrivateKey"
+                }
+            };
+            _discovery.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
+            while (!_createCredentialsTested)
+                yield return null;
+
+            //  Get Credential
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to get credential");
+            _discovery.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
+            while (!_getCredentialTested)
+                yield return null;
+
+            //  DeleteCredential
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete credential");
+            _discovery.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
+            while (!_deleteCredentialsTested)
+                yield return null;
+
             //  Delete Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
             if (!_discovery.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
@@ -310,7 +354,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
-            _environmentId = resp.environments[0].environment_id;
+            foreach (var environment in resp.environments)
+            {
+                if (environment.read_only == false)
+                {
+                    Log.Debug("TestDiscovery.OnGetEnvironments()", "setting environment to {0}", environment.environment_id);
+                    _environmentId = environment.environment_id;
+                }
+            }
             Test(resp != null);
             _getEnvironmentsTested = true;
         }
@@ -442,9 +493,33 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteUserData(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistant.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("TestDiscovery.OnDeleteUserData()", "Response: {0}", customData["json"].ToString());
             Test(response != null);
             _deleteUserDataTested = true;
+        }
+
+        private void OnListCredentials(CredentialsList response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnListCredentials()", "Response: {0}", customData["json"].ToString());
+            _listCredentialsTested = true;
+        }
+        private void OnCreateCredentials(SourceCredentials response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateCredentials()", "Response: {0}", customData["json"].ToString());
+            _createdCredentialId = response.CredentialId;
+            _createCredentialsTested = true;
+        }
+
+        private void OnGetCredential(SourceCredentials response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetCredential()", "Response: {0}", customData["json"].ToString());
+            _getCredentialTested = true;
+        }
+
+        private void OnDeleteCredentials(DeleteCredentials response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteCredentials()", "Response: {0}", customData["json"].ToString());
+            _deleteCredentialsTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
