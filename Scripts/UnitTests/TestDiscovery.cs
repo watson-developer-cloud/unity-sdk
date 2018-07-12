@@ -114,7 +114,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Create credential and instantiate service
             Credentials credentials = new Credentials(_username, _password, _url);
-            
+
             _discovery = new Discovery(credentials);
             _discovery.VersionDate = _discoveryVersionDate;
             _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
