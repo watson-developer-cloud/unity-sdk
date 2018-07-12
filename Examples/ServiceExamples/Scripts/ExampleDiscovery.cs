@@ -331,7 +331,7 @@ public class ExampleDiscovery : MonoBehaviour
 
         Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
     }
-    
+
     #region Check State
     private IEnumerator CheckEnvironmentState(float waitTime)
     {
@@ -372,7 +372,7 @@ public class ExampleDiscovery : MonoBehaviour
     {
         Log.Debug("ExampleDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
 
-        foreach(var environment in resp.environments)
+        foreach (var environment in resp.environments)
         {
             if (environment.read_only == false)
             {
@@ -380,7 +380,7 @@ public class ExampleDiscovery : MonoBehaviour
                 _environmentId = environment.environment_id;
             }
         }
-        
+
         _getEnvironmentsTested = true;
     }
 
