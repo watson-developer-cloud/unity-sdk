@@ -5,7 +5,7 @@ The following tasks should be completed before publishing a release. Track the p
 - [ ] Review and merge any outstanding pull requests.
 - [ ] Review any oustanding issues assigned to this release milestone.
 - [ ] Branch from `develop` to `rc-[version]`, ex: `rc-2.0.0`.
-- [ ] Draft release with version in the format of `v2.0.0` targeting the 'master' branch. Standard release should be named using the format `Watson Developer Cloud Unity SDK [version]`, ex: `Watson Developer Cloud Unity SDK v2.0.0`.
+- [ ] Draft release with version in the format of `v2.0.0` targeting the 'master' branch. Standard release should be named using the format `IBM Watson SDK for Unity [version]`, ex: `IBM Watson SDK for Unity v2.0.0`.
  
 #### Source Changes (in `rc` branch)
 - [ ] Update `String.Version` in `Scripts/Utilities/Constants.cs` to the current version, ex: `watson-apis-unity-sdk/2.0.0`
