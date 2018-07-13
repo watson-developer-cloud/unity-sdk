@@ -29,7 +29,7 @@ Ensure that you have the following prerequisites:
 * [Unity][get_unity]. You can use the **free** Personal edition.
 
 ## Configuring Unity
-* Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The Watson Developer Cloud Unity SDK does not support Unity Web Player.
+* Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The IBM Watson SDK for Unity does not support Unity Web Player.
 * If using Unity 2018.2 or later you'll need to set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
@@ -107,15 +107,16 @@ You supply either an IAM service **API key** or an **access token**:
 ```cs
 IEnumerator TokenExample()
 {
-    //  Create IAM token options and supply the apikey. 
+    //  Create IAM token options and supply the apikey. IamUrl is the URL used to get the 
+    //  authorization token using the IamApiKey. It defaults to https://iam.bluemix.net/identity/token
     TokenOptions iamTokenOptions = new TokenOptions()
     {
         IamApiKey = "<iam-api-key>",
-        IamUrl = "<service-url>"
+        IamUrl = "<iam-url>"
     };
 
     //  Create credentials using the IAM token options
-    _credentials = new Credentials(iamTokenOptions, "<service-url");
+    _credentials = new Credentials(iamTokenOptions, "<service-url>");
     while (!_credentials.HasIamTokenData())
         yield return null;
 
@@ -314,6 +315,9 @@ private void OnMessage(object resp, Dictionary<string, object> customData)
 ```
 
 ## Authentication Tokens
+
+**Authenticating with the `X-Watson-Authorization-Token` header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam) or the [README](#IAM) in the IBM Watson SDK you use.**
+
 You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
 
 You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
@@ -351,6 +355,9 @@ private void OnGetToken(AuthenticationToken authenticationToken, string customDa
     Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
 }
 ```
+
+## Streaming outside of US South region
+Watson services have upgraded their hosts to TLS 1.2. The US South region has a TLS 1.0 endpoint that will work for streaming but if you are streaming in other regions you will need to use Unity 2018.2 and set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. In lower versions of Unity you will need to create the Speech to Text instance in US South.
 
 ## Documentation
 Documentation can be found [here][documentation]. You can also access the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).

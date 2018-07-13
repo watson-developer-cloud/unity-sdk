@@ -83,6 +83,12 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _readyToContinue = false;
     private float _waitTime = 10f;
 
+    private bool _listCredentialsTested = false;
+    private bool _createCredentialsTested = false;
+    private bool _getCredentialTested = false;
+    private bool _deleteCredentialsTested = false;
+    private string _createdCredentialId = null;
+
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
@@ -285,6 +291,44 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_isEnvironmentReady)
             yield return null;
 
+        //  List Credentials
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to list credentials");
+        _service.ListCredentials(OnListCredentials, OnFail, _environmentId);
+        while (!_listCredentialsTested)
+            yield return null;
+
+        //  Create Credentials
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to create credentials");
+        SourceCredentials credentialsParameter = new SourceCredentials()
+        {
+            SourceType = SourceCredentials.SourceTypeEnum.box,
+            CredentialDetails = new CredentialDetails()
+            {
+                CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
+                EnterpriseId = "myEnterpriseId",
+                ClientId = "myClientId",
+                ClientSecret = "myClientSecret",
+                PublicKeyId = "myPublicIdKey",
+                Passphrase = "myPassphrase",
+                PrivateKey = "myPrivateKey"
+            }
+        };
+        _service.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
+        while (!_createCredentialsTested)
+            yield return null;
+
+        //  Get Credential
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to get credential");
+        _service.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
+        while (!_getCredentialTested)
+            yield return null;
+
+        //  DeleteCredential
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete credential");
+        _service.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
+        while (!_deleteCredentialsTested)
+            yield return null;
+
         Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
     }
 
@@ -327,13 +371,22 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
+
+        foreach (var environment in resp.environments)
+        {
+            if (environment.read_only == false)
+            {
+                Log.Debug("ExampleDiscovery.OnGetEnvironments()", "setting environment to {0}", environment.environment_id);
+                _environmentId = environment.environment_id;
+            }
+        }
+
         _getEnvironmentsTested = true;
     }
 
     private void OnGetEnvironment(Environment resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", customData["json"].ToString());
-        _environmentId = resp.environment_id;
         _getEnvironmentTested = true;
     }
 
@@ -435,6 +488,30 @@ public class ExampleDiscovery : MonoBehaviour
     {
         Log.Debug("ExampleDiscovery.OnQuery()", "Discovery - Query Response: {0}", customData["json"].ToString());
         _queryTested = true;
+    }
+
+    private void OnListCredentials(CredentialsList response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnListCredentials()", "Response: {0}", customData["json"].ToString());
+        _listCredentialsTested = true;
+    }
+    private void OnCreateCredentials(SourceCredentials response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnCreateCredentials()", "Response: {0}", customData["json"].ToString());
+        _createdCredentialId = response.CredentialId;
+        _createCredentialsTested = true;
+    }
+
+    private void OnGetCredential(SourceCredentials response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetCredential()", "Response: {0}", customData["json"].ToString());
+        _getCredentialTested = true;
+    }
+
+    private void OnDeleteCredentials(DeleteCredentials response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnDeleteCredentials()", "Response: {0}", customData["json"].ToString());
+        _deleteCredentialsTested = true;
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

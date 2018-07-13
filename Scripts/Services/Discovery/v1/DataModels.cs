@@ -16,6 +16,9 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
@@ -322,6 +325,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// An array describing the configuration's document normalization settings.
         /// </summary>
         public NormalizationOperation[] normalizations { get; set; }
+        /// <summary>
+        /// Object containing source parameters for the configuration.
+        /// </summary>
+        [fsProperty("source")]
+        public Source Source { get; set; }
     }
 
     /// <summary>
@@ -776,6 +784,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// Object providing information about the documents in the collection.
         /// </summary>
         public DocumentCounts document_counts { get; set; }
+        /// <summary>
+        /// Object containing source crawl status information.
+        /// </summary>
+        [fsProperty("source_crawl")]
+        public SourceStatus SourceCrawl { get; set; }
     }
 
     /// <summary>
@@ -917,6 +930,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// Query aggregations.
         /// </summary>
         public QueryAggregation aggregations { get; set; }
+        /// <summary>
+        /// The session token for this query. The session token can be used to add events associated with this query to
+        /// the query and event log.
+        /// </summary>
+        [fsProperty("session_token")]
+        public string SessionToken { get; set; }
 
         public override string ToString()
         {
@@ -966,6 +985,24 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     }
 
     /// <summary>
+    /// Metadata of a query result.
+    /// </summary>
+    [fsObject]
+    public class QueryResultResultMetadata
+    {
+        /// <summary>
+        /// The raw score of the result. A higher score indicates a greater match to the query parameters.
+        /// </summary>
+        [fsProperty("score")]
+        public double? Score { get; set; }
+        /// <summary>
+        /// The confidence score of the result's analysis. A higher score indicates greater confidence.
+        /// </summary>
+        [fsProperty("confidence")]
+        public double? Confidence { get; set; }
+    }
+
+    /// <summary>
     /// Query aggregation.
     /// </summary>
     [fsObject]
@@ -1003,6 +1040,510 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// THe aggregation matching results.
         /// </summary>
         public double matching_results { get; set; }
+    }
+    #endregion
+
+    #region Credentials
+    [fsObject]
+    /// <summary>
+    /// CredentialsList.
+    /// </summary>
+    public class CredentialsList
+    {
+        /// <summary>
+        /// An array of credential definitions that were created for this instance.
+        /// </summary>
+        [fsProperty("credentials")]
+        public List<SourceCredentials> Credentials { get; set; }
+    }
+
+    [fsObject]
+    /// <summary>
+    /// Object containing credential information.
+    /// </summary>
+    public class SourceCredentials
+    {
+        /// <summary>
+        /// The source that this credentials object connects to.
+        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+        /// </summary>
+        public enum SourceTypeEnum
+        {
+
+            /// <summary>
+            /// Enum BOX for box
+            /// </summary>
+            [EnumMember(Value = "box")]
+            box,
+
+            /// <summary>
+            /// Enum SALESFORCE for salesforce
+            /// </summary>
+            [EnumMember(Value = "salesforce")]
+            salesforce,
+
+            /// <summary>
+            /// Enum SHAREPOINT for sharepoint
+            /// </summary>
+            [EnumMember(Value = "sharepoint")]
+            sharepoint
+        }
+
+        /// <summary>
+        /// The source that this credentials object connects to.
+        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+        /// </summary>
+        [fsProperty("source_type")]
+        public SourceTypeEnum? SourceType { get; set; }
+        /// <summary>
+        /// Unique identifier for this set of credentials.
+        /// </summary>
+        [fsProperty("credential_id")]
+        public virtual string CredentialId { get; private set; }
+        /// <summary>
+        /// Object containing details of the stored credentials.
+        ///
+        /// Obtain credentials for your source from the administrator of the source.
+        /// </summary>
+        [fsProperty("credential_details")]
+        public CredentialDetails CredentialDetails { get; set; }
+    }
+
+
+    [fsObject]
+    /// <summary>
+    /// Object containing details of the stored credentials.
+    ///
+    /// Obtain credentials for your source from the administrator of the source.
+    /// </summary>
+    public class CredentialDetails
+    {
+        /// <summary>
+        /// The authentication method for this credentials definition. The  **credential_type** specified must be
+        /// supported by the **source_type**. The following combinations are possible:
+        ///
+        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
+        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
+        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml`.
+        /// </summary>
+        public enum CredentialTypeEnum
+        {
+            
+            /// <summary>
+            /// Enum OAUTH2 for oauth2
+            /// </summary>
+            [EnumMember(Value = "oauth2")]
+            oauth2,
+            
+            /// <summary>
+            /// Enum SAML for saml
+            /// </summary>
+            [EnumMember(Value = "saml")]
+            saml,
+            
+            /// <summary>
+            /// Enum USERNAME_PASSWORD for username_password
+            /// </summary>
+            [EnumMember(Value = "username_password")]
+            username_password
+        }
+
+        /// <summary>
+        /// The authentication method for this credentials definition. The  **credential_type** specified must be
+        /// supported by the **source_type**. The following combinations are possible:
+        ///
+        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
+        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
+        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml`.
+        /// </summary>
+        [fsProperty("credential_type")]
+        public CredentialTypeEnum? CredentialType { get; set; }
+        /// <summary>
+        /// The **client_id** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `oauth2`.
+        /// </summary>
+        [fsProperty("client_id")]
+        public string ClientId { get; set; }
+        /// <summary>
+        /// The **enterprise_id** of the Box site that these credentials connect to. Only valid, and required, with a
+        /// **source_type** of `box`.
+        /// </summary>
+        [fsProperty("enterprise_id")]
+        public string EnterpriseId { get; set; }
+        /// <summary>
+        /// The **url** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `username_password`.
+        /// </summary>
+        [fsProperty("url")]
+        public string Url { get; set; }
+        /// <summary>
+        /// The **username** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `saml` and `username_password`.
+        /// </summary>
+        [fsProperty("username")]
+        public string Username { get; set; }
+        /// <summary>
+        /// The **organization_url** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `saml`.
+        /// </summary>
+        [fsProperty("organization_url")]
+        public string OrganizationUrl { get; set; }
+        /// <summary>
+        /// The **site_collection.path** of the source that these credentials connect to. Only valid, and required, with
+        /// a **source_type** of `sharepoint`.
+        /// </summary>
+        [fsProperty("site_collection.path")]
+        public string SiteCollectionPath { get; set; }
+        /// <summary>
+        /// The **client_secret** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
+        /// **credentials**.
+        /// </summary>
+        [fsProperty("client_secret")]
+        public string ClientSecret { get; set; }
+        /// <summary>
+        /// The **public_key_id** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
+        /// **credentials**.
+        /// </summary>
+        [fsProperty("public_key_id")]
+        public string PublicKeyId { get; set; }
+        /// <summary>
+        /// The **private_key** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
+        /// **credentials**.
+        /// </summary>
+        [fsProperty("private_key")]
+        public string PrivateKey { get; set; }
+        /// <summary>
+        /// The **passphrase** of the source that these credentials connect to. Only valid, and required, with a
+        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
+        /// **credentials**.
+        /// </summary>
+        [fsProperty("passphrase")]
+        public string Passphrase { get; set; }
+        /// <summary>
+        /// The **password** of the source that these credentials connect to. Only valid, and required, with
+        /// **credential_type**s of `saml` and `username_password`.
+        ///
+        /// **Note:** When used with a **source_type** of `salesforce`, the password consists of the Salesforce password
+        /// and a valid Salesforce security token concatenated. This value is never returned and is only used when
+        /// creating or modifying **credentials**.
+        /// </summary>
+        [fsProperty("password")]
+        public string Password { get; set; }
+    }
+
+    [fsObject]
+    /// <summary>
+    /// Object returned after credentials are deleted.
+    /// </summary>
+    public class DeleteCredentials
+    {
+        /// <summary>
+        /// The status of the deletion request.
+        /// </summary>
+        public enum StatusEnum
+        {
+
+            /// <summary>
+            /// Enum DELETED for deleted
+            /// </summary>
+            [EnumMember(Value = "deleted")]
+            deleted
+        }
+
+        /// <summary>
+        /// The status of the deletion request.
+        /// </summary>
+        [fsProperty("status")]
+        public StatusEnum? Status { get; set; }
+        /// <summary>
+        /// The unique identifier of the credentials that have been deleted.
+        /// </summary>
+        [fsProperty("credential_id")]
+        public string CredentialId { get; set; }
+    }
+
+    /// <summary>
+    /// Object containing source parameters for the configuration.
+    /// </summary>
+    [fsObject]
+    public class Source
+    {
+        /// <summary>
+        /// The type of source to connect to.
+        /// -  `box` indicates the configuration is to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the configuration is to connect to Salesforce.
+        /// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
+        /// </summary>
+        public enum TypeEnum
+        {
+
+            /// <summary>
+            /// Enum BOX for box
+            /// </summary>
+            [EnumMember(Value = "box")]
+            box,
+
+            /// <summary>
+            /// Enum SALESFORCE for salesforce
+            /// </summary>
+            [EnumMember(Value = "salesforce")]
+            salesforce,
+
+            /// <summary>
+            /// Enum SHAREPOINT for sharepoint
+            /// </summary>
+            [EnumMember(Value = "sharepoint")]
+            sharepoint
+        }
+
+        /// <summary>
+        /// The type of source to connect to.
+        /// -  `box` indicates the configuration is to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the configuration is to connect to Salesforce.
+        /// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
+        /// </summary>
+        [fsProperty("type")]
+        public TypeEnum? Type { get; set; }
+        /// <summary>
+        /// The **credential_id** of the credentials to use to connect to the source. Credentials are defined using the
+        /// **credentials** method. The **source_type** of the credentials used must match the **type** field specified
+        /// in this object.
+        /// </summary>
+        [fsProperty("credential_id")]
+        public string CredentialId { get; set; }
+        /// <summary>
+        /// Object containing the schedule information for the source.
+        /// </summary>
+        [fsProperty("schedule")]
+        public SourceSchedule Schedule { get; set; }
+        /// <summary>
+        /// The **options** object defines which items to crawl from the source system.
+        /// </summary>
+        [fsProperty("options")]
+        public SourceOptions Options { get; set; }
+    }
+
+    /// <summary>
+    /// The **options** object defines which items to crawl from the source system.
+    /// </summary>
+    [fsObject]
+    public class SourceOptions
+    {
+        /// <summary>
+        /// Array of folders to crawl from the Box source. Only valid, and required, when the **type** field of the
+        /// **source** object is set to `box`.
+        /// </summary>
+        [fsProperty("folders")]
+        public List<SourceOptionsFolder> Folders { get; set; }
+        /// <summary>
+        /// Array of Salesforce document object types to crawl from the Salesforce source. Only valid, and required,
+        /// when the **type** field of the **source** object is set to `salesforce`.
+        /// </summary>
+        [fsProperty("objects")]
+        public List<SourceOptionsObject> Objects { get; set; }
+        /// <summary>
+        /// Array of Microsoft SharePointoint Online site collections to crawl from the SharePoint source. Only valid
+        /// and required when the **type** field of the **source** object is set to `sharepoint`.
+        /// </summary>
+        [fsProperty("site_collections")]
+        public List<SourceOptionsSiteColl> SiteCollections { get; set; }
+    }
+
+    /// <summary>
+    /// Object that defines a box folder to crawl with this configuration.
+    /// </summary>
+    [fsObject]
+    public class SourceOptionsFolder
+    {
+        /// <summary>
+        /// The Box user ID of the user who owns the folder to crawl.
+        /// </summary>
+        [fsProperty("owner_user_id")]
+        public string OwnerUserId { get; set; }
+        /// <summary>
+        /// The Box folder ID of the folder to crawl.
+        /// </summary>
+        [fsProperty("folder_id")]
+        public string FolderId { get; set; }
+        /// <summary>
+        /// The maximum number of documents to crawl for this folder. By default, all documents in the folder are
+        /// crawled.
+        /// </summary>
+        [fsProperty("limit")]
+        public long? Limit { get; set; }
+    }
+
+    /// <summary>
+    /// Object that defines a Salesforce document object type crawl with this configuration.
+    /// </summary>
+    [fsObject]
+    public class SourceOptionsObject
+    {
+        /// <summary>
+        /// The name of the Salesforce document object to crawl. For example, `case`.
+        /// </summary>
+        [fsProperty("name")]
+        public string Name { get; set; }
+        /// <summary>
+        /// The maximum number of documents to crawl for this document object. By default, all documents in the document
+        /// object are crawled.
+        /// </summary>
+        [fsProperty("limit")]
+        public long? Limit { get; set; }
+    }
+
+    /// <summary>
+    /// Object that defines a Microsoft SharePoint site collection to crawl with this configuration.
+    /// </summary>
+    [fsObject]
+    public class SourceOptionsSiteColl
+    {
+        /// <summary>
+        /// The Microsoft SharePoint Online site collection path to crawl. The path must be be relative to the
+        /// **organization_url** that was specified in the credentials associated with this source configuration.
+        /// </summary>
+        [fsProperty("site_collection_path")]
+        public string SiteCollectionPath { get; set; }
+        /// <summary>
+        /// The maximum number of documents to crawl for this site collection. By default, all documents in the site
+        /// collection are crawled.
+        /// </summary>
+        [fsProperty("limit")]
+        public long? Limit { get; set; }
+    }
+
+    /// <summary>
+    /// Object containing the schedule information for the source.
+    /// </summary>
+    [fsObject]
+    public class SourceSchedule
+    {
+        /// <summary>
+        /// The crawl schedule in the specified **time_zone**.
+        ///
+        /// -  `daily`: Runs every day between 00:00 and 06:00.
+        /// -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
+        /// -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
+        /// </summary>
+        public enum FrequencyEnum
+        {
+
+            /// <summary>
+            /// Enum DAILY for daily
+            /// </summary>
+            [EnumMember(Value = "daily")]
+            daily,
+
+            /// <summary>
+            /// Enum WEEKLY for weekly
+            /// </summary>
+            [EnumMember(Value = "weekly")]
+            weekly,
+
+            /// <summary>
+            /// Enum MONTHLY for monthly
+            /// </summary>
+            [EnumMember(Value = "monthly")]
+            monthly
+        }
+
+        /// <summary>
+        /// The crawl schedule in the specified **time_zone**.
+        ///
+        /// -  `daily`: Runs every day between 00:00 and 06:00.
+        /// -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
+        /// -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
+        /// </summary>
+        [fsProperty("frequency")]
+        public FrequencyEnum? Frequency { get; set; }
+        /// <summary>
+        /// When `true`, the source is re-crawled based on the **frequency** field in this object. When `false` the
+        /// source is not re-crawled; When `false` and connecting to Salesforce the source is crawled annually.
+        /// </summary>
+        [fsProperty("enabled")]
+        public bool? Enabled { get; set; }
+        /// <summary>
+        /// The time zone to base source crawl times on. Possible values correspond to the IANA (Internet Assigned
+        /// Numbers Authority) time zones list.
+        /// </summary>
+        [fsProperty("time_zone")]
+        public string TimeZone { get; set; }
+    }
+
+    /// <summary>
+    /// Object containing source crawl status information.
+    /// </summary>
+    [fsObject]
+    public class SourceStatus
+    {
+        /// <summary>
+        /// The current status of the source crawl for this collection. This field returns `not_configured` if the
+        /// default configuration for this source does not have a **source** object defined.
+        ///
+        /// -  `running` indicates that a crawl to fetch more documents is in progress.
+        /// -  `complete` indicates that the crawl has completed with no errors.
+        /// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be
+        /// checked by using the **notices** query method.
+        /// -  `stopped` indicates that the crawl has stopped but is not complete.
+        /// </summary>
+        public enum StatusEnum
+        {
+
+            /// <summary>
+            /// Enum RUNNING for running
+            /// </summary>
+            [EnumMember(Value = "running")]
+            running,
+
+            /// <summary>
+            /// Enum COMPLETE for complete
+            /// </summary>
+            [EnumMember(Value = "complete")]
+            complete,
+
+            /// <summary>
+            /// Enum COMPLETE_WITH_NOTICES for complete_with_notices
+            /// </summary>
+            [EnumMember(Value = "complete_with_notices")]
+            complete_with_notices,
+
+            /// <summary>
+            /// Enum STOPPED for stopped
+            /// </summary>
+            [EnumMember(Value = "stopped")]
+            stopped,
+
+            /// <summary>
+            /// Enum NOT_CONFIGURED for not_configured
+            /// </summary>
+            [EnumMember(Value = "not_configured")]
+            not_configured
+        }
+
+        /// <summary>
+        /// The current status of the source crawl for this collection. This field returns `not_configured` if the
+        /// default configuration for this source does not have a **source** object defined.
+        ///
+        /// -  `running` indicates that a crawl to fetch more documents is in progress.
+        /// -  `complete` indicates that the crawl has completed with no errors.
+        /// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be
+        /// checked by using the **notices** query method.
+        /// -  `stopped` indicates that the crawl has stopped but is not complete.
+        /// </summary>
+        [fsProperty("status")]
+        public StatusEnum? Status { get; set; }
+        /// <summary>
+        /// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
+        /// </summary>
+        [fsProperty("last_updated")]
+        public DateTime LastUpdated { get; set; }
     }
     #endregion
 }
