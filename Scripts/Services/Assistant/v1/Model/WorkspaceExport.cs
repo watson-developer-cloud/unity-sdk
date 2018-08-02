@@ -121,6 +121,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         [fsProperty("learning_opt_out")]
         public bool? LearningOptOut { get; set; }
         /// <summary>
+        /// Global settings for the workspace.
+        /// </summary>
+        [fsProperty("system_settings")]
+        public WorkspaceSystemSettings SystemSettings { get; set; }
+        /// <summary>
         /// An array of intents.
         /// </summary>
         /// <value>An array of intents.</value>

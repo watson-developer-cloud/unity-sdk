@@ -16,40 +16,32 @@
 */
 
 using FullSerializer;
-using System;
 using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// Example.
+    /// An object describing a contextual entity mention.
     /// </summary>
     [fsObject]
-    public class Example
+    public class EntityMention
     {
         /// <summary>
         /// The text of the user input example.
         /// </summary>
-        /// <value>The text of the user input example.</value>
         [fsProperty("text")]
         public string ExampleText { get; set; }
         /// <summary>
-        /// The timestamp for creation of the example.
+        /// The name of the intent.
         /// </summary>
-        /// <value>The timestamp for creation of the example.</value>
-        [fsProperty("created")]
-        public virtual DateTime Created { get; private set; }
+        [fsProperty("intent")]
+        public string IntentName { get; set; }
         /// <summary>
-        /// The timestamp for the last update to the example.
+        /// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input
+        /// text.
         /// </summary>
-        /// <value>The timestamp for the last update to the example.</value>
-        [fsProperty("updated")]
-        public virtual DateTime Updated { get; private set; }
-        /// <summary>
-        /// An array of contextual entity mentions.
-        /// </summary>
-        [fsProperty("mentions")]
-        public List<Mentions> Mentions { get; set; }
+        [fsProperty("location")]
+        public List<int> Location { get; set; }
     }
 
 }

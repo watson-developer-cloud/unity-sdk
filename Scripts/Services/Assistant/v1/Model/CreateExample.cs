@@ -16,13 +16,15 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
     /// CreateExample.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(CreateExampleConverter))]
     public class CreateExample
     {
         /// <summary>
@@ -31,6 +33,52 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>The text of a user input example. This string must conform to the following restrictions:  - It cannot contain carriage return, newline, or tab characters.  - It cannot consist of only whitespace characters.  - It must be no longer than 1024 characters.</value>
         [fsProperty("text")]
         public string Text { get; set; }
+        /// <summary>
+        /// An array of contextual entity mentions.
+        /// </summary>
+        [fsProperty("mentions")]
+        public List<Mentions> Mentions { get; set; }
+    }
+
+    public class CreateExampleConverter : fsConverter
+    {
+        private static fsSerializer sm_Serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(CreateExample);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            CreateExample createExample = (CreateExample)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (createExample.Mentions != null)
+            {
+                sm_Serializer.TrySerialize(createExample.Mentions, out tempData);
+                serialization.Add("mentions", tempData);
+            }
+
+            if (createExample.Text != null)
+            {
+                sm_Serializer.TrySerialize(createExample.Text, out tempData);
+                serialization.Add("text", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
     }
 
 }

@@ -16,40 +16,32 @@
 */
 
 using FullSerializer;
-using System;
 using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
-    /// Example.
+    /// An object defining the message input, intents, and entities to be sent to the Watson Assistant service if the
+    /// user selects the corresponding disambiguation option.
     /// </summary>
     [fsObject]
-    public class Example
+    public class DialogSuggestionValue
     {
         /// <summary>
-        /// The text of the user input example.
+        /// The user input.
         /// </summary>
-        /// <value>The text of the user input example.</value>
-        [fsProperty("text")]
-        public string ExampleText { get; set; }
+        [fsProperty("input")]
+        public InputData Input { get; set; }
         /// <summary>
-        /// The timestamp for creation of the example.
+        /// An array of intents to be sent along with the user input.
         /// </summary>
-        /// <value>The timestamp for creation of the example.</value>
-        [fsProperty("created")]
-        public virtual DateTime Created { get; private set; }
+        [fsProperty("intents")]
+        public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
-        /// The timestamp for the last update to the example.
+        /// An array of entities to be sent along with the user input.
         /// </summary>
-        /// <value>The timestamp for the last update to the example.</value>
-        [fsProperty("updated")]
-        public virtual DateTime Updated { get; private set; }
-        /// <summary>
-        /// An array of contextual entity mentions.
-        /// </summary>
-        [fsProperty("mentions")]
-        public List<Mentions> Mentions { get; set; }
+        [fsProperty("entities")]
+        public List<RuntimeEntity> Entities { get; set; }
     }
 
 }
