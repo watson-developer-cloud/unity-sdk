@@ -81,6 +81,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private bool _createValueTested = false;
         private bool _getValueTested = false;
         private bool _updateValueTested = false;
+        private bool _listMentionsTested = false;
         private bool _listSynonymsTested = false;
         private bool _createSynonymTested = false;
         private bool _getSynonymTested = false;
@@ -314,6 +315,11 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateEntity(OnUpdateEntity, OnFail, _createdWorkspaceId, _createdEntity, updateEntity);
             while (!_updateEntityTested)
+                yield return null;
+
+            // List Mentions
+            _service.ListMentions(OnListMentions, OnFail, _createdWorkspaceId, updatedEntity);
+            while (!_listMentionsTested)
                 yield return null;
 
             //  List Values
@@ -707,6 +713,12 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("ExampleAssistant.OnListIntents()", "Response: {0}", customData["json"].ToString());
             _listIntentsTested = true;
+        }
+
+        private void OnListMentions(EntityMentionCollection response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnListMentions()", "Response: {0}", customData["json"].ToString());
+            _listMentionsTested = true;
         }
 
         private void OnMessage(object response, Dictionary<string, object> customData)

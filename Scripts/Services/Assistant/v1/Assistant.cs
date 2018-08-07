@@ -2708,6 +2708,116 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                     ((UpdateEntityRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
+
+        /// <summary>
+        /// List entity mentions.
+        ///
+        /// List mentions for a contextual entity. An entity mention is an occurrence of a contextual entity in the
+        /// context of an intent user input example.
+        ///
+        /// This operation is limited to 200 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
+        /// returned data includes only information about the element itself. If **export**=`true`, all content,
+        /// including subelements, is included. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="EntityMentionCollection" />EntityMentionCollection</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool ListMentions(SuccessCallback<EntityMentionCollection> successCallback, FailCallback failCallback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            ListMentionsRequestObj req = new ListMentionsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (export != null)
+                req.Parameters["export"] = export;
+            if (includeAudit != null)
+                req.Parameters["include_audit"] = includeAudit;
+            req.OnResponse = OnListMentionsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ListMentionsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<EntityMentionCollection> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnListMentionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            EntityMentionCollection result = new EntityMentionCollection();
+            fsData data = null;
+            Dictionary<string, object> customData = ((ListMentionsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Assistant.OnListMentionsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((ListMentionsRequestObj)req).SuccessCallback != null)
+                    ((ListMentionsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((ListMentionsRequestObj)req).FailCallback != null)
+                    ((ListMentionsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
         /// <summary>
         /// Add entity value. Create a new value for an entity.    This operation is limited to 1000 requests per 30 minutes. For more information, see [**Rate limiting**](https://www.ibm.com/watson/developercloud/assistant/api/v1/#rate-limiting).
         /// </summary>

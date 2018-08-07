@@ -205,6 +205,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>An array of objects describing any actions to be invoked by the dialog node.</value>
         [fsProperty("actions")]
         public List<DialogNodeAction> Actions { get; set; }
+        /// <summary>
+        /// A label that can be displayed externally to describe the purpose of the node to users.
+        /// </summary>
+        [fsProperty("user_label")]
+        public string UserLabel { get; set; }
     }
 
 }

@@ -205,6 +205,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>The location in the dialog context where output is stored.</value>
         [fsProperty("variable")]
         public string Variable { get; set; }
+        /// <summary>
+        /// A label that can be displayed externally to describe the purpose of the node to users.
+        /// </summary>
+        [fsProperty("user_label")]
+        public string UserLabel { get; set; }
     }
 
 }

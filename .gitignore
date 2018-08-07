@@ -72,3 +72,5 @@ Docs/publishing-release.md.meta
 *.md.meta
 *.txt.meta
 *.ps1.meta
+**/.swagger-codegen-ignore
+**/.swagger-codegen
