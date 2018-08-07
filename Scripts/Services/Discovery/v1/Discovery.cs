@@ -2553,8 +2553,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(_return))
                 req.Parameters["return"] = _return;
 
-            if (!string.IsNullOrEmpty(loggingOptOut)
-                    restRequest.WithHeader("X-Watson-Logging-Opt-Out", loggingOptOut);
+            if (loggingOptOut != null)
+                req.Headers.Add("X-Watson-Logging-Opt-Out", loggingOptOut.ToString());
 
             req.Parameters["offset"] = offset;
             req.Parameters["count"] = count;
