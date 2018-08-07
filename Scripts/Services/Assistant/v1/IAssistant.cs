@@ -83,6 +83,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         bool ListEntities(SuccessCallback<EntityCollection> successCallback, FailCallback failCallback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null);
 
         bool UpdateEntity(SuccessCallback<Entity> successCallback, FailCallback failCallback, string workspaceId, string entity, UpdateEntity properties, Dictionary<string, object> customData = null);
+        bool ListMentions(SuccessCallback<EntityMentionCollection> successCallback, FailCallback failCallback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null);
         bool CreateValue(SuccessCallback<Value> successCallback, FailCallback failCallback, string workspaceId, string entity, CreateValue properties, Dictionary<string, object> customData = null);
 
         bool DeleteValue(SuccessCallback<object> successCallback, FailCallback failCallback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null);

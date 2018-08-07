@@ -574,6 +574,89 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     public class EnrichmentOptions
     {
         /// <summary>
+        /// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language
+        /// detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de`
+        /// (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:**
+        /// Not all features support all languages, automatic detection is recommended.
+        /// </summary>
+        /// <value>
+        /// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language
+        /// detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de`
+        /// (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:**
+        /// Not all features support all languages, automatic detection is recommended.
+        /// </value>
+        public enum LanguageEnum
+        {
+
+            /// <summary>
+            /// Enum AR for ar
+            /// </summary>
+            [EnumMember(Value = "ar")]
+            AR,
+
+            /// <summary>
+            /// Enum EN for en
+            /// </summary>
+            [EnumMember(Value = "en")]
+            EN,
+
+            /// <summary>
+            /// Enum FR for fr
+            /// </summary>
+            [EnumMember(Value = "fr")]
+            FR,
+
+            /// <summary>
+            /// Enum DE for de
+            /// </summary>
+            [EnumMember(Value = "de")]
+            DE,
+
+            /// <summary>
+            /// Enum IT for it
+            /// </summary>
+            [EnumMember(Value = "it")]
+            IT,
+
+            /// <summary>
+            /// Enum PT for pt
+            /// </summary>
+            [EnumMember(Value = "pt")]
+            PT,
+
+            /// <summary>
+            /// Enum RU for ru
+            /// </summary>
+            [EnumMember(Value = "ru")]
+            RU,
+
+            /// <summary>
+            /// Enum ES for es
+            /// </summary>
+            [EnumMember(Value = "es")]
+            ES,
+
+            /// <summary>
+            /// Enum SV for sv
+            /// </summary>
+            [EnumMember(Value = "sv")]
+            SV
+        }
+        /// <summary>
+        /// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language
+        /// detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de`
+        /// (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:**
+        /// Not all features support all languages, automatic detection is recommended.
+        /// </summary>
+        /// <value>
+        /// ISO 639-1 code indicating the language to use for the analysis. This code overrides the automatic language
+        /// detection performed by the service. Valid codes are `ar` (Arabic), `en` (English), `fr` (French), `de`
+        /// (German), `it` (Italian), `pt` (Portuguese), `ru` (Russian), `es` (Spanish), and `sv` (Swedish). **Note:**
+        /// Not all features support all languages, automatic detection is recommended.
+        /// </value>
+        [fsProperty("language")]
+        public LanguageEnum? Language { get; set; }
+        /// <summary>
         ///  A comma sepeated list of analyses that should be applied when using the alchemy_language enrichment. 
         ///  See the the service documentation for details on each extract option.
         ///  Possible values include: entity, keyword, taxonomy, concept, relation, doc-sentiment, doc-emotion, 

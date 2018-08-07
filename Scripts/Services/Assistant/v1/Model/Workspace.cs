@@ -74,6 +74,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for general service improvements. `true` indicates that workspace training data is not to be used.</value>
         [fsProperty("learning_opt_out")]
         public bool? LearningOptOut { get; set; }
+        /// <summary>
+        /// Global settings for the workspace.
+        /// </summary>
+        [fsProperty("system_settings")]
+        public WorkspaceSystemSettings SystemSettings { get; set; }
     }
 
 }

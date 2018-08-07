@@ -97,6 +97,7 @@ public class ExampleAssistant : MonoBehaviour
     private bool _createEntityTested = false;
     private bool _getEntityTested = false;
     private bool _updateEntityTested = false;
+    private bool _listMentionsTested = false;
     private bool _listValuesTested = false;
     private bool _createValueTested = false;
     private bool _getValueTested = false;
@@ -189,8 +190,8 @@ public class ExampleAssistant : MonoBehaviour
         //  Update Workspace
         UpdateWorkspace updateWorkspace = new UpdateWorkspace()
         {
-            Name = _createdWorkspaceName + "-updated",
-            Description = _createdWorkspaceDescription + "-updated",
+            Name = _createdWorkspaceName + "Updated",
+            Description = _createdWorkspaceDescription + "Updated",
             Language = _createdWorkspaceLanguage
         };
         _service.UpdateWorkspace(OnUpdateWorkspace, OnFail, _createdWorkspaceId, updateWorkspace);
@@ -259,8 +260,8 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getIntentTested)
             yield return null;
         //  Update Intents
-        string updatedIntent = _createdIntent + "-updated";
-        string updatedIntentDescription = _createdIntentDescription + "-updated";
+        string updatedIntent = _createdIntent + "Updated";
+        string updatedIntentDescription = _createdIntentDescription + "Updated";
         UpdateIntent updateIntent = new UpdateIntent()
         {
             Intent = updatedIntent,
@@ -287,7 +288,7 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getExampleTested)
             yield return null;
         //  Update Examples
-        string updatedExample = _createdExample + "-updated";
+        string updatedExample = _createdExample + "Updated";
         UpdateExample updateExample = new UpdateExample()
         {
             Text = updatedExample
@@ -314,8 +315,8 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getEntityTested)
             yield return null;
         //  Update Entities
-        string updatedEntity = _createdEntity + "-updated";
-        string updatedEntityDescription = _createdEntityDescription + "-updated";
+        string updatedEntity = _createdEntity + "Updated";
+        string updatedEntityDescription = _createdEntityDescription + "Updated";
         UpdateEntity updateEntity = new UpdateEntity()
         {
             Entity = updatedEntity,
@@ -323,6 +324,11 @@ public class ExampleAssistant : MonoBehaviour
         };
         _service.UpdateEntity(OnUpdateEntity, OnFail, _createdWorkspaceId, _createdEntity, updateEntity);
         while (!_updateEntityTested)
+            yield return null;
+
+        // List Mentinos
+        _service.ListMentions(OnListMentions, OnFail, _createdWorkspaceId, updatedEntity);
+        while (!_listMentionsTested)
             yield return null;
 
         //  List Values
@@ -342,7 +348,7 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getValueTested)
             yield return null;
         //  Update Values
-        string updatedValue = _createdValue + "-updated";
+        string updatedValue = _createdValue + "Updated";
         UpdateValue updateValue = new UpdateValue()
         {
             Value = updatedValue
@@ -368,7 +374,7 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getSynonymTested)
             yield return null;
         //  Update Synonyms
-        string updatedSynonym = _createdSynonym + "-updated";
+        string updatedSynonym = _createdSynonym + "Updated";
         UpdateSynonym updateSynonym = new UpdateSynonym()
         {
             Synonym = updatedSynonym
@@ -395,8 +401,8 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getDialogNodeTested)
             yield return null;
         //  Update Dialog Nodes
-        string updatedDialogNodeName = _dialogNodeName + "_updated";
-        string updatedDialogNodeDescription = _dialogNodeDesc + "_updated";
+        string updatedDialogNodeName = _dialogNodeName + "Updated";
+        string updatedDialogNodeDescription = _dialogNodeDesc + "Updated";
         UpdateDialogNode updateDialogNode = new UpdateDialogNode()
         {
             DialogNode = updatedDialogNodeName,
@@ -433,7 +439,7 @@ public class ExampleAssistant : MonoBehaviour
         while (!_getCounterexampleTested)
             yield return null;
         //  Update Counterexamples
-        string updatedCounterExampleText = _createdCounterExampleText + "-updated";
+        string updatedCounterExampleText = _createdCounterExampleText + "Updated";
         UpdateCounterexample updateCounterExample = new UpdateCounterexample()
         {
             Text = updatedCounterExampleText
@@ -478,6 +484,12 @@ public class ExampleAssistant : MonoBehaviour
         Log.Debug("TestAssistant.RunTest()", "Assistant examples complete.");
 
         yield break;
+    }
+
+    private void OnListMentions(EntityMentionCollection response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleAssistant.OnListMentions()", "Response: {0}", customData["json"].ToString());
+        _listMentionsTested = true;
     }
 
     private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
@@ -769,6 +781,13 @@ public class ExampleAssistant : MonoBehaviour
     private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleAssistant.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+
+        foreach(Workspace workspace in response.Workspaces)
+        {
+            if(workspace.Name.Contains("unity"))
+                _service.DeleteWorkspace(OnDeleteWorkspace, OnFail, workspace.WorkspaceId);
+        }
+
         _listWorkspacesTested = true;
     }
 

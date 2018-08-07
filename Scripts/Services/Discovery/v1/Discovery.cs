@@ -2516,7 +2516,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// are returned is 10, and the offset is 8, it returns the last two results.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentID, string collectionID, string filter, string query, string aggregation, int count, string _return, int offset, Dictionary<string, object> customData = null)
+        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentID, string collectionID, string filter, string query, string aggregation, int count, string _return, int offset, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -2551,7 +2551,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["aggregation"] = aggregation;
 
             if (!string.IsNullOrEmpty(_return))
-                req.Parameters["_return"] = _return;
+                req.Parameters["return"] = _return;
+
+            if (loggingOptOut != null)
+                req.Headers.Add("X-Watson-Logging-Opt-Out", loggingOptOut.ToString());
 
             req.Parameters["offset"] = offset;
             req.Parameters["count"] = count;

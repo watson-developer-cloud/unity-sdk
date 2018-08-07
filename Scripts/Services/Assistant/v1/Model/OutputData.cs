@@ -39,6 +39,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         [fsProperty("text")]
         public Dictionary<string, object> Text { get; set; }
         /// <summary>
+        /// Output intended for any channel. It is the responsibility of the client application to implement the
+        /// supported response types.
+        /// </summary>
+        [fsProperty("generic")]
+        public Dictionary<string, object> Generic { get; set; }
+        /// <summary>
         /// An array of the nodes that were triggered to create the response, in the order in which they were visited. This information is useful for debugging and for tracing the path taken through the node tree.
         /// </summary>
         /// <value>An array of the nodes that were triggered to create the response, in the order in which they were visited. This information is useful for debugging and for tracing the path taken through the node tree.</value>
