@@ -193,13 +193,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>The timestamp for creation of the dialog node.</value>
         [fsProperty("created")]
-        public virtual DateTime Created { get; private set; }
+        public virtual DateTime? Created { get; private set; }
         /// <summary>
         /// The timestamp for the most recent update to the dialog node.
         /// </summary>
         /// <value>The timestamp for the most recent update to the dialog node.</value>
         [fsProperty("updated")]
-        public virtual DateTime Updated { get; private set; }
+        public virtual DateTime? Updated { get; private set; }
         /// <summary>
         /// The actions for the dialog node.
         /// </summary>

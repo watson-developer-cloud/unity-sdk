@@ -1720,7 +1720,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
         /// </summary>
         [fsProperty("last_updated")]
-        public DateTime LastUpdated { get; set; }
+        public DateTime? LastUpdated { get; set; }
     }
     #endregion
 }

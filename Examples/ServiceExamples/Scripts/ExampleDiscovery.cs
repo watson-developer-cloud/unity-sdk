@@ -63,7 +63,8 @@ public class ExampleDiscovery : MonoBehaviour
     private string _createdCollectionDescription = "A collection created by the Unity SDK. Please delete me.";
     private string _createdDocumentID;
     private string _documentFilePath;
-    private string _query = "What is the capital of china?";
+    private string _query = "When did Watson play Jeopardy?";
+    private string _sessionToken;
 
     private bool _getEnvironmentsTested = false;
     private bool _getEnvironmentTested = false;
@@ -83,7 +84,6 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _deleteCollectionTested = false;
     private bool _deleteConfigurationTested = false;
     private bool _isEnvironmentReady = false;
-    private bool _readyToContinue = false;
     private float _waitTime = 10f;
 
     private bool _listCredentialsTested = false;
@@ -91,6 +91,14 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _getCredentialTested = false;
     private bool _deleteCredentialsTested = false;
     private string _createdCredentialId = null;
+
+    private bool _createEventTested = false;
+    private bool _getMetricsEventRateTested = false;
+    private bool _getMetricsQueryTested = false;
+    private bool _getMetricsQueryEventTested = false;
+    private bool _getMetricsQueryNoResultTested = false;
+    private bool _getMetricsQueryTokenEventTested = false;
+    private bool _queryLogTested = false;
 
     private void Start()
     {
@@ -138,9 +146,9 @@ public class ExampleDiscovery : MonoBehaviour
     private IEnumerator Examples()
     {
         //  Get Environments
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get environments");
         if (!_service.GetEnvironments(OnGetEnvironments, OnFail))
-            Log.Debug("TestDiscovery.GetEnvironments()", "Failed to get environments");
+            Log.Debug("ExampleDiscovery.GetEnvironments()", "Failed to get environments");
         while (!_getEnvironmentsTested)
             yield return null;
 
@@ -150,98 +158,188 @@ public class ExampleDiscovery : MonoBehaviour
             yield return null;
 
         //  GetEnvironment
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get environment");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get environment");
         if (!_service.GetEnvironment(OnGetEnvironment, OnFail, _environmentId))
-            Log.Debug("TestDiscovery.GetEnvironment()", "Failed to get environment");
+            Log.Debug("ExampleDiscovery.GetEnvironment()", "Failed to get environment");
         while (!_getEnvironmentTested)
             yield return null;
 
         //  Get Configurations
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get configurations");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get configurations");
         if (!_service.GetConfigurations(OnGetConfigurations, OnFail, _environmentId))
-            Log.Debug("TestDiscovery.GetConfigurations()", "Failed to get configurations");
+            Log.Debug("ExampleDiscovery.GetConfigurations()", "Failed to get configurations");
         while (!_getConfigurationsTested)
             yield return null;
 
         //  Add Configuration
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to add configuration");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to add configuration");
         if (!_service.AddConfiguration(OnAddConfiguration, OnFail, _environmentId, _configurationJson.Replace("{guid}", System.Guid.NewGuid().ToString())))
-            Log.Debug("TestDiscovery.AddConfiguration()", "Failed to add configuration");
+            Log.Debug("ExampleDiscovery.AddConfiguration()", "Failed to add configuration");
         while (!_addConfigurationTested)
             yield return null;
 
         //  Get Configuration
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get configuration");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get configuration");
         if (!_service.GetConfiguration(OnGetConfiguration, OnFail, _environmentId, _createdConfigurationId))
-            Log.Debug("TestDiscovery.GetConfiguration()", "Failed to get configuration");
+            Log.Debug("ExampleDiscovery.GetConfiguration()", "Failed to get configuration");
         while (!_getConfigurationTested)
             yield return null;
 
         //  Preview Configuration
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to preview configuration");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to preview configuration");
         if (!_service.PreviewConfiguration(OnPreviewConfiguration, OnFail, _environmentId, _createdConfigurationId, null, _filePathToIngest, _metadata))
-            Log.Debug("TestDiscovery.PreviewConfiguration()", "Failed to preview configuration");
+            Log.Debug("ExampleDiscovery.PreviewConfiguration()", "Failed to preview configuration");
         while (!_previewConfigurationTested)
             yield return null;
 
         //  Get Collections
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get collections");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get collections");
         if (!_service.GetCollections(OnGetCollections, OnFail, _environmentId))
-            Log.Debug("TestDiscovery.GetCollections()", "Failed to get collections");
+            Log.Debug("ExampleDiscovery.GetCollections()", "Failed to get collections");
         while (!_getCollectionsTested)
             yield return null;
 
         //  Add Collection
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to add collection");
         if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationId))
-            Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
+            Log.Debug("ExampleDiscovery.AddCollection()", "Failed to add collection");
         while (!_addCollectionTested)
             yield return null;
 
         //  Get Collection
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get collection");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get collection");
         if (!_service.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionId))
-            Log.Debug("TestDiscovery.GetCollection()", "Failed to get collection");
+            Log.Debug("ExampleDiscovery.GetCollection()", "Failed to get collection");
         while (!_getCollectionTested)
             yield return null;
 
         if (!_service.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionId))
-            Log.Debug("TestDiscovery.GetFields()", "Failed to get fields");
+            Log.Debug("ExampleDiscovery.GetFields()", "Failed to get fields");
         while (!_getFieldsTested)
             yield return null;
 
         //  Add Document
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to add document");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to add document");
         if (!_service.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionId, _documentFilePath, _createdConfigurationId, null))
-            Log.Debug("TestDiscovery.AddDocument()", "Failed to add document");
+            Log.Debug("ExampleDiscovery.AddDocument()", "Failed to add document");
         while (!_addDocumentTested)
             yield return null;
 
         //  Get Document
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get document");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get document");
         if (!_service.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
-            Log.Debug("TestDiscovery.GetDocument()", "Failed to get document");
+            Log.Debug("ExampleDiscovery.GetDocument()", "Failed to get document");
         while (!_getDocumentTested)
             yield return null;
 
         //  Update Document
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to update document");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to update document");
         if (!_service.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID, _documentFilePath, _createdConfigurationId, null))
-            Log.Debug("TestDiscovery.UpdateDocument()", "Failed to update document");
+            Log.Debug("ExampleDiscovery.UpdateDocument()", "Failed to update document");
         while (!_updateDocumentTested)
             yield return null;
 
         //  Query
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
-        if (!_service.Query(OnQuery, OnFail, _environmentId, _createdCollectionId, null, _query, null, 10, null, 0))
-            Log.Debug("TestDiscovery.Query()", "Failed to query");
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to query");
+        if(!_service.Query(OnQuery, OnFail, _environmentId, _createdCollectionId, naturalLanguageQuery: _query))
         while (!_queryTested)
             yield return null;
 
+        ////  List Credentials
+        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to list credentials");
+        //_service.ListCredentials(OnListCredentials, OnFail, _environmentId);
+        //while (!_listCredentialsTested)
+        //    yield return null;
+
+        ////  Create Credentials
+        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create credentials");
+        //SourceCredentials credentialsParameter = new SourceCredentials()
+        //{
+        //    SourceType = SourceCredentials.SourceTypeEnum.box,
+        //    CredentialDetails = new CredentialDetails()
+        //    {
+        //        CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
+        //        EnterpriseId = "myEnterpriseId",
+        //        ClientId = "myClientId",
+        //        ClientSecret = "myClientSecret",
+        //        PublicKeyId = "myPublicIdKey",
+        //        Passphrase = "myPassphrase",
+        //        PrivateKey = "myPrivateKey"
+        //    }
+        //};
+        //_service.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
+        //while (!_createCredentialsTested)
+        //    yield return null;
+
+        //  Get Credential
+        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get credential");
+        //_service.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
+        //while (!_getCredentialTested)
+        //    yield return null;
+        
+        //  Get metrics event rate
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics event rate");
+        _service.GetMetricsEventRate(OnGetMetricsEventRate, OnFail);
+        while (!_getMetricsEventRateTested)
+            yield return null;
+
+        //  Get metrics query
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics query");
+        _service.GetMetricsQuery(OnGetMetricsQuery, OnFail);
+        while (!_getMetricsQueryTested)
+            yield return null;
+
+        //  Get metrics query event
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics query event");
+        _service.GetMetricsQueryEvent(OnGetMetricsQueryEvent, OnFail);
+        while (!_getMetricsQueryEventTested)
+            yield return null;
+
+        //  Get metrics query no result
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics query no result");
+        _service.GetMetricsQueryNoResults(OnGetMetricsQueryNoResult, OnFail);
+        while (!_getMetricsQueryNoResultTested)
+            yield return null;
+
+        //  Get metrics query token event
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics query token event");
+        _service.GetMetricsQueryTokenEvent(OnGetMetricsQueryTokenEvent, OnFail);
+        while (!_getMetricsQueryTokenEventTested)
+            yield return null;
+
+        //  Query log
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Query log");
+        _service.QueryLog(OnQueryLog, OnFail);
+        while (!_queryLogTested)
+            yield return null;
+
+        //  Create event
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create event");
+        CreateEventObject queryEvent = new CreateEventObject()
+        {
+            Type = CreateEventObject.TypeEnum.click,
+            Data = new EventData()
+            {
+                EnvironmentId = _environmentId,
+                SessionToken = _sessionToken,
+                CollectionId = _createdCollectionId,
+                DocumentId = _createdDocumentID
+            }
+        };
+        _service.CreateEvent(OnCreateEvent, OnFail, queryEvent);
+        while (!_createEventTested)
+            yield return null;
+
+        //  DeleteCredential
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete credential");
+        _service.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
+        while (!_deleteCredentialsTested)
+            yield return null;
+
         //  Delete Document
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
         if (!_service.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
-            Log.Debug("TestDiscovery.DeleteDocument()", "Failed to delete document");
+            Log.Debug("ExampleDiscovery.DeleteDocument()", "Failed to delete document");
         while (!_deleteDocumentTested)
             yield return null;
 
@@ -250,11 +348,10 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_isEnvironmentReady)
             yield return null;
 
-        _readyToContinue = false;
         //  Delete Collection
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
         if (!_service.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionId))
-            Log.Debug("TestDiscovery.DeleteCollection()", "Failed to delete collection");
+            Log.Debug("ExampleDiscovery.DeleteCollection()", "Failed to delete collection");
         while (!_deleteCollectionTested)
             yield return null;
 
@@ -263,11 +360,10 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_isEnvironmentReady)
             yield return null;
 
-        _readyToContinue = false;
         //  Delete Configuration
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete configuration {0}", _environmentId);
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete configuration {0}", _environmentId);
         if (!_service.DeleteConfiguration(OnDeleteConfiguration, OnFail, _environmentId, _createdConfigurationId))
-            Log.Debug("TestDiscovery.DeleteConfiguration()", "Failed to delete configuration");
+            Log.Debug("ExampleDiscovery.DeleteConfiguration()", "Failed to delete configuration");
         while (!_deleteConfigurationTested)
             yield return null;
 
@@ -276,45 +372,7 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_isEnvironmentReady)
             yield return null;
 
-        //  List Credentials
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to list credentials");
-        _service.ListCredentials(OnListCredentials, OnFail, _environmentId);
-        while (!_listCredentialsTested)
-            yield return null;
-
-        //  Create Credentials
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to create credentials");
-        SourceCredentials credentialsParameter = new SourceCredentials()
-        {
-            SourceType = SourceCredentials.SourceTypeEnum.box,
-            CredentialDetails = new CredentialDetails()
-            {
-                CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
-                EnterpriseId = "myEnterpriseId",
-                ClientId = "myClientId",
-                ClientSecret = "myClientSecret",
-                PublicKeyId = "myPublicIdKey",
-                Passphrase = "myPassphrase",
-                PrivateKey = "myPrivateKey"
-            }
-        };
-        _service.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
-        while (!_createCredentialsTested)
-            yield return null;
-
-        //  Get Credential
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to get credential");
-        _service.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
-        while (!_getCredentialTested)
-            yield return null;
-
-        //  DeleteCredential
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete credential");
-        _service.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
-        while (!_deleteCredentialsTested)
-            yield return null;
-
-        Log.Debug("TestDiscovery.RunTest()", "Discovery examples complete.");
+        Log.Debug("ExampleDiscovery.RunTest()", "Discovery examples complete.");
     }
 
     #region Check State
@@ -322,21 +380,21 @@ public class ExampleDiscovery : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
 
-        Log.Debug("TestDiscovery.CheckEnvironmentState()", "Attempting to get environment state");
+        Log.Debug("ExampleDiscovery.CheckEnvironmentState()", "Attempting to get environment state");
         try
         {
             _service.GetEnvironment(HandleCheckEnvironmentState, OnFail, _environmentId);
         }
         catch (System.Exception e)
         {
-            Log.Debug("TestDiscovery.CheckEnvironmentState()", string.Format("Failed to get environment state: {0}", e.Message));
+            Log.Debug("ExampleDiscovery.CheckEnvironmentState()", string.Format("Failed to get environment state: {0}", e.Message));
             Runnable.Run(CheckEnvironmentState(10f));
         }
     }
 
     private void HandleCheckEnvironmentState(Environment resp, Dictionary<string, object> customData)
     {
-        Log.Debug("TestDiscovery.HandleCheckEnvironmentState()", "Environment {0} is {1}", resp.environment_id, resp.status);
+        Log.Debug("ExampleDiscovery.HandleCheckEnvironmentState()", "Environment {0} is {1}", resp.environment_id, resp.status);
 
         if (resp.status.ToLower() == "active")
             _isEnvironmentReady = true;
@@ -466,6 +524,7 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnQuery()", "Discovery - Query Response: {0}", customData["json"].ToString());
+        _sessionToken = resp.SessionToken;
         _queryTested = true;
     }
 
@@ -491,6 +550,48 @@ public class ExampleDiscovery : MonoBehaviour
     {
         Log.Debug("ExampleDiscovery.OnDeleteCredentials()", "Response: {0}", customData["json"].ToString());
         _deleteCredentialsTested = true;
+    }
+
+    private void OnCreateEvent(CreateEventResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnCreateEvent()", "Response: {0}", customData["json"].ToString());
+        _createEventTested = true;
+    }
+    
+    private void OnGetMetricsEventRate(MetricResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetMetricsEventRate()", "Response: {0}", customData["json"].ToString());
+        _getMetricsEventRateTested = true;
+    }
+
+    private void OnGetMetricsQuery(MetricResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetMetricsQuery()", "Response: {0}", customData["json"].ToString());
+        _getMetricsQueryTested = true;
+    }
+
+    private void OnGetMetricsQueryEvent(MetricResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetMetricsQueryEvent()", "Response: {0}", customData["json"].ToString());
+        _getMetricsQueryEventTested = true;
+    }
+
+    private void OnGetMetricsQueryNoResult(MetricResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetMetricsQueryNoResult()", "Response: {0}", customData["json"].ToString());
+        _getMetricsQueryNoResultTested = true;
+    }
+
+    private void OnGetMetricsQueryTokenEvent(MetricTokenResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetMetricsQueryTokenEvent()", "Response: {0}", customData["json"].ToString());
+        _getMetricsQueryTokenEventTested = true;
+    }
+
+    private void OnQueryLog(LogQueryResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnQueryLog()", "Response: {0}", customData["json"].ToString());
+        _queryLogTested = true;
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

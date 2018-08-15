@@ -41,7 +41,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _filePathToIngest;
         private string _configurationJson = "{\"name\":\"IBM News {guid}\",\"description\":\"A configuration useful for ingesting IBM press releases. Safe to delete.\",\"conversions\":{\"html\":{\"exclude_tags_keep_content\":[\"span\"],\"exclude_content\":{\"xpaths\":[\"/home\"]}},\"segment\":{\"enabled\":true,\"selector_tags\":[\"h1\",\"h2\"]},\"json_normalizations\":[{\"operation\":\"move\",\"source_field\":\"extracted_metadata.title\",\"destination_field\":\"metadata.title\"},{\"operation\":\"move\",\"source_field\":\"extracted_metadata.author\",\"destination_field\":\"metadata.author\"},{\"operation\":\"remove\",\"source_field\":\"extracted_metadata\"}]},\"enrichments\":[{\"enrichment\":\"natural_language_understanding\",\"source_field\":\"title\",\"destination_field\":\"enriched_title\",\"options\":{\"features\":{\"keywords\":{\"sentiment\":true,\"emotion\":false,\"limit\":50},\"entities\":{\"sentiment\":true,\"emotion\":false,\"limit\":50,\"mentions\":true,\"mention_types\":true,\"sentence_locations\":true,\"model\":\"WKS-model-id\"},\"sentiment\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"emotion\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"categories\":{},\"concepts\":{\"limit\":8},\"semantic_roles\":{\"entities\":true,\"keywords\":true,\"limit\":50},\"relations\":{\"model\":\"WKS-model-id\"}}}},{\"enrichment\":\"elements\",\"source_field\":\"html\",\"destination_field\":\"enriched_html\",\"options\":{\"model\":\"contract\"}}],\"normalizations\":[{\"operation\":\"move\",\"source_field\":\"metadata.title\",\"destination_field\":\"title\"},{\"operation\":\"move\",\"source_field\":\"metadata.author\",\"destination_field\":\"author\"},{\"operation\":\"move\",\"source_field\":\"alchemy_enriched_text.language\",\"destination_field\":\"language\"},{\"operation\":\"remove\",\"source_field\":\"html\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.status\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.text\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.language\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.model\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.status\"},{\"operation\":\"remove_nulls\"}]}";
         private string _metadata = "{\n\t\"Creator\": \"Unity SDK Integration Test\",\n\t\"Subject\": \"Discovery service\"\n}";
-        private string _createdCollectionID;
+        private string _createdCollectionId;
         private string _createdCollectionName = "Unity SDK Created Collection - please delete me";
         private string _createdCollectionDescription = "A collection created by the Unity SDK. Please delete me.";
         private string _createdDocumentID;
@@ -183,40 +183,40 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Get Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get collection");
-            if (!_discovery.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionID))
+            if (!_discovery.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionId))
                 Log.Debug("TestDiscovery.GetCollection()", "Failed to get collection");
             while (!_getCollectionTested)
                 yield return null;
 
-            if (!_discovery.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionID))
+            if (!_discovery.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionId))
                 Log.Debug("TestDiscovery.GetFields()", "Failed to get fields");
             while (!_getFieldsTested)
                 yield return null;
 
             //  Add Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add document");
-            if (!_discovery.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionID, _documentFilePath, _createdConfigurationID, null))
+            if (!_discovery.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionId, _documentFilePath, _createdConfigurationID, null))
                 Log.Debug("TestDiscovery.AddDocument()", "Failed to add document");
             while (!_addDocumentTested)
                 yield return null;
 
             //  Get Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get document");
-            if (!_discovery.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+            if (!_discovery.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
                 Log.Debug("TestDiscovery.GetDocument()", "Failed to get document");
             while (!_getDocumentTested)
                 yield return null;
 
             //  Update Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to update document");
-            if (!_discovery.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID, _documentFilePath, _createdConfigurationID, null))
+            if (!_discovery.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID, _documentFilePath, _createdConfigurationID, null))
                 Log.Debug("TestDiscovery.UpdateDocument()", "Failed to update document");
             while (!_updateDocumentTested)
                 yield return null;
 
             //  Query
             Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
-            if (!_discovery.Query(OnQuery, OnFail, _environmentId, _createdCollectionID, null, _query, null, 10, null, 0))
+            if (!_discovery.Query(OnQuery, OnFail, _environmentId, _createdCollectionId, naturalLanguageQuery: _query))
                 Log.Debug("TestDiscovery.Query()", "Failed to query");
             while (!_queryTested)
                 yield return null;
@@ -261,7 +261,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Delete Document
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
-            if (!_discovery.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+            if (!_discovery.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
                 Log.Debug("TestDiscovery.DeleteDocument()", "Failed to delete document");
             while (!_deleteDocumentTested)
                 yield return null;
@@ -279,8 +279,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             _readyToContinue = false;
             //  Delete Collection
-            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionID);
-            if (!_discovery.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionID))
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
+            if (!_discovery.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionId))
                 Log.Debug("TestDiscovery.DeleteCollection()", "Failed to delete collection");
             while (!_deleteCollectionTested)
                 yield return null;
@@ -420,7 +420,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnAddCollection(CollectionRef resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", customData["json"].ToString());
-            _createdCollectionID = resp.collection_id;
+            _createdCollectionId = resp.collection_id;
             Test(resp != null);
             _addCollectionTested = true;
         }
@@ -468,7 +468,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", customData["json"].ToString());
 
-            _createdCollectionID = default(string);
+            _createdCollectionId = default(string);
             Test(resp != null);
 
             _deleteCollectionTested = true;

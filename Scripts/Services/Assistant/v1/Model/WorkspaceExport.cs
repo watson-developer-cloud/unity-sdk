@@ -101,13 +101,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>The timestamp for creation of the workspace.</value>
         [fsProperty("created")]
-        public virtual DateTime Created { get; private set; }
+        public virtual DateTime? Created { get; private set; }
         /// <summary>
         /// The timestamp for the last update to the workspace.
         /// </summary>
         /// <value>The timestamp for the last update to the workspace.</value>
         [fsProperty("updated")]
-        public virtual DateTime Updated { get; private set; }
+        public virtual DateTime? Updated { get; private set; }
         /// <summary>
         /// The workspace ID.
         /// </summary>
