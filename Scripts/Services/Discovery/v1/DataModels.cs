@@ -71,10 +71,104 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         public bool read_only { get; set; }
         /// <summary>
+        /// Size of the environment. = ['XS', 'S', 'MS', 'M', 'ML', 'L', 'XL', 'XXL', 'XXXL'].
+        /// </summary>
+        public SizeEnum? size { get; set; }
+        /// <summary>
         /// Disk and memory usage.
         /// </summary>
         public IndexCapacity index_capacity { get; set; }
     }
+
+    /// <summary>
+    /// An object that defines an environment name and optional description. The fields in this object are
+    /// not approved for personal information and cannot be deleted based on customer ID.
+    /// </summary>
+    [fsObject]
+    public class CreateEnvironmentRequest
+    {
+        /// <summary>
+        /// Name that identifies the environment.
+        /// </summary>
+        [fsProperty("name")]
+        public string Name { get; set; }
+        /// <summary>
+        /// Description of the environment.
+        /// </summary>
+        [fsProperty("description")]
+        public string Description { get; set; }
+        /// <summary>
+        /// Size of the environment. = ['XS', 'S', 'MS', 'M', 'ML', 'L', 'XL', 'XXL', 'XXXL'].
+        /// </summary>
+        [fsProperty("size")]
+        public SizeEnum? Size { get; set; }
+    }
+
+    /// <summary>
+    /// Size of the environment.
+    /// </summary>
+    /// <value>
+    /// Size of the environment.
+    /// </value>
+    public enum SizeEnum
+    {
+
+        /// <summary>
+        /// Enum XS for XS
+        /// </summary>
+        [EnumMember(Value = "XS")]
+        XS,
+
+        /// <summary>
+        /// Enum S for S
+        /// </summary>
+        [EnumMember(Value = "S")]
+        S,
+
+        /// <summary>
+        /// Enum MS for MS
+        /// </summary>
+        [EnumMember(Value = "MS")]
+        MS,
+
+        /// <summary>
+        /// Enum M for M
+        /// </summary>
+        [EnumMember(Value = "M")]
+        M,
+
+        /// <summary>
+        /// Enum ML for ML
+        /// </summary>
+        [EnumMember(Value = "ML")]
+        ML,
+
+        /// <summary>
+        /// Enum L for L
+        /// </summary>
+        [EnumMember(Value = "L")]
+        L,
+
+        /// <summary>
+        /// Enum XL for XL
+        /// </summary>
+        [EnumMember(Value = "XL")]
+        XL,
+
+        /// <summary>
+        /// Enum XXL for XXL
+        /// </summary>
+        [EnumMember(Value = "XXL")]
+        XXL,
+
+        /// <summary>
+        /// Enum XXXL for XXXL
+        /// </summary>
+        [EnumMember(Value = "XXXL")]
+        XXXL
+    }
+
+
 
     /// <summary>
     /// The disk and memory usage.
