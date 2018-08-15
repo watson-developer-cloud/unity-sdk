@@ -18,9 +18,11 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Environment = IBM.Watson.DeveloperCloud.Services.Discovery.v1.Environment;
 
 public class ExampleDiscovery : MonoBehaviour
 {
@@ -51,11 +53,12 @@ public class ExampleDiscovery : MonoBehaviour
     private Discovery _service;
 
     private string _createdEnvironmentID;
-    private string _configurationJson = "{\"name\":\"IBM News {guid}\",\"description\":\"A configuration useful for ingesting IBM press releases. Safe to delete.\",\"conversions\":{\"html\":{\"exclude_tags_keep_content\":[\"span\"],\"exclude_content\":{\"xpaths\":[\"/home\"]}},\"segment\":{\"enabled\":true,\"selector_tags\":[\"h1\",\"h2\"]},\"json_normalizations\":[{\"operation\":\"move\",\"source_field\":\"extracted_metadata.title\",\"destination_field\":\"metadata.title\"},{\"operation\":\"move\",\"source_field\":\"extracted_metadata.author\",\"destination_field\":\"metadata.author\"},{\"operation\":\"remove\",\"source_field\":\"extracted_metadata\"}]},\"enrichments\":[{\"enrichment\":\"natural_language_understanding\",\"source_field\":\"title\",\"destination_field\":\"enriched_title\",\"options\":{\"features\":{\"keywords\":{\"sentiment\":true,\"emotion\":false,\"limit\":50},\"entities\":{\"sentiment\":true,\"emotion\":false,\"limit\":50,\"mentions\":true,\"mention_types\":true,\"sentence_locations\":true,\"model\":\"WKS-model-id\"},\"sentiment\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"emotion\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"categories\":{},\"concepts\":{\"limit\":8},\"semantic_roles\":{\"entities\":true,\"keywords\":true,\"limit\":50},\"relations\":{\"model\":\"WKS-model-id\"}}}},{\"enrichment\":\"elements\",\"source_field\":\"html\",\"destination_field\":\"enriched_html\",\"options\":{\"model\":\"contract\"}}],\"normalizations\":[{\"operation\":\"move\",\"source_field\":\"metadata.title\",\"destination_field\":\"title\"},{\"operation\":\"move\",\"source_field\":\"metadata.author\",\"destination_field\":\"author\"},{\"operation\":\"move\",\"source_field\":\"alchemy_enriched_text.language\",\"destination_field\":\"language\"},{\"operation\":\"remove\",\"source_field\":\"html\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.status\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.text\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.language\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.model\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.status\"},{\"operation\":\"remove_nulls\"}]}";
     private string _environmentId;
+    private string _configurationJson = "{\"name\":\"IBM News {guid}\",\"description\":\"A configuration useful for ingesting IBM press releases. Safe to delete.\",\"conversions\":{\"html\":{\"exclude_tags_keep_content\":[\"span\"],\"exclude_content\":{\"xpaths\":[\"/home\"]}},\"segment\":{\"enabled\":true,\"selector_tags\":[\"h1\",\"h2\"]},\"json_normalizations\":[{\"operation\":\"move\",\"source_field\":\"extracted_metadata.title\",\"destination_field\":\"metadata.title\"},{\"operation\":\"move\",\"source_field\":\"extracted_metadata.author\",\"destination_field\":\"metadata.author\"},{\"operation\":\"remove\",\"source_field\":\"extracted_metadata\"}]},\"enrichments\":[{\"enrichment\":\"natural_language_understanding\",\"source_field\":\"title\",\"destination_field\":\"enriched_title\",\"options\":{\"features\":{\"keywords\":{\"sentiment\":true,\"emotion\":false,\"limit\":50},\"entities\":{\"sentiment\":true,\"emotion\":false,\"limit\":50,\"mentions\":true,\"mention_types\":true,\"sentence_locations\":true,\"model\":\"WKS-model-id\"},\"sentiment\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"emotion\":{\"document\":true,\"targets\":[\"IBM\",\"Watson\"]},\"categories\":{},\"concepts\":{\"limit\":8},\"semantic_roles\":{\"entities\":true,\"keywords\":true,\"limit\":50},\"relations\":{\"model\":\"WKS-model-id\"}}}}],\"normalizations\":[{\"operation\":\"move\",\"source_field\":\"metadata.title\",\"destination_field\":\"title\"},{\"operation\":\"move\",\"source_field\":\"metadata.author\",\"destination_field\":\"author\"},{\"operation\":\"move\",\"source_field\":\"alchemy_enriched_text.language\",\"destination_field\":\"language\"},{\"operation\":\"remove\",\"source_field\":\"html\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.status\"},{\"operation\":\"remove\",\"source_field\":\"alchemy_enriched_text.text\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.language\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.model\"},{\"operation\":\"remove\",\"source_field\":\"sire_enriched_text.status\"},{\"operation\":\"remove_nulls\"}]}";
     private string _filePathToIngest;
     private string _metadata = "{\n\t\"Creator\": \"Unity SDK Integration Test\",\n\t\"Subject\": \"Discovery service\"\n}";
-    private string _createdCollectionID;
+    private string _createdConfigurationId;
+    private string _createdCollectionId;
     private string _createdCollectionName = "Unity SDK Created Collection";
     private string _createdCollectionDescription = "A collection created by the Unity SDK. Please delete me.";
     private string _createdDocumentID;
@@ -169,14 +172,14 @@ public class ExampleDiscovery : MonoBehaviour
 
         //  Get Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get configuration");
-        if (!_service.GetConfiguration(OnGetConfiguration, OnFail, _environmentId, _environmentId))
+        if (!_service.GetConfiguration(OnGetConfiguration, OnFail, _environmentId, _createdConfigurationId))
             Log.Debug("TestDiscovery.GetConfiguration()", "Failed to get configuration");
         while (!_getConfigurationTested)
             yield return null;
 
         //  Preview Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to preview configuration");
-        if (!_service.PreviewConfiguration(OnPreviewConfiguration, OnFail, _environmentId, _environmentId, null, _filePathToIngest, _metadata))
+        if (!_service.PreviewConfiguration(OnPreviewConfiguration, OnFail, _environmentId, _createdConfigurationId, null, _filePathToIngest, _metadata))
             Log.Debug("TestDiscovery.PreviewConfiguration()", "Failed to preview configuration");
         while (!_previewConfigurationTested)
             yield return null;
@@ -190,62 +193,56 @@ public class ExampleDiscovery : MonoBehaviour
 
         //  Add Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
-        if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _environmentId))
+        if (!_service.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationId))
             Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
         while (!_addCollectionTested)
             yield return null;
 
         //  Get Collection
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get collection");
-        if (!_service.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionID))
+        if (!_service.GetCollection(OnGetCollection, OnFail, _environmentId, _createdCollectionId))
             Log.Debug("TestDiscovery.GetCollection()", "Failed to get collection");
         while (!_getCollectionTested)
             yield return null;
 
-        if (!_service.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionID))
+        if (!_service.GetFields(OnGetFields, OnFail, _environmentId, _createdCollectionId))
             Log.Debug("TestDiscovery.GetFields()", "Failed to get fields");
         while (!_getFieldsTested)
             yield return null;
 
         //  Add Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to add document");
-        if (!_service.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionID, _documentFilePath, _environmentId, null))
+        if (!_service.AddDocument(OnAddDocument, OnFail, _environmentId, _createdCollectionId, _documentFilePath, _createdConfigurationId, null))
             Log.Debug("TestDiscovery.AddDocument()", "Failed to add document");
         while (!_addDocumentTested)
             yield return null;
 
         //  Get Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to get document");
-        if (!_service.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+        if (!_service.GetDocument(OnGetDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
             Log.Debug("TestDiscovery.GetDocument()", "Failed to get document");
         while (!_getDocumentTested)
             yield return null;
 
         //  Update Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to update document");
-        if (!_service.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID, _documentFilePath, _environmentId, null))
+        if (!_service.UpdateDocument(OnUpdateDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID, _documentFilePath, _createdConfigurationId, null))
             Log.Debug("TestDiscovery.UpdateDocument()", "Failed to update document");
         while (!_updateDocumentTested)
             yield return null;
 
         //  Query
         Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
-        if (!_service.Query(OnQuery, OnFail, _environmentId, _createdCollectionID, null, _query, null, 10, null, 0))
+        if (!_service.Query(OnQuery, OnFail, _environmentId, _createdCollectionId, null, _query, null, 10, null, 0))
             Log.Debug("TestDiscovery.Query()", "Failed to query");
         while (!_queryTested)
             yield return null;
 
         //  Delete Document
         Log.Debug("TestDiscovery.RunTest()", "Attempting to delete document {0}", _createdDocumentID);
-        if (!_service.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionID, _createdDocumentID))
+        if (!_service.DeleteDocument(OnDeleteDocument, OnFail, _environmentId, _createdCollectionId, _createdDocumentID))
             Log.Debug("TestDiscovery.DeleteDocument()", "Failed to delete document");
         while (!_deleteDocumentTested)
-            yield return null;
-
-        //  Delay
-        Log.Debug("TestDiscovery.RunTest()", "Delaying delete collection for 10 sec");
-        Runnable.Run(Delay(_waitTime));
-        while (!_readyToContinue)
             yield return null;
 
         _isEnvironmentReady = false;
@@ -255,16 +252,10 @@ public class ExampleDiscovery : MonoBehaviour
 
         _readyToContinue = false;
         //  Delete Collection
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionID);
-        if (!_service.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionID))
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
+        if (!_service.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionId))
             Log.Debug("TestDiscovery.DeleteCollection()", "Failed to delete collection");
         while (!_deleteCollectionTested)
-            yield return null;
-
-        //  Delay
-        Log.Debug("TestDiscovery.RunTest()", "Delaying delete configuration for 10 sec");
-        Runnable.Run(Delay(_waitTime));
-        while (!_readyToContinue)
             yield return null;
 
         _isEnvironmentReady = false;
@@ -275,15 +266,9 @@ public class ExampleDiscovery : MonoBehaviour
         _readyToContinue = false;
         //  Delete Configuration
         Log.Debug("TestDiscovery.RunTest()", "Attempting to delete configuration {0}", _environmentId);
-        if (!_service.DeleteConfiguration(OnDeleteConfiguration, OnFail, _environmentId, _environmentId))
+        if (!_service.DeleteConfiguration(OnDeleteConfiguration, OnFail, _environmentId, _createdConfigurationId))
             Log.Debug("TestDiscovery.DeleteConfiguration()", "Failed to delete configuration");
         while (!_deleteConfigurationTested)
-            yield return null;
-
-        //  Delay
-        Log.Debug("TestDiscovery.RunTest()", "Delaying delete environment for 10 sec");
-        Runnable.Run(Delay(_waitTime));
-        while (!_readyToContinue)
             yield return null;
 
         _isEnvironmentReady = false;
@@ -360,12 +345,6 @@ public class ExampleDiscovery : MonoBehaviour
             Runnable.Run(CheckEnvironmentState(10f));
         }
     }
-
-    private IEnumerator Delay(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
-        _readyToContinue = true;
-    }
     #endregion
 
     private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
@@ -406,7 +385,7 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnAddConfiguration(Configuration resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnAddConfiguration()", "Discovery - AddConfiguration Response: {0}", customData["json"].ToString());
-        _environmentId = resp.configuration_id;
+        _createdConfigurationId= resp.configuration_id;
         _addConfigurationTested = true;
     }
 
@@ -431,7 +410,7 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnAddCollection(CollectionRef resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnAddCollection()", "Discovery - Add collection Response: {0}", customData["json"].ToString());
-        _createdCollectionID = resp.collection_id;
+        _createdCollectionId = resp.collection_id;
         _addCollectionTested = true;
     }
 
@@ -471,7 +450,7 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnDeleteCollection(DeleteCollectionResponse resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnDeleteCollection()", "Discovery - Delete collection Response: deleted:{0}", customData["json"].ToString());
-        _createdCollectionID = default(string);
+        _createdCollectionId = default(string);
 
         _deleteCollectionTested = true;
     }
@@ -479,7 +458,7 @@ public class ExampleDiscovery : MonoBehaviour
     private void OnDeleteConfiguration(DeleteConfigurationResponse resp, Dictionary<string, object> customData)
     {
         Log.Debug("ExampleDiscovery.OnDeleteConfiguration()", "Discovery - DeleteConfiguration Response: deleted:{0}", customData["json"].ToString());
-        _environmentId = default(string);
+        _createdConfigurationId = default(string);
 
         _deleteConfigurationTested = true;
     }
