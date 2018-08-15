@@ -244,19 +244,26 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="size">The size of the environment to be created. See <a href="https://www.ibm.com/watson/services/discovery/#pricing-block">pricing.</a></param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), int size = 0, Dictionary<string, object> customData = null)
+        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), SizeEnum? size = null, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            CreateEnvironmentRequest createEnvironmentRequest = new CreateEnvironmentRequest();
+            if(!string.IsNullOrEmpty(name))
+            {
+                createEnvironmentRequest.Name = name;
+            }
 
-            Dictionary<string, object> addEnvironmentData = new Dictionary<string, object>();
-            addEnvironmentData["name"] = name;
-            addEnvironmentData["description"] = description;
-            addEnvironmentData["size"] = size;
+            if(!string.IsNullOrEmpty(description))
+            {
+                createEnvironmentRequest.Description = description;
+            }
 
-            return AddEnvironment(successCallback, failCallback, addEnvironmentData, customData);
+            if(size != null)
+            {
+                createEnvironmentRequest.Size = size;
+            }
+            
+
+            return AddEnvironment(successCallback, failCallback, createEnvironmentRequest, customData);
         }
 
         /// <summary>
@@ -268,6 +275,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="addEnvironmentData">The AddEnvironmentData.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
+        [Obsolete("Use AddEnvironment with CreateEnvironmentRequest instead.")]
         public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, Dictionary<string, object> addEnvironmentData, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
@@ -292,6 +300,50 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Headers["Accept"] = "application/json";
             string sendjson = Json.Serialize(addEnvironmentData);
             req.Send = Encoding.UTF8.GetBytes(sendjson);
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, Environments);
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
+        /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
+        /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="createEnvironmentRequest">An object that defines an environment name and optional description. The fields in this object are not approved for personal information and cannot be deleted based on customer ID.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
+        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, CreateEnvironmentRequest createEnvironmentRequest, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            AddEnvironmentRequest req = new AddEnvironmentRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnAddEnvironmentResponse;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            fsData data = null;
+            _serializer.TrySerialize(createEnvironmentRequest, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Environments);
             if (connector == null)
