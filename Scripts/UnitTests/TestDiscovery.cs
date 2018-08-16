@@ -48,6 +48,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _documentFilePath;
         private string _query = "What is the capital of china?";
         private float _waitTime = 10f;
+        private string _sessionToken;
 
         private bool _getEnvironmentsTested = false;
         private bool _getEnvironmentTested = false;
@@ -75,6 +76,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getCredentialTested = false;
         private bool _deleteCredentialsTested = false;
         private string _createdCredentialId = null;
+
+        private bool _createEventTested = false;
+        private bool _getMetricsEventRateTested = false;
+        private bool _getMetricsQueryTested = false;
+        private bool _getMetricsQueryEventTested = false;
+        private bool _getMetricsQueryNoResultTested = false;
+        private bool _getMetricsQueryTokenEventTested = false;
+        private bool _queryLogTested = false;
 
         public override IEnumerator RunTest()
         {
@@ -217,9 +226,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Query
             Log.Debug("TestDiscovery.RunTest()", "Attempting to query");
             if (!_discovery.Query(OnQuery, OnFail, _environmentId, _createdCollectionId, naturalLanguageQuery: _query))
-                Log.Debug("TestDiscovery.Query()", "Failed to query");
-            while (!_queryTested)
-                yield return null;
+                while (!_queryTested)
+                    yield return null;
 
             //  List Credentials
             Log.Debug("TestDiscovery.RunTest()", "Attempting to list credentials");
@@ -253,6 +261,59 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_getCredentialTested)
                 yield return null;
 
+            //  Get metrics event rate
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Get metrics event rate");
+            _discovery.GetMetricsEventRate(OnGetMetricsEventRate, OnFail);
+            while (!_getMetricsEventRateTested)
+                yield return null;
+
+            //  Get metrics query
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Get metrics query");
+            _discovery.GetMetricsQuery(OnGetMetricsQuery, OnFail);
+            while (!_getMetricsQueryTested)
+                yield return null;
+
+            //  Get metrics query event
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Get metrics query event");
+            _discovery.GetMetricsQueryEvent(OnGetMetricsQueryEvent, OnFail);
+            while (!_getMetricsQueryEventTested)
+                yield return null;
+
+            //  Get metrics query no result
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Get metrics query no result");
+            _discovery.GetMetricsQueryNoResults(OnGetMetricsQueryNoResult, OnFail);
+            while (!_getMetricsQueryNoResultTested)
+                yield return null;
+
+            //  Get metrics query token event
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Get metrics query token event");
+            _discovery.GetMetricsQueryTokenEvent(OnGetMetricsQueryTokenEvent, OnFail);
+            while (!_getMetricsQueryTokenEventTested)
+                yield return null;
+
+            //  Query log
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to Query log");
+            _discovery.QueryLog(OnQueryLog, OnFail);
+            while (!_queryLogTested)
+                yield return null;
+
+            //  Create event
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to create event");
+            CreateEventObject queryEvent = new CreateEventObject()
+            {
+                Type = CreateEventObject.TypeEnum.click,
+                Data = new EventData()
+                {
+                    EnvironmentId = _environmentId,
+                    SessionToken = _sessionToken,
+                    CollectionId = _createdCollectionId,
+                    DocumentId = _createdDocumentID
+                }
+            };
+            _discovery.CreateEvent(OnCreateEvent, OnFail, queryEvent);
+            while (!_createEventTested)
+                yield return null;
+
             //  DeleteCredential
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete credential");
             _discovery.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
@@ -266,12 +327,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_deleteDocumentTested)
                 yield return null;
 
-            //  Delay
-            Log.Debug("TestDiscovery.RunTest()", "Delaying delete collection for 10 sec");
-            Runnable.Run(Delay(_waitTime));
-            while (!_readyToContinue)
-                yield return null;
-
             _isEnvironmentReady = false;
             Runnable.Run(CheckEnvironmentState(_waitTime));
             while (!_isEnvironmentReady)
@@ -283,12 +338,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             if (!_discovery.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionId))
                 Log.Debug("TestDiscovery.DeleteCollection()", "Failed to delete collection");
             while (!_deleteCollectionTested)
-                yield return null;
-
-            //  Delay
-            Log.Debug("TestDiscovery.RunTest()", "Delaying delete configuration for 10 sec");
-            Runnable.Run(Delay(_waitTime));
-            while (!_readyToContinue)
                 yield return null;
 
             _isEnvironmentReady = false;
@@ -342,12 +391,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             {
                 Runnable.Run(CheckEnvironmentState(10f));
             }
-        }
-
-        private IEnumerator Delay(float waitTime)
-        {
-            yield return new WaitForSeconds(waitTime);
-            _readyToContinue = true;
         }
         #endregion
 
@@ -487,6 +530,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnQuery(QueryResponse resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnQuery()", "Discovery - Query Response: {0}", customData["json"].ToString());
+            _sessionToken = resp.SessionToken;
             Test(resp != null);
             _queryTested = true;
         }
@@ -520,6 +564,47 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestDiscovery.OnDeleteCredentials()", "Response: {0}", customData["json"].ToString());
             _deleteCredentialsTested = true;
+        }
+        private void OnCreateEvent(CreateEventResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateEvent()", "Response: {0}", customData["json"].ToString());
+            _createEventTested = true;
+        }
+
+        private void OnGetMetricsEventRate(MetricResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetMetricsEventRate()", "Response: {0}", customData["json"].ToString());
+            _getMetricsEventRateTested = true;
+        }
+
+        private void OnGetMetricsQuery(MetricResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetMetricsQuery()", "Response: {0}", customData["json"].ToString());
+            _getMetricsQueryTested = true;
+        }
+
+        private void OnGetMetricsQueryEvent(MetricResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetMetricsQueryEvent()", "Response: {0}", customData["json"].ToString());
+            _getMetricsQueryEventTested = true;
+        }
+
+        private void OnGetMetricsQueryNoResult(MetricResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetMetricsQueryNoResult()", "Response: {0}", customData["json"].ToString());
+            _getMetricsQueryNoResultTested = true;
+        }
+
+        private void OnGetMetricsQueryTokenEvent(MetricTokenResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetMetricsQueryTokenEvent()", "Response: {0}", customData["json"].ToString());
+            _getMetricsQueryTokenEventTested = true;
+        }
+
+        private void OnQueryLog(LogQueryResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnQueryLog()", "Response: {0}", customData["json"].ToString());
+            _queryLogTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

@@ -245,38 +245,38 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_queryTested)
             yield return null;
 
-        ////  List Credentials
-        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to list credentials");
-        //_service.ListCredentials(OnListCredentials, OnFail, _environmentId);
-        //while (!_listCredentialsTested)
-        //    yield return null;
+        //  List Credentials
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to list credentials");
+        _service.ListCredentials(OnListCredentials, OnFail, _environmentId);
+        while (!_listCredentialsTested)
+            yield return null;
 
-        ////  Create Credentials
-        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create credentials");
-        //SourceCredentials credentialsParameter = new SourceCredentials()
-        //{
-        //    SourceType = SourceCredentials.SourceTypeEnum.box,
-        //    CredentialDetails = new CredentialDetails()
-        //    {
-        //        CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
-        //        EnterpriseId = "myEnterpriseId",
-        //        ClientId = "myClientId",
-        //        ClientSecret = "myClientSecret",
-        //        PublicKeyId = "myPublicIdKey",
-        //        Passphrase = "myPassphrase",
-        //        PrivateKey = "myPrivateKey"
-        //    }
-        //};
-        //_service.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
-        //while (!_createCredentialsTested)
-        //    yield return null;
+        //  Create Credentials
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create credentials");
+        SourceCredentials credentialsParameter = new SourceCredentials()
+        {
+            SourceType = SourceCredentials.SourceTypeEnum.box,
+            CredentialDetails = new CredentialDetails()
+            {
+                CredentialType = CredentialDetails.CredentialTypeEnum.oauth2,
+                EnterpriseId = "myEnterpriseId",
+                ClientId = "myClientId",
+                ClientSecret = "myClientSecret",
+                PublicKeyId = "myPublicIdKey",
+                Passphrase = "myPassphrase",
+                PrivateKey = "myPrivateKey"
+            }
+        };
+        _service.CreateCredentials(OnCreateCredentials, OnFail, _environmentId, credentialsParameter);
+        while (!_createCredentialsTested)
+            yield return null;
 
         //  Get Credential
-        //Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get credential");
-        //_service.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
-        //while (!_getCredentialTested)
-        //    yield return null;
-        
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get credential");
+        _service.GetCredential(OnGetCredential, OnFail, _environmentId, _createdCredentialId);
+        while (!_getCredentialTested)
+            yield return null;
+
         //  Get metrics event rate
         Log.Debug("ExampleDiscovery.RunTest()", "Attempting to Get metrics event rate");
         _service.GetMetricsEventRate(OnGetMetricsEventRate, OnFail);
