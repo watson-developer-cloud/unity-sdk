@@ -4882,7 +4882,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["count"] = count;
             req.OnResponse = OnGetMetricsQueryTokenEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "v1/metrics/top_query_tokens_with_event_rate");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/top_query_tokens_with_event_rate");
             if (connector == null)
                 return false;
 
