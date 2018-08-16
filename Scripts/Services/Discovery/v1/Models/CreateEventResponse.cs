@@ -44,7 +44,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// Query event data object.
         /// </summary>
         [fsProperty("data")]
-        public EventResponseData Data { get; set; }
+        public EventData Data { get; set; }
     }
 
 }
