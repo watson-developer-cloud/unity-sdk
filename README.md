@@ -1,4 +1,4 @@
-# Watson APIs Unity SDK
+# IBM Watson SDK for Unity
 [![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
 [![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
@@ -361,6 +361,9 @@ Watson services have upgraded their hosts to TLS 1.2. The US South region has a 
 
 ## Documentation
 Documentation can be found [here][documentation]. You can also access the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
+
+## Getting started videos
+You can view Getting Started videos for the IBM Watson SDK for Unity on [YouTube](https://www.youtube.com/watch?v=Sa5hmukwHV8&list=PLZDyxLlNKRY8MdgiUq45cZztn_f0EVz6c).
 
 ## Questions
 

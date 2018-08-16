@@ -244,19 +244,26 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="size">The size of the environment to be created. See <a href="https://www.ibm.com/watson/services/discovery/#pricing-block">pricing.</a></param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), int size = 0, Dictionary<string, object> customData = null)
+        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), SizeEnum? size = null, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            CreateEnvironmentRequest createEnvironmentRequest = new CreateEnvironmentRequest();
+            if(!string.IsNullOrEmpty(name))
+            {
+                createEnvironmentRequest.Name = name;
+            }
 
-            Dictionary<string, object> addEnvironmentData = new Dictionary<string, object>();
-            addEnvironmentData["name"] = name;
-            addEnvironmentData["description"] = description;
-            addEnvironmentData["size"] = size;
+            if(!string.IsNullOrEmpty(description))
+            {
+                createEnvironmentRequest.Description = description;
+            }
 
-            return AddEnvironment(successCallback, failCallback, addEnvironmentData, customData);
+            if(size != null)
+            {
+                createEnvironmentRequest.Size = size;
+            }
+            
+
+            return AddEnvironment(successCallback, failCallback, createEnvironmentRequest, customData);
         }
 
         /// <summary>
@@ -268,6 +275,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="addEnvironmentData">The AddEnvironmentData.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
+        [Obsolete("Use AddEnvironment with CreateEnvironmentRequest instead.")]
         public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, Dictionary<string, object> addEnvironmentData, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
@@ -292,6 +300,50 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Headers["Accept"] = "application/json";
             string sendjson = Json.Serialize(addEnvironmentData);
             req.Send = Encoding.UTF8.GetBytes(sendjson);
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, Environments);
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        /// <summary>
+        /// Creates a new environment. You can only create one environment per service instance.An attempt to create another environment 
+        /// will result in an error. The size of the new environment can be controlled by specifying the size parameter.
+        /// </summary>
+        /// <param name="successCallback">The success callback.</param>
+        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="createEnvironmentRequest">An object that defines an environment name and optional description. The fields in this object are not approved for personal information and cannot be deleted based on customer ID.</param>
+        /// <param name="customData">Optional custom data.</param>
+        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
+        public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, CreateEnvironmentRequest createEnvironmentRequest, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            AddEnvironmentRequest req = new AddEnvironmentRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnAddEnvironmentResponse;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            fsData data = null;
+            _serializer.TrySerialize(createEnvironmentRequest, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Environments);
             if (connector == null)
@@ -2496,40 +2548,78 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Queries
         /// <summary>
-        /// Query the discovery instance.
+        /// Query documents in multiple collections.
+        ///
+        /// See the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html)
+        /// for more details.
         /// </summary>
-        /// <param name="successCallback">The success callback.</param>
-        /// <param name="failCallback">The fail callback.</param>
-        /// <param name="environmentID">The environment identifier.</param>
-        /// <param name="collectionID">The collection identifier.</param>
-        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that don't mention 
-        /// the query content. Filter searches are better for metadata type searches and when you are trying to get a sense of concepts 
-        /// in the data set.</param>
-        /// <param name="query">A query search returns all documents in your data set with full enrichments and full text, but with the
-        /// most relevant documents listed first. Use a query search when you want to find the most relevant search results.</param>
-        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an exact answer. 
-        /// Aggregations are useful for building applications, because you can use them to build lists, tables, and time series. For a 
-        /// full list of possible aggregrations, see the Query reference.</param>
-        /// <param name="count">Number of documents to return.</param>
-        /// <param name="_return">A comma separated list of the portion of the document hierarchy to return.</param>
-        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number of results that
-        /// are returned is 10, and the offset is 8, it returns the last two results.</param>
-        /// <param name="customData">Optional custom data.</param>
-        /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentID, string collectionID, string filter, string query, string aggregation, int count, string _return, int offset, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that
+        /// don't mention the query content. Filter searches are better for metadata type searches and when you are
+        /// trying to get a sense of concepts in the data set. (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an
+        /// exact answer. Aggregations are useful for building applications, because you can use them to build lists,
+        /// tables, and time series. For a full list of possible aggregrations, see the Query reference.
+        /// (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10, and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <param name="highlight">When true a highlight field is returned for each result which contains the fields
+        /// that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+        /// (optional)</param>
+        /// <param name="deduplicate">When `true` and used with a Watson Discovery News collection, duplicate results
+        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
+        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
+        /// to false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs that will be used to find similar
+        /// documents.
+        ///
+        /// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope
+        /// of the document similarity search to include the natural language query. Other query parameters, such as
+        /// **filter** and **query** are subsequently applied and reduce the query scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that will be used as a basis for
+        /// comparison to identify similar documents. If not specified, the entire document is used for comparison.
+        /// (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have. The
+        /// default is `400`. The minimum is `50`. The maximum is `2000`. (optional)</param>
+        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool FederatedQuery(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, bool? passages = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            if (string.IsNullOrEmpty(environmentID))
-                throw new ArgumentNullException("environmentID");
-            if (string.IsNullOrEmpty(collectionID))
-                throw new ArgumentNullException("collectionID");
-            if (string.IsNullOrEmpty(query))
-                throw new ArgumentNullException("query");
 
-            QueryRequest req = new QueryRequest();
+            FederatedQueryRequestObj req = new FederatedQueryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
@@ -2540,35 +2630,412 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-
+            req.Parameters["version"] = VersionDate;
+            if (collectionIds != null)
+                req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
             if (!string.IsNullOrEmpty(filter))
                 req.Parameters["filter"] = filter;
-
             if (!string.IsNullOrEmpty(query))
                 req.Parameters["query"] = query;
-
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                req.Parameters["natural_language_query"] = naturalLanguageQuery;
             if (!string.IsNullOrEmpty(aggregation))
                 req.Parameters["aggregation"] = aggregation;
+            if (count != null)
+                req.Parameters["count"] = count;
+            if (returnFields != null)
+                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (offset != null)
+                req.Parameters["offset"] = offset;
+            if (sort != null)
+                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (highlight != null)
+                req.Parameters["highlight"] = highlight;
+            if (deduplicate != null)
+                req.Parameters["deduplicate"] = deduplicate;
+            if (!string.IsNullOrEmpty(deduplicateField))
+                req.Parameters["deduplicate.field"] = deduplicateField;
+            if (similar != null)
+                req.Parameters["similar"] = similar;
+            if (similarDocumentIds != null)
+                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
+            if (similarFields != null)
+                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            if (passages != null)
+                req.Parameters["passages"] = passages;
+            if (passagesFields != null)
+                req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
+            if (passagesCount != null)
+                req.Parameters["passages.count"] = passagesCount;
+            if (passagesCharacters != null)
+                req.Parameters["passages.characters"] = passagesCharacters;
+            req.OnResponse = OnFederatedQueryResponse;
 
-            if (!string.IsNullOrEmpty(_return))
-                req.Parameters["return"] = _return;
-
-            if (loggingOptOut != null)
-                req.Headers.Add("X-Watson-Logging-Opt-Out", loggingOptOut.ToString());
-
-            req.Parameters["offset"] = offset;
-            req.Parameters["count"] = count;
-            req.Parameters["version"] = VersionDate;
-            req.OnResponse = OnQueryResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(QueryCollection, environmentID, collectionID));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
             if (connector == null)
                 return false;
 
             return connector.Send(req);
         }
 
-        private class QueryRequest : RESTConnector.Request
+        private class FederatedQueryRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<QueryResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryResponse result = new QueryResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((FederatedQueryRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnFederatedQueryResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((FederatedQueryRequestObj)req).SuccessCallback != null)
+                    ((FederatedQueryRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((FederatedQueryRequestObj)req).FailCallback != null)
+                    ((FederatedQueryRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Query multiple collection system notices.
+        ///
+        /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
+        /// when ingesting documents and performing relevance training. See the [Discovery service
+        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+        /// language.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that
+        /// don't mention the query content. Filter searches are better for metadata type searches and when you are
+        /// trying to get a sense of concepts in the data set. (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an
+        /// exact answer. Aggregations are useful for building applications, because you can use them to build lists,
+        /// tables, and time series. For a full list of possible aggregrations, see the Query reference.
+        /// (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10, and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <param name="highlight">When true a highlight field is returned for each result which contains the fields
+        /// that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+        /// (optional)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs that will be used to find similar
+        /// documents.
+        ///
+        /// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope
+        /// of the document similarity search to include the natural language query. Other query parameters, such as
+        /// **filter** and **query** are subsequently applied and reduce the query scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that will be used as a basis for
+        /// comparison to identify similar documents. If not specified, the entire document is used for comparison.
+        /// (optional)</param>
+        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool FederatedQueryNotices(SuccessCallback<QueryNoticesResponse> successCallback, FailCallback failCallback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            FederatedQueryNoticesRequestObj req = new FederatedQueryNoticesRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (collectionIds != null)
+                req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                req.Parameters["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                req.Parameters["natural_language_query"] = naturalLanguageQuery;
+            if (!string.IsNullOrEmpty(aggregation))
+                req.Parameters["aggregation"] = aggregation;
+            if (count != null)
+                req.Parameters["count"] = count;
+            if (returnFields != null)
+                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (offset != null)
+                req.Parameters["offset"] = offset;
+            if (sort != null)
+                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (highlight != null)
+                req.Parameters["highlight"] = highlight;
+            if (!string.IsNullOrEmpty(deduplicateField))
+                req.Parameters["deduplicate.field"] = deduplicateField;
+            if (similar != null)
+                req.Parameters["similar"] = similar;
+            if (similarDocumentIds != null)
+                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
+            if (similarFields != null)
+                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            req.OnResponse = OnFederatedQueryNoticesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/notices", environmentId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class FederatedQueryNoticesRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<QueryNoticesResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryNoticesResponse result = new QueryNoticesResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((FederatedQueryNoticesRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnFederatedQueryNoticesResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((FederatedQueryNoticesRequestObj)req).SuccessCallback != null)
+                    ((FederatedQueryNoticesRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((FederatedQueryNoticesRequestObj)req).FailCallback != null)
+                    ((FederatedQueryNoticesRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Query your collection.
+        ///
+        /// After your content is uploaded and enriched by the Discovery service, you can build queries to search your
+        /// content. For details, see the [Discovery service
+        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that
+        /// don't mention the query content. Filter searches are better for metadata type searches and when you are
+        /// trying to get a sense of concepts in the data set. (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an
+        /// exact answer. Aggregations are useful for building applications, because you can use them to build lists,
+        /// tables, and time series. For a full list of possible aggregrations, see the Query reference.
+        /// (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10, and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <param name="highlight">When true a highlight field is returned for each result which contains the fields
+        /// that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+        /// (optional)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have. The
+        /// default is `400`. The minimum is `50`. The maximum is `2000`. (optional)</param>
+        /// <param name="deduplicate">When `true` and used with a Watson Discovery News collection, duplicate results
+        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
+        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
+        /// to false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs that will be used to find similar
+        /// documents.
+        ///
+        /// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope
+        /// of the document similarity search to include the natural language query. Other query parameters, such as
+        /// **filter** and **query** are subsequently applied and reduce the query scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that will be used as a basis for
+        /// comparison to identify similar documents. If not specified, the entire document is used for comparison.
+        /// (optional)</param>
+        /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
+        /// default to false)</param>
+        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            QueryRequestObj req = new QueryRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (loggingOptOut != null)
+                req.Headers["X-Watson-Logging-Opt-Out"] = loggingOptOut.ToString();
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                req.Parameters["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                req.Parameters["natural_language_query"] = naturalLanguageQuery;
+            if (passages != null)
+                req.Parameters["passages"] = passages;
+            if (!string.IsNullOrEmpty(aggregation))
+                req.Parameters["aggregation"] = aggregation;
+            if (count != null)
+                req.Parameters["count"] = count;
+            if (returnFields != null)
+                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (offset != null)
+                req.Parameters["offset"] = offset;
+            if (sort != null)
+                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (highlight != null)
+                req.Parameters["highlight"] = highlight;
+            if (passagesFields != null)
+                req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
+            if (passagesCount != null)
+                req.Parameters["passages.count"] = passagesCount;
+            if (passagesCharacters != null)
+                req.Parameters["passages.characters"] = passagesCharacters;
+            if (deduplicate != null)
+                req.Parameters["deduplicate"] = deduplicate;
+            if (!string.IsNullOrEmpty(deduplicateField))
+                req.Parameters["deduplicate.field"] = deduplicateField;
+            if (similar != null)
+                req.Parameters["similar"] = similar;
+            if(similarDocumentIds != null)
+                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
+            if(similarFields != null)
+                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            req.OnResponse = OnQueryResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryRequestObj : RESTConnector.Request
         {
             /// <summary>
             /// The success callback.
@@ -2588,8 +3055,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             QueryResponse result = new QueryResponse();
             fsData data = null;
-            Dictionary<string, object> customData = ((QueryRequest)req).CustomData;
-            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+            Dictionary<string, object> customData = ((QueryRequestObj)req).CustomData;
 
             if (resp.Success)
             {
@@ -2608,20 +3074,717 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Discovery.OnQueryResponse()", "OnQueryResponse Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnQueryResponse()", "Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
 
             if (resp.Success)
             {
-                if (((QueryRequest)req).SuccessCallback != null)
-                    ((QueryRequest)req).SuccessCallback(result, customData);
+                if (((QueryRequestObj)req).SuccessCallback != null)
+                    ((QueryRequestObj)req).SuccessCallback(result, customData);
             }
             else
             {
-                if (((QueryRequest)req).FailCallback != null)
-                    ((QueryRequest)req).FailCallback(resp.Error, customData);
+                if (((QueryRequestObj)req).FailCallback != null)
+                    ((QueryRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Knowledge Graph entity query.
+        ///
+        /// See the [Knowledge Graph
+        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="entityQuery">An object specifying the entities to query, which functions to perform, and any
+        /// additional constraints.</param>
+        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool QueryEntities(SuccessCallback<QueryEntitiesResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, QueryEntities entityQuery, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            QueryEntitiesRequestObj req = new QueryEntitiesRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+
+            fsData data = null;
+            _serializer.TrySerialize(entityQuery, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            req.OnResponse = OnQueryEntitiesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryEntitiesRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<QueryEntitiesResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryEntitiesResponse result = new QueryEntitiesResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((QueryEntitiesRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnQueryEntitiesResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((QueryEntitiesRequestObj)req).SuccessCallback != null)
+                    ((QueryEntitiesRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((QueryEntitiesRequestObj)req).FailCallback != null)
+                    ((QueryEntitiesRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Query system notices.
+        ///
+        /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
+        /// when ingesting documents and performing relevance training. See the [Discovery service
+        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+        /// language.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that
+        /// don't mention the query content. Filter searches are better for metadata type searches and when you are
+        /// trying to get a sense of concepts in the data set. (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="aggregation">An aggregation search uses combinations of filters and query search to return an
+        /// exact answer. Aggregations are useful for building applications, because you can use them to build lists,
+        /// tables, and time series. For a full list of possible aggregrations, see the Query reference.
+        /// (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10, and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <param name="highlight">When true a highlight field is returned for each result which contains the fields
+        /// that match the query with `<em></em>` tags around the matching query terms. Defaults to false.
+        /// (optional)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have. The
+        /// default is `400`. The minimum is `50`. The maximum is `2000`. (optional)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs that will be used to find similar
+        /// documents.
+        ///
+        /// **Note:** If the **natural_language_query** parameter is also specified, it will be used to expand the scope
+        /// of the document similarity search to include the natural language query. Other query parameters, such as
+        /// **filter** and **query** are subsequently applied and reduce the query scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that will be used as a basis for
+        /// comparison to identify similar documents. If not specified, the entire document is used for comparison.
+        /// (optional)</param>
+        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool QueryNotices(SuccessCallback<QueryNoticesResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            QueryNoticesRequestObj req = new QueryNoticesRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                req.Parameters["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                req.Parameters["natural_language_query"] = naturalLanguageQuery;
+            if (passages != null)
+                req.Parameters["passages"] = passages;
+            if (!string.IsNullOrEmpty(aggregation))
+                req.Parameters["aggregation"] = aggregation;
+            if (count != null)
+                req.Parameters["count"] = count;
+            if (returnFields != null)
+                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (offset != null)
+                req.Parameters["offset"] = offset;
+            if (sort != null)
+                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (highlight != null)
+                req.Parameters["highlight"] = highlight;
+            if(passagesFields != null)
+                req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
+            if (passagesCount != null)
+                req.Parameters["passages.count"] = passagesCount;
+            if (passagesCharacters != null)
+                req.Parameters["passages.characters"] = passagesCharacters;
+            if (!string.IsNullOrEmpty(deduplicateField))
+                req.Parameters["deduplicate.field"] = deduplicateField;
+            if (similar != null)
+                req.Parameters["similar"] = similar;
+            if (similarDocumentIds != null)
+                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
+            if (similarFields != null)
+                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            req.OnResponse = OnQueryNoticesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryNoticesRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<QueryNoticesResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryNoticesResponse result = new QueryNoticesResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((QueryNoticesRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnQueryNoticesResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((QueryNoticesRequestObj)req).SuccessCallback != null)
+                    ((QueryNoticesRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((QueryNoticesRequestObj)req).FailCallback != null)
+                    ((QueryNoticesRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Knowledge Graph relationship query.
+        ///
+        /// See the [Knowledge Graph
+        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="relationshipQuery">An object that describes the relationships to be queried and any query
+        /// constraints (such as filters).</param>
+        /// <returns><see cref="QueryRelationsResponse" />QueryRelationsResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool QueryRelations(SuccessCallback<QueryRelationsResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, QueryRelations relationshipQuery, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            QueryRelationsRequestObj req = new QueryRelationsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+
+            fsData data = null;
+            _serializer.TrySerialize(relationshipQuery, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            req.OnResponse = OnQueryRelationsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_relations", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryRelationsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<QueryRelationsResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnQueryRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            QueryRelationsResponse result = new QueryRelationsResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((QueryRelationsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnQueryRelationsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((QueryRelationsRequestObj)req).SuccessCallback != null)
+                    ((QueryRelationsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((QueryRelationsRequestObj)req).FailCallback != null)
+                    ((QueryRelationsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Expansions
+        /// <summary>
+        /// Create or update expansion list.
+        ///
+        /// Create or replace the Expansion list for this collection. The maximum number of expanded terms per
+        /// collection is `500`.
+        /// The current expansion list is replaced with the uploaded content.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="body">An object that defines the expansion list.</param>
+        /// <returns><see cref="Expansions" />Expansions</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool CreateExpansions(SuccessCallback<Expansions> successCallback, FailCallback failCallback, string environmentId, string collectionId, Expansions body, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            CreateExpansionsRequestObj req = new CreateExpansionsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnCreateExpansionsResponse;
+
+            fsData data = null;
+            _serializer.TrySerialize(body, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateExpansionsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Expansions> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnCreateExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Expansions result = new Expansions();
+            fsData data = null;
+            Dictionary<string, object> customData = ((CreateExpansionsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnCreateExpansionsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((CreateExpansionsRequestObj)req).SuccessCallback != null)
+                    ((CreateExpansionsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateExpansionsRequestObj)req).FailCallback != null)
+                    ((CreateExpansionsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Delete the expansion list.
+        ///
+        /// Remove the expansion information for this collection. The expansion list must be deleted to disable query
+        /// expansion for a collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="" />object</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool DeleteExpansions(SuccessCallback<object> successCallback, FailCallback failCallback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            DeleteExpansionsRequestObj req = new DeleteExpansionsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnDeleteExpansionsResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteExpansionsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteExpansionsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnDeleteExpansionsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((DeleteExpansionsRequestObj)req).SuccessCallback != null)
+                    ((DeleteExpansionsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteExpansionsRequestObj)req).FailCallback != null)
+                    ((DeleteExpansionsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Get the expansion list.
+        ///
+        /// Returns the current expansion list for the specified collection. If an expansion list is not specified, an
+        /// object with empty expansion arrays is returned.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="Expansions" />Expansions</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool ListExpansions(SuccessCallback<Expansions> successCallback, FailCallback failCallback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            ListExpansionsRequestObj req = new ListExpansionsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnListExpansionsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ListExpansionsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Expansions> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Expansions result = new Expansions();
+            fsData data = null;
+            Dictionary<string, object> customData = ((ListExpansionsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnListExpansionsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((ListExpansionsRequestObj)req).SuccessCallback != null)
+                    ((ListExpansionsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((ListExpansionsRequestObj)req).FailCallback != null)
+                    ((ListExpansionsRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
         #endregion
@@ -2870,6 +4033,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             _serializer.TrySerialize(credentialsParameter, out data);
             string json = data.ToString().Replace('\"', '"');
             req.Send = Encoding.UTF8.GetBytes(json);
+
             req.OnResponse = OnCreateCredentialsResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialsEndpoint, environmentId));
@@ -3145,6 +4309,760 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
         }
         #endregion
+        #endregion
+
+        #region Events and feedback
+        /// <summary>
+        /// Create event.
+        ///
+        /// The **Events** API can be used to create log entries that are associated with specific queries. For example,
+        /// you can record which documents in the results set were "clicked" by a user and when that click occured.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="queryEvent">An object that defines a query event to be added to the log.</param>
+        /// <returns><see cref="CreateEventResponse" />CreateEventResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool CreateEvent(SuccessCallback<CreateEventResponse> successCallback, FailCallback failCallback, CreateEventObject queryEvent, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            CreateEventRequestObj req = new CreateEventRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnCreateEventResponse;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            fsData data = null;
+            _serializer.TrySerialize(queryEvent, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/events");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateEventRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<CreateEventResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnCreateEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            CreateEventResponse result = new CreateEventResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((CreateEventRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnCreateEventResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((CreateEventRequestObj)req).SuccessCallback != null)
+                    ((CreateEventRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateEventRequestObj)req).FailCallback != null)
+                    ((CreateEventRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Percentage of queries with an associated event.
+        ///
+        /// The percentage of queries using the **natural_language_query** parameter that have a corresponding "click"
+        /// event over a specified time window.  This metric requires having integrated event tracking in your
+        /// application using the **Events** API.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetMetricsEventRate(SuccessCallback<MetricResponse> successCallback, FailCallback failCallback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetMetricsEventRateRequestObj req = new GetMetricsEventRateRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (startTime != null)
+                req.Parameters["start_time"] = startTime;
+            if (endTime != null)
+                req.Parameters["end_time"] = endTime;
+            if (!string.IsNullOrEmpty(resultType))
+                req.Parameters["result_type"] = resultType;
+            req.OnResponse = OnGetMetricsEventRateResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/event_rate");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetMetricsEventRateRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MetricResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MetricResponse result = new MetricResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetMetricsEventRateRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetMetricsEventRateResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetMetricsEventRateRequestObj)req).SuccessCallback != null)
+                    ((GetMetricsEventRateRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMetricsEventRateRequestObj)req).FailCallback != null)
+                    ((GetMetricsEventRateRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Number of queries over time.
+        ///
+        /// Total number of queries using the **natural_language_query** parameter over a specific time window.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetMetricsQuery(SuccessCallback<MetricResponse> successCallback, FailCallback failCallback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetMetricsQueryRequestObj req = new GetMetricsQueryRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (startTime != null)
+                req.Parameters["start_time"] = startTime;
+            if (endTime != null)
+                req.Parameters["end_time"] = endTime;
+            if (!string.IsNullOrEmpty(resultType))
+                req.Parameters["result_type"] = resultType;
+            req.OnResponse = OnGetMetricsQueryResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetMetricsQueryRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MetricResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetMetricsQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MetricResponse result = new MetricResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetMetricsQueryRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetMetricsQueryResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetMetricsQueryRequestObj)req).SuccessCallback != null)
+                    ((GetMetricsQueryRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMetricsQueryRequestObj)req).FailCallback != null)
+                    ((GetMetricsQueryRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Number of queries with an event over time.
+        ///
+        /// Total number of queries using the **natural_language_query** parameter that have a corresponding "click"
+        /// event over a specified time window. This metric requires having integrated event tracking in your
+        /// application using the **Events** API.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetMetricsQueryEvent(SuccessCallback<MetricResponse> successCallback, FailCallback failCallback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetMetricsQueryEventRequestObj req = new GetMetricsQueryEventRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (startTime != null)
+                req.Parameters["start_time"] = startTime;
+            if (endTime != null)
+                req.Parameters["end_time"] = endTime;
+            if (!string.IsNullOrEmpty(resultType))
+                req.Parameters["result_type"] = resultType;
+            req.OnResponse = OnGetMetricsQueryEventResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_event");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetMetricsQueryEventRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MetricResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetMetricsQueryEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MetricResponse result = new MetricResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetMetricsQueryEventRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetMetricsQueryEventResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetMetricsQueryEventRequestObj)req).SuccessCallback != null)
+                    ((GetMetricsQueryEventRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMetricsQueryEventRequestObj)req).FailCallback != null)
+                    ((GetMetricsQueryEventRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Number of queries with no search results over time.
+        ///
+        /// Total number of queries using the **natural_language_query** parameter that have no results returned over a
+        /// specified time window.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetMetricsQueryNoResults(SuccessCallback<MetricResponse> successCallback, FailCallback failCallback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetMetricsQueryNoResultsRequestObj req = new GetMetricsQueryNoResultsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (startTime != null)
+                req.Parameters["start_time"] = startTime;
+            if (endTime != null)
+                req.Parameters["end_time"] = endTime;
+            if (!string.IsNullOrEmpty(resultType))
+                req.Parameters["result_type"] = resultType;
+            req.OnResponse = OnGetMetricsQueryNoResultsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_no_search_results");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetMetricsQueryNoResultsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MetricResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetMetricsQueryNoResultsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MetricResponse result = new MetricResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetMetricsQueryNoResultsRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetMetricsQueryNoResultsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetMetricsQueryNoResultsRequestObj)req).SuccessCallback != null)
+                    ((GetMetricsQueryNoResultsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMetricsQueryNoResultsRequestObj)req).FailCallback != null)
+                    ((GetMetricsQueryNoResultsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Most frequent query tokens with an event.
+        ///
+        /// The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding
+        /// "click" event rate within the recording period (queries and events are stored for 30 days). A query token is
+        /// an individual word or unigram within the query string.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <returns><see cref="MetricTokenResponse" />MetricTokenResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetMetricsQueryTokenEvent(SuccessCallback<MetricTokenResponse> successCallback, FailCallback failCallback, long? count = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetMetricsQueryTokenEventRequestObj req = new GetMetricsQueryTokenEventRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (count != null)
+                req.Parameters["count"] = count;
+            req.OnResponse = OnGetMetricsQueryTokenEventResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/top_query_tokens_with_event_rate");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetMetricsQueryTokenEventRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<MetricTokenResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetMetricsQueryTokenEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            MetricTokenResponse result = new MetricTokenResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetMetricsQueryTokenEventRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetMetricsQueryTokenEventResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetMetricsQueryTokenEventRequestObj)req).SuccessCallback != null)
+                    ((GetMetricsQueryTokenEventRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetMetricsQueryTokenEventRequestObj)req).FailCallback != null)
+                    ((GetMetricsQueryTokenEventRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Search the query and event log.
+        ///
+        /// Searches the query and event log to find query sessions that match the specified criteria. Searching the
+        /// **logs** endpoint uses the standard Discovery query syntax for the parameters that are supported.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="filter">A cacheable query that limits the documents returned to exclude any documents that
+        /// don't mention the query content. Filter searches are better for metadata type searches and when you are
+        /// trying to get a sense of concepts in the data set. (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10, and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool QueryLog(SuccessCallback<LogQueryResponse> successCallback, FailCallback failCallback, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            QueryLogRequestObj req = new QueryLogRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(filter))
+                req.Parameters["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                req.Parameters["query"] = query;
+            if (count != null)
+                req.Parameters["count"] = count;
+            if (offset != null)
+                req.Parameters["offset"] = offset;
+            if(sort != null)
+                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            req.OnResponse = OnQueryLogResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class QueryLogRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<LogQueryResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            LogQueryResponse result = new LogQueryResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((QueryLogRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnQueryLogResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((QueryLogRequestObj)req).SuccessCallback != null)
+                    ((QueryLogRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((QueryLogRequestObj)req).FailCallback != null)
+                    ((QueryLogRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
         #endregion
 
         #region IWatsonService Interface
