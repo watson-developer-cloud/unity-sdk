@@ -71,13 +71,13 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>The timestamp for creation of the entity value.</value>
         [fsProperty("created")]
-        public virtual DateTime Created { get; private set; }
+        public virtual DateTime? Created { get; private set; }
         /// <summary>
         /// The timestamp for the last update to the entity value.
         /// </summary>
         /// <value>The timestamp for the last update to the entity value.</value>
         [fsProperty("updated")]
-        public virtual DateTime Updated { get; private set; }
+        public virtual DateTime? Updated { get; private set; }
         /// <summary>
         /// An array containing any synonyms for the entity value.
         /// </summary>
