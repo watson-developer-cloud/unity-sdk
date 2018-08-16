@@ -24,8 +24,8 @@ namespace IBM.Watson.DeveloperCloud.Editor
 {
     public class WatsonMenu : MonoBehaviour
     {
-        private const string TITLE = "Watson Unity SDK";
-        private const string SIGNUP_FOR_IBM_CLOUD_MSG = "Thanks for installing the Watson Unity SDK.\nSign up for IBM Cloud?";
+        private const string TITLE = "IBM Watson SDK for Unity";
+        private const string SIGNUP_FOR_IBM_CLOUD_MSG = "Thanks for installing the IBM Watson SDK for Unity.\nSign up for IBM Cloud?";
         private const string MENU_ITEM_MSG = "The IBM Cloud signup link can be found in the \"Watson\" menu.";
         private const string YES = "Yes";
         private const string NO = "No";

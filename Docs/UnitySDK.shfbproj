@@ -34,7 +34,7 @@
     <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>HashedMemberName</NamingMethod>
-    <HelpTitle>Watson Unity SDK</HelpTitle>
+    <HelpTitle>IBM Watson SDK for Unity</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\..\..\..\DocumentationBuilder\ConsoleApplication1\ConsoleApplication1\bin\Debug\Assembly-CSharp.dll" />
