@@ -1,15 +1,6 @@
 {
   "branch": "master",
   "verifyConditions": [],
-  "prepare": [
-    {
-      "path": "@semantic-release/exec",
-      "cmd": "bumpversion --current-version ${lastRelease.version} --new-version ${nextRelease.version} --verbose patch"
-    }
-  ],
-  "publish": [
-    {
-      "path": "@semantic-release/github"
-    }
-  ]
+  "prepare": [],
+  "publish": ["@semantic-release/github"]
 }
