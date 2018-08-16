@@ -1,7 +1,9 @@
-language: objective-c
-osx_image: xcode61
+language: node_js
 node_js:
 - "8"
+os:
+- osx
+osx_image: xcode61
 rvm:
 - 2.2
 cache:
