@@ -1,0 +1,6 @@
+{
+  "branch": "master",
+  "verifyConditions": [],
+  "prepare": [],
+  "publish": ["@semantic-release/github"]
+}

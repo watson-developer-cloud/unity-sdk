@@ -2,7 +2,7 @@
 project="unity-sdk-travis"
 
 echo "Attempting to install credentials"
-git clone https://$GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credentials.git Travis/sdk-credentials/
+git clone https://$CREDENTIALS_GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credentials.git Travis/sdk-credentials/
 
 if [ $? = 0 ] ; then
   echo "Credentials install SUCCEEDED! Exited with $?"
