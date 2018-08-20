@@ -8,7 +8,7 @@ Before you open an issue, please check if a similar issue already exists or has 
 - [ ] Steps to reproduce
 - [ ] Expected behavior
 - [ ] Actual behavior
-- [ ] Unity SDK version
+- [ ] IBM Watson SDK for Unity version
 
 ### When you open an issue for a feature request, please add as much detail as possible:
 - [ ] A descriptive title starting with the service name

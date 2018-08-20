@@ -21,7 +21,7 @@ or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
  
 # Issues
 
-If you encounter an issue with the Unity SDK library, you are welcome to submit
+If you encounter an issue with the IBM Watson SDK for Unity library, you are welcome to submit
 a [bug report](https://github.com/watson-developer-cloud/unity-sdk/issues).
 Before that, please search for similar issues. It's possible somebody has
 already encountered this issue.
