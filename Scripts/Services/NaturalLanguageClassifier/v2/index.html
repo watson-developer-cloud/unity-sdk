@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="natural-language-classifier">Natural Language Classifier</h1>
+<p>Use <a href="https://www.ibm.com/watson/services/natural-language-classifier/">Natural Language Classifier</a> service to create a classifier instance by providing a set of representative strings and a set of one or more correct classes for each as training. Then use the trained classifier to classify your new question for best matching answers or to retrieve next actions for your application.</p>
+<h2 id="usage">Usage</h2>
+<p>Classify intents in natural language.</p>
+<h3 id="listing-classifiers">Listing Classifiers</h3>
+<p>Returns an empty array if no classifiers are available.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetClassifiers</span>()
+{
+  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">GetClassifiers</span>(OnGetClassifiers, OnFail))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.GetClassifiers()&quot;</span>, <span class="st">&quot;Failed to get classifiers!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifiers</span>(Classifiers classifiers, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnGetClassifiers()&quot;</span>, <span class="st">&quot;Natural Language Classifier - GetClassifiers  Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="classifying-text">Classifying Text</h3>
+<p>The status must be Available before you can use the classifier to classify calls. Use GET /classifiers/{classifier_id} to retrieve the status.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Classify</span>()
+{
+  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">Classify</span>(OnClassify, OnFail, &lt;classifier-id&gt;, &lt;input&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.Classify()&quot;</span>, <span class="st">&quot;Failed to classify!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnClassify</span>(ClassifyResult result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnClassify()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Classify Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="classifying-a-collection-of-text">Classifying A Collection of text</h3>
+<p>The status must be Available before you can use the classifier to classify calls. Use GET /classifiers/{classifier_id} to retrieve the status.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">ClassifyCollection</span>()
+{
+    ClassifyCollectionInput classifyCollectionInput = <span class="kw">new</span> <span class="fu">ClassifyCollectionInput</span>()
+    {
+        collection = <span class="kw">new</span> List&lt;ClassifyInput&gt;()
+        {
+            <span class="kw">new</span> <span class="fu">ClassifyInput</span>()
+            {
+                text = &lt;text-to-classify&gt;
+            },
+            <span class="kw">new</span> <span class="fu">ClassifyInput</span>()
+            {
+                text = &lt;text-to-classify&gt;
+            }
+        }
+    };
+
+    <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">ClassifyCollection</span>(OnClassify, OnFail, &lt;classifier-id&gt;, classifyCollectionInput))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.ClassifyCollection()&quot;</span>, <span class="st">&quot;Failed to classify!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnClassifyCollection</span>(ClassificationCollection result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnClassifyCollection()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Classify Collection Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="training-a-new-classifier">Training A New Classifier</h3>
+<p>Sends data to create and train a classifier and returns information about the new classifier.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">TrainClassifier</span>()
+{
+  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">TrainClassifier</span>(&lt;classifier-name&gt;, &lt;classifier-language&gt;, &lt;training-data&gt;, OnTrainClassifier))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.TrainClassifier()&quot;</span>, <span class="st">&quot;Failed to train clasifier!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnTrainClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnTrainClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Train Classifier: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="getting-information-about-a-classifier">Getting Information About A Classifier</h3>
+<p>Returns status and other information about a classifier</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetClassifier</span>()
+{
+  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">GetClassifier</span>(&lt;classifier-id&gt;, OnGetClassifier))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.GetClassifier()&quot;</span>, <span class="st">&quot;Failed to get classifier {0}!&quot;</span>, classifierId);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifier</span>(Classifier classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnGetClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Get Classifier {0}: {1}&quot;</span>, classifier.<span class="fu">classifier_id</span>, data);
+}</code></pre></div>
+<h3 id="deleting-a-classifier">Deleting A Classifier</h3>
+<p>Deletes a classifier</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteClassifier</span>()
+{
+  <span class="kw">if</span> (!naturalLanguageClassifier.<span class="fu">DeleteClassifer</span>(&lt;classifier-id&gt;, OnDeleteTrainedClassifier))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.DeleteClassifier()&quot;</span>, <span class="st">&quot;Failed to delete clasifier {0}!&quot;</span>, &lt;classifier-id&gt;);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteTrainedClassifier</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleNaturalLanguageClassifier.OnDeleteTrainedClassifier()&quot;</span>, <span class="st">&quot;Natural Language Classifier - Delete Trained Classifier {0} | success: {1} {2}&quot;</span>, &lt;classifier-id&gt;, success, data);
+}</code></pre></div>
+</body>
+</html>

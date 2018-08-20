@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="language-translator-v3">Language Translator V3</h1>
+<p><a href="https://www.ibm.com/watson/services/language-translator/">Language Translator</a> translates text from one language to another. The service offers multiple domain-specific models that you can customize based on your unique terminology and language. Use Language Translator to take news from across the globe and present it in your language, communicate with your customers in their own language, and more.</p>
+<h2 id="usage">Usage</h2>
+<p>Select a domain, then identify or select the language of text, and then translate the text from one supported language to another.</p>
+<h3 id="list-models">List models</h3>
+<p>Lists available models for language translation with option to filter by source or by target language.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModels</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetModels</span>(OnGetModels, OnFail))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetModels()&quot;</span>, <span class="st">&quot;Failed to get models.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetModels</span>(TranslationModels models, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetModels()&quot;</span>, <span class="st">&quot;Language Translator - Get models response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="create-a-model">Create a model</h3>
+<p>Uploads a TMX glossary file on top of a domain to customize a translation model. Depending on the size of the file, training can range from minutes for a glossary to several hours for a large parallel corpus. Glossary files must be less than 10 MB. The cumulative file size of all uploaded glossary and corpus files is limited to 250 MB.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">CreateModel</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">CreateModel</span>(OnCreateModel, OnFail, &lt;<span class="kw">base</span>-model-name&gt;, &lt;custom-model-name&gt;, &lt;glossary-filepath&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.CreateModel()&quot;</span>, <span class="st">&quot;Failed to create model.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnCreateModel</span>(TranslationModel model, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnCreateModel()&quot;</span>, <span class="st">&quot;Language Translator - Create model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="get-a-model-details">Get a model details</h3>
+<p>Returns information, including training status, about a specified translation model.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModel</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetModel</span>(OnGetModel, OnFail, &lt;custom-language-model-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetModel()&quot;</span>, <span class="st">&quot;Failed to get model.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetModel</span>(TranslationModel model, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetModel()&quot;</span>, <span class="st">&quot;Language Translator - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-a-model">Delete a model</h3>
+<p>Deletes trained translation models.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteModel</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">DeleteModel</span>(OnDeleteModel, OnFail, &lt;custom-language-model-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.DeleteModel()&quot;</span>, <span class="st">&quot;Failed to delete model.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteModel</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnDeleteModel()&quot;</span>, <span class="st">&quot;Language Translator - Delete model response: success: {0}&quot;</span>, success);
+}</code></pre></div>
+<h3 id="translate">Translate</h3>
+<p>Translates input text from the source language to the target language.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Translate</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetTranslation</span>(OnGetTranslation, OnFail, &lt;text-to-translate&gt;, &lt;from-language&gt;, &lt;to-language&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.Translate()&quot;</span>, <span class="st">&quot;Failed to translate.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetTranslation</span>(Translations translation, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetTranslation()&quot;</span>, <span class="st">&quot;Langauge Translator - Translate Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="identify-language">Identify language</h3>
+<p>Identify the language in which a text is written.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Identify</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">Identify</span>(OnIdentify, OnFail, &lt;text-to-identify&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.Identify()&quot;</span>, <span class="st">&quot;Failed to identify language.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnIdentify</span>(<span class="dt">string</span> lang, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnIdentify()&quot;</span>, <span class="st">&quot;Language Translator - Identify response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="identifiable-languages">Identifiable languages</h3>
+<p>Return the list of languages it can detect.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetLanguages</span>()
+{
+  <span class="kw">if</span> (!_languageTranslator.<span class="fu">GetLanguages</span>(OnGetLanguages, OnFail))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.GetLanguages()&quot;</span>, <span class="st">&quot;Failed to get languages.&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetLanguages</span>(Languages languages, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleLanguageTranslatorV3.OnGetLanguages()&quot;</span>, <span class="st">&quot;Language Translator - Get languages response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+</body>
+</html>

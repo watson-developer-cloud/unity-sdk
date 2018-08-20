@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="discovery">Discovery</h1>
+<p>The IBM Watson™ <a href="https://www.ibm.com/watson/developercloud/discovery.html">Discovery</a> service makes it possible to rapidly build cognitive, cloud-based exploration applications that unlock actionable insights hidden in unstructured data - including your own proprietary data, as well as public and third-party data.</p>
+<h2 id="usage">Usage</h2>
+<p>The IBM Watson™ <a href="https://www.ibm.com/watson/developercloud/discovery.html">Discovery</a> Service uses data analysis combined with cognitive intuition in order to take your unstructured data and enrich it so that you can query it to return the information that you need from it.</p>
+<h3 id="create-an-environment">Create an environment</h3>
+<p>Creates an environment for the service instance. Note: You can create only one environment per service instance. Attempting to create another environment for the same service instance results in an error. See the <a href="https://www.ibm.com/watson/developercloud/discovery.html">Discovery service home page</a> for additional information about sizing and pricing. To create a free trial environment, specify the value of size as 0 (zero).</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">CreateEnvironment</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">AddEnvironment</span>(OnAddEnvironment, OnFail, &lt;environment-name&gt;, &lt;environment-description&gt;, &lt;environment-size&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.CreateEnvironment()&quot;</span>, <span class="st">&quot;Failed to add environment&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnAddEnvironment</span>(Environment resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnAddEnvironment()&quot;</span>, <span class="st">&quot;Discovery - AddEnvironment Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-environments">List environments</h3>
+<p>List existing environments for the service instance.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetEnvironments</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetEnvironments</span>(OnGetEnvironments, OnFail))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetEnvironments()&quot;</span>, <span class="st">&quot;Failed to get environments&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetEnvironments</span>(GetEnvironmentsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetEnvironments()&quot;</span>, <span class="st">&quot;Discovery - GetEnvironments Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-environment-details">List environment details</h3>
+<p>Gets detailed information about the specified environment.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetEnvironment</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetEnvironment</span>(OnGetEnvironment, OnFail, &lt;environment-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetEnvironment()&quot;</span>, <span class="st">&quot;Failed to get environment&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetEnvironment</span>(Environment resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetEnvironment()&quot;</span>, <span class="st">&quot;Discovery - GetEnvironment Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-an-environment">Delete an environment</h3>
+<p>Deletes an existing environment.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteEnvironment</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">DeleteEnvironment</span>(OnDeleteEnvironment, OnFail, &lt;environment-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.DeleteEnvironment()&quot;</span>, <span class="st">&quot;Failed to delete environment&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteEnvironment</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnDeleteEnvironment()&quot;</span>, <span class="st">&quot;Discovery - DeleteEnvironment Response: deleted:{0}&quot;</span>, success);
+}</code></pre></div>
+<h3 id="add-an-configuration">Add an configuration</h3>
+<p>Adds a configuration to the service instance.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddConfiguration</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">AddConfiguration</span>(OnAddConfiguration, OnFail, &lt;environment-id&gt;, &lt;configuration-json-path&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.AddConfiguration()&quot;</span>, <span class="st">&quot;Failed to add configuration&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnAddConfiguration</span>(Configuration resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnAddConfiguration()&quot;</span>, <span class="st">&quot;Discovery - AddConfiguration Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-configurations">List configurations</h3>
+<p>Lists existing configurations for the service instance.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetConfigurations</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetConfigurations</span>(OnGetConfigurations, OnFail, &lt;environment-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetConfigurations()&quot;</span>, <span class="st">&quot;Failed to get configurations&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetConfigurations</span>(GetConfigurationsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetConfigurations()&quot;</span>, <span class="st">&quot;Discovery - GetConfigurations Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-configuration-details">List configuration details</h3>
+<p>Get information about the specified configuration.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetConfiguration</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetConfiguration</span>(OnGetConfiguration, OnFail, &lt;environment-id&gt;, &lt;configuration-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetConfiguration()&quot;</span>, <span class="st">&quot;Failed to get configuration&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetConfiguration</span>(Configuration resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetConfiguration()&quot;</span>, <span class="st">&quot;Discovery - GetConfiguration Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="preview-a-configuration">Preview a configuration</h3>
+<p>Runs a sample document through the default or your configuration and returns diagnostic information designed to help you understand how the document was processed. The document is not added to the index.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">PreviewConfiguration</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">PreviewConfiguration</span>(OnPreviewConfiguration, OnFail, &lt;environment-id&gt;, &lt;configuration-id&gt;, <span class="kw">null</span>, &lt;filepath-to-ingest&gt;, &lt;metadata&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.PreviewConfiguration()&quot;</span>, <span class="st">&quot;Failed to preview configuration&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnPreviewConfiguration</span>(TestDocument resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnPreviewConfiguration()&quot;</span>, <span class="st">&quot;Discovery - Preview configuration Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-a-configuration">Delete a configuration</h3>
+<p>Deletes an existing configuration from the service instance.</p>
+<p>The delete operation is performed unconditionally. A delete request succeeds even if the configuration is referenced by a collection or document ingestion. However, documents that have already been submitted for processing continue to use the deleted configuration; documents are always processed with a snapshot of the configuration as it existed at the time the document was submitted.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteConfiguration</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">DeleteConfiguration</span>(OnDeleteConfiguration, OnFail, &lt;environment-id&gt;, &lt;configuration-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.DeleteConfiguration()&quot;</span>, <span class="st">&quot;Failed to delete configuration&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteConfiguration</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnDeleteConfiguration()&quot;</span>, <span class="st">&quot;Discovery - DeleteConfiguration Response: deleted:{0}&quot;</span>, success);
+}</code></pre></div>
+<h3 id="create-an-collection">Create an collection</h3>
+<p>Creates a new collection for storing documents.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddCollection</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">AddCollection</span>(OnAddCollection, OnFail, &lt;environment-id&gt;, &lt;collection-name&gt;, &lt;collection-description&gt;, &lt;configuration-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.AddCollection()&quot;</span>, <span class="st">&quot;Failed to add collection&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnAddCollection</span>(CollectionRef resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnAddCollection()&quot;</span>, <span class="st">&quot;Discovery - Add collection Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-collections">List collections</h3>
+<p>Display a list of existing collections.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCollections</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetCollections</span>(OnGetCollections, OnFail, &lt;environment-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetCollections()&quot;</span>, <span class="st">&quot;Failed to get collections&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetCollections</span>(GetCollectionsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetCollections()&quot;</span>, <span class="st">&quot;Discovery - Get colletions Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-collection-details">List collection details</h3>
+<p>Show detailed information about an existing collection.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCollection</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetCollection</span>(OnGetCollection, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetCollection()&quot;</span>, <span class="st">&quot;Failed to get collection&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetCollection</span>(Collection resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetCollection()&quot;</span>, <span class="st">&quot;Discovery - Get colletion Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-fields">List fields</h3>
+<p>Gets a list of the unique fields, and each field's type, that are stored in a collection's index.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetFields</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetFields</span>(OnGetFields, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetFields()&quot;</span>, <span class="st">&quot;Failed to get fields&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetFields</span>(GetFieldsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetFields()&quot;</span>, <span class="st">&quot;Discovery - Get fields Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-an-collection">Delete an collection</h3>
+<p>Deletes an existing collection.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteCollection</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">DeleteCollection</span>(OnDeleteCollection, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.DeleteCollection()&quot;</span>, <span class="st">&quot;Failed to add collection&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteCollection</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnDeleteCollection()&quot;</span>, <span class="st">&quot;Discovery - Delete collection Response: deleted:{0}&quot;</span>, success);
+}</code></pre></div>
+<h3 id="add-a-document">Add a document</h3>
+<p>Add a document to your collection.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddDocument</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">AddDocument</span>(OnAddDocument, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;, &lt;filepath-to-ingest&gt;, &lt;configuration-id&gt;, <span class="kw">null</span>))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.AddDocument()&quot;</span>, <span class="st">&quot;Failed to add document&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnAddDocument</span>(DocumentAccepted resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnAddDocument()&quot;</span>, <span class="st">&quot;Discovery - Add document Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="update-a-document">Update a document</h3>
+<p>Update or partially update a document to create or replace an existing document.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">UpdateDocument</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">UpdateDocument</span>(OnUpdateDocument, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;, &lt;document-id&gt;, &lt;filepath-to-ingest&gt;, &lt;configuration-id&gt;, <span class="kw">null</span>))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.UpdateDocument()&quot;</span>, <span class="st">&quot;Failed to update document&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnUpdateDocument</span>(DocumentAccepted resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnUpdateDocument()&quot;</span>, <span class="st">&quot;Discovery - Update document Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="list-document-details">List document details</h3>
+<p>Display status information about a submitted document.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetDocument</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">GetDocument</span>(OnGetDocument, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;, &lt;document-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.GetDocument()&quot;</span>, <span class="st">&quot;Failed to get document&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetDocument</span>(DocumentStatus resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnGetDocument()&quot;</span>, <span class="st">&quot;Discovery - Get document Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-a-document">Delete a document</h3>
+<p>Delete a document from a collection.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteDocument</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">DeleteDocument</span>(OnDeleteDocument, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;, &lt;document-id&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.DeleteDocument()&quot;</span>, <span class="st">&quot;Failed to delete document&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteDocument</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnDeleteDocument()&quot;</span>, <span class="st">&quot;Discovery - Delete document Response: deleted:{0}&quot;</span>, success);
+}</code></pre></div>
+<h3 id="queries">Queries</h3>
+<p>Query the documents in your collection.</p>
+<p>Once your content is uploaded and enriched by the Discovery service, you can build queries to search your content. For a deep dive into queries, see <a href="https://console.bluemix.net/docs/services/discovery/using.html">Building Queries and Delivering Content</a>.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Query</span>()
+{
+  <span class="kw">if</span> (!_discovery.<span class="fu">Query</span>(OnQuery, OnFail, &lt;environment-id&gt;, &lt;collection-id&gt;, <span class="kw">null</span>, &lt;query&gt;, <span class="kw">null</span>, <span class="dv">10</span>, <span class="kw">null</span>, <span class="dv">0</span>))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.Query()&quot;</span>, <span class="st">&quot;Failed to query&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnQuery</span>(QueryResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleDiscovery.OnQuery()&quot;</span>, <span class="st">&quot;Discovery - Query Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+</body>
+</html>

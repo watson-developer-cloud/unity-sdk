@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="conversation">Conversation</h1>
+<p>With the IBM Watson™ <a href="https://console.bluemix.net/docs/services/conversation/index.html">Conversation</a> service, you can create an application that understands natural-language input and uses machine learning to respond to customers in a way that simulates a conversation between humans.</p>
+<h2 id="usage">Usage</h2>
+<p>You complete these steps to implement your application:</p>
+<ul>
+<li><p>Configure a workspace. With the easy-to-use graphical environment, you set up the dialog flow and training data for your application.</p></li>
+<li><p>Develop your application. You code your application to connect to the Conversation workspace through API calls. You then integrate your app with other systems that you need, including back-end systems and third-party services such as chat services or social media.</p></li>
+</ul>
+<h3 id="message">Message</h3>
+<p>Send a message to the Conversation instance</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="co">//  Send a simple message using a string</span>
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">Message</span>()
+{
+  <span class="kw">if</span> (!_conversation.<span class="fu">Message</span>(OnMessage, OnFail, &lt;workspace-id&gt;, &lt;input-<span class="dt">string</span>&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.Message()&quot;</span>, <span class="st">&quot;Failed to message!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.OnMessage()&quot;</span>, <span class="st">&quot;Conversation: Message Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="co">//  Send a message using a MessageRequest object</span>
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">Message</span>()
+{
+  MessageRequest messageRequest = <span class="kw">new</span> <span class="fu">MessageRequest</span>()
+  {
+    input = <span class="kw">new</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;()
+    {
+        { <span class="st">&quot;text&quot;</span>, &lt;input-<span class="dt">string</span>&gt; }
+    }
+  };
+
+  <span class="kw">if</span> (!_conversation.<span class="fu">Message</span>(OnMessage, OnFail, &lt;workspace-id&gt;, messageRequest))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.Message()&quot;</span>, <span class="st">&quot;Failed to message!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.OnMessage()&quot;</span>, <span class="st">&quot;Conversation: Message Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="co">//  Send a message perserving conversation context</span>
+Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; _context; <span class="co">// context to persist</span>
+<span class="co">//  Initiate a conversation</span>
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">Message0</span>()
+{
+  <span class="kw">if</span> (!_conversation.<span class="fu">Message</span>(OnMessage, OnFail, &lt;workspace-id&gt;, &lt;input-string0&gt;))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.Message()&quot;</span>, <span class="st">&quot;Failed to message!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage0</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.OnMessage0()&quot;</span>, <span class="st">&quot;Conversation: Message Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+
+  <span class="co">//  Set context for next round of messaging</span>
+  <span class="dt">object</span> _tempContext = <span class="kw">null</span>;
+  (resp <span class="kw">as</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;).<span class="fu">TryGetValue</span>(<span class="st">&quot;context&quot;</span>, <span class="kw">out</span> _tempContext);
+
+  <span class="kw">if</span> (_tempContext != <span class="kw">null</span>)
+      _context = _tempContext <span class="kw">as</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;;
+  <span class="kw">else</span>
+      Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.OnMessage0()&quot;</span>, <span class="st">&quot;Failed to get context&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">Message1</span>()
+{
+  MessageRequest messageRequest = <span class="kw">new</span> <span class="fu">MessageRequest</span>()
+  {
+    input = <span class="kw">new</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;()
+    {
+        { <span class="st">&quot;text&quot;</span>, &lt;input-string1&gt; }
+    },
+    context = _context
+  };
+
+  <span class="kw">if</span> (!_conversation.<span class="fu">Message</span>(OnMessage, OnFail, &lt;workspace-id&gt;, messageRequest))
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.Message1()&quot;</span>, <span class="st">&quot;Failed to message!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage1</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleConversation.OnMessage1()&quot;</span>, <span class="st">&quot;Conversation: Message Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+</body>
+</html>

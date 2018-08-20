@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h1 id="visual-recognition">Visual Recognition</h1>
+<p>The IBM Watson™ <a href="https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/">Visual Recognition</a> service uses deep learning algorithms to identify scenes, objects, and celebrity faces in images you upload to the service. You can create and train a custom classifier to identify subjects that suit your needs.</p>
+<h2 id="usage">Usage</h2>
+<p>The IBM Watson™ <a href="https://www.ibm.com/watson/developercloud/visual-recognition/api/v3/">Visual Recognition</a> service uses deep learning algorithms to identify scenes, objects, and faces in images you upload to the service. You can create and train a custom classifier to identify subjects that suit your needs. You can create and add images to a collection and then search that collection with your own image to find similar images. A valid API Key from Bluemix is required for all calls.</p>
+<h3 id="classify-an-image">Classify an image</h3>
+<p>Upload images or URLs to identify classes by default. To identify custom classifiers, include the classifier_ids or owners parameters. Images must be in .jpeg, or .png format.</p>
+<p>For each image, the response includes a score for each class within each selected classifier. Scores range from 0 - 1 with a higher score indicating greater likelihood of the class being depicted in the image. The default threshold for reporting scores from a classifier is 0.5. We recommend an image that is a minimum of 224 x 224 pixels for best quality results.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">Classify</span>()
+{
+    <span class="co">//  Classify using image url</span>
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">Classify</span>(<span class="st">&quot;&lt;image-url&gt;&quot;</span>, OnClassify, OnFail))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.Classify()&quot;</span>, <span class="st">&quot;Classify image failed!&quot;</span>);
+
+    <span class="co">//  Classify using image path</span>
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">Classify</span>(OnClassify, OnFail, <span class="st">&quot;&lt;image-path&gt;&quot;</span>, <span class="st">&quot;&lt;classifier-owners&gt;&quot;</span>, <span class="st">&quot;&lt;classifier-ids&gt;&quot;</span>, <span class="fl">0.</span>5f))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.Classify()&quot;</span>, <span class="st">&quot;Classify image failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnClassify</span>(ClassifyTopLevelMultiple classify, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnClassify()&quot;</span>, <span class="st">&quot;Classify result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="detect-faces">Detect faces</h3>
+<p>Analyze faces in images and get data about them, such as estimated age, gender, plus names of celebrities. Images must be in .jpeg, or .png format. This functionality is not trainable, and does not support general biometric facial recognition.</p>
+<p>For each image, the response includes face location, a minimum and maximum estimated age, a gender, and confidence scores. Scores range from 0 - 1 with a higher score indicating greater correlation.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">DetectFaces</span>()
+{
+    <span class="co">//  Classify using image url</span>
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">DetectFaces</span>(<span class="st">&quot;&lt;image-url&gt;&quot;</span>, OnDetectFaces, OnFail))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.DetectFaces()&quot;</span>, <span class="st">&quot;Detect faces failed!&quot;</span>);
+
+    <span class="co">//  Classify using image path</span>
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">DetectFaces</span>(OnDetectFaces, OnFail, <span class="st">&quot;&lt;image-path&gt;&quot;</span>))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.DetectFaces()&quot;</span>, <span class="st">&quot;Detect faces failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDetectFaces</span>(FacesTopLevelMultiple multipleImages, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnDetectFaces()&quot;</span>, <span class="st">&quot;Detect faces result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="create-a-classifier">Create a classifier</h3>
+<p>Train a new multi-faceted classifier on the uploaded image data. A new custom classifier can be trained by several compressed (.zip) files, including files containing positive or negative images (.jpg, or .png). You must supply at least two compressed files, either two positive example files or one positive and one negative example file.</p>
+<p>Compressed files containing positive examples are used to create “classes” that define what the new classifier is. The prefix that you specify for each positive example parameter is used as the class name within the new classifier. The <code>_positive_examples</code> suffix is required. There is no limit on the number of positive example files you can upload in a single call.</p>
+<p>The compressed file containing negative examples is not used to create a class within the created classifier, but does define what the new classifier is not. Negative example files should contain images that do not depict the subject of any of the positive examples. You can only specify one negative example file in a single call. For more information, see <a href="https://console.bluemix.net/docs/services/visual-recognition/customizing.html#structure">Structure of the training data</a>, and <a href="https://console.bluemix.net/docs/services/visual-recognition/customizing.html#guidelines-for-good-training">Guidelines for good training</a>.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">TrainClassifier</span>()
+{
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">TrainClassifier</span>(OnTrainClassifier, OnFail, <span class="st">&quot;&lt;classifier-name&gt;&quot;</span>, <span class="st">&quot;&lt;class-name&gt;&quot;</span>, <span class="st">&quot;&lt;positive-examples-path&gt;&quot;</span>, <span class="st">&quot;&lt;negative-examples-path&gt;&quot;</span>))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.TrainClassifier()&quot;</span>, <span class="st">&quot;Train classifier failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnTrainClassifier</span>(GetClassifiersPerClassifierVerbose classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnTrainClassifier()&quot;</span>, <span class="st">&quot;Train classifier result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="retrieve-a-list-of-custom-classifiers">Retrieve a list of custom classifiers</h3>
+<p>Retrieve a list of user-created classifiers.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">GetClassifiers</span>()
+{
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">GetClassifiers</span>(OnGetClassifiers, OnFail))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.GetClassifiers()&quot;</span>, <span class="st">&quot;Getting classifiers failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifiers</span>(GetClassifiersTopLevelBrief classifiers, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnGetClassifiers()&quot;</span>, <span class="st">&quot;Get classifiers result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="retrieve-classifier-details">Retrieve classifier details</h3>
+<p>Retrieve information about a specific classifier.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">GetClassifier</span>()
+{
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">GetClassifier</span>(OnGetClassifier, OnFail, <span class="st">&quot;&lt;classifier-id&gt;&quot;</span>))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.GetClassifier()&quot;</span>, <span class="st">&quot;Getting classifier failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetClassifier</span>(GetClassifiersPerClassifierVerbose classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnGetClassifier()&quot;</span>, <span class="st">&quot;Get classifier result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="update-a-classifier">Update a classifier</h3>
+<p>Update an existing classifier by adding new classes, or by adding new images to existing classes.You cannot update a custom classifier with a free API Key.</p>
+<p>To update the existing classifier, use several compressed (.zip) files, including files containing positive or negative images (.jpg, or .png). You must supply at least one compressed file, with additional positive or negative examples.</p>
+<p>Compressed files containing positive examples are used to create and update “classes” to impact all of the classes in that classifier. The prefix that you specify for each positive example parameter is used as the class name within the new classifier. The <code>_positive_examples</code> suffix is required. There is no limit on the number of positive example files you can upload in a single call.</p>
+<p>The compressed file containing negative examples is not used to create a class within the created classifier, but does define what the updated classifier is not. Negative example files should contain images that do not depict the subject of any of the positive examples. You can only specify one negative example file in a single call. For more information, see <a href="https://console.bluemix.net/docs/services/visual-recognition/customizing.html#updating-custom-classifiers">Updating custom classifiers</a>.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="kw">private</span> VisualRecognition _visualRecognition = <span class="kw">new</span> <span class="fu">VisualRecognition</span>();
+
+<span class="dt">void</span> <span class="fu">UpdateClassifier</span>()
+{
+   <span class="kw">if</span>(!_visualRecognition.<span class="fu">UpdateClassifier</span>(OnUpdateClassifier, OnFail, <span class="st">&quot;&lt;classifier-id&gt;&quot;</span>, <span class="st">&quot;&lt;classifier-name&gt;&quot;</span>, <span class="st">&quot;&lt;class-name&gt;&quot;</span>, <span class="st">&quot;&lt;positive-examples-path&gt;&quot;</span>))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.UpdateClassifier()&quot;</span>, <span class="st">&quot;Update classifier failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnUpdateClassifier</span>(GetClassifiersPerClassifierVerbose classifier, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnUpdateClassifier()&quot;</span>, <span class="st">&quot;Update classifier result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+<h3 id="delete-a-classifier">Delete a classifier</h3>
+<p>Delete a custom classifier with the specified classifier ID.</p>
+<div class="sourceCode"><pre class="sourceCode cs"><code class="sourceCode cs"><span class="dt">void</span> <span class="fu">DeleteClassifier</span>()
+{
+    <span class="kw">if</span>(!_visualRecognition.<span class="fu">DeleteClassifier</span>(OnDeleteClassifier, OnFail, <span class="st">&quot;&lt;classifier-id&gt;&quot;</span>))
+        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.DeleteClassifier()&quot;</span>, <span class="st">&quot;Deleting classifier failed!&quot;</span>);
+}
+
+<span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnDeleteClassifier</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)
+{
+    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleVisualRecognition.OnDeleteClassifier()&quot;</span>, <span class="st">&quot;Update classifier result: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());
+}</code></pre></div>
+</body>
+</html>
