@@ -414,8 +414,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
-#if UNITY_2018_2_OR_NEWER
+#if NET_4_6
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+#else
+                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls;
 #endif
                 ws.Connect();
 
