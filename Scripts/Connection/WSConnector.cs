@@ -213,14 +213,16 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("https://stream.", "wss://stream.");
             }
 
-            //  TLS 1.0 endpoint
+            //  TLS 1.0 endpoint - Do not change this to TLS 1.2 endpoint since
+            //  users may need to use the TLS 1.0 endpoint because of different
+            //  platforms.
             else if (URL.StartsWith("http://stream-tls10."))
             {
-                URL = URL.Replace("http://stream-tls10.", "ws://stream.");
+                URL = URL.Replace("http://stream-tls10.", "ws://stream-tls10.");
             }
             else if (URL.StartsWith("https://stream-tls10."))
             {
-                URL = URL.Replace("https://stream-tls10.", "wss://stream.");
+                URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
             }
 
             //  Germany
