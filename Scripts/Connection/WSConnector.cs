@@ -203,6 +203,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public static string FixupURL(string URL)
         {
 #if UNITY_2018_2_OR_NEWER
+#if NET_4_6
             //  Use standard endpoints since 2018.2 supports TLS 1.2
             if (URL.StartsWith("http://stream."))
             {
@@ -260,6 +261,26 @@ namespace IBM.Watson.DeveloperCloud.Connection
             {
                 Log.Warning("WSConnector", "No case for URL for wss://. Leaving URL unchanged.");
             }
+#else
+            //  Use TLS 1.0 endpoint if user is on .NET 3.5. US South is the 
+            //  only region that supports this endpoint.
+            if (URL.StartsWith("http://stream."))
+            {
+                URL = URL.Replace("http://stream.", "ws://stream-tls10.");
+            }
+            else if (URL.StartsWith("https://stream."))
+            {
+                URL = URL.Replace("https://stream.", "wss://stream-tls10.");
+            }
+            else if (URL.StartsWith("http://stream-tls10."))
+            {
+                URL = URL.Replace("http://stream-tls10.", "ws://stream-tls10.");
+            }
+            else if (URL.StartsWith("https://stream-tls10."))
+            {
+                URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
+            }
+#endif
 #else
             //  Redirect to TLS 1.0 endpoints. 
             //  Note frankfurt endpoint does not support TLS 1.0.
@@ -397,7 +418,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #endregion
 
         #region Threaded Functions
-        // NOTE: ALl functions in this region are operating in a background thread, do NOT call any Unity functions!
+        // NOTE: All functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
         private void SendMessages()
         {
@@ -415,8 +436,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
 #if NET_4_6
+                //  Enable TLS 1.1 and TLS 1.2 if we are on .NET 4.x
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
 #else
+                //  .NET 3.x does not support TLS 1.1 or TLS 1.2
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls;
 #endif
                 ws.Connect();
