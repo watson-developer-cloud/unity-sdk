@@ -69,7 +69,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteConfigurationTested = false;
         private bool _isEnvironmentReady = false;
         private bool _deleteUserDataTested = false;
-        private bool _readyToContinue = false;
 
         private bool _listCredentialsTested = false;
         private bool _createCredentialsTested = false;
@@ -332,7 +331,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isEnvironmentReady)
                 yield return null;
 
-            _readyToContinue = false;
             //  Delete Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
             if (!_discovery.DeleteCollection(OnDeleteCollection, OnFail, _environmentId, _createdCollectionId))
@@ -345,7 +343,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isEnvironmentReady)
                 yield return null;
 
-            _readyToContinue = false;
             //  Delete Configuration
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete configuration {0}", _createdConfigurationID);
             if (!_discovery.DeleteConfiguration(OnDeleteConfiguration, OnFail, _environmentId, _createdConfigurationID))
