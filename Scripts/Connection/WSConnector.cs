@@ -190,6 +190,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private AutoResetEvent _receiveEvent = new AutoResetEvent(false);
         private Queue<Message> _receiveQueue = new Queue<Message>();
         private int _receiverRoutine = 0;
+        private static readonly string https = "https://";
+        private static readonly string wss = "wss://";
         #endregion
 
         /// <summary>
@@ -231,7 +233,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
             else
             {
-                URL = URL.Replace("https://", "wss://");
+                URL = URL.Replace(https, wss);
                 Log.Warning("WSConnector", "No case for URL for wss://. Replacing https:// with wss://.");
             }
 #else
@@ -247,7 +249,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
             else
             {
-                URL = URL.Replace("https://", "wss://");
+                URL = URL.Replace(https, wss);
                 Log.Warning("WSConnector", "No case for URL for wss://. Replacing https:// with wss://.");
                 Log.Warning("WSConnector", "Streaming with TLS 1.0 is only available in US South. Please create your Speech to Text instance in US South. Alternatviely, use Unity 2018.2 with .NET 4.x Scripting Runtime Version enabled (File > Build Settings > Player Settings > Other Settings > Scripting Runtime Version).");
             }
@@ -265,7 +267,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
             else
             {
-                URL = URL.Replace("https://", "wss://");
+                URL = URL.Replace(https, wss);
                 Log.Warning("WSConnector", "No case for URL for wss://. Replacing https:// with wss://.");
                 Log.Warning("WSConnector", "Streaming with TLS 1.0 is only available in US South. Please create your Speech to Text instance in US South. Alternatviely, use Unity 2018.2 with .NET 4.x Scripting Runtime Version enabled (File > Build Settings > Player Settings > Other Settings > Scripting Runtime Version).");
             }
