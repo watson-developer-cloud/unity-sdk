@@ -12,20 +12,20 @@ download() {
 
  echo "Downloading from $url: "
  cd Unity
- curl -o `basename "$package"` "$url"
+ curl -o $(basename "$package") "$url"
  cd ../
 }
 
 install() {
  package=$1
- filename=`basename "$package"`
+ filename=$(basename "$package")
  packagePath="Unity/$filename"
  if [ ! -f $packagePath ] ; then
-   echo "$packagePath not found. downloading `basename "$packagePath"`"
+   echo "$packagePath not found. downloading $(basename "$packagePath")"
    download "$package"
  fi
 
- echo "Installing "`basename "$package"`
+ echo "Installing "$(basename "$package")
  sudo installer -dumplog -package $packagePath -target /
 }
 

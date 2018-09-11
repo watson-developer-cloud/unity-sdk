@@ -1,5 +1,4 @@
 #! /bin/sh
-project="unity-sdk-travis"
 
 echo "Attempting to create directory for empty project Travis/UnityTestProject..."
 mkdir -p Travis/UnityTestProject

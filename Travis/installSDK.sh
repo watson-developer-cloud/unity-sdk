@@ -1,5 +1,4 @@
 #! /bin/sh
-project="unity-sdk-travis"
 
 echo "Attempting to install credentials"
 git clone https://$CREDENTIALS_GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credentials.git Travis/sdk-credentials/
