@@ -7,7 +7,7 @@ CREATE_APP_URL ?= 'https://appscan.ibmcloud.com/api/V2/Apps'
 GET_ASSET_GROUP_URL ?= 'https://appscan.ibmcloud.com/api/V2/AssetGroups'
 
 APPSCAN_CLIENT_URL ?= https://appscan.ibmcloud.com/api/SCX/StaticAnalyzer/SAClientUtil?os=
-OS ?= linux
+OS ?= mac
 APPSCAN_TOOL := $(APPSCAN_CLIENT_URL)$(OS)
 
 GIT_REPO ?= git@github.com:watson-developer-cloud/unity-sdk.git
