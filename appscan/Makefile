@@ -26,7 +26,8 @@ api-login:
 upload-file: api-login
 	$(eval TOKE := $(shell python getJson.py $(HOME)/token.json "Token"))
 	$(eval AUTH := --header 'Authorization: Bearer $(TOKE)')
-	$(eval FILE := fileToUpload=@$(shell pwd)/$(notdir $(shell find $(pwd) -maxdepth 2 -name '*.irx' -print)))
+	$(eval PWD := $(pwd))
+	$(eval FILE := fileToUpload=@$(shell pwd)/$(notdir $(shell find $(PWD) -maxdepth 2 -name "*.irx" -print)))
 	
 	curl -o $(HOME)/file.json -X POST --header 'Content-Type: multipart/form-data' $(ACCEPT_HEADER_JSON) $(AUTH) -F $(FILE) $(UPLOAD_URL)
 
