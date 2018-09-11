@@ -14,16 +14,19 @@ before_install:
 - npm install -g npm@6.x
 install:
 - ./Travis/installUnity.sh
+- cd appscan; make asoc-tool; cd ../;
 before_script:
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
 - chmod a+x ./Travis/runTests.sh
 - chmod a+x ./Travis/build.sh
+- chmod a+x ./appscan/ASOC.sh;
 script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
+- ./appscan/ASOC.sh;
 deploy:
   - provider: script
     skip_cleanup: true
