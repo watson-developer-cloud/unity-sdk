@@ -40,9 +40,9 @@ namespace Assets.Watson.Scripts.UnitTests
         private fsSerializer _serializer = new fsSerializer();
 
         private string _inputString = "Hello";
-        private string _conversationString0 = "unlock the door";
-        private string _conversationString1 = "turn on the ac";
-        private string _conversationString2 = "turn down the radio";
+        private string _conversationString0 = "Are you open on christmas?";
+        private string _conversationString1 = "Can you connect me to a real person?";
+        private string _conversationString2 = "goodbye";
         private static string _lastIntent = null;
 
         private static string _createdWorkspaceName = "unity-sdk-example-workspace-delete";
