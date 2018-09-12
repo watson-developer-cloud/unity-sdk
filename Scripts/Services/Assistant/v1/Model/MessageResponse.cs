@@ -62,6 +62,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>Output from the dialog, including the response to the user, the nodes that were triggered, and log messages.</value>
         [fsProperty("output")]
         public object Output { get; set; }
+        /// <summary>
+        /// An array of objects describing any actions requested by the dialog node.
+        /// </summary>
+        [fsProperty("actions")]
+        public object Actions { get; set; }
     }
 
 }
