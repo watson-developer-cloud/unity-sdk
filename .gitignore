@@ -77,3 +77,4 @@ Docs/publishing-release.md.meta
 **/.swagger-codegen
 /Scripts/Editor/Help/
 /Scripts/Editor/Help.meta
+*/MRefBuilder.config.meta

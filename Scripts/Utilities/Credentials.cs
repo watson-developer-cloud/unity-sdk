@@ -36,6 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         private string _iamApiKey;
         private string _userAcessToken;
         private const string APIKEY_AS_USERNAME = "apikey";
+        private const string ICP_PREFIX = "icp-";
         #endregion
 
         #region Public Fields
@@ -146,7 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region SetCredentials
         private void SetCredentials(string username, string password, string url = null)
         {
-            if (username == APIKEY_AS_USERNAME)
+            if (username == APIKEY_AS_USERNAME && !password.StartsWith(ICP_PREFIX))
             {
                 TokenOptions tokenOptions = new TokenOptions()
                 {
@@ -167,18 +168,25 @@ namespace IBM.Watson.DeveloperCloud.Utilities
 
         private void SetCredentials(TokenOptions iamTokenOptions, string serviceUrl = null)
         {
-            if (!string.IsNullOrEmpty(serviceUrl))
-                Url = serviceUrl;
-            _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
-            _iamTokenData = new IamTokenData();
+            if (iamTokenOptions.IamApiKey.StartsWith(ICP_PREFIX))
+            {
+                SetCredentials(APIKEY_AS_USERNAME, iamTokenOptions.IamApiKey, serviceUrl);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(serviceUrl))
+                    Url = serviceUrl;
+                _iamUrl = !string.IsNullOrEmpty(iamTokenOptions.IamUrl) ? iamTokenOptions.IamUrl : "https://iam.bluemix.net/identity/token";
+                _iamTokenData = new IamTokenData();
 
-            if (!string.IsNullOrEmpty(iamTokenOptions.IamApiKey))
-                _iamApiKey = iamTokenOptions.IamApiKey;
+                if (!string.IsNullOrEmpty(iamTokenOptions.IamApiKey))
+                    _iamApiKey = iamTokenOptions.IamApiKey;
 
-            if (!string.IsNullOrEmpty(iamTokenOptions.IamAccessToken))
-                this._userAcessToken = iamTokenOptions.IamAccessToken;
+                if (!string.IsNullOrEmpty(iamTokenOptions.IamAccessToken))
+                    this._userAcessToken = iamTokenOptions.IamAccessToken;
 
-            GetToken();
+                GetToken();
+            }
         }
         #endregion
 

@@ -56,6 +56,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <value>An array of objects containing detailed diagnostic information about the nodes that were triggered during processing of the input message. Included only if **nodes_visited_details** is set to `true` in the message request.</value>
         [fsProperty("nodes_visited_details")]
         public Dictionary<string, object> NodesVisitedDetails { get; set; }
+        // <summary>
+        /// An array of objects describing any actions requested by the dialog node.
+        /// </summary>
+        [fsProperty("actions")]
+        public Dictionary<string, object> Actions { get; set; }
     }
 
 }
