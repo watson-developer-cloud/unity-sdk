@@ -84,7 +84,7 @@ private void OnMessage1(object resp, Dictionary<string, object> customData)
 
 - Send a message perserving conversation context - Extract code from [ExamplesAssistant.cs](https://github.com/watson-developer-cloud/unity-sdk/blob/develop/Examples/ServiceExamples/Scripts/ExampleAssistant.cs)
 ```cs
-[...]
+
 private void Message()
 {
   MessageRequest messageRequest = new MessageRequest()
