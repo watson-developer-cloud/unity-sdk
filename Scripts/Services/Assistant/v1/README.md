@@ -11,21 +11,9 @@ You complete these steps to implement your application:
 
 ### Message
 Send a message to the Assistant instance
-```cs
-//  Send a simple message using a string
-private void Message()
-{
-  if (!_assistant.Message(OnMessage, OnFail, <workspace-id>, <input-string>))
-    Log.Debug("ExampleAssistant.Message()", "Failed to message!");
-}
 
-private void OnMessage(object resp, Dictionary<string, object> customData)
-{
-  Log.Debug("ExampleAssistant.OnMessage()", "Assistant: Message Response: {0}", customData["json"].ToString());
-}
-```
+- Send a message using a MessageRequest object
 ```cs
-//  Send a message using a MessageRequest object
 private void Message()
 {
   MessageRequest messageRequest = new MessageRequest()
@@ -45,8 +33,10 @@ private void OnMessage(object resp, Dictionary<string, object> customData)
   Log.Debug("ExampleAssistant.OnMessage()", "Assistant: Message Response: {0}", customData["json"].ToString());
 }
 ```
+
+
+- Send a message perserving conversation context
 ```cs
-//  Send a message perserving conversation context
 Dictionary<string, object> _context; // context to persist
 
 //  Initiate a conversation
@@ -89,6 +79,65 @@ private void OnMessage1(object resp, Dictionary<string, object> customData)
 {
   Log.Debug("ExampleAssistant.OnMessage1()", "Assistant: Message Response: {0}", customData["json"].ToString());
 }
+```
+
+
+- Send a message perserving conversation context - Extract code from [ExamplesAssistant.cs](https://github.com/watson-developer-cloud/unity-sdk/blob/develop/Examples/ServiceExamples/Scripts/ExampleAssistant.cs)
+```cs
+[...]
+private void Message()
+{
+  MessageRequest messageRequest = new MessageRequest()
+  {
+    input = new Dictionary<string, object>()
+    {
+        { "text", <input-string> }
+    }
+  };
+
+  if (!_assistant.Message(OnMessage, OnFail, <workspace-id>, messageRequest))
+    Log.Debug("ExampleAssistant.Message()", "Failed to message!");
+}
+
+private void OnMessage(object response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
+
+        //  Convert resp to fsdata
+        fsData fsdata = null;
+        fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Convert fsdata to MessageResponse
+        MessageResponse messageResponse = new MessageResponse();
+        object obj = messageResponse;
+        r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
+        if (!r.Succeeded)
+            throw new WatsonException(r.FormattedMessages);
+
+        //  Set context for next round of messaging
+        object _tempContext = null;
+        (response as Dictionary<string, object>).TryGetValue("context", out _tempContext);
+
+        if (_tempContext != null)
+            _context = _tempContext as Dictionary<string, object>;
+        else
+            Log.Debug("ExampleAssistant.OnMessage()", "Failed to get context");
+
+        //  Get intent
+        object tempIntentsObj = null;
+        (response as Dictionary<string, object>).TryGetValue("intents", out tempIntentsObj);
+        object tempIntentObj = (tempIntentsObj as List<object>)[0];
+        object tempIntent = null;
+        (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
+        string intent = tempIntent.ToString();
+
+        Log.Debug("ExampleAssistant.OnMessage()", "intent: {0}", intent);
+
+        _messageTested = true;
+}
+
 ```
 
 [assistant]: https://console.bluemix.net/docs/services/assistant/index.html
