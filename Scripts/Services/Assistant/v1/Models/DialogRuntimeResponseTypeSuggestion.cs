@@ -1,7 +1,3 @@
-
-
-using FullSerializer;
-using System.Collections.Generic;
 /**
 * Copyright 2018 IBM Corp. All Rights Reserved.
 *
@@ -18,6 +14,10 @@ using System.Collections.Generic;
 * limitations under the License.
 *
 */
+
+using FullSerializer;
+using System.Collections.Generic;
+
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     /// <summary>
