@@ -214,6 +214,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// </summary>
             public bool Delete { get; set; }
             /// <summary>
+            /// True to send a post method.
+            /// </summary>
+            public bool Post { get; set; }
+            /// <summary>
             /// The name of the function to invoke on the server.
             /// </summary>
             public string Function { get; set; }
@@ -406,7 +410,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (!req.Delete)
+                if (!req.Delete && !req.Post)
                 {
                     WWW www = null;
                     if (req.Forms != null)
@@ -548,6 +552,33 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         req.OnResponse(req, resp);
 
                     www.Dispose();
+                }
+                else if(req.Post)
+                {
+                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
+
+                    PostRequest postReq = new PostRequest();
+                    Runnable.Run(postReq.Send(url, req.Headers));
+                    while (!postReq.IsComplete)
+                    {
+                        if (req.Cancel)
+                            break;
+                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
+                            break;
+                        yield return null;
+                    }
+
+                    if (req.Cancel)
+                        continue;
+
+                    resp.Success = postReq.Success;
+                    resp.Data = postReq.Data;
+                    resp.Error = postReq.Error;
+                    resp.HttpResponseCode = postReq.HttpResponseCode;
+                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+                    resp.Headers = postReq.ResponseHeaders;
+                    if (req.OnResponse != null)
+                        req.OnResponse(req, resp);
                 }
                 else
                 {
@@ -691,6 +722,72 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 HttpResponseCode = deleteReq.responseCode;
                 ResponseHeaders = deleteReq.GetResponseHeaders();
                 Data = deleteReq.downloadHandler.data;
+                Error = error;
+                IsComplete = true;
+            }
+        };
+
+        private class PostRequest
+        {
+            public string URL { get; set; }
+            public Dictionary<string, string> Headers { get; set; }
+            public bool IsComplete { get; set; }
+            public bool Success { get; set; }
+            public long HttpResponseCode { get; set; }
+            public byte[] Data { get; set; }
+            public Error Error { get; set; }
+            public Dictionary<string, string> ResponseHeaders { get; set; }
+
+            public IEnumerator Send(string url, Dictionary<string, string> headers)
+            {
+#if ENABLE_DEBUGGING
+                Log.Debug("PostRequest.Send()", "PostRequest, Send: {0}", url);
+#endif
+
+                URL = url;
+                Headers = new Dictionary<string, string>();
+                foreach (var kp in headers)
+                {
+                    if (kp.Key != "User-Agent")
+                        Headers[kp.Key] = kp.Value;
+                }
+
+#if !NETFX_CORE
+                // This fixes the exception thrown by self-signed certificates.
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+#endif
+
+#if ENABLE_DEBUGGING
+                Log.Debug("PostRequest.Send()", "PostRequest, ProcessRequest {0}", URL);
+#endif
+                UnityWebRequest postReq = UnityWebRequest.Get(URL);
+                postReq.method = UnityWebRequest.kHttpVerbPOST;
+                postReq.downloadHandler = new DownloadHandlerBuffer();
+
+                foreach (var kp in Headers)
+                    postReq.SetRequestHeader(kp.Key, kp.Value);
+#if UNITY_2017_2_OR_NEWER
+                yield return postReq.SendWebRequest();
+#else
+                yield return postReq.Send();
+#endif
+                Error error = null;
+                if (!string.IsNullOrEmpty(postReq.error))
+                {
+                    error = new Error()
+                    {
+                        URL = url,
+                        ErrorCode = postReq.responseCode,
+                        ErrorMessage = postReq.error,
+                        Response = postReq.downloadHandler.text,
+                        ResponseHeaders = postReq.GetResponseHeaders()
+                    };
+                }
+
+                Success = postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_NO_CONTENT || postReq.responseCode == HTTP_STATUS_ACCEPTED;
+                HttpResponseCode = postReq.responseCode;
+                ResponseHeaders = postReq.GetResponseHeaders();
+                Data = postReq.downloadHandler.data;
                 Error = error;
                 IsComplete = true;
             }

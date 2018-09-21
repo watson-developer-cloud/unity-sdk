@@ -20,12 +20,11 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleAssistant : MonoBehaviour
+public class ExampleAssistantV1 : MonoBehaviour
 {
     #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
     [Space(10)]
@@ -481,248 +480,248 @@ public class ExampleAssistant : MonoBehaviour
         while (!_deleteWorkspaceTested)
             yield return null;
 
-        Log.Debug("TestAssistant.RunTest()", "Assistant examples complete.");
+        Log.Debug("ExampleAssistantV1.RunTest()", "Assistant examples complete.");
 
         yield break;
     }
 
     private void OnListMentions(EntityMentionCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListMentions()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListMentions()", "Response: {0}", customData["json"].ToString());
         _listMentionsTested = true;
     }
 
     private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
         _deleteWorkspaceTested = true;
     }
 
     private void OnDeleteIntent(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
         _deleteIntentTested = true;
     }
 
     private void OnDeleteExample(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
         _deleteExampleTested = true;
     }
 
     private void OnDeleteEntity(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
         _deleteEntityTested = true;
     }
 
     private void OnDeleteValue(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
         _deleteValueTested = true;
     }
 
     private void OnDeleteSynonym(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
         _deleteSynonymTested = true;
     }
 
     private void OnDeleteDialogNode(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
         _deleteDialogNodeTested = true;
     }
 
     private void OnDeleteCounterexample(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
         _deleteCounterexampleTested = true;
     }
 
     private void OnUpdateCounterexample(Counterexample response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateCounterexample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateCounterexample()", "Response: {0}", customData["json"].ToString());
         _updateCounterexampleTested = true;
     }
 
     private void OnGetCounterexample(Counterexample response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetCounterexample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetCounterexample()", "Response: {0}", customData["json"].ToString());
         _getCounterexampleTested = true;
     }
 
     private void OnCreateCounterexample(Counterexample response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateCounterexample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateCounterexample()", "Response: {0}", customData["json"].ToString());
         _createCounterexampleTested = true;
     }
 
     private void OnListCounterexamples(CounterexampleCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListCounterexamples()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListCounterexamples()", "Response: {0}", customData["json"].ToString());
         _listCounterexamplesTested = true;
     }
 
     private void OnListAllLogs(LogCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListAllLogs()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListAllLogs()", "Response: {0}", customData["json"].ToString());
         _listAllLogsTested = true;
     }
 
     private void OnListLogs(LogCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListLogs()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListLogs()", "Response: {0}", customData["json"].ToString());
         _listLogsInWorkspaceTested = true;
     }
 
     private void OnUpdateDialogNode(DialogNode response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateDialogNode()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateDialogNode()", "Response: {0}", customData["json"].ToString());
         _updateDialogNodeTested = true;
     }
 
     private void OnGetDialogNode(DialogNode response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetDialogNode()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetDialogNode()", "Response: {0}", customData["json"].ToString());
         _getDialogNodeTested = true;
     }
 
     private void OnCreateDialogNode(DialogNode response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateDialogNode()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateDialogNode()", "Response: {0}", customData["json"].ToString());
         _createDialogNodeTested = true;
     }
 
     private void OnListDialogNodes(DialogNodeCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListDialogNodes()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListDialogNodes()", "Response: {0}", customData["json"].ToString());
         _listDialogNodesTested = true;
     }
 
     private void OnUpdateSynonym(Synonym response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateSynonym()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateSynonym()", "Response: {0}", customData["json"].ToString());
         _updateSynonymTested = true;
     }
 
     private void OnGetSynonym(Synonym response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetSynonym()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetSynonym()", "Response: {0}", customData["json"].ToString());
         _getSynonymTested = true;
     }
 
     private void OnCreateSynonym(Synonym response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateSynonym()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateSynonym()", "Response: {0}", customData["json"].ToString());
         _createSynonymTested = true;
     }
 
     private void OnListSynonyms(SynonymCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListSynonyms()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListSynonyms()", "Response: {0}", customData["json"].ToString());
         _listSynonymsTested = true;
     }
 
     private void OnUpdateValue(Value response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateValue()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateValue()", "Response: {0}", customData["json"].ToString());
         _updateValueTested = true;
     }
 
     private void OnGetValue(ValueExport response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetValue()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetValue()", "Response: {0}", customData["json"].ToString());
         _getValueTested = true;
     }
 
     private void OnCreateValue(Value response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateValue()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateValue()", "Response: {0}", customData["json"].ToString());
         _createValueTested = true;
     }
 
     private void OnListValues(ValueCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListValues()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListValues()", "Response: {0}", customData["json"].ToString());
         _listValuesTested = true;
     }
 
     private void OnUpdateEntity(Entity response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateEntity()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateEntity()", "Response: {0}", customData["json"].ToString());
         _updateEntityTested = true;
     }
 
     private void OnGetEntity(EntityExport response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetEntity()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetEntity()", "Response: {0}", customData["json"].ToString());
         _getEntityTested = true;
     }
 
     private void OnCreateEntity(Entity response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateEntity()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateEntity()", "Response: {0}", customData["json"].ToString());
         _createEntityTested = true;
     }
 
     private void OnListEntities(EntityCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListEntities()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListEntities()", "Response: {0}", customData["json"].ToString());
         _listEntitiesTested = true;
     }
 
     private void OnUpdateExample(Example response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateExample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateExample()", "Response: {0}", customData["json"].ToString());
         _updateExampleTested = true;
     }
 
     private void OnGetExample(Example response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetExample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetExample()", "Response: {0}", customData["json"].ToString());
         _getExampleTested = true;
     }
 
     private void OnCreateExample(Example response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateExample()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateExample()", "Response: {0}", customData["json"].ToString());
         _createExampleTested = true;
     }
 
     private void OnListExamples(ExampleCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListExamples()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListExamples()", "Response: {0}", customData["json"].ToString());
         _listExamplesTested = true;
     }
 
     private void OnUpdateIntent(Intent response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateIntent()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateIntent()", "Response: {0}", customData["json"].ToString());
         _updateIntentTested = true;
     }
 
     private void OnGetIntent(IntentExport response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetIntent()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetIntent()", "Response: {0}", customData["json"].ToString());
         _getIntentTested = true;
     }
 
     private void OnCreateIntent(Intent response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateIntent()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateIntent()", "Response: {0}", customData["json"].ToString());
         _createIntentTested = true;
     }
 
     private void OnListIntents(IntentCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListIntents()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListIntents()", "Response: {0}", customData["json"].ToString());
         _listIntentsTested = true;
     }
 
     private void OnMessage(object response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnMessage()", "Response: {0}", customData["json"].ToString());
 
         //  Convert resp to fsdata
         fsData fsdata = null;
@@ -744,7 +743,7 @@ public class ExampleAssistant : MonoBehaviour
         if (_tempContext != null)
             _context = _tempContext as Dictionary<string, object>;
         else
-            Log.Debug("ExampleAssistant.OnMessage()", "Failed to get context");
+            Log.Debug("ExampleAssistantV1.OnMessage()", "Failed to get context");
 
         //  Get intent
         object tempIntentsObj = null;
@@ -754,33 +753,33 @@ public class ExampleAssistant : MonoBehaviour
         (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
         string intent = tempIntent.ToString();
 
-        Log.Debug("ExampleAssistant.OnMessage()", "intent: {0}", intent);
+        Log.Debug("ExampleAssistantV1.OnMessage()", "intent: {0}", intent);
 
         _messageTested = true;
     }
 
     private void OnUpdateWorkspace(Workspace response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
         _updateWorkspaceTested = true;
     }
 
     private void OnGetWorkspace(WorkspaceExport response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
         _getWorkspaceTested = true;
     }
 
     private void OnCreateWorkspace(Workspace response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
         _createdWorkspaceId = response.WorkspaceId;
         _createWorkspaceTested = true;
     }
 
     private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+        Log.Debug("ExampleAssistantV1.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
 
         foreach(Workspace workspace in response.Workspaces)
         {
@@ -793,7 +792,7 @@ public class ExampleAssistant : MonoBehaviour
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {
-        Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
-        Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
+        Log.Debug("ExampleAssistantV1.OnFail()", "Response: {0}", customData["json"].ToString());
+        Log.Error("ExampleAssistantV1.OnFail()", "Error received: {0}", error.ToString());
     }
 }
