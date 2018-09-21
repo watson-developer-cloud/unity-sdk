@@ -118,7 +118,7 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("TestAssistantV2.OnDeleteSession()", "Session deleted.");
             Test(response != null);
-            _createSessionTested = true;
+            _deleteSessionTested = true;
         }
 
         private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
