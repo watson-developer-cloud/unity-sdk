@@ -117,24 +117,27 @@ namespace Assets.Watson.Scripts.UnitTests
         private void OnDeleteSession(object response, Dictionary<string, object> customData)
         {
             Log.Debug("TestAssistantV2.OnDeleteSession()", "Session deleted.");
+            Test(response != null);
             _createSessionTested = true;
         }
 
         private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
         {
+            Test(response != null);
             _messageTested = true;
-        }
-
-        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestAssistantV2.OnFail()", "Call failed: {0}: {1}", error.ErrorCode, error.ErrorMessage);
         }
 
         private void OnCreateSession(SessionResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestAssistantV2.OnCreateSession()", "Session: {0}", response.SessionId);
             _sessionId = response.SessionId;
+            Test(response != null);
             _createSessionTested = true;
+        }
+
+        private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestAssistantV2.OnFail()", "Call failed: {0}: {1}", error.ErrorCode, error.ErrorMessage);
         }
     }
 }
