@@ -141,8 +141,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+            req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateSessionResponse;
+            req.Post = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
             if (connector == null)
@@ -244,6 +246,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteSessionResponse;
+            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
             if (connector == null)
@@ -346,6 +349,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+
+            IDictionary<string, string> requestDict = new Dictionary<string, string>();
+            int iterator = 0;
+            StringBuilder stringBuilder = new StringBuilder("{");
+            foreach (KeyValuePair<string, string> property in requestDict)
+            {
+                string delimeter = iterator < requestDict.Count - 1 ? "," : "";
+                stringBuilder.Append(string.Format("\"{0}\": {1}{2}", property.Key, property.Value, delimeter));
+                iterator++;
+            }
+            stringBuilder.Append("}");
+
+            string stringToSend = stringBuilder.ToString();
+
+            req.Send = Encoding.UTF8.GetBytes(stringToSend);
+            req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnMessageResponse;
 

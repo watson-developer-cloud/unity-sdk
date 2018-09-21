@@ -37,7 +37,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private fsSerializer _serializer = new fsSerializer();
 
         private Assistant _service;
-        private string _assistantVersionDate = "2018-09-17";
+        private string _assistantVersionDate = "2018-09-20";
 
         private string _assistantId;
         private string _sessionId;
@@ -77,7 +77,7 @@ namespace Assets.Watson.Scripts.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("assistantV2-sdk-staging")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
             _username = credential.Username.ToString();
             _password = credential.Password.ToString();
             _url = credential.Url.ToString();
