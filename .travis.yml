@@ -14,6 +14,7 @@ before_install:
 - npm install -g npm@6.x
 install:
 - ./Travis/installUnity.sh
+- npm install @semantic-release/exec
 before_script:
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
@@ -27,4 +28,4 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: npx travis-deploy-once "npx semantic-release@v15.8.0"
+    script: npx semantic-release
