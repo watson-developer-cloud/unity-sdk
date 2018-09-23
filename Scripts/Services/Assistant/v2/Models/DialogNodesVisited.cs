@@ -1,7 +1,3 @@
-
-
-using FullSerializer;
-using System.Collections.Generic;
 /**
 * Copyright 2018 IBM Corp. All Rights Reserved.
 *
@@ -18,27 +14,32 @@ using System.Collections.Generic;
 * limitations under the License.
 *
 */
-namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
+
+using FullSerializer;
+
+namespace IBM.WatsonDeveloperCloud.Assistant.v2
 {
     /// <summary>
-    /// DialogRuntimeResponseTypeSuggestion
+    /// DialogNodesVisited
     /// </summary>
     [fsObject]
-    public class DialogRuntimeResponseTypeSuggestion
+    public class DialogNodesVisited
     {
         /// <summary>
-        /// The title or introductory text to show before the response.
+        /// A dialog node that was triggered during processing of the input message.
+        /// </summary>
+        [fsProperty("dialog_node")]
+        public string DialogNode { get; set; }
+        /// <summary>
+        /// The title of the dialog node.
         /// </summary>
         [fsProperty("title")]
         public string Title { get; set; }
         /// <summary>
-        /// An array of objects describing the possible matching dialog nodes from which the user can choose.
-        ///
-        /// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for
-        /// Premium users.
+        /// The conditions that trigger the dialog node.
         /// </summary>
-        [fsProperty("suggestions")]
-        public List<DialogSuggestion> Suggestions { get; set; }
+        [fsProperty("conditions")]
+        public string Conditions { get; set; }
     }
 
 }

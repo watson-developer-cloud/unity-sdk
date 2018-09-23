@@ -619,6 +619,8 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public string IamApikey { get; set; }
         [fsProperty("iam_url")]
         public string IamUrl { get; set; }
+        [fsProperty("assistant_id")]
+        public string AssistantId { get; set; }
     }
 
     /// <summary>
