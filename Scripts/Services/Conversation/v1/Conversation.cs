@@ -92,6 +92,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         /// Conversation constructor
         /// </summary>
         /// <param name="credentials">The service credentials</param>
+        [Obsolete("Conversation V1 is deprecated and will be removed in the next major release of the SDK. Use Assistant V1 or Assistant V2.")]
         public Conversation(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())

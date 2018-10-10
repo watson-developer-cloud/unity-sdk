@@ -128,6 +128,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// If no URL is set then default to the non-IAM Visual Recognition endpoint.
         /// </summary>
         /// <param name="url">The service endpoint.</param>
+        [Obsolete("Authentication using legacy apikey is deprecated. Please authenticate using TokenOptions.")]
         public Credentials(string apiKey, string url = null)
         {
             ApiKey = apiKey;
@@ -614,6 +615,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         [fsProperty("workspace_id")]
         public string WorkspaceId { get; set; }
         [fsProperty("api_key")]
+        [Obsolete("Authentication using legacy apikey is deprecated. Please authenticate using TokenOptions.")]
         public string ApiKey { get; set; }
         [fsProperty("apikey")]
         public string IamApikey { get; set; }

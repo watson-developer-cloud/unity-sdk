@@ -15,10 +15,8 @@
 *
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
@@ -57,8 +55,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         #endregion
 
         private Assistant _service;
-
-        private fsSerializer _serializer = new fsSerializer();
 
         private bool _createSessionTested = false;
         private bool _messageTested = false;
