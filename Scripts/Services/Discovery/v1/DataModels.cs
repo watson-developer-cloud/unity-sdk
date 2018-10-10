@@ -71,9 +71,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         public bool read_only { get; set; }
         /// <summary>
-        /// Size of the environment. = ['XS', 'S', 'MS', 'M', 'ML', 'L', 'XL', 'XXL', 'XXXL'].
+        /// Size of the environment. = ['LT', 'XS', 'S', 'MS', 'M', 'ML', 'L', 'XL', 'XXL', 'XXXL'].
         /// </summary>
         public SizeEnum? size { get; set; }
+        /// <summary>
+        /// The new size requested for this environment. Only returned when the environment *status* is `resizing`.
+        /// 
+        /// *Note:* Querying and indexing can still be performed during an environment upsize.
+        /// </summary>
+        public string requested_size { get; set; }
+        /// <summary>
+        /// Information about Continuous Relevancy Training for this environment.
+        /// </summary>
+        public SearchStatus search_status { get; set; }
         /// <summary>
         /// Disk and memory usage.
         /// </summary>
@@ -112,6 +122,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     /// </value>
     public enum SizeEnum
     {
+        /// <summary>
+        /// Enum LT for LT
+        /// </summary>
+        [EnumMember(Value = "LT")]
+        LT,
 
         /// <summary>
         /// Enum XS for XS
