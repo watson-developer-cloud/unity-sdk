@@ -67,9 +67,9 @@ The credentials for each service contain either a `username`, `password` and end
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
 * [Assistant V1](/Scripts/Services/Assistant/v1)
 * [Assistant V2](/Scripts/Services/Assistant/v2)
-* [Conversation](/Scripts/Services/Conversation/v1)
+* [Conversation](/Scripts/Services/Conversation/v1) (deprecated - Use Assistant V1 or Assistant V2)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2) (deprecated)
+* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2) (deprecated - Use LanguageTranslator V3)
 * [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
@@ -84,7 +84,6 @@ Watson services are migrating to token-based Identity and Access Management (IAM
 
 - With some service instances, you authenticate to the API by using **[IAM](#iam)**.
 - In other instances, you authenticate by providing the **[username and password](#username-and-password)** for the service instance.
-- Visual Recognition uses a form of [API key](#api-key) only with instances created before May 23, 2018. Newer instances of Visual Recognition use [IAM](#iam).
 
 ### Getting credentials
 To find out which authentication to use, view the service credentials. You find the service credentials for authentication the same way for all Watson services:
@@ -178,20 +177,6 @@ void Start()
     Assistant _assistant = new Assistant(credentials);
 }
 ```
-
-### API key
-**Important**: This type of authentication works only with Visual Recognition instances created before May 23, 2018. Newer instances of Visual Recognition use [IAM](#iam).
-```cs
-using IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<apikey>, <url>);
-    VisualRecognition _visualRecognition = new VisualRecognition(credentials);
-}
-```
-
 
 ## Callbacks
 Success and failure callbacks are required. You can specify the return type in the callback.  
