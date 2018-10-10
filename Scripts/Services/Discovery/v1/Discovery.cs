@@ -2612,12 +2612,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool FederatedQuery(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, bool? passages = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, Dictionary<string, object> customData = null)
+        public bool FederatedQuery(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, bool? passages = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string bias = null, string loggingOptOut = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("environmentId");
+            }
+            if(collectionIds == null || collectionIds.Count < 1)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
 
             FederatedQueryRequestObj req = new FederatedQueryRequestObj();
             req.SuccessCallback = successCallback;
@@ -2631,44 +2639,41 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            if (collectionIds != null)
-                req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
-            if (!string.IsNullOrEmpty(filter))
-                req.Parameters["filter"] = filter;
-            if (!string.IsNullOrEmpty(query))
-                req.Parameters["query"] = query;
-            if (!string.IsNullOrEmpty(naturalLanguageQuery))
-                req.Parameters["natural_language_query"] = naturalLanguageQuery;
-            if (!string.IsNullOrEmpty(aggregation))
-                req.Parameters["aggregation"] = aggregation;
-            if (count != null)
-                req.Parameters["count"] = count;
-            if (returnFields != null)
-                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
-            if (offset != null)
-                req.Parameters["offset"] = offset;
-            if (sort != null)
-                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
-            if (highlight != null)
-                req.Parameters["highlight"] = highlight;
-            if (deduplicate != null)
-                req.Parameters["deduplicate"] = deduplicate;
-            if (!string.IsNullOrEmpty(deduplicateField))
-                req.Parameters["deduplicate.field"] = deduplicateField;
-            if (similar != null)
-                req.Parameters["similar"] = similar;
-            if (similarDocumentIds != null)
-                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            if (similarFields != null)
-                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
-            if (passages != null)
-                req.Parameters["passages"] = passages;
-            if (passagesFields != null)
-                req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
-            if (passagesCount != null)
-                req.Parameters["passages.count"] = passagesCount;
-            if (passagesCharacters != null)
-                req.Parameters["passages.characters"] = passagesCharacters;
+            if (loggingOptOut != null)
+            {
+                req.Headers.Add("X-Watson-Logging-Opt-Out", loggingOptOut.ToString());
+            }
+            req.Headers["Content-Type"] = "application/json";
+
+            QueryLarge queryLarge = new QueryLarge()
+            {
+                Filter = filter,
+                Query = query,
+                NaturalLanguageQuery = naturalLanguageQuery,
+                Passages = passages,
+                Aggregation = aggregation,
+                Count = count,
+                ReturnFields = (returnFields == null || returnFields.Count < 1) ? null : string.Join(", ", returnFields.ToArray()),
+                Offset = offset,
+                Sort = (sort == null || sort.Count < 1) ? null : string.Join(", ", sort.ToArray()),
+                Highlight = highlight,
+                PassagesFields = (passagesFields == null || passagesFields.Count < 1) ? null : string.Join(", ", passagesFields.ToArray()),
+                PassagesCount = passagesCount,
+                PassagesCharacters = passagesCharacters,
+                Deduplicate = deduplicate,
+                DeduplicateField = deduplicateField,
+                CollectionIds = (collectionIds == null || collectionIds.Count < 1) ? null : string.Join(", ", collectionIds.ToArray()),
+                Similar = similar,
+                SimilarDocumentIds = (similarDocumentIds == null || similarDocumentIds.Count < 1) ? null : string.Join(", ", similarDocumentIds.ToArray()),
+                SimilarFields = (similarFields == null || similarFields.Count < 1) ? null : string.Join(", ", similarFields.ToArray()),
+                Bias = bias
+            };
+
+            fsData data = null;
+            _serializer.TrySerialize(queryLarge, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
             req.OnResponse = OnFederatedQueryResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
@@ -2969,7 +2974,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
+        public bool Query(SuccessCallback<QueryResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, string bias = null, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -2989,43 +2994,39 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             if (loggingOptOut != null)
-                req.Headers["X-Watson-Logging-Opt-Out"] = loggingOptOut.ToString();
-            if (!string.IsNullOrEmpty(filter))
-                req.Parameters["filter"] = filter;
-            if (!string.IsNullOrEmpty(query))
-                req.Parameters["query"] = query;
-            if (!string.IsNullOrEmpty(naturalLanguageQuery))
-                req.Parameters["natural_language_query"] = naturalLanguageQuery;
-            if (passages != null)
-                req.Parameters["passages"] = passages;
-            if (!string.IsNullOrEmpty(aggregation))
-                req.Parameters["aggregation"] = aggregation;
-            if (count != null)
-                req.Parameters["count"] = count;
-            if (returnFields != null)
-                req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
-            if (offset != null)
-                req.Parameters["offset"] = offset;
-            if (sort != null)
-                req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
-            if (highlight != null)
-                req.Parameters["highlight"] = highlight;
-            if (passagesFields != null)
-                req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
-            if (passagesCount != null)
-                req.Parameters["passages.count"] = passagesCount;
-            if (passagesCharacters != null)
-                req.Parameters["passages.characters"] = passagesCharacters;
-            if (deduplicate != null)
-                req.Parameters["deduplicate"] = deduplicate;
-            if (!string.IsNullOrEmpty(deduplicateField))
-                req.Parameters["deduplicate.field"] = deduplicateField;
-            if (similar != null)
-                req.Parameters["similar"] = similar;
-            if(similarDocumentIds != null)
-                req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            if(similarFields != null)
-                req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            {
+                req.Headers.Add("X-Watson-Logging-Opt-Out", loggingOptOut.ToString());
+            }
+            req.Headers["Content-Type"] = "application/json";
+
+            QueryLarge queryLarge = new QueryLarge()
+            {
+                Filter = filter,
+                Query = query,
+                NaturalLanguageQuery = naturalLanguageQuery,
+                Passages = passages,
+                Aggregation = aggregation,
+                Count = count,
+                ReturnFields = (returnFields == null || returnFields.Count < 1) ? null : string.Join(", ", returnFields.ToArray()),
+                Offset = offset,
+                Sort = (sort == null || sort.Count < 1) ? null : string.Join(", ", sort.ToArray()),
+                Highlight = highlight,
+                PassagesFields = (passagesFields == null || passagesFields.Count < 1) ? null : string.Join(", ", passagesFields.ToArray()),
+                PassagesCount = passagesCount,
+                PassagesCharacters = passagesCharacters,
+                Deduplicate = deduplicate,
+                DeduplicateField = deduplicateField,
+                Similar = similar,
+                SimilarDocumentIds = (similarDocumentIds == null || similarDocumentIds.Count < 1) ? null : string.Join(", ", similarDocumentIds.ToArray()),
+                SimilarFields = (similarFields == null || similarFields.Count < 1) ? null : string.Join(", ", similarFields.ToArray()),
+                Bias = bias
+            };
+
+            fsData data = null;
+            _serializer.TrySerialize(queryLarge, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
             req.OnResponse = OnQueryResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId));

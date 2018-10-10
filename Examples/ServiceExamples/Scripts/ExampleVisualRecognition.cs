@@ -88,12 +88,7 @@ public class ExampleVisualRecognition : MonoBehaviour
     private IEnumerator CreateService()
     {
         Credentials credentials = null;
-        if (!string.IsNullOrEmpty(_apikey))
-        {
-            //  Authenticate using apikey
-            credentials = new Credentials(_apikey, _serviceUrl);
-        }
-        else if (!string.IsNullOrEmpty(_iamApikey))
+        if (!string.IsNullOrEmpty(_iamApikey))
         {
             //  Authenticate using iamApikey
             TokenOptions tokenOptions = new TokenOptions()
@@ -110,7 +105,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         }
         else
         {
-            throw new WatsonException("Please provide either CF apikey or IAM apikey to authenticate the service.");
+            throw new WatsonException("Please provide IAM apikey to authenticate the service.");
         }
 
         //  Create credential and instantiate service
