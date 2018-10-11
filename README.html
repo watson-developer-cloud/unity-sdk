@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="ibm-watson-sdk-for-unity">IBM Watson SDK for Unity</h1>
+<p><a href="https://travis-ci.org/watson-developer-cloud/unity-sdk"><img src="https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop" alt="Build Status" /></a> <a href="http://wdc-slack-inviter.mybluemix.net/"><img src="https://wdc-slack-inviter.mybluemix.net/badge.svg" alt="wdc-community.slack.com" /></a> <a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release" /></a></p>
+<p>Use this SDK to build Watson-powered applications in Unity.</p>
+<details>
+<p><summary>Table of Contents</summary></p>
+<ul>
+<li><a href="#before-you-begin">Before you begin</a>
+<ul>
+<li><a href="#getting-the-watson-sdk-and-adding-it-to-unity">Getting the Watson SDK and adding it to Unity</a>
+<ul>
+<li><a href="#installing-the-sdk-source-into-your-unity-project">Installing the SDK source into your Unity project</a></li>
+</ul></li>
+<li><a href="#configuring-your-service-credentials">Configuring your service credentials</a></li>
+<li><a href="#authentication">Authentication</a></li>
+<li><a href="#watson-services">Watson Services</a></li>
+<li><a href="#authentication-tokens">Authentication Tokens</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#questions">Questions</a></li>
+<li><a href="#open-source--ibm">Open Source @ IBM</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#contributing">Contributing</a></li>
+</ul></li>
+</ul>
+</details>
+<h2 id="before-you-begin">Before you begin</h2>
+<p>Ensure that you have the following prerequisites:</p>
+<ul>
+<li>You need an <a href="http://console.bluemix.net/registration?target=/developer/watson&cm_mmc=Display_UnitySDK-_-Developer_Innovation-_-WW_WW-_-unity_sdk_watson_dw">IBM Cloud</a> account.</li>
+<li><a href="https://unity3d.com/get-unity">Unity</a>. You can use the <strong>free</strong> Personal edition.</li>
+</ul>
+<h2 id="configuring-unity">Configuring Unity</h2>
+<ul>
+<li>Change the build settings in Unity (<strong>File &gt; Build Settings</strong>) to any platform except for web player/Web GL. The IBM Watson SDK for Unity does not support Unity Web Player.</li>
+<li>If using Unity 2018.2 or later you’ll need to set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2.</li>
+</ul>
+<h2 id="getting-the-watson-sdk-and-adding-it-to-unity">Getting the Watson SDK and adding it to Unity</h2>
+<p>You can get the latest SDK release by clicking <a href="https://github.com/watson-developer-cloud/unity-sdk/releases/latest">here</a>.</p>
+<h3 id="installing-the-sdk-source-into-your-unity-project">Installing the SDK source into your Unity project</h3>
+<p>Move the <strong><code>unity-sdk</code></strong> directory into the <strong><code>Assets</code></strong> directory of your Unity project. <em>Optional: rename the SDK directory from <code>unity-sdk</code> to <code>Watson</code></em>.</p>
+<h2 id="configuring-your-service-credentials">Configuring your service credentials</h2>
+<p>To create instances of Watson services and their credentials, follow the steps below.</p>
+<p><strong>Note:</strong> Service credentials are different from your IBM Cloud account username and password.</p>
+<ol type="1">
+<li>Determine which services to configure.</li>
+<li>If you have configured the services already, complete the following steps. Otherwise, go to step 3.
+<ol type="1">
+<li>Log in to IBM Cloud at https://console.bluemix.net.</li>
+<li>Click the service you would like to use.</li>
+<li>Click <strong>Service credentials</strong>.</li>
+<li>Click <strong>View credentials</strong> to access your credentials.</li>
+</ol></li>
+<li>If you need to configure the services that you want to use, complete the following steps.
+<ol type="1">
+<li>Log in to IBM Cloud at https://console.bluemix.net.</li>
+<li>Click the <strong>Create service</strong> button.</li>
+<li>Under <strong>Watson</strong>, select which service you would like to create an instance of and click that service.</li>
+<li>Give the service and credential a name. Select a plan and click the <strong>Create</strong> button on the bottom.</li>
+<li>Click <strong>Service Credentials</strong>.</li>
+<li>Click <strong>View credentials</strong> to access your credentials.</li>
+</ol></li>
+<li>Your service credentials can be used to instantiate Watson Services within your application. Most services also support tokens which you can instantiate the service with as well.</li>
+</ol>
+<p>The credentials for each service contain either a <code>username</code>, <code>password</code> and endpoint <code>url</code> <strong>or</strong> an <code>apikey</code> and endpoint <code>url</code>.</p>
+<p><strong>WARNING:</strong> You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!</p>
+<h2 id="watson-services">Watson Services</h2>
+<p>To get started with the Watson Services in Unity, click on each service below to read through each of their <code>README.md</code>’s and their codes. <br />
+* <a href="Scripts/Services/Assistant/v1/index.html">Assistant V1</a> <br />
+* <a href="Scripts/Services/Assistant/v2/index.html">Assistant V2</a> <br />
+* <a href="Scripts/Services/Conversation/v1/index.html">Conversation</a> (deprecated - Use Assistant V1 or Assistant V2) <br />
+* <a href="Scripts/Services/Discovery/v1/index.html">Discovery</a> <br />
+* <a href="Scripts/Services/LanguageTranslator/v2/index.html">Language Translator V2</a> (deprecated - Use LanguageTranslator V3) <br />
+* <a href="Scripts/Services/LanguageTranslator/v3/index.html">Language Translator V3</a> <br />
+* <a href="Scripts/Services/NaturalLanguageClassifier/v2/index.html">Natural Language Classifier</a> <br />
+* <a href="Scripts/Services/NaturalLanguageUnderstanding/v1/index.html">Natural Language Understanding</a> <br />
+* <a href="Scripts/Services/PersonalityInsights/v3/index.html">Personality Insights</a> <br />
+* <a href="Scripts/Services/SpeechToText/v1/index.html">Speech to Text</a> <br />
+* <a href="Scripts/Services/TextToSpeech/v1/index.html">Text to Speech</a> <br />
+* <a href="Scripts/Services/ToneAnalyzer/v3/index.html">Tone Analyzer</a> <br />
+* <a href="Scripts/Services/VisualRecognition/v3/index.html">Visual Recognition</a></p>
+<h2 id="authentication">Authentication</h2>
+<p>Watson services are migrating to token-based Identity and Access Management (IAM) authentication.</p>
+<ul>
+<li>With some service instances, you authenticate to the API by using <strong><a href="#iam">IAM</a></strong>.</li>
+<li>In other instances, you authenticate by providing the <strong><a href="#username-and-password">username and password</a></strong> for the service instance.</li>
+</ul>
+<h3 id="getting-credentials">Getting credentials</h3>
+<p>To find out which authentication to use, view the service credentials. You find the service credentials for authentication the same way for all Watson services:</p>
+<ol type="1">
+<li>Go to the IBM Cloud <strong><a href="https://console.bluemix.net/dashboard/apps?category=watson">Dashboard</a></strong> page.</li>
+<li>Either click an existing Watson service instance or click <strong>Create</strong>.</li>
+<li>Click <strong>Show</strong> to view your service credentials.</li>
+<li>Copy the <code>url</code> and either <code>apikey</code> or <code>username</code> and <code>password</code>.</li>
+</ol>
+<p>In your code, you can use these values in the service constructor or with a method call after instantiating your service.</p>
+<h3 id="iam">IAM</h3>
+<p>Some services use token-based Identity and Access Management (IAM) authentication. IAM authentication uses a service API key to get an access token that is passed with the call. Access tokens are valid for approximately one hour and must be regenerated.</p>
+<p>You supply either an IAM service <strong>API key</strong> or an <strong>access token</strong>:</p>
+<ul>
+<li>Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.</li>
+<li>Use the access token if you want to manage the lifecycle yourself. For details, see <a href="https://console.bluemix.net/docs/services/watson/getting-started-iam.html">Authenticating with IAM tokens</a>. If you want to switch to API key, in a coroutine, override your stored IAM credentials with an IAM API key and yield until the credentials object <code>HasIamTokenData()</code> returns <code>true</code>.</li>
+</ul>
+<h4 id="supplying-the-iam-api-key">Supplying the IAM API key</h4>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1">IEnumerator <span class="fu">TokenExample</span>()</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="co">//  Create IAM token options and supply the apikey. IamUrl is the URL used to get the </span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="co">//  authorization token using the IamApiKey. It defaults to https://iam.bluemix.net/identity/token</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">    TokenOptions iamTokenOptions = <span class="kw">new</span> <span class="fu">TokenOptions</span>()</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    {</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">        IamApiKey = <span class="st">&quot;&lt;iam-api-key&gt;&quot;</span>,</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">        IamUrl = <span class="st">&quot;&lt;iam-url&gt;&quot;</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    };</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">    <span class="co">//  Create credentials using the IAM token options</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">    _credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(iamTokenOptions, <span class="st">&quot;&lt;service-url&gt;&quot;</span>);</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">    <span class="kw">while</span> (!_credentials.<span class="fu">HasIamTokenData</span>())</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">        <span class="kw">yield</span> <span class="kw">return</span> <span class="kw">null</span>;</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">    _assistant = <span class="kw">new</span> <span class="fu">Assistant</span>(_credentials);</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">    _assistant.<span class="fu">VersionDate</span> = <span class="st">&quot;2018-02-16&quot;</span>;</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">    _assistant.<span class="fu">ListWorkspaces</span>(OnListWorkspaces, OnFail);</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">}</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnListWorkspaces</span>(WorkspaceCollection response, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">{</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23">    Log.<span class="fu">Debug</span>(<span class="st">&quot;OnListWorkspaces()&quot;</span>, <span class="st">&quot;Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">}</a>
+<a class="sourceLine" id="cb1-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb1-27" data-line-number="27">{</a>
+<a class="sourceLine" id="cb1-28" data-line-number="28">    Log.<span class="fu">Debug</span>(<span class="st">&quot;OnFail()&quot;</span>, <span class="st">&quot;Failed: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb1-29" data-line-number="29">}</a></code></pre></div>
+<h4 id="supplying-the-access-token">Supplying the access token</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="dt">void</span> <span class="fu">TokenExample</span>()</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="co">//  Create IAM token options and supply the access token.</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    TokenOptions iamTokenOptions = <span class="kw">new</span> <span class="fu">TokenOptions</span>()</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    {</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">        IamAccessToken = <span class="st">&quot;&lt;iam-access-token&gt;&quot;</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    };</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="co">//  Create credentials using the IAM token options</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">     _credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(iamTokenOptions, <span class="st">&quot;&lt;service-url&quot;</span>);</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    _assistant = <span class="kw">new</span> <span class="fu">Assistant</span>(_credentials);</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">    _assistant.<span class="fu">VersionDate</span> = <span class="st">&quot;2018-02-16&quot;</span>;</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">    _assistant.<span class="fu">ListWorkspaces</span>(OnListWorkspaces, OnFail);</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">}</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnListWorkspaces</span>(WorkspaceCollection response, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">{</a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    Log.<span class="fu">Debug</span>(<span class="st">&quot;OnListWorkspaces()&quot;</span>, <span class="st">&quot;Response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">}</a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">{</a>
+<a class="sourceLine" id="cb2-24" data-line-number="24">    Log.<span class="fu">Debug</span>(<span class="st">&quot;OnFail()&quot;</span>, <span class="st">&quot;Failed: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-25" data-line-number="25">}</a></code></pre></div>
+<h3 id="username-and-password">Username and password</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">Assistant</span>.<span class="fu">v1</span>;</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">{</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(&lt;username&gt;, &lt;password&gt;, &lt;url&gt;);</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    Assistant _assistant = <span class="kw">new</span> <span class="fu">Assistant</span>(credentials);</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">}</a></code></pre></div>
+<h2 id="callbacks">Callbacks</h2>
+<p>Success and failure callbacks are required. You can specify the return type in the callback.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Example</span>()</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="co">//  Call with sepcific callbacks</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">    assistant.<span class="fu">Message</span>(OnMessage, OnGetEnvironmentsFail, _workspaceId, <span class="st">&quot;&quot;</span>);</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">    discovery.<span class="fu">GetEnvironments</span>(OnGetEnvironments, OnFail);</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">//  OnMessage callback</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">{</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCallback.OnMessage()&quot;</span>, <span class="st">&quot;Response received: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">}</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">//  OnGetEnvironments callback</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetEnvironments</span>(GetEnvironmentsResponse resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">{</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCallback.OnGetEnvironments()&quot;</span>, <span class="st">&quot;Response received: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">}</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">//  OnMessageFail callback</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessageFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22">{</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleCallback.OnMessageFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">}</a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">//  OnGetEnvironmentsFail callback</span></a>
+<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetEnvironmentsFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-28" data-line-number="28">{</a>
+<a class="sourceLine" id="cb4-29" data-line-number="29">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleCallback.OnGetEnvironmentsFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-30" data-line-number="30">}</a></code></pre></div>
+<p>Since the success callback signature is generic and the failure callback always has the same signature, you can use a single set of callbacks to handle multiple calls.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Example</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="co">//  Call with generic callbacks</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    assistant.<span class="fu">Message</span>(OnSuccess, OnMessageFail, <span class="st">&quot;&lt;workspace-id&gt;&quot;</span>, <span class="st">&quot;&quot;</span>);</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">    discovery.<span class="fu">GetEnvironments</span>(OnSuccess, OnFail);</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">//  Generic success callback</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="kw">private</span> <span class="dt">void</span> OnSuccess&lt;T&gt;(T resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">{</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCallback.OnSuccess()&quot;</span>, <span class="st">&quot;Response received: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">}</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">//  Generic fail callback</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">{</a>
+<a class="sourceLine" id="cb5-17" data-line-number="17">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleCallback.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">}</a></code></pre></div>
+<h2 id="custom-data">Custom data</h2>
+<p>Custom data can be passed through a <code>Dictionary&lt;string, object&gt; customData</code> in each call. In most cases, the raw json response is returned in the customData under <code>&quot;json&quot;</code> entry. In cases where there is no returned json, the entry will contain the success and http response code of the call.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="dt">void</span> <span class="fu">Example</span>()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">    Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData = <span class="kw">new</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;();</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    customData.<span class="fu">Add</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>);</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">    assistant.<span class="fu">Message</span>(OnSuccess, OnFail, <span class="st">&quot;&lt;workspace-id&gt;&quot;</span>, <span class="st">&quot;&quot;</span>, customData);</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">//  Generic success callback</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="kw">private</span> <span class="dt">void</span> OnSuccess&lt;T&gt;(T resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">{</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCustomData.OnSuccess()&quot;</span>, <span class="st">&quot;Custom Data: {0}&quot;</span>, customData[<span class="st">&quot;foo&quot;</span>].<span class="fu">ToString</span>());  <span class="co">// returns &quot;bar&quot;</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">}</a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">//  Generic fail callback</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnFail</span>(RESTConnector.<span class="fu">Error</span> error, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">{</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">    Log.<span class="fu">Error</span>(<span class="st">&quot;ExampleCustomData.OnFail()&quot;</span>, <span class="st">&quot;Error received: {0}&quot;</span>, error.<span class="fu">ToString</span>());  <span class="co">// returns error string</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCustomData.OnFail()&quot;</span>, <span class="st">&quot;Custom Data: {0}&quot;</span>, customData[<span class="st">&quot;foo&quot;</span>].<span class="fu">ToString</span>());  <span class="co">// returns &quot;bar&quot;</span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">}</a></code></pre></div>
+<h2 id="custom-request-headers">Custom Request Headers</h2>
+<p>You can send custom request headers by adding them to the <code>customData</code> object.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="dt">void</span> <span class="fu">Example</span>()</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">    <span class="co">//  Create customData object</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData = <span class="kw">new</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt;();</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">    <span class="co">//  Create a dictionary of custom headers</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">    Dictionary&lt;<span class="dt">string</span>, <span class="dt">string</span>&gt; customHeaders = <span class="kw">new</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">string</span>&gt;();</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">    <span class="co">//  Add to the header dictionary</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">    customHeaders.<span class="fu">Add</span>(<span class="st">&quot;X-Watson-Metadata&quot;</span>, <span class="st">&quot;customer_id=some-assistant-customer-id&quot;</span>);</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">    <span class="co">//  Add the header dictionary to the custom data object</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">    customData.<span class="fu">Add</span>(Constants.<span class="fu">String</span>.<span class="fu">CUSTOM_REQUEST_HEADERS</span>, customHeaders);</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12">    assistant.<span class="fu">Message</span>(OnSuccess, OnFail, <span class="st">&quot;&lt;workspace-id&gt;&quot;</span>, customData: customData);</a>
+<a class="sourceLine" id="cb7-13" data-line-number="13">}</a></code></pre></div>
+<h2 id="response-headers">Response Headers</h2>
+<p>You can get responseheaders in the <code>customData</code> object in the callback.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="dt">void</span> <span class="fu">Example</span>()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">    assistant.<span class="fu">Message</span>(OnMessage, OnFail, <span class="st">&quot;&lt;workspace-id&gt;&quot;</span>);</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnMessage</span>(<span class="dt">object</span> resp, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">{</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">    <span class="co">//  List all headers in the response headers object</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">    <span class="kw">if</span> (customData.<span class="fu">ContainsKey</span>(Constants.<span class="fu">String</span>.<span class="fu">RESPONSE_HEADERS</span>))</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">    {</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">        <span class="kw">foreach</span> (KeyValuePair&lt;<span class="dt">string</span>, <span class="dt">string</span>&gt; kvp <span class="kw">in</span> customData[Constants.<span class="fu">String</span>.<span class="fu">RESPONSE_HEADERS</span>] <span class="kw">as</span> Dictionary&lt;<span class="dt">string</span>, <span class="dt">string</span>&gt;)</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">        {</a>
+<a class="sourceLine" id="cb8-13" data-line-number="13">            Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleCustomHeader.OnMessage()&quot;</span>, <span class="st">&quot;{0}: {1}&quot;</span>, kvp.<span class="fu">Key</span>, kvp.<span class="fu">Value</span>);</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">        }</a>
+<a class="sourceLine" id="cb8-15" data-line-number="15">    }</a>
+<a class="sourceLine" id="cb8-16" data-line-number="16">}</a></code></pre></div>
+<h2 id="authentication-tokens">Authentication Tokens</h2>
+<p><strong>Authenticating with the <code>X-Watson-Authorization-Token</code> header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see <a href="https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam">Authenticating with IAM tokens</a> or the <a href="#IAM">README</a> in the IBM Watson SDK you use.</strong></p>
+<p>You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.</p>
+<p>You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Services</span>.<span class="fu">Assistant</span>.<span class="fu">v1</span>;</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">{</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">    Credentials credentials = <span class="kw">new</span> <span class="fu">Credentials</span>(&lt;service-url&gt;)</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">    {</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">        AuthenticationToken = &lt;authentication-token&gt;</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">    };</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">    Assistant _assistant = <span class="kw">new</span> <span class="fu">Assistant</span>(credentials);</a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">}</a></code></pre></div>
+<p>There is a helper class included to obtain tokens from within your Unity application.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">using</span> IBM.<span class="fu">Watson</span>.<span class="fu">DeveloperCloud</span>.<span class="fu">Utilities</span>;</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">AuthenticationToken _authenticationToken;</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="dt">void</span> <span class="fu">Start</span>()</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">{</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">    <span class="kw">if</span> (!Utility.<span class="fu">GetToken</span>(OnGetToken, &lt;service-url&gt;, &lt;service-username&gt;, &lt;service-password&gt;))</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">        Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleGetToken.Start()&quot;</span>, <span class="st">&quot;Failed to get token.&quot;</span>);</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">}</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">OnGetToken</span>(AuthenticationToken authenticationToken, <span class="dt">string</span> customData)</a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">{</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">    _authenticationToken = authenticationToken;</a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleGetToken.OnGetToken()&quot;</span>, <span class="st">&quot;created: {0} | time to expiration: {1} minutes | token: {2}&quot;</span>, _authenticationToken.<span class="fu">Created</span>, _authenticationToken.<span class="fu">TimeUntilExpiration</span>, _authenticationToken.<span class="fu">Token</span>);</a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">}</a></code></pre></div>
+<h2 id="streaming-outside-of-us-south-region">Streaming outside of US South region</h2>
+<p>Watson services have upgraded their hosts to TLS 1.2. The US South region has a TLS 1.0 endpoint that will work for streaming but if you are streaming in other regions you will need to use Unity 2018.2 and set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. In lower versions of Unity you will need to create the Speech to Text instance in US South.</p>
+<h2 id="documentation">Documentation</h2>
+<p>Documentation can be found <a href="https://watson-developer-cloud.github.io/unity-sdk/">here</a>. You can also access the documentation by selecting API Reference the Watson menu (<strong>Watson -&gt; API Reference</strong>).</p>
+<h2 id="getting-started-videos">Getting started videos</h2>
+<p>You can view Getting Started videos for the IBM Watson SDK for Unity on <a href="https://www.youtube.com/watch?v=Sa5hmukwHV8&amp;list=PLZDyxLlNKRY8MdgiUq45cZztn_f0EVz6c">YouTube</a>.</p>
+<h2 id="questions">Questions</h2>
+<p>If you are having difficulties using the APIs or have a question about the IBM Watson Services, please ask a question on <a href="https://developer.ibm.com/answers/questions/ask/?topics=watson">dW Answers</a> or <a href="http://stackoverflow.com/questions/ask?tags=ibm-watson">Stack Overflow</a>.</p>
+<h2 id="open-source-ibm">Open Source @ IBM</h2>
+<p>Find more open source projects on the <a href="http://ibm.github.io/">IBM Github Page</a>.</p>
+<h2 id="license">License</h2>
+<p>This library is licensed under Apache 2.0. Full license text is available in <a href="LICENSE">LICENSE</a>.</p>
+<h2 id="contributing">Contributing</h2>
+<p>See <a href=".github/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+</body>
+</html>
