@@ -123,7 +123,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// invalid when performing a single collection query.
         /// </summary>
         [fsProperty("collection_ids")]
-        public string CollectionIds { get; set; }
+        public List<string> CollectionIds { get; set; }
         /// <summary>
         /// When `true`, results are returned based on their similarity to the document IDs specified in the
         /// **similar.document_ids** parameter.

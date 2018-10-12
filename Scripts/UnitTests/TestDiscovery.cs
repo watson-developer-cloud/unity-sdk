@@ -24,6 +24,7 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -64,6 +65,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getDocumentTested = false;
         private bool _updateDocumentTested = false;
         private bool _queryTested = false;
+        private bool _federatedQueryTested = false;
         private bool _deleteDocumentTested = false;
         private bool _deleteCollectionTested = false;
         private bool _deleteConfigurationTested = false;
@@ -228,6 +230,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 while (!_queryTested)
                     yield return null;
 
+            //  Federated Query
+            List<string> collectionIds = new List<string>()
+            {
+                _createdCollectionId
+            };
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to federated query");
+            if (!_discovery.FederatedQuery(OnFederatedQuery, OnFail, _environmentId, collectionIds, naturalLanguageQuery: _query))
+                while (!_federatedQueryTested)
+                    yield return null;
+
             //  List Credentials
             Log.Debug("TestDiscovery.RunTest()", "Attempting to list credentials");
             _discovery.ListCredentials(OnListCredentials, OnFail, _environmentId);
@@ -378,7 +390,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             }
         }
 
-        private void HandleCheckEnvironmentState(Environment resp, Dictionary<string, object> customData)
+        private void HandleCheckEnvironmentState(Services.Discovery.v1.Environment resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.HandleCheckEnvironmentState()", "Environment {0} is {1}", resp.environment_id, resp.status);
 
@@ -406,7 +418,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _getEnvironmentsTested = true;
         }
 
-        private void OnGetEnvironment(Environment resp, Dictionary<string, object> customData)
+        private void OnGetEnvironment(Services.Discovery.v1.Environment resp, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetEnvironment()", "Discovery - GetEnvironment Response: {0}", customData["json"].ToString());
             Test(resp != null);
@@ -530,6 +542,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _sessionToken = resp.SessionToken;
             Test(resp != null);
             _queryTested = true;
+        }
+
+        private void OnFederatedQuery(QueryResponse resp, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnFederatedQuery()", "Discovery - FederatedQuery Response: {0}", customData["json"].ToString());
+            Test(resp != null);
+            _federatedQueryTested = true;
         }
 
         private void OnDeleteUserData(object response, Dictionary<string, object> customData)
