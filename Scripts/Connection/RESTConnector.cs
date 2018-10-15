@@ -249,6 +249,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// This callback is invoked to provide upload progress.
             /// </summary>
             public ProgressEvent OnUploadProgress { get; set; }
+            /// <summary>
+            /// The http method for use with UnityWebRequest.
+            /// </summary>
+            public string HttpMethod { get; set; }
             #endregion
         }
         #endregion
@@ -342,7 +346,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, Authentication.CreateAuthorization());
                 }
-                else if(Authentication.HasIamTokenData())
+                else if (Authentication.HasIamTokenData())
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("Bearer {0}", Authentication.IamAccessToken));
                 }
@@ -410,7 +414,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (!req.Delete && !req.Post)
+                if (string.IsNullOrEmpty(req.HttpMethod))
                 {
                     WWW www = null;
                     if (req.Forms != null)
@@ -553,45 +557,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                     www.Dispose();
                 }
-                else if(req.Post)
-                {
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-
-                    PostRequest postReq = new PostRequest();
-                    Runnable.Run(postReq.Send(url, req.Headers));
-                    while (!postReq.IsComplete)
-                    {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        yield return null;
-                    }
-
-                    if (req.Cancel)
-                        continue;
-
-                    resp.Success = postReq.Success;
-                    resp.Data = postReq.Data;
-                    resp.Error = postReq.Error;
-                    resp.HttpResponseCode = postReq.HttpResponseCode;
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    resp.Headers = postReq.ResponseHeaders;
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
-                }
                 else
                 {
-
-#if ENABLE_DEBUGGING
-                    Log.Debug("RESTConnector.ProcessRequestQueue90", "Delete Request URL: {0}", url);
-#endif
-
                     float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
+                    WatsonRequest watsonRequest = new WatsonRequest();
+                    watsonRequest.HttpMethod = req.HttpMethod;
+                    Runnable.Run(watsonRequest.Send(url, req.Headers));
 
-                    DeleteRequest deleteReq = new DeleteRequest();
-                    Runnable.Run(deleteReq.Send(url, req.Headers));
-                    while (!deleteReq.IsComplete)
+                    while (!watsonRequest.IsComplete)
                     {
                         if (req.Cancel)
                             break;
@@ -603,12 +576,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (req.Cancel)
                         continue;
 
-                    resp.Success = deleteReq.Success;
-                    resp.Data = deleteReq.Data;
-                    resp.Error = deleteReq.Error;
-                    resp.HttpResponseCode = deleteReq.HttpResponseCode;
+                    resp.Success = watsonRequest.Success;
+                    resp.Data = watsonRequest.Data;
+                    resp.Error = watsonRequest.Error;
+                    resp.HttpResponseCode = watsonRequest.HttpResponseCode;
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    resp.Headers = deleteReq.ResponseHeaders;
+                    resp.Headers = watsonRequest.ResponseHeaders;
                     if (req.OnResponse != null)
                         req.OnResponse(req, resp);
                 }
@@ -660,24 +633,50 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
             return ret;
         }
+        #endregion
 
-        private class DeleteRequest
+        #region WatsonRequest
+        private class WatsonRequest
         {
+            /// <summary>
+            /// The endpoint of the service.
+            /// </summary>
             public string URL { get; set; }
+            /// <summary>
+            /// The http method of the call.
+            /// </summary>
+            public string HttpMethod { get; set; }
+            /// <summary>
+            /// The request headers.
+            /// </summary>
             public Dictionary<string, string> Headers { get; set; }
+            /// <summary>
+            /// Is the request complete?
+            /// </summary>
             public bool IsComplete { get; set; }
+            /// <summary>
+            /// Did the request succeed?
+            /// </summary>
             public bool Success { get; set; }
+            /// <summary>
+            /// The http response code from the request.
+            /// </summary>
             public long HttpResponseCode { get; set; }
+            /// <summary>
+            /// The response data from the request.
+            /// </summary>
             public byte[] Data { get; set; }
+            /// <summary>
+            /// The response error.
+            /// </summary>
             public Error Error { get; set; }
+            /// <summary>
+            /// The response headers.
+            /// </summary>
             public Dictionary<string, string> ResponseHeaders { get; set; }
 
             public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}", url);
-#endif
-
                 URL = url;
                 Headers = new Dictionary<string, string>();
                 foreach (var kp in headers)
@@ -691,107 +690,41 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
 #endif
 
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, ProcessRequest {0}", URL);
-#endif
-                UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
-                deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
-                deleteReq.downloadHandler = new DownloadHandlerBuffer();
+                //  Create web request
+                UnityWebRequest req = new UnityWebRequest();
+                req.url = URL;
+                req.method = HttpMethod;
+                req.downloadHandler = new DownloadHandlerBuffer();
+
 
                 foreach (var kp in Headers)
-                    deleteReq.SetRequestHeader(kp.Key, kp.Value);
+                    req.SetRequestHeader(kp.Key, kp.Value);
 #if UNITY_2017_2_OR_NEWER
-                yield return deleteReq.SendWebRequest();
+                yield return req.SendWebRequest();
 #else
-                yield return deleteReq.Send();
+                yield return req.Send();
 #endif
                 Error error = null;
-                if (!string.IsNullOrEmpty(deleteReq.error))
+                if (!string.IsNullOrEmpty(req.error))
                 {
                     error = new Error()
                     {
                         URL = url,
-                        ErrorCode = deleteReq.responseCode,
-                        ErrorMessage = deleteReq.error,
-                        Response = deleteReq.downloadHandler.text,
-                        ResponseHeaders = deleteReq.GetResponseHeaders()
+                        ErrorCode = req.responseCode,
+                        ErrorMessage = req.error,
+                        Response = req.downloadHandler.text,
+                        ResponseHeaders = req.GetResponseHeaders()
                     };
                 }
 
-                Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT || deleteReq.responseCode == HTTP_STATUS_ACCEPTED;
-                HttpResponseCode = deleteReq.responseCode;
-                ResponseHeaders = deleteReq.GetResponseHeaders();
-                Data = deleteReq.downloadHandler.data;
+                Success = req.responseCode == HTTP_STATUS_OK || req.responseCode == HTTP_STATUS_NO_CONTENT || req.responseCode == HTTP_STATUS_ACCEPTED;
+                HttpResponseCode = req.responseCode;
+                ResponseHeaders = req.GetResponseHeaders();
+                Data = req.downloadHandler.data;
                 Error = error;
                 IsComplete = true;
             }
-        };
-
-        private class PostRequest
-        {
-            public string URL { get; set; }
-            public Dictionary<string, string> Headers { get; set; }
-            public bool IsComplete { get; set; }
-            public bool Success { get; set; }
-            public long HttpResponseCode { get; set; }
-            public byte[] Data { get; set; }
-            public Error Error { get; set; }
-            public Dictionary<string, string> ResponseHeaders { get; set; }
-
-            public IEnumerator Send(string url, Dictionary<string, string> headers)
-            {
-#if ENABLE_DEBUGGING
-                Log.Debug("PostRequest.Send()", "PostRequest, Send: {0}", url);
-#endif
-
-                URL = url;
-                Headers = new Dictionary<string, string>();
-                foreach (var kp in headers)
-                {
-                    if (kp.Key != "User-Agent")
-                        Headers[kp.Key] = kp.Value;
-                }
-
-#if !NETFX_CORE
-                // This fixes the exception thrown by self-signed certificates.
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-#endif
-
-#if ENABLE_DEBUGGING
-                Log.Debug("PostRequest.Send()", "PostRequest, ProcessRequest {0}", URL);
-#endif
-                UnityWebRequest postReq = UnityWebRequest.Get(URL);
-                postReq.method = UnityWebRequest.kHttpVerbPOST;
-                postReq.downloadHandler = new DownloadHandlerBuffer();
-
-                foreach (var kp in Headers)
-                    postReq.SetRequestHeader(kp.Key, kp.Value);
-#if UNITY_2017_2_OR_NEWER
-                yield return postReq.SendWebRequest();
-#else
-                yield return postReq.Send();
-#endif
-                Error error = null;
-                if (!string.IsNullOrEmpty(postReq.error))
-                {
-                    error = new Error()
-                    {
-                        URL = url,
-                        ErrorCode = postReq.responseCode,
-                        ErrorMessage = postReq.error,
-                        Response = postReq.downloadHandler.text,
-                        ResponseHeaders = postReq.GetResponseHeaders()
-                    };
-                }
-
-                Success = postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_NO_CONTENT || postReq.responseCode == HTTP_STATUS_ACCEPTED;
-                HttpResponseCode = postReq.responseCode;
-                ResponseHeaders = postReq.GetResponseHeaders();
-                Data = postReq.downloadHandler.data;
-                Error = error;
-                IsComplete = true;
-            }
-        };
+        }
         #endregion
     }
 }

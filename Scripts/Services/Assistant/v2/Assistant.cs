@@ -23,6 +23,7 @@ using IBM.WatsonDeveloperCloud.Assistant.v2;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 {
@@ -144,7 +145,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateSessionResponse;
-            req.Post = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
             if (connector == null)
@@ -246,7 +247,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteSessionResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
             if (connector == null)
@@ -367,6 +368,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnMessageResponse;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
             if (connector == null)
