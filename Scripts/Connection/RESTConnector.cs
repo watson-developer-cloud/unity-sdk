@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using FullSerializer;
 
 #if !NETFX_CORE
 using System.Net;
@@ -233,6 +234,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The data to send through the connection. Do not use Forms if set.
             /// </summary>
             public byte[] Send { get; set; }
+            ///// <summary>
+            ///// The data to send through the connection. Do not use Forms if set.
+            ///// </summary>
+            //public string Body { get; set; }
             /// <summary>
             /// Multi-part form data that needs to be sent. Do not use Send if set.
             /// </summary>
@@ -414,9 +419,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (string.IsNullOrEmpty(req.HttpMethod))
+                if (string.IsNullOrEmpty(req.HttpMethod) || req.Delete)
                 {
-                    WWW www = null;
+                    UnityWebRequest www = null;
                     if (req.Forms != null)
                     {
                         if (req.Send != null)
@@ -443,13 +448,30 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         {
                             Log.Error("RESTConnector.ProcessRequestQueue()", "Exception when initializing WWWForm: {0}", e.ToString());
                         }
-                        www = new WWW(url, form.data, req.Headers);
+                        www = UnityWebRequest.Post(url, form);
                     }
                     else if (req.Send == null)
-                        www = new WWW(url, null, req.Headers);
+                    {
+                        www = UnityWebRequest.Get(url);
+                    }
                     else
-                        www = new WWW(url, req.Send, req.Headers);
+                    {
+                        www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+                        www.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
+                        www.SetRequestHeader("Content-Type", "application/json");
+                    }
 
+                    foreach (KeyValuePair<string, string> kvp in req.Headers)
+                    {
+                        www.SetRequestHeader(kvp.Key, kvp.Value);
+                    }
+                    www.downloadHandler = new DownloadHandlerBuffer();
+
+#if UNITY_2017_2_OR_NEWER
+                    www.SendWebRequest();
+#else
+                    www.Send();
+#endif
 #if ENABLE_DEBUGGING
                     Log.Debug("RESTConnector", "URL: {0}", url);
 #endif
@@ -465,7 +487,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         if (req.OnUploadProgress != null)
                             req.OnUploadProgress(www.uploadProgress);
                         if (req.OnDownloadProgress != null)
-                            req.OnDownloadProgress(www.progress);
+                            req.OnDownloadProgress(www.downloadProgress);
 
 #if UNITY_EDITOR
                         if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
@@ -508,16 +530,16 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             URL = url,
                             ErrorCode = resp.HttpResponseCode = nErrorCode,
                             ErrorMessage = www.error,
-                            Response = www.text,
-                            ResponseHeaders = www.responseHeaders
+                            Response = www.downloadHandler.text,
+                            ResponseHeaders = www.GetResponseHeaders()
                         };
 
                         if (bError)
                             Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.text) ? "" : www.text);
+                                string.IsNullOrEmpty(www.downloadHandler.text) ? "" : www.downloadHandler.text);
                         else
                             Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.text) ? "" : www.text);
+                                string.IsNullOrEmpty(www.downloadHandler.text) ? "" : www.downloadHandler.text);
                     }
                     if (!www.isDone)
                     {
@@ -535,8 +557,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (!bError)
                     {
                         resp.Success = true;
-                        resp.Data = www.bytes;
-                        resp.HttpResponseCode = GetResponseCode(www);
+                        resp.Data = www.downloadHandler.data;
+                        resp.HttpResponseCode = www.responseCode;
                     }
                     else
                     {
@@ -544,7 +566,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         resp.Error = error;
                     }
 
-                    resp.Headers = www.responseHeaders;
+                    resp.Headers = www.GetResponseHeaders();
 
                     resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
 
