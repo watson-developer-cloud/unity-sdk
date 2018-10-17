@@ -258,6 +258,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The http method for use with UnityWebRequest.
             /// </summary>
             public string HttpMethod { get; set; }
+            private bool disableSslVerification = false;
+            /// <summary>
+            /// Gets and sets the option to disable ssl verification
+            /// </summary>
+            public bool DisableSslVerification
+            {
+                get { return disableSslVerification; }
+                set { disableSslVerification = value; }
+            }
             #endregion
         }
         #endregion
@@ -315,6 +324,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (request == null)
                 throw new ArgumentNullException("request");
 
+#if !NETFX_CORE
+            if (request.DisableSslVerification)
+            {
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+            }
+#endif
             _requests.Enqueue(request);
 
             // if we are not already running a co-routine to send the Requests
@@ -696,6 +711,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The response headers.
             /// </summary>
             public Dictionary<string, string> ResponseHeaders { get; set; }
+            private bool disableSslVerification = false;
+            /// <summary>
+            /// Gets and sets the option to disable ssl verification
+            /// </summary>
+            public bool DisableSslVerification
+            {
+                get { return disableSslVerification; }
+                set { disableSslVerification = value; }
+            }
 
             public IEnumerator Send(string url, Dictionary<string, string> headers)
             {
@@ -708,8 +732,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
 
 #if !NETFX_CORE
-                // This fixes the exception thrown by self-signed certificates.
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+                if (DisableSslVerification)
+                {
+                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+                }
 #endif
 
                 //  Create web request

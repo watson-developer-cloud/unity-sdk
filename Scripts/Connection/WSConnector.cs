@@ -156,7 +156,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// Headers to pass when making the socket.
         /// </summary>
         private Dictionary<string, string> _headers;
-        public Dictionary<string, string> Headers {
+        public Dictionary<string, string> Headers
+        {
             get
             {
                 if (_headers == null)
@@ -176,6 +177,16 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return _connectionState; } set { _connectionState = value; } }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Private Data
@@ -304,7 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             return connector;
         }
 
-#region Public Functions
+        #region Public Functions
         /// <summary>
         /// This function sends the given message object.
         /// </summary>
@@ -356,9 +367,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             // setting the state to closed will make the SendThread automatically exit.
             _connectionState = ConnectionState.CLOSED;
         }
-#endregion
+        #endregion
 
-#region Private Functions
+        #region Private Functions
         private IEnumerator ProcessReceiveQueue()
         {
             while (_connectionState == ConnectionState.CONNECTED
@@ -389,9 +400,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (OnClose != null)
                 OnClose(this);
         }
-#endregion
+        #endregion
 
-#region Threaded Functions
+        #region Threaded Functions
         // NOTE: All functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
         private void SendMessages()
@@ -409,6 +420,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
+
+                if (DisableSslVerification)
+                {
+                    ws.SslConfiguration.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+                    {
+                        return true;
+                    };
+                }
 #if NET_4_6
                 //  Enable TLS 1.1 and TLS 1.2 if we are on .NET 4.x
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
@@ -590,6 +609,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
         }
 #endif
-#endregion
+        #endregion
     }
 }

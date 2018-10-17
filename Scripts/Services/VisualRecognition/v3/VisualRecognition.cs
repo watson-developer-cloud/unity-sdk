@@ -98,6 +98,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
         }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Constructor
@@ -161,6 +171,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyReq req = new ClassifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -254,6 +265,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyReq req = new ClassifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -372,6 +384,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectFacesReq req = new DetectFacesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -450,6 +463,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectFacesReq req = new DetectFacesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -552,6 +566,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersBriefReq req = new GetClassifiersBriefReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -651,6 +666,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersVerboseReq req = new GetClassifiersVerboseReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -752,6 +768,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifierReq req = new GetClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -905,6 +922,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             TrainClassifierReq req = new TrainClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1069,6 +1087,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             TrainClassifierReq req = new TrainClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1117,6 +1136,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DeleteClassifierReq req = new DeleteClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1183,6 +1203,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetCoreMLModelRequest req = new GetCoreMLModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1284,6 +1305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {

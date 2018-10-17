@@ -84,6 +84,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
         }
         private IamTokenData _tokenData = null;
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Callback delegates
@@ -261,6 +270,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRequestIamTokenResponse;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -352,6 +362,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRefreshIamTokenResponse;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {

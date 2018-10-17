@@ -69,6 +69,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             set { _versionDate = value; }
         }
 
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
+
         #region Callback delegates
         /// <summary>
         /// Success callback delegate.
@@ -128,7 +138,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 requestDict.Add("context", Json.Serialize(request.Context));
             if (request.Input != null)
                 requestDict.Add("input", Json.Serialize(request.Input));
-            if(request.AlternateIntents != null)
+            if (request.AlternateIntents != null)
                 requestDict.Add("alternate_intents", Json.Serialize(request.AlternateIntents));
             if (request.Entities != null)
                 requestDict.Add("entities", Json.Serialize(request.Entities));
@@ -152,10 +162,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             MessageRequestObj req = new MessageRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -237,14 +248,15 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
-            
+
             CreateWorkspaceRequestObj req = new CreateWorkspaceRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -256,7 +268,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             string json = data.ToString().Replace('\"', '"');
             req.Send = Encoding.UTF8.GetBytes(json);
             req.OnResponse = OnCreateWorkspaceResponse;
-            
+
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
             if (connector == null)
                 return false;
@@ -339,10 +351,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteWorkspaceRequestObj req = new DeleteWorkspaceRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -436,10 +449,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetWorkspaceRequestObj req = new GetWorkspaceRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -536,10 +550,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListWorkspacesRequestObj req = new ListWorkspacesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -641,10 +656,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateWorkspaceRequestObj req = new UpdateWorkspaceRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -738,10 +754,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateIntentRequestObj req = new CreateIntentRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -836,10 +853,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteIntentRequestObj req = new DeleteIntentRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -934,10 +952,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetIntentRequestObj req = new GetIntentRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1036,10 +1055,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListIntentsRequestObj req = new ListIntentsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1143,10 +1163,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateIntentRequestObj req = new UpdateIntentRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1241,10 +1262,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateExampleRequestObj req = new CreateExampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1340,10 +1362,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteExampleRequestObj req = new DeleteExampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1438,10 +1461,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetExampleRequestObj req = new GetExampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1539,10 +1563,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListExamplesRequestObj req = new ListExamplesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1645,10 +1670,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateExampleRequestObj req = new UpdateExampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1742,10 +1768,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateCounterexampleRequestObj req = new CreateCounterexampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1840,10 +1867,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteCounterexampleRequestObj req = new DeleteCounterexampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -1937,10 +1965,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetCounterexampleRequestObj req = new GetCounterexampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2038,10 +2067,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListCounterexamplesRequestObj req = new ListCounterexamplesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2144,10 +2174,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateCounterexampleRequestObj req = new UpdateCounterexampleRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2241,10 +2272,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateEntityRequestObj req = new CreateEntityRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2339,10 +2371,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteEntityRequestObj req = new DeleteEntityRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2437,10 +2470,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetEntityRequestObj req = new GetEntityRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2541,10 +2575,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListEntitiesRequestObj req = new ListEntitiesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2648,10 +2683,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateEntityRequestObj req = new UpdateEntityRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2758,6 +2794,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListMentionsRequestObj req = new ListMentionsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2856,10 +2893,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateValueRequestObj req = new CreateValueRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -2955,10 +2993,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteValueRequestObj req = new DeleteValueRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3054,10 +3093,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetValueRequestObj req = new GetValueRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3159,10 +3199,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListValuesRequestObj req = new ListValuesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3267,10 +3308,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateValueRequestObj req = new UpdateValueRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3366,10 +3408,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateSynonymRequestObj req = new CreateSynonymRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3466,10 +3509,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteSynonymRequestObj req = new DeleteSynonymRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3565,10 +3609,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetSynonymRequestObj req = new GetSynonymRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3668,10 +3713,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListSynonymsRequestObj req = new ListSynonymsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3775,10 +3821,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateSynonymRequestObj req = new UpdateSynonymRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3872,10 +3919,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             CreateDialogNodeRequestObj req = new CreateDialogNodeRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -3970,10 +4018,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteDialogNodeRequestObj req = new DeleteDialogNodeRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -4067,10 +4116,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             GetDialogNodeRequestObj req = new GetDialogNodeRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -4168,10 +4218,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListDialogNodesRequestObj req = new ListDialogNodesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -4273,10 +4324,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             UpdateDialogNodeRequestObj req = new UpdateDialogNodeRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -4372,21 +4424,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListAllLogsRequestObj req = new ListAllLogsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            if(!string.IsNullOrEmpty(filter))
+            if (!string.IsNullOrEmpty(filter))
                 req.Parameters["filter"] = filter;
             if (!string.IsNullOrEmpty(sort))
                 req.Parameters["sort"] = sort;
-            if(pageLimit != null)
+            if (pageLimit != null)
                 req.Parameters["page_imit"] = pageLimit;
-            if(!string.IsNullOrEmpty(cursor))
+            if (!string.IsNullOrEmpty(cursor))
                 req.Parameters["cursor"] = cursor;
 
             req.Parameters["version"] = VersionDate;
@@ -4479,10 +4532,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             ListLogsRequestObj req = new ListLogsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -4585,6 +4639,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {

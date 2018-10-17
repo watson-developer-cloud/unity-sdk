@@ -63,6 +63,16 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 }
             }
         }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Private Data
@@ -179,10 +189,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             TranslateReq req = new TranslateReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -238,7 +249,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                     resp.Success = false;
                 }
             }
-            
+
             if (resp.Success)
             {
                 if (((TranslateReq)req).SuccessCallback != null)
@@ -281,11 +292,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         /// <param name="targetFilter">Optional target language filter.</param>
         /// <param name="defaults">Controls if we get default, non-default, or all models.</param>
         /// <returns>Returns a true on success, false if it failed to submit the request.</returns>
-        public bool GetModels(SuccessCallback<TranslationModels> successCallback, 
+        public bool GetModels(SuccessCallback<TranslationModels> successCallback,
             FailCallback failCallback,
             string sourceFilter = null,
             string targetFilter = null,
-            TypeFilter defaults = TypeFilter.ALL, 
+            TypeFilter defaults = TypeFilter.ALL,
             Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
@@ -300,10 +311,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetModelsReq req = new GetModelsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -402,10 +414,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetModelReq req = new GetModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -492,7 +505,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
         /// <param name="monolingualCorpusFilePath">A UTF-8 encoded plain text file that is used to customize the target language model.</param>
         /// <param name="customData">User defined custom string data.</param>
         /// <returns>True if the call succeeded, false if the call fails.</returns>
-        public bool CreateModel(SuccessCallback<TranslationModel> successCallback, FailCallback failCallback, string baseModelId, string customModelName, string forcedGlossaryFilePath = default(string), string parallelCorpusFilePath= default(string), string monolingualCorpusFilePath = default(string), Dictionary<string, object> customData = null)
+        public bool CreateModel(SuccessCallback<TranslationModel> successCallback, FailCallback failCallback, string baseModelId, string customModelName, string forcedGlossaryFilePath = default(string), string parallelCorpusFilePath = default(string), string monolingualCorpusFilePath = default(string), Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -504,14 +517,15 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                 throw new ArgumentNullException("customModelName");
             if (string.IsNullOrEmpty(forcedGlossaryFilePath) && string.IsNullOrEmpty(parallelCorpusFilePath) && string.IsNullOrEmpty(monolingualCorpusFilePath))
                 throw new ArgumentNullException("Either a forced glossary, parallel corpus or monolingual corpus is required to create a custom model.");
-            
+
             CreateModelRequest req = new CreateModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -524,13 +538,13 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             byte[] parallelCorpusData = null;
             byte[] monolingualCorpusData = null;
 
-            if(!string.IsNullOrEmpty(forcedGlossaryFilePath))
+            if (!string.IsNullOrEmpty(forcedGlossaryFilePath))
             {
                 try
                 {
                     forcedGlossaryData = File.ReadAllBytes(forcedGlossaryFilePath);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Debug("LanguageTranslator.CreateModel()", "There was an error loading the forced glossary file: {0}", e.Message);
                 }
@@ -574,7 +588,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 
             return connector.Send(req);
         }
-        
+
         private class CreateModelRequest : RESTConnector.Request
         {
             /// <summary>
@@ -655,10 +669,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             DeleteModelReq req = new DeleteModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -748,10 +763,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetLanguagesReq req = new GetLanguagesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -843,10 +859,11 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             IdentifyReq req = new IdentifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }

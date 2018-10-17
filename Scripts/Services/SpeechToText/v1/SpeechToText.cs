@@ -79,6 +79,16 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// Set this property to overload the internal file loading of this class.
         /// </summary>
         public LoadFileDelegate LoadFile { get; set; }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Private Data
@@ -320,6 +330,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetModelsRequest req = new GetModelsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -415,6 +426,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetModelRequest req = new GetModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -665,6 +677,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
 
                 _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + parsedParams);
+                _listenSocket.DisableSslVerification = DisableSslVerification;
                 if (_listenSocket == null)
                 {
                     return false;
@@ -917,6 +930,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             RecognizeRequest req = new RecognizeRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1283,6 +1297,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomizationsReq req = new GetCustomizationsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1392,6 +1407,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CreateCustomizationRequest req = new CreateCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1492,6 +1508,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomizationRequest req = new DeleteCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1569,6 +1586,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomizationRequest req = new GetCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1676,6 +1694,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             TrainCustomizationRequest req = new TrainCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1756,6 +1775,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             ResetCustomizationRequest req = new ResetCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1835,6 +1855,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             UpgradeCustomizationRequest req = new UpgradeCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1915,6 +1936,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomCorporaReq req = new GetCustomCorporaReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2017,6 +2039,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomCorpusReq req = new GetCustomCorpusReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2118,6 +2141,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomCorpusRequest req = new DeleteCustomCorpusRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2200,6 +2224,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddCustomCorpusRequest req = new AddCustomCorpusRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2282,6 +2307,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomWordsReq req = new GetCustomWordsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2477,6 +2503,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddCustomWordsRequest req = new AddCustomWordsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2560,6 +2587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomWordRequest req = new DeleteCustomWordRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2640,6 +2668,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomWordReq req = new GetCustomWordReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2735,6 +2764,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticModelsReq req = new GetCustomAcousticModelsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2844,6 +2874,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CreateAcousticCustomizationRequest req = new CreateAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2943,6 +2974,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteAcousticCustomizationRequest req = new DeleteAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3019,6 +3051,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticModelReq req = new GetCustomAcousticModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3117,6 +3150,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             TrainAcousticCustomizationRequest req = new TrainAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3199,6 +3233,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             ResetAcousticCustomizationRequest req = new ResetAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3277,6 +3312,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticResourcesReq req = new GetCustomAcousticResourcesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3376,6 +3412,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteAcousticResourceRequest req = new DeleteAcousticResourceRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3456,6 +3493,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticResourceReq req = new GetCustomAcousticResourceReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3565,6 +3603,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddAcousticResourceRequest req = new AddAcousticResourceRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3646,6 +3685,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
