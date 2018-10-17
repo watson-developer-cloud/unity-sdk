@@ -25,6 +25,7 @@ using MiniJSON;
 using System;
 using FullSerializer;
 using System.Text.RegularExpressions;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 {
@@ -406,7 +407,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             string escapedText = text.Replace("\\\"", "\"");
             string decodedText = DecodeUnicodeCharacters(escapedText);
 
-            string textId = Utility.GetMD5(decodedText);
+            string textId = Utilities.Utility.GetMD5(decodedText);
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/synthesize");
             if (connector == null)
@@ -853,7 +854,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.Timeout = RequestTimeout;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomizationResp;
 
             string service = "/v1/customizations/{0}";
@@ -1304,7 +1305,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.Timeout = RequestTimeout;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomizationWordResp;
 
             string service = "/v1/customizations/{0}/words/{1}";
@@ -1572,7 +1573,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.Parameters["customer_id"] = customerId;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

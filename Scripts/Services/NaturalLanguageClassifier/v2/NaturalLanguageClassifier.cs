@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
 {
@@ -432,7 +433,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnDeleteClassifierResp;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             return connector.Send(req);
         }

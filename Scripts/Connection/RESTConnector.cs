@@ -419,7 +419,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (string.IsNullOrEmpty(req.HttpMethod) || req.Delete)
+                if (string.IsNullOrEmpty(req.HttpMethod))
                 {
                     UnityWebRequest www = null;
                     if (req.Forms != null)

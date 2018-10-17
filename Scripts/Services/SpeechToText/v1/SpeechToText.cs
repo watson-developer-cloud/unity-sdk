@@ -29,6 +29,7 @@ using UnityEngine;
 using System.Text;
 using FullSerializer;
 using System.IO;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
@@ -1499,7 +1500,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomizationResp;
 
             string service = "/v1/customizations/{0}";
@@ -2125,7 +2126,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomCorpusResp;
 
             string service = "/v1/customizations/{0}/corpora/{1}";
@@ -2567,7 +2568,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomWordResp;
 
             string service = "/v1/customizations/{0}/words/{1}";
@@ -2950,7 +2951,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteAcousticCustomizationResp;
 
             string service = "/v1/acoustic_customizations/{0}";
@@ -3383,7 +3384,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.Timeout = 10f;
             req.OnResponse = OnDeleteAcousticResourceResp;
 
@@ -3654,7 +3655,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
             }
             req.Parameters["customer_id"] = customerId;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

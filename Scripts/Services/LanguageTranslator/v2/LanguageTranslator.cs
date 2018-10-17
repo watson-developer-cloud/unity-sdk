@@ -25,6 +25,7 @@ using MiniJSON;
 using System;
 using FullSerializer;
 using System.IO;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
 {
@@ -664,7 +665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             }
             req.Function = WWW.EscapeURL(model_id);
             req.OnResponse = DeleteModelResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             return connector.Send(req);
         }
 

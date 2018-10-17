@@ -23,6 +23,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using MiniJSON;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
@@ -347,7 +348,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteWorkspaceResponse;
 
@@ -844,7 +845,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteIntentResponse;
 
@@ -1348,7 +1349,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteExampleResponse;
 
@@ -1848,7 +1849,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteCounterexampleResponse;
 
@@ -2347,7 +2348,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteEntityResponse;
 
@@ -2963,7 +2964,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteValueResponse;
 
@@ -3474,7 +3475,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteSynonymResponse;
 
@@ -3978,7 +3979,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 }
             }
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteDialogNodeResponse;
 
@@ -4594,7 +4595,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             }
             req.Parameters["customer_id"] = customerId;
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

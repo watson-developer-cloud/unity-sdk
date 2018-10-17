@@ -22,6 +22,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
@@ -349,7 +350,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnDeleteModelResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ModelEndpoint, modelId));
             if (connector == null)

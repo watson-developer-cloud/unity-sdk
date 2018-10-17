@@ -23,6 +23,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
@@ -1128,7 +1129,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             return connector.Send(req);
         }
@@ -1294,7 +1295,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["customer_id"] = customerId;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

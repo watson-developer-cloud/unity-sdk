@@ -23,7 +23,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using MiniJSON;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -337,7 +337,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             }
             req.Parameters["customer_id"] = customerId;
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

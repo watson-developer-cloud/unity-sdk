@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
@@ -538,7 +539,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteEnvironmentResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Environment, environmentID));
             if (connector == null)
@@ -978,7 +979,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteConfigurationResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Configuration, environmentID, configurationID));
             if (connector == null)
@@ -1092,7 +1093,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new WatsonException(string.Format("Failed to load content: {0}", e.Message));
             }
 
-            string contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+            string contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
 
             return PreviewConfiguration(successCallback, failCallback, environmentID, configurationID, configurationFilePath, contentData, contentMimeType, metadata, customData);
         }
@@ -1607,7 +1608,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCollectionResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Collection, environmentID, collectionID));
             if (connector == null)
@@ -1822,7 +1823,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             try
             {
                 contentData = File.ReadAllBytes(contentFilePath);
-                contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+                contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
             }
             catch (Exception e)
             {
@@ -2096,7 +2097,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteDocumentResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Document, environmentID, collectionID, documentID));
             if (connector == null)
@@ -2308,7 +2309,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             try
             {
                 contentData = File.ReadAllBytes(contentFilePath);
-                contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+                contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
             }
             catch (Exception e)
             {
@@ -3626,7 +3627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteExpansionsResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
@@ -3823,7 +3824,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["customer_id"] = customerId;
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 
@@ -4138,7 +4139,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCredentialsResponse;
-            req.Delete = true;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialEndpoint, environmentID, credentialId));
             if (connector == null)
