@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -267,6 +268,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             RequestIamTokenRequest req = new RequestIamTokenRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRequestIamTokenResponse;
@@ -359,6 +361,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             RefreshIamTokenRequest req = new RefreshIamTokenRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRefreshIamTokenResponse;

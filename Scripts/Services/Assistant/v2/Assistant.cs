@@ -144,6 +144,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             CreateSessionRequestObj req = new CreateSessionRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -156,7 +157,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateSessionResponse;
-            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
             if (connector == null)
@@ -248,6 +248,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             DeleteSessionRequestObj req = new DeleteSessionRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -259,7 +260,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteSessionResponse;
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
             if (connector == null)
@@ -354,6 +354,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             MessageRequestObj req = new MessageRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -381,7 +382,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnMessageResponse;
-            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
             if (connector == null)

@@ -330,6 +330,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetModelsRequest req = new GetModelsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -426,6 +427,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetModelRequest req = new GetModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -676,7 +678,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
 
-                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + WWW.EscapeURL(_recognizeModel) + parsedParams);
+                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams);
                 _listenSocket.DisableSslVerification = DisableSslVerification;
                 if (_listenSocket == null)
                 {
@@ -685,7 +687,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 else
                 {
 #if ENABLE_DEBUGGING
-                    Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", WWW.EscapeURL(_recognizeModel), parsedParams);
+                    Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", UnityWebRequest.EscapeURL(_recognizeModel), parsedParams);
 #endif
                 }
 
@@ -930,6 +932,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             RecognizeRequest req = new RecognizeRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1297,6 +1300,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomizationsReq req = new GetCustomizationsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1407,6 +1411,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CreateCustomizationRequest req = new CreateCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1508,6 +1513,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomizationRequest req = new DeleteCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1517,7 +1523,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomizationResp;
 
             string service = "/v1/customizations/{0}";
@@ -1586,6 +1591,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomizationRequest req = new GetCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1694,6 +1700,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             TrainCustomizationRequest req = new TrainCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1775,6 +1782,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             ResetCustomizationRequest req = new ResetCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1855,6 +1863,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             UpgradeCustomizationRequest req = new UpgradeCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -1936,6 +1945,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomCorporaReq req = new GetCustomCorporaReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2039,6 +2049,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomCorpusReq req = new GetCustomCorpusReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2141,6 +2152,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomCorpusRequest req = new DeleteCustomCorpusRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2150,7 +2162,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomCorpusResp;
 
             string service = "/v1/customizations/{0}/corpora/{1}";
@@ -2224,6 +2235,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddCustomCorpusRequest req = new AddCustomCorpusRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2307,6 +2319,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomWordsReq req = new GetCustomWordsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2503,6 +2516,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddCustomWordsRequest req = new AddCustomWordsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2587,6 +2601,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteCustomWordRequest req = new DeleteCustomWordRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2596,7 +2611,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteCustomWordResp;
 
             string service = "/v1/customizations/{0}/words/{1}";
@@ -2668,6 +2682,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomWordReq req = new GetCustomWordReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2764,6 +2779,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticModelsReq req = new GetCustomAcousticModelsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2874,6 +2890,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             CreateAcousticCustomizationRequest req = new CreateAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2974,6 +2991,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteAcousticCustomizationRequest req = new DeleteAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -2983,7 +3001,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.OnResponse = OnDeleteAcousticCustomizationResp;
 
             string service = "/v1/acoustic_customizations/{0}";
@@ -3051,6 +3068,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticModelReq req = new GetCustomAcousticModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3150,6 +3168,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             TrainAcousticCustomizationRequest req = new TrainAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3233,6 +3252,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             ResetAcousticCustomizationRequest req = new ResetAcousticCustomizationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3312,6 +3332,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticResourcesReq req = new GetCustomAcousticResourcesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3412,6 +3433,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteAcousticResourceRequest req = new DeleteAcousticResourceRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3421,12 +3443,11 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.Timeout = 10f;
             req.OnResponse = OnDeleteAcousticResourceResp;
 
             string service = "/v1/acoustic_customizations/{0}/audio/{1}";
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, WWW.EscapeURL(audioName)));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, UnityWebRequest.EscapeURL(audioName)));
             if (connector == null)
                 return false;
 
@@ -3493,6 +3514,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             GetCustomAcousticResourceReq req = new GetCustomAcousticResourceReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3603,6 +3625,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             AddAcousticResourceRequest req = new AddAcousticResourceRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3685,6 +3708,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -3695,7 +3719,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 }
             }
             req.Parameters["customer_id"] = customerId;
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

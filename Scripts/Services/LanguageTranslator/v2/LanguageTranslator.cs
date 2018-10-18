@@ -15,7 +15,6 @@
 *
 */
 
-using UnityEngine;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Utilities;
@@ -189,6 +188,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             TranslateReq req = new TranslateReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -311,6 +311,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetModelsReq req = new GetModelsReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -414,6 +415,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetModelReq req = new GetModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -423,7 +425,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Function = WWW.EscapeURL(model_id);
+            req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = GetModelResponse;
 
             return connector.Send(req);
@@ -521,6 +523,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             CreateModelRequest req = new CreateModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -669,6 +672,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             DeleteModelReq req = new DeleteModelReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -678,9 +682,8 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
-            req.Function = WWW.EscapeURL(model_id);
+            req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = DeleteModelResponse;
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
             return connector.Send(req);
         }
 
@@ -763,6 +766,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             GetLanguagesReq req = new GetLanguagesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -859,6 +863,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v2
             IdentifyReq req = new IdentifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))

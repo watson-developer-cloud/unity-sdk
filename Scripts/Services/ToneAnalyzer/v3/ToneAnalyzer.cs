@@ -23,6 +23,7 @@ using System.Text;
 using MiniJSON;
 using System;
 using FullSerializer;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
@@ -151,6 +152,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             GetToneAnalyzerRequest req = new GetToneAnalyzerRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
