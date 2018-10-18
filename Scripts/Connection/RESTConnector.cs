@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-using FullSerializer;
 
 #if !NETFX_CORE
 using System.Net;
@@ -234,10 +233,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// The data to send through the connection. Do not use Forms if set.
             /// </summary>
             public byte[] Send { get; set; }
-            ///// <summary>
-            ///// The data to send through the connection. Do not use Forms if set.
-            ///// </summary>
-            //public string Body { get; set; }
             /// <summary>
             /// Multi-part form data that needs to be sent. Do not use Send if set.
             /// </summary>
@@ -247,7 +242,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// </summary>
             public ResponseEvent OnResponse { get; set; }
             /// <summary>
-            /// This callback is invoked to provide progress on the WWW download.
+            /// This callback is invoked to provide progress on the UntiyWebRequest download.
             /// </summary>
             public ProgressEvent OnDownloadProgress { get; set; }
             /// <summary>
@@ -408,7 +403,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     var value = kp.Value;
 
                     if (value is string)
-                        value = WWW.EscapeURL((string)value);             // escape the value
+                        value = UnityWebRequest.EscapeURL((string)value);             // escape the value
                     else if (value is byte[])
                         value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
                     else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
@@ -434,9 +429,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (string.IsNullOrEmpty(req.HttpMethod))
+                UnityWebRequest unityWebRequest = null;
+                if (req.Forms != null || req.Send != null)
                 {
-                    UnityWebRequest www = null;
                     if (req.Forms != null)
                     {
                         if (req.Send != null)
@@ -463,27 +458,40 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         {
                             Log.Error("RESTConnector.ProcessRequestQueue()", "Exception when initializing WWWForm: {0}", e.ToString());
                         }
-                        www = UnityWebRequest.Post(url, form);
+                        unityWebRequest = UnityWebRequest.Post(url, form);
                     }
-                    else if (req.Send == null)
+                    else if (req.Send != null)
                     {
-                        www = UnityWebRequest.Get(url);
+                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod);
+                        unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
+                        unityWebRequest.SetRequestHeader("Content-Type", "application/json");
                     }
-                    else
+                }
+                else
+                {
+                    if (req.HttpMethod == UnityWebRequest.kHttpVerbGET || req.HttpMethod == UnityWebRequest.kHttpVerbDELETE || req.HttpMethod == UnityWebRequest.kHttpVerbPOST)
                     {
-                        www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
-                        www.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
-                        www.SetRequestHeader("Content-Type", "application/json");
+                        unityWebRequest = new UnityWebRequest();
+                        unityWebRequest.url = url;
+                        unityWebRequest.method = req.HttpMethod;
                     }
+                    else if (req.HttpMethod == UnityWebRequest.kHttpVerbPUT)
+                    {
+                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod);
+                        unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
+                        unityWebRequest.SetRequestHeader("Content-Type", "application/json");
+                    }
+                }
 
-                    foreach (KeyValuePair<string, string> kvp in req.Headers)
-                    {
-                        www.SetRequestHeader(kvp.Key, kvp.Value);
-                    }
-                    www.downloadHandler = new DownloadHandlerBuffer();
+                foreach (KeyValuePair<string, string> kvp in req.Headers)
+                {
+                    unityWebRequest.SetRequestHeader(kvp.Key, kvp.Value);
+                }
+
+                unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
 
 #if UNITY_2017_2_OR_NEWER
-                    www.SendWebRequest();
+                unityWebRequest.SendWebRequest();
 #else
                     www.Send();
 #endif
@@ -491,245 +499,107 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     Log.Debug("RESTConnector", "URL: {0}", url);
 #endif
 
-                    // wait for the request to complete.
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-                    while (!www.isDone)
-                    {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        if (req.OnUploadProgress != null)
-                            req.OnUploadProgress(www.uploadProgress);
-                        if (req.OnDownloadProgress != null)
-                            req.OnDownloadProgress(www.downloadProgress);
+                // wait for the request to complete.
+                float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
+                while (!unityWebRequest.isDone)
+                {
+                    if (req.Cancel)
+                        break;
+                    if ((DateTime.Now - startTime).TotalSeconds > timeout)
+                        break;
+                    if (req.OnUploadProgress != null)
+                        req.OnUploadProgress(unityWebRequest.uploadProgress);
+                    if (req.OnDownloadProgress != null)
+                        req.OnDownloadProgress(unityWebRequest.downloadProgress);
 
 #if UNITY_EDITOR
-                        if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                            yield return null;
+                    if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                        yield return null;
 #else
                         yield return null;
 #endif
-                    }
+                }
 
-                    if (req.Cancel)
-                        continue;
+                if (req.Cancel)
+                    continue;
 
-                    bool bError = false;
-                    Error error = null;
-                    if (!string.IsNullOrEmpty(www.error))
+                bool bError = false;
+                Error error = null;
+                if (!string.IsNullOrEmpty(unityWebRequest.error))
+                {
+                    long nErrorCode = -1;
+                    int nSeperator = unityWebRequest.error.IndexOf(' ');
+                    if (nSeperator > 0 && long.TryParse(unityWebRequest.error.Substring(0, nSeperator).Trim(), out nErrorCode))
                     {
-                        long nErrorCode = -1;
-                        int nSeperator = www.error.IndexOf(' ');
-                        if (nSeperator > 0 && long.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
+                        switch (nErrorCode)
                         {
-                            switch (nErrorCode)
-                            {
-                                case HTTP_STATUS_OK:
-                                case HTTP_STATUS_CREATED:
-                                case HTTP_STATUS_ACCEPTED:
-                                    bError = false;
-                                    break;
-                                default:
-                                    bError = true;
-                                    break;
-                            }
+                            case HTTP_STATUS_OK:
+                            case HTTP_STATUS_CREATED:
+                            case HTTP_STATUS_ACCEPTED:
+                                bError = false;
+                                break;
+                            default:
+                                bError = true;
+                                break;
                         }
-                        else
-                        {
-                            bError = true;
-                        }
-
-                        error = new Error()
-                        {
-                            URL = url,
-                            ErrorCode = resp.HttpResponseCode = nErrorCode,
-                            ErrorMessage = www.error,
-                            Response = www.downloadHandler.text,
-                            ResponseHeaders = www.GetResponseHeaders()
-                        };
-
-                        if (bError)
-                            Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.downloadHandler.text) ? "" : www.downloadHandler.text);
-                        else
-                            Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.downloadHandler.text) ? "" : www.downloadHandler.text);
-                    }
-                    if (!www.isDone)
-                    {
-                        Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
-                        bError = true;
-                    }
-                    /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
-                    {
-                        Log.Warning("RESTConnector.ProcessRequestQueue()", "No data recevied for URL: {0}", url);
-                        bError = true;
-                    }*/
-
-
-                    // generate the Response object now..
-                    if (!bError)
-                    {
-                        resp.Success = true;
-                        resp.Data = www.downloadHandler.data;
-                        resp.HttpResponseCode = www.responseCode;
                     }
                     else
                     {
-                        resp.Success = false;
-                        resp.Error = error;
+                        bError = true;
                     }
 
-                    resp.Headers = www.GetResponseHeaders();
+                    error = new Error()
+                    {
+                        URL = url,
+                        ErrorCode = resp.HttpResponseCode = nErrorCode,
+                        ErrorMessage = unityWebRequest.error,
+                        Response = unityWebRequest.downloadHandler.text,
+                        ResponseHeaders = unityWebRequest.GetResponseHeaders()
+                    };
 
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+                    if (bError)
+                        Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
+                            string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                    else
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
+                            string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                }
+                if (!unityWebRequest.isDone)
+                {
+                    Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
+                    bError = true;
+                }
 
-                    // if the response is over a threshold, then log with status instead of debug
-                    if (resp.ElapsedTime > LogResponseTime)
-                        Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
-
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
-
-                    www.Dispose();
+                // generate the Response object now..
+                if (!bError)
+                {
+                    resp.Success = true;
+                    resp.Data = unityWebRequest.downloadHandler.data;
+                    resp.HttpResponseCode = unityWebRequest.responseCode;
                 }
                 else
                 {
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-                    WatsonRequest watsonRequest = new WatsonRequest();
-                    watsonRequest.HttpMethod = req.HttpMethod;
-                    Runnable.Run(watsonRequest.Send(url, req.Headers));
-
-                    while (!watsonRequest.IsComplete)
-                    {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        yield return null;
-                    }
-
-                    if (req.Cancel)
-                        continue;
-
-                    resp.Success = watsonRequest.Success;
-                    resp.Data = watsonRequest.Data;
-                    resp.Error = watsonRequest.Error;
-                    resp.HttpResponseCode = watsonRequest.HttpResponseCode;
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    resp.Headers = watsonRequest.ResponseHeaders;
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
+                    resp.Success = false;
+                    resp.Error = error;
                 }
+
+                resp.Headers = unityWebRequest.GetResponseHeaders();
+
+                resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+
+                // if the response is over a threshold, then log with status instead of debug
+                if (resp.ElapsedTime > LogResponseTime)
+                    Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
+
+                if (req.OnResponse != null)
+                    req.OnResponse(req, resp);
+
+                unityWebRequest.Dispose();
             }
 
             // reduce the connection count before we exit..
             _activeConnections -= 1;
             yield break;
-        }
-        #endregion
-
-        #region WatsonRequest
-        private class WatsonRequest
-        {
-            /// <summary>
-            /// The endpoint of the service.
-            /// </summary>
-            public string URL { get; set; }
-            /// <summary>
-            /// The http method of the call.
-            /// </summary>
-            public string HttpMethod { get; set; }
-            /// <summary>
-            /// The request headers.
-            /// </summary>
-            public Dictionary<string, string> Headers { get; set; }
-            /// <summary>
-            /// Is the request complete?
-            /// </summary>
-            public bool IsComplete { get; set; }
-            /// <summary>
-            /// Did the request succeed?
-            /// </summary>
-            public bool Success { get; set; }
-            /// <summary>
-            /// The http response code from the request.
-            /// </summary>
-            public long HttpResponseCode { get; set; }
-            /// <summary>
-            /// The response data from the request.
-            /// </summary>
-            public byte[] Data { get; set; }
-            /// <summary>
-            /// The response error.
-            /// </summary>
-            public Error Error { get; set; }
-            /// <summary>
-            /// The response headers.
-            /// </summary>
-            public Dictionary<string, string> ResponseHeaders { get; set; }
-            private bool disableSslVerification = false;
-            /// <summary>
-            /// Gets and sets the option to disable ssl verification
-            /// </summary>
-            public bool DisableSslVerification
-            {
-                get { return disableSslVerification; }
-                set { disableSslVerification = value; }
-            }
-
-            public IEnumerator Send(string url, Dictionary<string, string> headers)
-            {
-                URL = url;
-                Headers = new Dictionary<string, string>();
-                foreach (var kp in headers)
-                {
-                    if (kp.Key != "User-Agent")
-                        Headers[kp.Key] = kp.Value;
-                }
-
-#if !NETFX_CORE
-                if (DisableSslVerification)
-                {
-                    ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-                }
-#endif
-
-                //  Create web request
-                UnityWebRequest req = new UnityWebRequest();
-                req.url = URL;
-                req.method = HttpMethod;
-                req.downloadHandler = new DownloadHandlerBuffer();
-
-
-                foreach (var kp in Headers)
-                    req.SetRequestHeader(kp.Key, kp.Value);
-#if UNITY_2017_2_OR_NEWER
-                yield return req.SendWebRequest();
-#else
-                yield return req.Send();
-#endif
-                Error error = null;
-                if (!string.IsNullOrEmpty(req.error))
-                {
-                    error = new Error()
-                    {
-                        URL = url,
-                        ErrorCode = req.responseCode,
-                        ErrorMessage = req.error,
-                        Response = req.downloadHandler.text,
-                        ResponseHeaders = req.GetResponseHeaders()
-                    };
-                }
-
-                Success = req.responseCode == HTTP_STATUS_OK || req.responseCode == HTTP_STATUS_NO_CONTENT || req.responseCode == HTTP_STATUS_ACCEPTED;
-                HttpResponseCode = req.responseCode;
-                ResponseHeaders = req.GetResponseHeaders();
-                Data = req.downloadHandler.data;
-                Error = error;
-                IsComplete = true;
-            }
         }
         #endregion
     }
