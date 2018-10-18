@@ -628,48 +628,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             _activeConnections -= 1;
             yield break;
         }
-
-        public static int GetResponseCode(WWW request)
-        {
-            int ret = -1;
-            if (request.responseHeaders == null)
-            {
-                Log.Error("RESTConnector.GetResponseCode()", "no response headers.");
-            }
-            else
-            {
-                if (!request.responseHeaders.ContainsKey("STATUS"))
-                {
-                    Log.Error("RESTConnector.GetResponseCode()", "response headers has no STATUS.");
-                }
-                else
-                {
-                    ret = ParseResponseCode(request.responseHeaders["STATUS"]);
-                }
-            }
-
-            return ret;
-        }
-
-        public static int ParseResponseCode(string statusLine)
-        {
-            int ret = -1;
-
-            string[] components = statusLine.Split(' ');
-            if (components.Length < 3)
-            {
-                Log.Error("RESTConnector.ParseResponseCode()", "invalid response status: " + statusLine);
-            }
-            else
-            {
-                if (!int.TryParse(components[1], out ret))
-                {
-                    Log.Error("RESTConnector.ParseResponseCode()", "invalid response code: " + components[1]);
-                }
-            }
-
-            return ret;
-        }
         #endregion
 
         #region WatsonRequest
