@@ -34,4 +34,3 @@ if [ ! -d "Unity" ] ; then
 fi
 
 install "MacEditorInstaller/Unity-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
