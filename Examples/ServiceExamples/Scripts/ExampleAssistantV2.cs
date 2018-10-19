@@ -58,8 +58,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 
         private Assistant _service;
 
-        private fsSerializer _serializer = new fsSerializer();
-
         private bool _createSessionTested = false;
         private bool _messageTested = false;
         private bool _deleteSessionTested = false;
