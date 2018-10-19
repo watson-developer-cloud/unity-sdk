@@ -301,7 +301,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             connector.URL = credentials.Url + function;
             connector.Authentication = credentials;
             if (connector.Authentication.HasIamTokenData())
+            {
                 connector.Authentication.GetToken();
+            }
 
             return connector;
         }
@@ -317,7 +319,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public bool Send(Request request)
         {
             if (request == null)
+            {
                 throw new ArgumentNullException("request");
+            }
 
 #if !NETFX_CORE
             if (request.DisableSslVerification)
@@ -351,7 +355,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (Authentication != null)
             {
                 if (headers == null)
+                {
                     throw new ArgumentNullException("headers");
+                }
 
                 if (Authentication.HasWatsonAuthenticationToken())
                 {
@@ -370,7 +376,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (Headers != null)
             {
                 foreach (var kp in Headers)
+                {
                     headers[kp.Key] = kp.Value;
+                }
             }
 
             headers.Add("User-Agent", Constants.String.Version);
@@ -382,19 +390,25 @@ namespace IBM.Watson.DeveloperCloud.Connection
             _activeConnections += 1;
 #if UNITY_EDITOR
             if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+            {
                 yield return null;
+            }
 #else
-                yield return null;
+            yield return null;
 #endif
 
             while (_requests.Count > 0)
             {
                 Request req = _requests.Dequeue();
                 if (req.Cancel)
+                {
                     continue;
+                }
                 string url = URL;
                 if (!string.IsNullOrEmpty(req.Function))
+                {
                     url += req.Function;
+                }
 
                 StringBuilder args = null;
                 foreach (var kp in req.Parameters)
@@ -403,26 +417,42 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     var value = kp.Value;
 
                     if (value is string)
+                    {
                         value = UnityWebRequest.EscapeURL((string)value);
+                    }
                     else if (value is byte[])
+                    {
                         value = Convert.ToBase64String((byte[])value);
+                    }
                     else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
+                    {
                         value = value.ToString();
+                    }
                     else if (value != null)
+                    {
                         Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported parameter value type {0}", value.GetType().Name);
+                    }
                     else
+                    {
                         Log.Error("RESTConnector.ProcessRequestQueue()", "Parameter {0} value is null", key);
+                    }
 
                     if (args == null)
+                    {
                         args = new StringBuilder();
+                    }
                     else
+                    {
                         args.Append("&");
+                    }
 
                     args.Append(key + "=" + value);
                 }
 
                 if (args != null && args.Length > 0)
+                {
                     url += "?" + args.ToString();
+                }
 
                 AddHeaders(req.Headers);
 
@@ -436,7 +466,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (req.Forms != null)
                     {
                         if (req.Send != null)
+                        {
                             Log.Warning("RESTConnector", "Do not use both Send & Form fields in a Request object.");
+                        }
 
                         WWWForm form = new WWWForm();
                         try
@@ -444,16 +476,26 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             foreach (var formData in req.Forms)
                             {
                                 if (formData.Value.IsBinary)
+                                {
                                     form.AddBinaryData(formData.Key, formData.Value.Contents, formData.Value.FileName, formData.Value.MimeType);
+                                }
                                 else if (formData.Value.BoxedObject is string)
+                                {
                                     form.AddField(formData.Key, (string)formData.Value.BoxedObject);
+                                }
                                 else if (formData.Value.BoxedObject is int)
+                                {
                                     form.AddField(formData.Key, (int)formData.Value.BoxedObject);
+                                }
                                 else if (formData.Value.BoxedObject != null)
+                                {
                                     Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
+                                }
                             }
                             foreach (var headerData in form.headers)
+                            {
                                 req.Headers[headerData.Key] = headerData.Value;
+                            }
                         }
                         catch (Exception e)
                         {
@@ -497,24 +539,36 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 while (!unityWebRequest.isDone)
                 {
                     if (req.Cancel)
+                    {
                         break;
+                    }
                     if ((DateTime.Now - startTime).TotalSeconds > timeout)
+                    {
                         break;
+                    }
                     if (req.OnUploadProgress != null)
+                    {
                         req.OnUploadProgress(unityWebRequest.uploadProgress);
+                    }
                     if (req.OnDownloadProgress != null)
+                    {
                         req.OnDownloadProgress(unityWebRequest.downloadProgress);
+                    }
 
 #if UNITY_EDITOR
                     if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                    {
                         yield return null;
+                    }
 #else
-                        yield return null;
+                    yield return null;
 #endif
                 }
 
                 if (req.Cancel)
+                {
                     continue;
+                }
 
                 bool bError = false;
                 Error error = null;
@@ -551,11 +605,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     };
 
                     if (bError)
+                    {
                         Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
                             string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                    }
                     else
+                    {
                         Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
                             string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                    }
                 }
                 if (!unityWebRequest.isDone)
                 {
@@ -582,10 +640,14 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 // if the response is over a threshold, then log with status instead of debug
                 if (resp.ElapsedTime > LogResponseTime)
+                {
                     Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
+                }
 
                 if (req.OnResponse != null)
+                {
                     req.OnResponse(req, resp);
+                }
 
                 unityWebRequest.Dispose();
             }
