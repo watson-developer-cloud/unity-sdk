@@ -23,7 +23,7 @@ script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
 - ./Travis/runTests.sh
-- ./Travis/build.sh
+# - ./Travis/build.sh
 deploy:
   - provider: script
     skip_cleanup: true
