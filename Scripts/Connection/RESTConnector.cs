@@ -403,9 +403,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     var value = kp.Value;
 
                     if (value is string)
-                        value = UnityWebRequest.EscapeURL((string)value);             // escape the value
+                        value = UnityWebRequest.EscapeURL((string)value);
                     else if (value is byte[])
-                        value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
+                        value = Convert.ToBase64String((byte[])value);
                     else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
                         value = value.ToString();
                     else if (value != null)
@@ -416,9 +416,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     if (args == null)
                         args = new StringBuilder();
                     else
-                        args.Append("&");                  // append separator
+                        args.Append("&");
 
-                    args.Append(key + "=" + value);       // append key=value
+                    args.Append(key + "=" + value);
                 }
 
                 if (args != null && args.Length > 0)
@@ -432,6 +432,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 UnityWebRequest unityWebRequest = null;
                 if (req.Forms != null || req.Send != null)
                 {
+                    //  POST and PUT with data
                     if (req.Forms != null)
                     {
                         if (req.Send != null)
@@ -469,18 +470,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
                 else
                 {
-                    if (req.HttpMethod == UnityWebRequest.kHttpVerbGET || req.HttpMethod == UnityWebRequest.kHttpVerbDELETE || req.HttpMethod == UnityWebRequest.kHttpVerbPOST)
-                    {
-                        unityWebRequest = new UnityWebRequest();
-                        unityWebRequest.url = url;
-                        unityWebRequest.method = req.HttpMethod;
-                    }
-                    else if (req.HttpMethod == UnityWebRequest.kHttpVerbPUT)
-                    {
-                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod);
-                        unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
-                        unityWebRequest.SetRequestHeader("Content-Type", "application/json");
-                    }
+                    //  GET, DELETE and POST without data
+                    unityWebRequest = new UnityWebRequest();
+                    unityWebRequest.url = url;
+                    unityWebRequest.method = req.HttpMethod;
                 }
 
                 foreach (KeyValuePair<string, string> kvp in req.Headers)
@@ -493,10 +486,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
 #if UNITY_2017_2_OR_NEWER
                 unityWebRequest.SendWebRequest();
 #else
-                    www.Send();
+                www.Send();
 #endif
 #if ENABLE_DEBUGGING
-                    Log.Debug("RESTConnector", "URL: {0}", url);
+                Log.Debug("RESTConnector", "URL: {0}", url);
 #endif
 
                 // wait for the request to complete.
