@@ -424,9 +424,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         value = Convert.ToBase64String((byte[])value);
                     }
-                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
+                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float)
                     {
                         value = value.ToString();
+                    }
+                    else if (value is bool)
+                    {
+                        value = value.ToString().ToLower();
                     }
                     else if (value != null)
                     {
