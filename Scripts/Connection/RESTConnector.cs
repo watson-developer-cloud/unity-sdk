@@ -574,31 +574,22 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 Error error = null;
                 if (!string.IsNullOrEmpty(unityWebRequest.error))
                 {
-                    long nErrorCode = -1;
-                    int nSeperator = unityWebRequest.error.IndexOf(' ');
-                    if (nSeperator > 0 && long.TryParse(unityWebRequest.error.Substring(0, nSeperator).Trim(), out nErrorCode))
+                    switch (unityWebRequest.responseCode)
                     {
-                        switch (nErrorCode)
-                        {
-                            case HTTP_STATUS_OK:
-                            case HTTP_STATUS_CREATED:
-                            case HTTP_STATUS_ACCEPTED:
-                                bError = false;
-                                break;
-                            default:
-                                bError = true;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        bError = true;
+                        case HTTP_STATUS_OK:
+                        case HTTP_STATUS_CREATED:
+                        case HTTP_STATUS_ACCEPTED:
+                            bError = false;
+                            break;
+                        default:
+                            bError = true;
+                            break;
                     }
 
                     error = new Error()
                     {
                         URL = url,
-                        ErrorCode = resp.HttpResponseCode = nErrorCode,
+                        ErrorCode = unityWebRequest.responseCode,
                         ErrorMessage = unityWebRequest.error,
                         Response = unityWebRequest.downloadHandler.text,
                         ResponseHeaders = unityWebRequest.GetResponseHeaders()
@@ -606,12 +597,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                     if (bError)
                     {
-                        Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
+                        Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, unityWebRequest.responseCode, unityWebRequest.error,
                             string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
                     }
                     else
                     {
-                        Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, unityWebRequest.error,
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, unityWebRequest.responseCode, unityWebRequest.error,
                             string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
                     }
                 }
