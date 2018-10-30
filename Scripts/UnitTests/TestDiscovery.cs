@@ -24,6 +24,8 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using System;
+using Environment = IBM.Watson.DeveloperCloud.Services.Discovery.v1.Environment;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -75,6 +77,16 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getCredentialTested = false;
         private bool _deleteCredentialsTested = false;
         private string _createdCredentialId = null;
+
+        private bool _listExpansionsTested = false;
+        private bool _createExpansionTested = false;
+        private bool _deleteExpansionTested = false;
+        private bool _getTokenizationDictStatusTested = false;
+        private bool _createTokenizationDictTested = false;
+        private bool _deleteTokenizationDictTested = false;
+        private string _createdJpCollection = null;
+        private bool _createJpCollectionTested = false;
+        private bool _deleteJpCollectionTested = false;
 
         private bool _createEventTested = false;
         private bool _getMetricsEventRateTested = false;
@@ -184,7 +196,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Add Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to add collection");
-            if (!_discovery.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationID))
+            if (!_discovery.AddCollection(OnAddCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationID, "en"))
                 Log.Debug("TestDiscovery.AddCollection()", "Failed to add collection");
             while (!_addCollectionTested)
                 yield return null;
@@ -313,6 +325,88 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_createEventTested)
                 yield return null;
 
+            Log.Debug("TestDiscovery.RunTests()", "Attempting to list expansions");
+            _discovery.ListExpansions(OnListExpansions, OnFail, _environmentId, _createdCollectionId);
+            while (!_listExpansionsTested)
+                yield return null;
+
+            Log.Debug("TestDiscovery.RunTests()", "Attempting to create expansion");
+            Expansions expansions = new Expansions()
+            {
+                ExpansionsProperty = new List<Expansion>()
+                {
+                    new Expansion()
+                    {
+                        ExpandedTerms = new List<string>()
+                        {
+                            "expanded-term"
+                        },
+                        InputTerms = new List<string>()
+                        {
+                            "input-term"
+                        }
+                    }
+                }
+            };
+            _discovery.CreateExpansions(OnCreateExpansion, OnFail, _environmentId, _createdCollectionId, expansions);
+            while (!_createExpansionTested)
+                yield return null;
+
+            Log.Debug("TestDiscovery.RunTests()", "Attempting to delete expansion");
+            _discovery.DeleteExpansions(OnDeleteExpansion, OnFail, _environmentId, _createdCollectionId);
+            while (!_deleteExpansionTested)
+                yield return null;
+            
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to create jp collection");
+            _discovery.AddCollection(OnCreateJpCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationID, "ja");
+            while (!_createJpCollectionTested)
+                yield return null;
+
+            TokenDict tokenizationDictionary = new TokenDict()
+            {
+                TokenizationRules = new List<TokenDictRule>()
+                {
+                    new TokenDictRule()
+                    {
+                        Text = "すしネコ",
+                        Tokens = new List<string>()
+                        {
+                            "すし", "ネコ"
+                        },
+                        Readings = new List<string>()
+                        {
+                            "寿司", "ネコ"
+                        },
+                        PartOfSpeech = "カスタム名詞"
+                    }
+                }
+            };
+            Log.Debug("TestDiscovery.RunTests()", "Attempting to create tokenization dict");
+            _discovery.CreateTokenizationDictionary(OnCreateTokenizationDictionary, OnCreateTokenizationDictionaryFail, _environmentId, _createdJpCollection, tokenizationDictionary);
+            while (!_createTokenizationDictTested)
+                yield return null;
+
+            if (!_getTokenizationDictStatusTested)
+            {
+                Log.Debug("TestDiscovery.RunTests()", "Attempting to get tokenization dict status");
+                _discovery.GetTokenizationDictionaryStatus(OnGetTokenizationDictonaryStatus, OnFail, _environmentId, _createdJpCollection);
+                while (!_getTokenizationDictStatusTested)
+                    yield return null;
+            }
+
+            if (!_deleteTokenizationDictTested)
+            {
+                Log.Debug("TestDiscovery.RunTests()", "Attempting to delete tokenization dict");
+                _discovery.DeleteTokenizationDictionary(OnDeleteTokenizationDictionary, OnFail, _environmentId, _createdJpCollection);
+                while (!_deleteTokenizationDictTested)
+                    yield return null;
+            }
+
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete jp collection");
+            _discovery.DeleteCollection(OnDeleteJpCollection, OnFail, _environmentId, _createdJpCollection);
+            while (!_deleteJpCollectionTested)
+                yield return null;
+
             //  DeleteCredential
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete credential");
             _discovery.DeleteCredentials(OnDeleteCredentials, OnFail, _environmentId, _createdCredentialId);
@@ -359,6 +453,73 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestDiscovery.RunTest()", "Discovery unit tests complete.");
 
             yield break;
+        }
+
+        private void OnCreateJpCollection(CollectionRef response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnAddJpCollection()", "Discovery - add jp collection Response: added:{0}", customData["json"].ToString());
+            _createdJpCollection = response.collection_id;
+            Test(response != null);
+            _createJpCollectionTested = true;
+        }
+
+        private void OnDeleteJpCollection(DeleteCollectionResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteJpCollection()", "Discovery - Delete jp collection Response: deleted:{0}", customData["json"].ToString());
+
+            _createdJpCollection = default(string);
+            Test(response != null);
+
+            _deleteJpCollectionTested = true;
+        }
+
+        private void OnDeleteTokenizationDictionary(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteTokenizationDictionary()", "Discovery - delete tokenization dictionary: deleted:{0}", customData["json"].ToString());
+            Test(response != null);
+
+            _deleteTokenizationDictTested = true;
+        }
+
+        private void OnGetTokenizationDictonaryStatus(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetTokenizationDictonaryStatus()", "Discovery - get tokenization dictionary status: {0}", customData["json"].ToString());
+            Test(response != null);
+            _getTokenizationDictStatusTested = true;
+        }
+    
+
+        private void OnCreateTokenizationDictionary(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateTokenizationDictionary()", "Discovery - create tokenization dictionary status: {0}", customData["json"].ToString());
+            Test(response != null);
+            _createTokenizationDictTested = true;
+        }
+
+        
+
+        private void OnDeleteExpansion(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteExpansion()", "Discovery - delete expansion: deleted");
+            Test(response != null);
+
+            _deleteExpansionTested = true;
+        }
+
+        private void OnCreateExpansion(Expansions response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateExpansion()", "Discovery - create expansion: {0}", customData["json"].ToString());
+            Test(response != null);
+
+            _createExpansionTested = true;
+        }
+
+        private void OnListExpansions(Expansions response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnListExpansions()", "Discovery - list expansions: {0}", customData["json"].ToString());
+            Test(response != null);
+
+            _listExpansionsTested = true;
         }
 
         #region Check State
@@ -542,11 +703,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnListCredentials(CredentialsList response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnListCredentials()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _listCredentialsTested = true;
         }
         private void OnCreateCredentials(SourceCredentials response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnCreateCredentials()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _createdCredentialId = response.CredentialId;
             _createCredentialsTested = true;
         }
@@ -554,47 +717,55 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnGetCredential(SourceCredentials response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetCredential()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getCredentialTested = true;
         }
 
         private void OnDeleteCredentials(DeleteCredentials response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnDeleteCredentials()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _deleteCredentialsTested = true;
         }
         private void OnCreateEvent(CreateEventResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnCreateEvent()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _createEventTested = true;
         }
 
         private void OnGetMetricsEventRate(MetricResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetMetricsEventRate()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getMetricsEventRateTested = true;
         }
 
         private void OnGetMetricsQuery(MetricResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetMetricsQuery()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getMetricsQueryTested = true;
         }
 
         private void OnGetMetricsQueryEvent(MetricResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetMetricsQueryEvent()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getMetricsQueryEventTested = true;
         }
 
         private void OnGetMetricsQueryNoResult(MetricResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetMetricsQueryNoResult()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getMetricsQueryNoResultTested = true;
         }
 
         private void OnGetMetricsQueryTokenEvent(MetricTokenResponse response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnGetMetricsQueryTokenEvent()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
             _getMetricsQueryTokenEventTested = true;
         }
 
@@ -607,6 +778,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
             Log.Error("TestDiscovery.OnFail()", "Error received: {0}", error.ToString());
+        }
+
+        private void OnCreateTokenizationDictionaryFail(RESTConnector.Error error, Dictionary<string, object> customData)
+        {
+            Log.Error("TestDiscovery.OnCreateTokenizationDictionaryFail()", "Error received - Continuing without testing tokenization dictionaries: {0}", error.ToString());
+            _createTokenizationDictTested = true;
+            _getTokenizationDictStatusTested = true;
+            _deleteTokenizationDictTested = true;
         }
     }
 }
