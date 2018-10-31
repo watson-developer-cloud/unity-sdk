@@ -3938,31 +3938,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             object result = new object();
-            fsData data = null;
             Dictionary<string, object> customData = ((DeleteTokenizationDictionaryRequestObj)req).CustomData;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery.OnDeleteTokenizationDictionaryResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
-
+            
             if (resp.Success)
             {
                 if (((DeleteTokenizationDictionaryRequestObj)req).SuccessCallback != null)

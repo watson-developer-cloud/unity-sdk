@@ -475,7 +475,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private void OnDeleteTokenizationDictionary(object response, Dictionary<string, object> customData)
         {
-            Log.Debug("TestDiscovery.OnDeleteTokenizationDictionary()", "Discovery - delete tokenization dictionary: deleted:{0}", customData["json"].ToString());
+            Log.Debug("TestDiscovery.OnDeleteTokenizationDictionary()", "Discovery - delete tokenization dictionary: deleted");
             Test(response != null);
 
             _deleteTokenizationDictTested = true;
