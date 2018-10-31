@@ -1383,7 +1383,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="configurationID">The configuration identifier.</param>
         /// <param name="customData">Optional custom data.</param>
         /// <returns>True if the call succeeds, false if the call is unsuccessful.</returns>
-        public bool AddCollection(SuccessCallback<CollectionRef> successCallback, FailCallback failCallback, string environmentID, string name, string description = default(string), string configurationID = default(string), Dictionary<string, object> customData = null)
+        public bool AddCollection(SuccessCallback<CollectionRef> successCallback, FailCallback failCallback, string environmentID, string name, string description = default(string), string configurationID = default(string), string language = default(string), Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -1391,6 +1391,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new ArgumentNullException("failCallback");
             if (string.IsNullOrEmpty(environmentID))
                 throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(language))
+                throw new ArgumentNullException("language");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("name");
 
@@ -1398,6 +1400,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             parameters["name"] = name;
             parameters["description"] = description;
             parameters["configuration_id"] = configurationID;
+            parameters["language"] = language;
 
             return AddCollection(successCallback, failCallback, environmentID, Encoding.UTF8.GetBytes(Json.Serialize(parameters)), customData);
         }
@@ -3582,6 +3585,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateExpansionsResponse;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
 
             fsData data = null;
             _serializer.TrySerialize(body, out data);
@@ -3714,30 +3719,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             object result = new object();
-            fsData data = null;
             Dictionary<string, object> customData = ((DeleteExpansionsRequestObj)req).CustomData;
-
-            if (resp.Success)
-            {
-                try
-                {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Discovery.OnDeleteExpansionsResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
-            }
 
             if (resp.Success)
             {
@@ -3848,6 +3830,284 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             {
                 if (((ListExpansionsRequestObj)req).FailCallback != null)
                     ((ListExpansionsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Create tokenization dictionary.
+        ///
+        /// Upload a custom tokenization dictionary to use with the specified collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="tokenizationDictionary">An object that represents the tokenization dictionary to be uploaded.
+        /// (optional)</param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool CreateTokenizationDictionary(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, TokenDict tokenizationDictionary = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            CreateTokenizationDictionaryRequestObj req = new CreateTokenizationDictionaryRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnCreateTokenizationDictionaryResponse;
+
+            fsData data = null;
+            _serializer.TrySerialize(tokenizationDictionary, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateTokenizationDictionaryRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TokenDictStatusResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnCreateTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TokenDictStatusResponse result = new TokenDictStatusResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((CreateTokenizationDictionaryRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnCreateTokenizationDictionaryResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((CreateTokenizationDictionaryRequestObj)req).SuccessCallback != null)
+                    ((CreateTokenizationDictionaryRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateTokenizationDictionaryRequestObj)req).FailCallback != null)
+                    ((CreateTokenizationDictionaryRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Delete tokenization dictionary.
+        ///
+        /// Delete the tokenization dictionary from the collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="" />object</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool DeleteTokenizationDictionary(SuccessCallback<object> successCallback, FailCallback failCallback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            DeleteTokenizationDictionaryRequestObj req = new DeleteTokenizationDictionaryRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnDeleteTokenizationDictionaryResponse;
+            req.Delete = true;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteTokenizationDictionaryRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            Dictionary<string, object> customData = ((DeleteTokenizationDictionaryRequestObj)req).CustomData;
+            
+            if (resp.Success)
+            {
+                if (((DeleteTokenizationDictionaryRequestObj)req).SuccessCallback != null)
+                    ((DeleteTokenizationDictionaryRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteTokenizationDictionaryRequestObj)req).FailCallback != null)
+                    ((DeleteTokenizationDictionaryRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+
+        /// <summary>
+        /// Get tokenization dictionary status.
+        ///
+        /// Returns the current status of the tokenization dictionary for the specified collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        public bool GetTokenizationDictionaryStatus(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+
+            GetTokenizationDictionaryStatusRequestObj req = new GetTokenizationDictionaryStatusRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetTokenizationDictionaryStatusRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TokenDictStatusResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TokenDictStatusResponse result = new TokenDictStatusResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetTokenizationDictionaryStatusRequestObj)req).CustomData;
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetTokenizationDictionaryStatusResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetTokenizationDictionaryStatusRequestObj)req).SuccessCallback != null)
+                    ((GetTokenizationDictionaryStatusRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetTokenizationDictionaryStatusRequestObj)req).FailCallback != null)
+                    ((GetTokenizationDictionaryStatusRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
         #endregion

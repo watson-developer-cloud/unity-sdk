@@ -117,8 +117,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         private int _recordingHZ = -1;
         private int _inactivityTimeout = 60;
         private string _customization_id = null;
+        private string _languageCustomizationId = null;
         private string _acoustic_customization_id = null;
-        private float _customization_weight = 0.3f;
+        private float? _customization_weight = null;
         private bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
         private float _silenceDuration = 0.0f;
         private float _silenceCutoff = 1.0f;
@@ -253,7 +254,12 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
         /// </summary>
+        [Obsolete("Use LanguageCustomizationId instead.")]
         public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
+        /// <summary>
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// </summary>
+        public string LanguageCustomizationId { get { return _languageCustomizationId; } set { _languageCustomizationId = value; } }
         /// <summary>
         /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
         /// </summary>
@@ -261,7 +267,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://console.bluemix.net/docs/services/speech-to-text/language-use.html#weight.
         /// </summary>
-        public float CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
+        public float? CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
         /// <summary>
         /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission.
         /// </summary>
@@ -665,11 +671,21 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             {
                 Dictionary<string, string> queryParams = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(CustomizationId))
+                {
                     queryParams["customization_id"] = CustomizationId;
+                }
+                if (!string.IsNullOrEmpty(LanguageCustomizationId))
+                {
+                    queryParams["language_customization_id"] = LanguageCustomizationId;
+                }
                 if (!string.IsNullOrEmpty(AcousticCustomizationId))
+                {
                     queryParams["acoustic_customization_id"] = AcousticCustomizationId;
-                if (!string.IsNullOrEmpty(CustomizationId))
+                }
+                if (CustomizationWeight != null)
+                {
                     queryParams["customization_weight"] = CustomizationWeight.ToString();
+                }
 
                 string parsedParams = "";
 
@@ -955,11 +971,20 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                 return false;
             }
             if (!string.IsNullOrEmpty(AcousticCustomizationId))
+            {
                 req.Parameters["acoustic_customization_id"] = AcousticCustomizationId;
+            }
             if (!string.IsNullOrEmpty(CustomizationId))
             {
                 req.Parameters["customization_id"] = CustomizationId;
+            }
+            if (CustomizationWeight != null)
+            {
                 req.Parameters["customization_weight"] = CustomizationWeight;
+            }
+            if (!string.IsNullOrEmpty(LanguageCustomizationId))
+            {
+                req.Parameters["language_customization_id"] = LanguageCustomizationId;
             }
             req.Parameters["inactivity_timeout"] = InactivityTimeout;
             req.Parameters["keywords"] = string.Join(",", Keywords);
