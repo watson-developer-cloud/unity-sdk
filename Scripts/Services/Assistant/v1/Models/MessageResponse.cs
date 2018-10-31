@@ -20,7 +20,66 @@ using System.Collections.Generic;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
-    /// <summary>
+    // "intents":[{"intent":"destroy","confidence":0.921167278289795}]
+    public class MessageResponseIntent
+    {
+        /// <summary>
+        /// Name
+        /// </summary>
+        /// <value>Name</value>
+        [fsProperty("intent")]
+        public string Intent { get; set; }
+        /// <summary>
+        /// Confidence
+        /// </summary>
+        /// <value>Confidence</value>
+        [fsProperty("confidence")]
+        public double Confidence { get; set; }
+    }
+    // "entities":[{"entity":"material","location":[11,15],"value":"blue","confidence":1},..]
+    public class MessageResponseEntity
+    {
+        /// <summary>
+        /// Name
+        /// </summary>
+        /// <value>Name</value>
+        [fsProperty("entity")]
+        public string Entity { get; set; }
+        /// <summary>
+        /// Value
+        /// </summary>
+        /// <value>Value</value>
+        [fsProperty("value")]
+        public string Value { get; set; }
+        /// <summary>
+        /// Location
+        /// </summary>
+        /// <value>Location</value>
+        [fsProperty("location")]
+        public int[] Location { get; set; }
+        /// <summary>
+        /// Confidence
+        /// </summary>
+        /// <value>Confidence</value>
+        [fsProperty("confidence")]
+        public double Confidence { get; set; }
+    }
+    // "input":{"text":"help me"}
+    public class MessageResponseInput
+    {
+        /// <summary>
+        /// Text
+        /// </summary>
+        /// <value>Text</value>
+        [fsProperty("text")]
+        public string Text { get; set; }
+    }
+    // "output":{"generic":[],"text":[],"nodes_visited":[],"internal":{"fallback":true},"warning":"No dialog node condition matched to true in the last dialog round - context.nodes_visited is empty. Falling back to the root node in the next round.","log_messages":[{"level":"warn","msg":"No dialog node condition matched to true in the last dialog round - context.nodes_visited is empty. Falling back to the root node in the next round."}]}
+    // TODO
+    // "context":{"conversation_id":"f1e5b566-3cdb-444e-8554-d18e9baf6694","system":{"initialized":true,"dialog_stack":[{"dialog_node":"root"}],"dialog_turn_counter":4,"dialog_request_counter":4}}
+    // TODO
+
+    // <summary>
     /// A response from the Assistant service.
     /// </summary>
     [fsObject]
@@ -31,19 +90,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>The user input from the request.</value>
         [fsProperty("input")]
-        public object Input { get; set; }
+        public MessageResponseInput Input { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
         /// <value>An array of intents recognized in the user input, sorted in descending order of confidence.</value>
         [fsProperty("intents")]
-        public object Intents { get; set; }
+        public MessageResponseIntent[] Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
         /// <value>An array of entities identified in the user input.</value>
         [fsProperty("entities")]
-        public object Entities { get; set; }
+        public MessageResponseEntity[] Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>

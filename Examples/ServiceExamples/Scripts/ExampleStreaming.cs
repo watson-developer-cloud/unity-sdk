@@ -47,6 +47,10 @@ public class ExampleStreaming : MonoBehaviour
     [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
     [SerializeField]
     private string _iamUrl;
+
+    public delegate void RecognizeEvent(string text, double confidence);
+    public static event RecognizeEvent OnRecognizeFinal;
+    public static event RecognizeEvent OnRecognizeInterim;
     #endregion
 
 
@@ -222,7 +226,19 @@ public class ExampleStreaming : MonoBehaviour
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
                     Log.Debug("ExampleStreaming.OnRecognize()", text);
-                    ResultsField.text = text;
+                    if (ResultsField != null)
+                    {
+                        ResultsField.text = text;
+                    }
+
+                    if (!res.final && OnRecognizeInterim != null)
+                    {
+                        OnRecognizeInterim(alt.transcript, alt.confidence);
+                    }
+                    if (res.final && OnRecognizeFinal != null)
+                    {
+                        OnRecognizeFinal(alt.transcript, alt.confidence);
+                    }
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)

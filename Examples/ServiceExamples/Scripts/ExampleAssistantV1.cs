@@ -745,15 +745,34 @@ public class ExampleAssistantV1 : MonoBehaviour
         else
             Log.Debug("ExampleAssistantV1.OnMessage()", "Failed to get context");
 
-        //  Get intent
-        object tempIntentsObj = null;
-        (response as Dictionary<string, object>).TryGetValue("intents", out tempIntentsObj);
-        object tempIntentObj = (tempIntentsObj as List<object>)[0];
-        object tempIntent = null;
-        (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
-        string intent = tempIntent.ToString();
+        string text = "";
 
-        Log.Debug("ExampleAssistantV1.OnMessage()", "intent: {0}", intent);
+        // Intents
+        if (messageResponse != null && messageResponse.Intents.Length > 0)
+        {
+            text += "Intents: [";
+            foreach (var intent in messageResponse.Intents)
+            {
+                string intentStr = string.Format("{0} ({1:0.00}) ", intent.Intent, intent.Confidence);
+                text += intentStr;
+            }
+            text += "]";
+        }
+
+        text += " ";
+
+        // Entities
+        if (messageResponse != null && messageResponse.Entities.Length > 0)
+        {
+            text += "Entities: [";
+            foreach (var entity in messageResponse.Entities)
+            {
+                string entityStr = string.Format("{0} {1} ({2:0.00}) ", entity.Entity, entity.Value, entity.Confidence);
+                text += entityStr;
+            }
+            text += "]";
+        }
+        Log.Debug("ExampleAssistantV1.OnMessage()", text);
 
         _messageTested = true;
     }
