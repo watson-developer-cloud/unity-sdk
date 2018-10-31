@@ -3858,6 +3858,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateTokenizationDictionaryRequestObj req = new CreateTokenizationDictionaryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3962,6 +3964,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteTokenizationDictionaryRequestObj req = new DeleteTokenizationDictionaryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4037,6 +4041,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetTokenizationDictionaryStatusRequestObj req = new GetTokenizationDictionaryStatusRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
