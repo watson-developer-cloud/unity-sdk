@@ -28,28 +28,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     public class LogQueryResponseResult
     {
         /// <summary>
-        /// The type of log entry returned.
-        ///
-        ///  **query** indicates that the log represents the results of a call to the single collection **query**
-        /// method.
-        ///
-        ///  **event** indicates that the log represents  a call to the **events** API.
-        /// </summary>
-        public enum DocumentTypeEnum
-        {
-            /// <summary>
-            /// Enum query for query
-            /// </summary>
-            [EnumMember(Value = "query")]
-            query,
-            /// <summary>
-            /// Enum _event for event
-            /// </summary>
-            [EnumMember(Value = "event")]
-            _event
-        }
-
-        /// <summary>
         /// The type of event that this object respresents. Possible values are
         ///
         ///  -  `query` the log of a query to a collection
@@ -91,7 +69,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         ///  **event** indicates that the log represents  a call to the **events** API.
         /// </summary>
         [fsProperty("document_type")]
-        public DocumentTypeEnum? DocumentType { get; set; }
+        public string DocumentType { get; set; }
         /// <summary>
         /// The type of event that this object respresents. Possible values are
         ///

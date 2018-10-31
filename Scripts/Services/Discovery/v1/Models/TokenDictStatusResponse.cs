@@ -29,36 +29,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Current tokenization dictionary status for the specified collection.
         /// </summary>
-        /// <value>
-        /// Current tokenization dictionary status for the specified collection.
-        /// </value>
-        public enum StatusEnum
-        {
-            
-            /// <summary>
-            /// Enum ACTIVE for active
-            /// </summary>
-            [EnumMember(Value = "active")]
-            ACTIVE,
-            
-            /// <summary>
-            /// Enum PENDING for pending
-            /// </summary>
-            [EnumMember(Value = "pending")]
-            PENDING,
-            
-            /// <summary>
-            /// Enum NOT_FOUND for not found
-            /// </summary>
-            [EnumMember(Value = "not found")]
-            NOT_FOUND
-        }
-
-        /// <summary>
-        /// Current tokenization dictionary status for the specified collection.
-        /// </summary>
         [fsProperty("status")]
-        public StatusEnum? Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// The type for this dictionary. Always returns `tokenization_dictionary`.
         /// </summary>
