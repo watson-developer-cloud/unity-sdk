@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="speech-to-text">Speech to Text</h1>
+<p>The IBM® <a href="https://console.bluemix.net/docs/services/speech-to-text/index.html">Speech to Text</a> service provides an API that enables you to add IBM’s speech recognition capabilities to your applications. The service transcribes speech from various languages and audio formats to text with low latency. For most languages, the service supports two sampling rates, broadband and narrowband.</p>
+<h2 id="usage">Usage</h2>
+<p>The Speech to Text API consists of the following groups of related calls:</p>
+<ul>
+<li><p>Models includes calls that return information about the models (languages and sampling rates) available for transcription.</p></li>
+<li><p>WebSockets includes a single call that establishes a persistent connection with the service over the WebSocket protocol.</p></li>
+<li><p>Sessionless includes HTTP calls that provide a simple means of transcribing audio without the overhead of establishing and maintaining a session.</p></li>
+<li><p>Sessions provides a collection of HTTP calls that provide a mechanism for a client to maintain a long, multi-turn exchange, or session, with the service or to establish multiple parallel conversations with a particular instance of the service.</p></li>
+<li><p>Asynchronous provides a non-blocking HTTP interface for transcribing audio. You can register a callback URL to be notified of job status and, optionally, results, or you can poll the service to learn job status and retrieve results manually.</p></li>
+<li><p>Custom models provides an HTTP interface for creating custom language models. The interface lets you expand the vocabulary of a base language model with domain-specific terminology.</p></li>
+<li><p>Custom corpora provides an HTTP interface for managing the corpora associated with a custom language model. You add a corpus to a custom model to extract words from the corpus into the model’s vocabulary.</p></li>
+<li><p>Custom words provides an HTTP interface for managing individual words in a custom language model. You can add, list, and delete words from a custom model.</p></li>
+</ul>
+<h3 id="get-models">Get models</h3>
+<p>Retrieves a list of all models available for use with the service. The information includes the name of the model and its minimum sampling rate in Hertz, among other things.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModels</span>()</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetModels</span>(HandleGetModels, OnFail))</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetModels()&quot;</span>, <span class="st">&quot;Failed to get models&quot;</span>);</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetModels</span>(ModelSet result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetModels()&quot;</span>, <span class="st">&quot;Speech to Text - Get models response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="get-a-model">Get a model</h3>
+<p>Retrieves information about a single specified model that is available for use with the service. The information includes the name of the model and its minimum sampling rate in Hertz, among other things.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetModel</span>()</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetModel</span>(HandleGetModel, OnFail, &lt;model-name&gt;))</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetModel()&quot;</span>, <span class="st">&quot;Failed to get model&quot;</span>);</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetModel</span>(Model result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetModel()&quot;</span>, <span class="st">&quot;Speech to Text - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="recognize-audio">Recognize audio</h3>
+<h4 id="accessing-the-device-microphone-and-sending-data-to-the-speech-to-text-instance">Accessing the device microphone and sending data to the Speech to Text instance</h4>
+<p>Please see <code>ExampleStreaming</code> scene for an example.</p>
+<h4 id="streaming-mode">Streaming mode</h4>
+<p>For requests to transcribe live audio as it becomes available or to transcribe multiple audio files with multipart requests, you must set the Transfer-Encoding header to chunked to use streaming mode. In streaming mode, the server closes the connection (status code 408) if the service receives no data chunk for 30 seconds and the service has no audio to transcribe for 30 seconds. The server also closes the connection (status code 400) if no speech is detected for inactivity_timeout seconds of audio (not processing time); use the inactivity_timeout parameter to change the default of 30 seconds. An example of streaming from the Unity microphone is provided in the Examples directory.</p>
+<h4 id="non-multipart-requests">Non-multipart requests</h4>
+<p>For non-multipart requests, you specify all parameters of the request as a collection of request headers and query parameters, and you provide the audio as the body of the request. This is the recommended means of submitting a recognition request. Use the following parameters:</p>
+<ul>
+<li>Required: Content-Type and body</li>
+<li>Optional: Transfer-Encoding, model, customization_id, continuous, inactivity_timeout, keywords, keywords_threshold, max_alternatives, word_alternatives_threshold, word_confidence, timestamps, profanity_filter, smart_formatting, and speaker_labels</li>
+</ul>
+<h4 id="multipart-requests">Multipart requests</h4>
+<p>For multipart requests, you specify a few parameters of the request as request headers and query parameters, but you specify most parameters as multipart form data in the form of JSON metadata, in which only part_content_type is required. You then specify the audio files for the request as subsequent parts of the form data. Use this approach with browsers that do not support JavaScript or when the parameters of the request are greater than the 8 KB limit imposed by most HTTP servers and proxies. Use the following parameters:</p>
+<ul>
+<li>Required: Content-Type, metadata, and upload</li>
+<li>Optional: Transfer-Encoding, model, and customization_id</li>
+</ul>
+<p>An example of the multipart metadata for a pair of FLAC files follows. This first part of the request is sent as JSON; the remaining parts are the audio files for the request.</p>
+<pre><code>metadata=&quot;{\&quot;part_content_type\&quot;:\&quot;audio/flac\&quot;,\&quot;data_parts_count\&quot;:2,\&quot;continuous\&quot;:true,\&quot;inactivity_timeout\&quot;=-1}&quot;</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">Recognize</span>()</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="co">//  create AudioClip with clip bytearray data</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">  _audioClip = WaveFile.<span class="fu">ParseWAV</span>(&lt;clip-name&gt;, &lt;clip-data&gt;);</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="kw">if</span>(!_speechToText.<span class="fu">Recognize</span>(HandleRecognize, OnFail))</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.Recognize()&quot;</span>, <span class="st">&quot;Failed to recognize!&quot;</span>);</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">}</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleRecognize</span>(SpeechRecognitionEvent result, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">{</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleRecognize()&quot;</span>, <span class="st">&quot;Speech to Text - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">}</a></code></pre></div>
+<h3 id="list-custom-models">List custom models</h3>
+<p>Lists information about all custom language models that are owned by the calling user. Use the language query parameter to see all custom models for the specified language; omit the parameter to see all custom models for all languages.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomizations</span>()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomizations</span>(HandleGetCustomizations, OnFail))</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomizations()&quot;</span>, <span class="st">&quot;Failed to get customizations&quot;</span>);</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomizations</span>(Customizations customizations, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomizations()&quot;</span>, <span class="st">&quot;Speech to Text - Get customizations response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-a-custom-model">List a custom model</h3>
+<p>Lists information about a custom language model. Only the owner of a custom model can use this method to query information about the model.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomization</span>()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomization</span>(HandleGetCustomization, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomization()&quot;</span>, <span class="st">&quot;Failed to get customization&quot;</span>);</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomization</span>(Customization customization, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomization()&quot;</span>, <span class="st">&quot;Speech to Text - Get customization response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="create-a-custom-model">Create a custom model</h3>
+<p>Creates a new custom language model for a specified base language model. The custom language model can be used only with the base language model for which it is created. The new model is owned by the individual whose service credentials are used to create it.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">CreateModel</span>()</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">CreateCustomization</span>(HandleCreateCustomization, OnFail, &lt;customization-name&gt;, &lt;<span class="kw">base</span>-model-name&gt;, &lt;customization-description&gt;))</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.CreateCustomization()&quot;</span>, <span class="st">&quot;Failed to create custom model&quot;</span>);</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleCreateCustomization</span>(CustomizationID customizationID, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleCreateCustomization()&quot;</span>, <span class="st">&quot;Speech to Text - Get model response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="train-a-custom-model">Train a custom model</h3>
+<p>Initiates the training of a custom language model with new corpora, words, or both. After adding training data to the custom model with the corpora or words methods, use this method to begin the actual training of the model on the new data. You can specify whether the custom model is to be trained with all words from its words resources or only with words that were added or modified by the user. Only the owner of a custom model can use this method to train the model.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">TrainModel</span>()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">TrainCustomization</span>(HandleTrainCustomization, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.TrainCustomization()&quot;</span>, <span class="st">&quot;Failed to train custom model&quot;</span>);</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleTrainCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleTrainCustomization()&quot;</span>, <span class="st">&quot;Speech to Text - Train model response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="reset-a-custom-model">Reset a custom model</h3>
+<p>Resets a custom language model by removing all corpora and words from the model. Resetting a custom model initializes the model to its state when it was first created. Metadata such as the name and language of the model are preserved. Only the owner of a custom model can use this method to reset the model.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">ResetModel</span>()</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">ResetCustomization</span>(HandleResetCustomization, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.ResetCustomization()&quot;</span>, <span class="st">&quot;Failed to train custom model&quot;</span>);</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleResetCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleResetCustomization()&quot;</span>, <span class="st">&quot;Speech to Text - Reset model response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">}</a></code></pre></div>
+<!-- ### Upgrade a custom model
+Upgrades a custom language model to the latest release level of the Speech to Text service. The method bases the upgrade on the latest trained data stored for the custom model. If the corpora or words for the model have changed since the model was last trained, you must use the  train method to train the model on the new data. You must use credentials for the instance of the service that owns a model to upgrade it. **Note**: This method is not currently implemented. It will be added for a future release of the API.
+```cs
+private void UpgradeModel()
+{
+  if(!_speechToText.UpgradeCustomization(HandleUpgradeCustomization, OnFail, <customization-id>))
+    Log.Debug("ExampleSpeechToText.UpgradeCustomization()", "Failed to train custom model");
+}
+
+private void HandleUpgradeCustomizationh(bool success, Dictionary<string, object> customData)
+{
+  Log.Debug("ExampleSpeechToText.HandleUpgradeCustomizationh()", "Speech to Text - Upgrade model response: {0}", success);
+}
+``` -->
+<h3 id="delete-a-custom-model">Delete a custom model</h3>
+<p>Deletes an existing custom language model. The custom model cannot be deleted if another request, such as adding a corpus to the model, is currently being processed. Only the owner of a custom model can use this method to delete the model.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteModel</span>()</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">DeleteCustomization</span>(HandleDeleteCustomization, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.DeleteCustomization()&quot;</span>, <span class="st">&quot;Failed to delete custom model&quot;</span>);</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleDeleteCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleDeleteCustomization()&quot;</span>, <span class="st">&quot;Speech to Text - Delete model response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="add-a-corpus">Add a corpus</h3>
+<p>Adds a single corpus text file of new training data to the custom language model. Use multiple requests to submit multiple corpus text files. Only the owner of a custom model can use this method to add a corpus to the model. Note that adding a corpus does not affect the custom model until you train the model for the new data by using the Train a custom model method.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddCustomCorpus</span>()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">AddCustomCorpus</span>(HandleAddCustomCorpus, OnFail, &lt;customization-id&gt;, &lt;corpus-name&gt;, &lt;allow-overwrite&gt;, &lt;corpus-file-path&gt;))</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.AddCustomCorpus()&quot;</span>, <span class="st">&quot;Failed to delete custom model&quot;</span>);</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleAddCustomCorpus</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleAddCustomCorpus()&quot;</span>, <span class="st">&quot;Speech to Text - Add custom corpus response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-corpora">List corpora</h3>
+<p>Lists information about all corpora that have been added to the specified custom language model. The information includes the total number of words and out-of-vocabulary (OOV) words, name, and status of each corpus. Only the owner of a custom model can use this method to list the model’s corpora.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCorpora</span>()</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomCorpora</span>(HandleGetCustomCorpora, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomCorpora()&quot;</span>, <span class="st">&quot;Failed to get custom corpora&quot;</span>);</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomCorpora</span>(Corpora corpora, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomCorpora()&quot;</span>, <span class="st">&quot;Speech to Text - Get custom corpora response: {0}&quot;</span>, customdData);</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-a-corpus">List a corpus</h3>
+<p>Lists information about a single specified corpus. The information includes the total number of words and out-of-vocabulary (OOV) words, name, and status of the corpus. Only the owner of a custom model can use this method to list information about a corpus from the model.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCorpus</span>()</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomCorpus</span>(HandleGetCustomCorpus, OnFail, &lt;customization-id&gt;, &lt;corpus-name&gt;))</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomCorpus()&quot;</span>, <span class="st">&quot;Failed to get custom corpus&quot;</span>);</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomCorpus</span>(Corpus corpus, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomCorpus()&quot;</span>, <span class="st">&quot;Speech to Text - Get custom corpus response: {0}&quot;</span>, customdData);</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="delete-a-corpus">Delete a corpus</h3>
+<p>Deletes an existing corpus from a custom language model. The service removes any out-of-vocabulary (OOV) words associated with the corpus from the custom model’s words resource unless they were also added by another corpus or they have been modified in some way with the Add custom words or Add a custom word method. Removing a corpus does not affect the custom model until you train the model with the Train a custom model method. Only the owner of a custom model can use this method to delete a corpus from the model.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteCorpus</span>()</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">DeleteCustomCorpus</span>(HandleDeleteCustomCorpus, OnFail, &lt;customization-id&gt;, &lt;corpus-name&gt;))</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.DeleteCustomCorpus()&quot;</span>, <span class="st">&quot;Failed to delete custom corpus&quot;</span>);</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleDeleteCustomCorpus</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleDeleteCustomCorpus()&quot;</span>, <span class="st">&quot;Speech to Text - Delete custom corpus response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="add-custom-words">Add custom words</h3>
+<p>Adds one or more custom words to a custom language model. The service populates the words resource for a custom model with out-of-vocabulary (OOV) words found in each corpus added to the model. You can use this method to add additional words or to modify existing words in the words resource. Only the owner of a custom model can use this method to add or modify custom words associated with the model. Adding or modifying custom words does not affect the custom model until you train the model for the new data by using the Train a custom model method.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">//  Add custom words using words object</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="dt">var</span> words = <span class="kw">new</span> <span class="fu">Words</span>()</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">{</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">    WordsProperty = <span class="kw">new</span> List&lt;Word&gt;()</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">    {</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">        <span class="kw">new</span> <span class="fu">Word</span>()</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">        {</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">           DisplayAs = &lt;word-<span class="dt">string</span><span class="dv">-0</span>&gt;,</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">           SoundsLike = <span class="kw">new</span> List&lt;<span class="dt">string</span>&gt;()</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">           {</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">               &lt;soundslike-<span class="dt">string</span><span class="dv">-0</span>&gt;</a>
+<a class="sourceLine" id="cb15-12" data-line-number="12">           },</a>
+<a class="sourceLine" id="cb15-13" data-line-number="13">           WordProperty = &lt;wordproperty-<span class="dt">string</span><span class="dv">-0</span>&gt;</a>
+<a class="sourceLine" id="cb15-14" data-line-number="14">        },</a>
+<a class="sourceLine" id="cb15-15" data-line-number="15">        <span class="kw">new</span> <span class="fu">Word</span>()</a>
+<a class="sourceLine" id="cb15-16" data-line-number="16">        {</a>
+<a class="sourceLine" id="cb15-17" data-line-number="17">          DisplayAs = &lt;word-<span class="dt">string</span><span class="dv">-1</span>&gt;,</a>
+<a class="sourceLine" id="cb15-18" data-line-number="18">          SoundsLike = <span class="kw">new</span> List&lt;<span class="dt">string</span>&gt;()</a>
+<a class="sourceLine" id="cb15-19" data-line-number="19">          {</a>
+<a class="sourceLine" id="cb15-20" data-line-number="20">              &lt;soundslike-<span class="dt">string</span><span class="dv">-1</span>&gt;</a>
+<a class="sourceLine" id="cb15-21" data-line-number="21">          },</a>
+<a class="sourceLine" id="cb15-22" data-line-number="22">          WordProperty = &lt;wordproperty-<span class="dt">string</span><span class="dv">-1</span>&gt;</a>
+<a class="sourceLine" id="cb15-23" data-line-number="23">        },</a>
+<a class="sourceLine" id="cb15-24" data-line-number="24">         <span class="kw">new</span> <span class="fu">Word</span>()</a>
+<a class="sourceLine" id="cb15-25" data-line-number="25">        {</a>
+<a class="sourceLine" id="cb15-26" data-line-number="26">          DisplayAs = &lt;word-<span class="dt">string</span><span class="dv">-2</span>&gt;,</a>
+<a class="sourceLine" id="cb15-27" data-line-number="27">          SoundsLike = <span class="kw">new</span> List&lt;<span class="dt">string</span>&gt;()</a>
+<a class="sourceLine" id="cb15-28" data-line-number="28">          {</a>
+<a class="sourceLine" id="cb15-29" data-line-number="29">              &lt;soundslike-<span class="dt">string</span><span class="dv">-2</span>&gt;</a>
+<a class="sourceLine" id="cb15-30" data-line-number="30">          },</a>
+<a class="sourceLine" id="cb15-31" data-line-number="31">          WordProperty = &lt;wordproperty-<span class="dt">string</span><span class="dv">-2</span>&gt;</a>
+<a class="sourceLine" id="cb15-32" data-line-number="32">        }</a>
+<a class="sourceLine" id="cb15-33" data-line-number="33">    }</a>
+<a class="sourceLine" id="cb15-34" data-line-number="34">});</a>
+<a class="sourceLine" id="cb15-35" data-line-number="35"></a>
+<a class="sourceLine" id="cb15-36" data-line-number="36"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddCustomWordsUsingObject</span>()</a>
+<a class="sourceLine" id="cb15-37" data-line-number="37">{</a>
+<a class="sourceLine" id="cb15-38" data-line-number="38">  <span class="kw">if</span>(!_speechToText.<span class="fu">AddCustomWords</span>(HandleAddCustomWords, OnFail, &lt;customization-id&gt;, words))</a>
+<a class="sourceLine" id="cb15-39" data-line-number="39">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.AddCustomWords()&quot;</span>, <span class="st">&quot;Failed to add custom words&quot;</span>);</a>
+<a class="sourceLine" id="cb15-40" data-line-number="40">}</a>
+<a class="sourceLine" id="cb15-41" data-line-number="41"></a>
+<a class="sourceLine" id="cb15-42" data-line-number="42"><span class="co">//  Add custom words using words file</span></a>
+<a class="sourceLine" id="cb15-43" data-line-number="43"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddCustomWordsUsingFile</span>()</a>
+<a class="sourceLine" id="cb15-44" data-line-number="44">{</a>
+<a class="sourceLine" id="cb15-45" data-line-number="45">  <span class="kw">if</span>(!_speechToText.<span class="fu">AddCustomWords</span>(HandleAddCustomWords, OnFail, &lt;customization-id&gt;, &lt;words-filepath&gt;))</a>
+<a class="sourceLine" id="cb15-46" data-line-number="46">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.AddCustomWords()&quot;</span>, <span class="st">&quot;Failed to add custom words&quot;</span>);</a>
+<a class="sourceLine" id="cb15-47" data-line-number="47">}</a>
+<a class="sourceLine" id="cb15-48" data-line-number="48"></a>
+<a class="sourceLine" id="cb15-49" data-line-number="49"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleAddCustomCorpus</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb15-50" data-line-number="50">{</a>
+<a class="sourceLine" id="cb15-51" data-line-number="51">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleAddCustomCorpus()&quot;</span>, <span class="st">&quot;Speech to Text - Add custom words response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb15-52" data-line-number="52">}</a></code></pre></div>
+<h3 id="list-custom-words">List custom words</h3>
+<p>Lists information about all custom words from a custom language model. You can list all words from the custom model’s words resource, only custom words that were added or modified by the user, or only OOV words that were extracted from corpora. Only the owner of a custom model can use this method to query the words from the model.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomWords</span>()</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomWords</span>(HandleGetCustomWords, OnFail, &lt;customization-id&gt;))</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomWordsMethod()&quot;</span>, <span class="st">&quot;Failed to get custom words&quot;</span>);</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb16-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomWords</span>(WordsList wordList, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomWords()&quot;</span>, <span class="st">&quot;Speech to Text - Get custom words response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-a-custom-word">List a custom word</h3>
+<p>Lists information about a custom word from a custom language model. Only the owner of a custom model can use this method to query a word from the model.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomWord</span>()</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomWord</span>(HandleGetCustomWord, OnFail, &lt;customization-id&gt;, &lt;word&gt;))</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomWord()&quot;</span>, <span class="st">&quot;Failed to get custom word&quot;</span>);</a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomWord</span>(WordData word, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomWord()&quot;</span>, <span class="st">&quot;Speech to Text - Get custom word response: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="delete-a-custom-word">Delete a custom word</h3>
+<p>Deletes a custom word from a custom language model. You can remove any word that you added to the custom model’s words resource via any means. However, if the word also exists in the service’s base vocabulary, the service removes only the custom pronunciation for the word; the word remains in the base vocabulary.</p>
+<p>Removing a custom word does not affect the custom model until you train the model with the Train a custom model method. Only the owner of a custom model can use this method to delete a word from the model.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteCustomWord</span>()</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">DeleteCustomWord</span>(HandleDeleteCustomWord, OnFail, &lt;customization-id&gt;, &lt;word&gt;))</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.DeleteCustomWord()&quot;</span>, <span class="st">&quot;Failed to delete custom word&quot;</span>);</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleDeleteCustomWord</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleDeleteCustomWord()&quot;</span>, <span class="st">&quot;Speech to Text - Delete custom word response: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-custom-acoustic-models">List custom acoustic models</h3>
+<p>Lists information about all custom acoustic models that are owned by an instance of the service. Use the <code>language</code> parameter to see all custom acoustic models for the specified language; omit the parameter to see all custom acoustic models for all languages. You must use credentials for the instance of the service that owns a model to list information about it.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">ListCustomAcousticModels</span>()</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomAcousticModels</span>(HandleGetCustomAcousticModels, OnFail))</a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomAcousticModels()&quot;</span>, <span class="st">&quot;Failed to list custom acoustic models&quot;</span>);</a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb19-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleListCustomAcousticModels</span>(AcousticCustomizations acousticCustomizations, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb19-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleListCustomAcousticModels()&quot;</span>, <span class="st">&quot;acousticCustomizations: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb19-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="create-custom-acoustic-model">Create custom acoustic model</h3>
+<p>Creates a new custom acoustic model for a specified base model. The custom acoustic model can be used only with the base model for which it is created. The model is owned by the instance of the service whose credentials are used to create it.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">CreateAcousticCustomization</span>()</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">CreateAcousticCustomization</span>(HandleCreateAcousticCustomization, OnFail, <span class="st">&quot;&lt;createdAcousticModelName&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.CreateAcousticCustomization()&quot;</span>, <span class="st">&quot;Failed to create acoustic customization&quot;</span>);</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleCreateAcousticCustomization</span>(CustomizationID customizationID, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleCreateAcousticCustomization()&quot;</span>, <span class="st">&quot;customizationId: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb20-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="delete-custom-acoustic-model">Delete custom acoustic model</h3>
+<p>Deletes an existing custom acoustic model. The custom model cannot be deleted if another request, such as adding an audio resource to the model, is currently being processed. You must use credentials for the instance of the service that owns a model to delete it.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteAcousticCustomization</span>()</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">DeleteAcousticCustomization</span>(HandleDeleteAcousticCustomization, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.DeleteAcousticCustomization()&quot;</span>, <span class="st">&quot;Failed to delete acoustic customization&quot;</span>);</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleDeleteAcousticCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleDeleteAcousticCustomization()&quot;</span>, <span class="st">&quot;deleted acoustic customization: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="get-details-about-a-custom-acoustic-model">Get details about a custom acoustic model</h3>
+<p>Lists information about a specified custom acoustic model. You must use credentials for the instance of the service that owns a model to list information about it.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomAcousticModel</span>()</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomAcousticModel</span>(HandleGetCustomAcousticModel, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomAcousticModel()&quot;</span>, <span class="st">&quot;Failed to get custom acoustic model&quot;</span>);</a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomAcousticModel</span>(AcousticCustomization acousticCustomization, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb22-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomAcousticModel()&quot;</span>, <span class="st">&quot;acousticCustomization: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="train-a-custom-acoustic-model">Train a custom acoustic model</h3>
+<p>Initiates the training of a custom acoustic model with new or changed audio resources. After adding or deleting audio resources for a custom acoustic model, use this method to begin the actual training of the model on the latest audio data. The custom acoustic model does not reflect its changed data until you train it. You must use credentials for the instance of the service that owns a model to train it.</p>
+<p>The training method is asynchronous. It can take on the order of minutes or hours to complete depending on the total amount of audio data on which the model is being trained and the current load on the service. Typically, training takes approximately twice the length of the total audio contained in the custom model. The method returns an HTTP 200 response code to indicate that the training process has begun.</p>
+<p>You can monitor the status of the training by using the <code>GET /v1/acoustic_customizations/{customization_id}</code> method to poll the model’s status. Use a loop to check the status once a minute. The method returns an <code>AcousticCustomization</code> object that includes <code>status</code> and <code>progress</code> fields. A status of <code>available</code> indicates that the custom model is trained and ready to use. The service cannot accept subsequent training requests, or requests to add new audio resources, until the existing request completes.</p>
+<p>You can use the optional <code>custom_language_model_id</code> query parameter to specify the GUID of a separately created custom language model that is to be used during training. Specify a custom language model if you have verbatim transcriptions of the audio files that you have added to the custom model or you have either corpora (text files) or a list of words that are relevant to the contents of the audio files. For information about creating a separate custom language model, see <a href="https://console.bluemix.net/docs/services/speech-to-text/language-create.html">Creating a custom language model</a>.</p>
+<p>Training can fail to start for the following reasons: * The service is currently handling another request for the custom model, such as another training request or a request to add audio resources to the model. * The custom model contains less than 10 minutes or more than 50 hours of audio data. * One or more of the custom model’s audio resources is invalid.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">TrainAcousticCustomization</span>()</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">TrainAcousticCustomization</span>(HandleTrainAcousticCustomization, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>, <span class="st">&quot;&lt;customLanguageModelId&gt;&quot;</span>, <span class="st">&quot;&lt;forceTrain&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.TrainAcousticCustomization()&quot;</span>, <span class="st">&quot;Failed to train acoustic customization&quot;</span>);</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleTrainAcousticCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleTrainAcousticCustomization()&quot;</span>, <span class="st">&quot;train customization success: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb23-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="reset-a-custom-acoustic-model">Reset a custom acoustic model</h3>
+<p>Resets a custom acoustic model by removing all audio resources from the model. Resetting a custom acoustic model initializes the model to its state when it was first created. Metadata such as the name and language of the model are preserved, but the model’s audio resources are removed and must be re-created. You must use credentials for the instance of the service that owns a model to reset it.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">ResetAcousticCustomization</span>()</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">ResetAcousticCustomization</span>(HandleResetAcousticCustomization, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.ResetAcousticCustomization()&quot;</span>, <span class="st">&quot;Failed to reset acoustic customizations&quot;</span>);</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleResetAcousticCustomization</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleResetAcousticCustomization()&quot;</span>, <span class="st">&quot;reset customization success: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="list-information-about-a-custom-acoustic-models-audio-resources">List information about a custom acoustic model’s audio resources</h3>
+<p>Lists information about all audio resources from a custom acoustic model. The information includes the name of the resource and information about its audio data, such as its duration. It also includes the status of the audio resource, which is important for checking the service’s analysis of the resource in response to a request to add it to the custom acoustic model. You must use credentials for the instance of the service that owns a model to list its audio resources.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomAcousticResources</span>()</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomAcousticResources</span>(HandleGetCustomAcousticResources, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomAcousticResources()&quot;</span>, <span class="st">&quot;Failed to get custom acoustic resources&quot;</span>);</a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomAcousticResources</span>(AudioResources audioResources, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb25-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomAcousticResources()&quot;</span>, <span class="st">&quot;audioResources: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb25-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="delete-an-audio-resource-from-a-custom-acoustic-model">Delete an audio resource from a custom acoustic model</h3>
+<p>Deletes an existing audio resource from a custom acoustic model. Deleting an archive-type audio resource removes the entire archive of files; the current interface does not allow deletion of individual files from an archive resource. Removing an audio resource does not affect the custom model until you train the model on its updated data by using the <code>POST /v1/acoustic_customizations/{customization_id}/train</code> method. You must use credentials for the instance of the service that owns a model to delete its audio resources.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">DeleteAcousticResource</span>()</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">DeleteAcousticResource</span>(HandleDeleteAcousticResource, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>, <span class="st">&quot;&lt;acousticResourceName&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.DeleteAcousticResource()&quot;</span>, <span class="st">&quot;Failed to delete acoustic resource&quot;</span>);</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb26-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb26-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleDeleteAcousticResource</span>(<span class="dt">bool</span> success, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb26-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb26-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleDeleteAcousticResource()&quot;</span>, <span class="st">&quot;deleted acoustic resource: {0}&quot;</span>, success);</a>
+<a class="sourceLine" id="cb26-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="get-information-about-an-audio-resource-associated-with-a-custom-acoustic-model">Get information about an audio resource associated with a custom acoustic model</h3>
+<p>Lists information about an audio resource from a custom acoustic model. The method returns an <code>AudioListing</code> object whose fields depend on the type of audio resource you specify with the method’s <code>audio_name</code> parameter: For an audio-type resource, the object’s fields match those of an <code>AudioResource</code> object: <code>duration</code>, <code>name</code>, <code>details</code>, and <code>status</code>.</p>
+<p>For an archive-type resource, the object includes a <code>container</code> field whose fields match those of an <code>AudioResource</code> object. It also includes an <code>audio</code> field, which contains an array of <code>AudioResource</code> objects that provides information about the audio files that are contained in the archive.</p>
+<p>The information includes the status of the specified audio resource, which is important for checking the service’s analysis of the resource in response to a request to add it to the custom model. You must use credentials for the instance of the service that owns a model to list its audio resources.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">GetCustomAcousticResource</span>()</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">  <span class="kw">if</span>(!_speechToText.<span class="fu">GetCustomAcousticResource</span>(HandleGetCustomAcousticResource, OnFail, <span class="st">&quot;&lt;createdAcousticModelId&gt;&quot;</span>, <span class="st">&quot;&lt;acousticResourceName&gt;&quot;</span>))</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.GetCustomAcousticResource()&quot;</span>, <span class="st">&quot;Failed to get custom acoustic resource&quot;</span>);</a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleGetCustomAcousticResource</span>(AudioListing audioListing, Dictionary&lt;<span class="dt">string</span>, <span class="dt">object</span>&gt; customData)</a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">{</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleGetCustomAcousticResource()&quot;</span>, <span class="st">&quot;audioListing: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb27-10" data-line-number="10">}</a></code></pre></div>
+<h3 id="add-an-audio-resource-to-a-custom-acoustic-model">Add an audio resource to a custom acoustic model</h3>
+<p>Adds an audio resource to a custom acoustic model. Add audio content that reflects the acoustic characteristics of the audio that you plan to transcribe. You must use credentials for the instance of the service that owns a model to add an audio resource to it. Adding audio data does not affect the custom acoustic model until you train the model for the new data by using the <code>POST /v1/acoustic_customizations/{customization_id}/train</code> method.</p>
+<p>You can add individual audio files or an archive file that contains multiple audio files. Adding multiple audio files via a single archive file is significantly more efficient than adding each file individually. You can add an individual audio file in any format that the service supports for speech recognition. Use the <code>Content-Type</code> header to specify the format of the audio file.</p>
+<p>You can add an archive file (<strong>.zip</strong> or <strong>.tar.gz</strong> file) that contains audio files in any format that the service supports for speech recognition. All audio files added with the same archive file must have the same audio format. Use the <code>Content-Type</code> header to specify the archive type, <code>application/zip</code> or <code>application/gzip</code>. Use the <code>Contained-Content-Type</code> header to specify the format of the contained audio files; the default format is <code>audio/wav</code>.</p>
+<p>You can use this method to add any number of audio resources to a custom model by calling the method once for each audio or archive file. But the addition of one audio resource must be fully complete before you can add another. You must add a minimum of 10 minutes and a maximum of 50 hours of audio that includes speech, not just silence, to a custom acoustic model before you can train it. No audio resource, audio- or archive-type, can be larger than 100 MB.</p>
+<p>The method is asynchronous. It can take several seconds to complete depending on the duration of the audio and, in the case of an archive file, the total number of audio files being processed. The service returns a 201 response code if the audio is valid. It then asynchronously analyzes the contents of the audio file or files and automatically extracts information about the audio such as its length, sampling rate, and encoding. You cannot submit requests to add additional audio resources to a custom acoustic model, or to train the model, until the service’s analysis of all audio files for the current request completes.</p>
+<p>To determine the status of the service’s analysis of the audio, use the <code>GET /v1/acoustic_customizations/{customization_id}/audio/{audio_name}</code> method to poll the status of the audio. The method accepts the GUID of the custom model and the name of the audio resource, and it returns the status of the resource. Use a loop to check the status of the audio every few seconds until it becomes <code>ok</code>.</p>
+<p><strong>Note:</strong> The sampling rate of an audio file must match the sampling rate of the base model for the custom model: for broadband models, at least 16 kHz; for narrowband models, at least 8 kHz. If the sampling rate of the audio is higher than the minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio is lower than the minimum required rate, the service labels the audio file as <code>invalid</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode cs"><code class="sourceCode cs"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">AddAcousticResource</span>()</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">{</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">  <span class="dt">string</span> mimeType = Utility.<span class="fu">GetMimeType</span>(Path.<span class="fu">GetExtension</span>(<span class="st">&quot;&lt;acousticResourceUrl&gt;&quot;</span>));</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">  <span class="kw">if</span>(!_speechToText.<span class="fu">AddAcousticResource</span>(HandleAddAcousticResource, OnFail, <span class="st">&quot;&lt;acousticModelId&gt;&quot;</span>, <span class="st">&quot;&lt;acousticResourceName&gt;&quot;</span>, mimeType, mimeType, <span class="kw">true</span>, <span class="st">&quot;&lt;acousticResourceData&gt;&quot;</span>)</a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">    Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.AddAcousticResourceMethod()&quot;</span>, <span class="st">&quot;Failed to add acoustic resource&quot;</span>);</a>
+<a class="sourceLine" id="cb28-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb28-8" data-line-number="8"><span class="kw">private</span> <span class="dt">void</span> <span class="fu">HandleAddAcousticResource</span>(<span class="dt">string</span> data)</a>
+<a class="sourceLine" id="cb28-9" data-line-number="9">{</a>
+<a class="sourceLine" id="cb28-10" data-line-number="10">  Log.<span class="fu">Debug</span>(<span class="st">&quot;ExampleSpeechToText.HandleAddAcousticResource()&quot;</span>, <span class="st">&quot;added acoustic resource: {0}&quot;</span>, customData[<span class="st">&quot;json&quot;</span>].<span class="fu">ToString</span>());</a>
+<a class="sourceLine" id="cb28-11" data-line-number="11">}</a></code></pre></div>
+</body>
+</html>
