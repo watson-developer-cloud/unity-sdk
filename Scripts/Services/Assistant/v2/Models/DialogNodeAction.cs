@@ -40,7 +40,19 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
             /// Enum server for server
             /// </summary>
             [EnumMember(Value = "server")]
-            server
+            server,
+
+            /// <summary>
+            /// Enum WEB_ACTION for web-action
+            /// </summary>
+            [EnumMember(Value = "web-action")]
+            web_action,
+
+            /// <summary>
+            /// Enum CLOUD_FUNCTION for cloud-function
+            /// </summary>
+            [EnumMember(Value = "cloud-function")]
+            cloud_function
         }
 
         /// <summary>

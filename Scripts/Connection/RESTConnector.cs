@@ -784,7 +784,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     };
                 }
 
-                Success = postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_NO_CONTENT || postReq.responseCode == HTTP_STATUS_ACCEPTED;
+                Success = postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_CREATED || postReq.responseCode == HTTP_STATUS_NO_CONTENT || postReq.responseCode == HTTP_STATUS_ACCEPTED;
                 HttpResponseCode = postReq.responseCode;
                 ResponseHeaders = postReq.GetResponseHeaders();
                 Data = postReq.downloadHandler.data;
