@@ -47,6 +47,12 @@ public class ExampleStreaming : MonoBehaviour
     [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
     [SerializeField]
     private string _iamUrl;
+
+    [Header("Parameters")]
+    // https://www.ibm.com/watson/developercloud/speech-to-text/api/v1/curl.html?curl#get-model
+    [Tooltip("The Model to use. This defaults to en-US_BroadbandModel")]
+    [SerializeField]
+    private string _recognizeModel;
     #endregion
 
 
@@ -107,6 +113,7 @@ public class ExampleStreaming : MonoBehaviour
         {
             if (value && !_service.IsListening)
             {
+                _service.RecognizeModel = (string.IsNullOrEmpty(_recognizeModel) ? "en-US_BroadbandModel" : _recognizeModel);
                 _service.DetectSilence = true;
                 _service.EnableWordConfidence = true;
                 _service.EnableTimestamps = true;
