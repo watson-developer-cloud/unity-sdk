@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Threading;
+using UnityEngine;
 #if !NETFX_CORE
 using UnitySDK.WebSocketSharp;
 #else
@@ -185,11 +186,27 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public bool DisableSslVerification
         {
             get { return disableSslVerification; }
-            set { disableSslVerification = value; }
-        }
-        #endregion
+            set
+            {
+#if UNITY_2018_2_12_OR_NEWER
+                Log.Warning("WSConnector", "Please use Unity 2018.2.11 or earlier to disable ssl verification.")
+#else
+                disableSslVerification = value;
 
-        #region Private Data
+                if (disableSslVerification)
+                {
+                    Network.useProxy = true;
+                }
+                else
+                {
+                    Network.useProxy = false;
+                }
+#endif
+            }
+        }
+#endregion
+
+#region Private Data
         private ConnectionState _connectionState = ConnectionState.CLOSED;
 #if !NETFX_CORE
         private Thread _sendThread = null;
@@ -203,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private int _receiverRoutine = 0;
         private static readonly string https = "https://";
         private static readonly string wss = "wss://";
-        #endregion
+#endregion
 
         /// <summary>
         /// Helper function to convert a HTTP/HTTPS url into a WS/WSS URL.
@@ -315,7 +332,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             return connector;
         }
 
-        #region Public Functions
+#region Public Functions
         /// <summary>
         /// This function sends the given message object.
         /// </summary>
@@ -367,9 +384,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             // setting the state to closed will make the SendThread automatically exit.
             _connectionState = ConnectionState.CLOSED;
         }
-        #endregion
+#endregion
 
-        #region Private Functions
+#region Private Functions
         private IEnumerator ProcessReceiveQueue()
         {
             while (_connectionState == ConnectionState.CONNECTED
@@ -400,9 +417,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (OnClose != null)
                 OnClose(this);
         }
-        #endregion
+#endregion
 
-        #region Threaded Functions
+#region Threaded Functions
         // NOTE: All functions in this region are operating in a background thread, do NOT call any Unity functions!
 #if !NETFX_CORE
         private void SendMessages()
@@ -428,9 +445,13 @@ namespace IBM.Watson.DeveloperCloud.Connection
                         return true;
                     };
                 }
+                else
+                {
+                    ws.SslConfiguration.ServerCertificateValidationCallback = null;
+                }
 #if NET_4_6
                 //  Enable TLS 1.1 and TLS 1.2 if we are on .NET 4.x
-                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls | SslProtocols.None;
 #else
                 //  .NET 3.x does not support TLS 1.1 or TLS 1.2
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls;
@@ -609,6 +630,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
             }
         }
 #endif
-        #endregion
+#endregion
     }
 }

@@ -260,7 +260,23 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public bool DisableSslVerification
             {
                 get { return disableSslVerification; }
-                set { disableSslVerification = value; }
+                set
+                {
+#if UNITY_2018_2_12_OR_NEWER
+                Log.Warning("WSConnector", "Please use Unity 2018.2.11 or earlier to disable ssl verification.")
+#else
+                    disableSslVerification = value;
+
+                    if (disableSslVerification)
+                    {
+                        Network.useProxy = true;
+                    }
+                    else
+                    {
+                        Network.useProxy = false;
+                    }
+#endif
+                }
             }
             #endregion
         }
@@ -323,12 +339,6 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 throw new ArgumentNullException("request");
             }
 
-#if !NETFX_CORE
-            if (request.DisableSslVerification)
-            {
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-            }
-#endif
             _requests.Enqueue(request);
 
             // if we are not already running a co-routine to send the Requests
@@ -529,6 +539,15 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
 
+                if (req.DisableSslVerification)
+                {
+                    unityWebRequest.certificateHandler = new AcceptAllCertificates();
+                }
+                else
+                {
+                    unityWebRequest.certificateHandler = null;
+                }
+
 #if UNITY_2017_2_OR_NEWER
                 unityWebRequest.SendWebRequest();
 #else
@@ -647,10 +666,18 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 unityWebRequest.Dispose();
             }
 
-            // reduce the connection count before we exit..
+            // reduce the connection count before we exit.
             _activeConnections -= 1;
             yield break;
         }
         #endregion
+    }
+
+    class AcceptAllCertificates : CertificateHandler
+    {
+        protected override bool ValidateCertificate(byte[] certificateData)
+        {
+            return true;
+        }
     }
 }
