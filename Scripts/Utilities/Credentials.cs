@@ -21,7 +21,6 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
@@ -90,26 +89,10 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <summary>
         /// Gets and sets the option to disable ssl verification for getting an IAM token.
         /// </summary>
-        public bool DisableSslVerification
+        public bool DisableSslVerificationDisableSslVerification
         {
             get { return disableSslVerification; }
-            set
-            {
-#if UNITY_2018_2_12_OR_NEWER
-                Log.Warning("WSConnector", "Please use Unity 2018.2.11 or earlier to disable ssl verification.")
-#else
-                disableSslVerification = value;
-
-                if (disableSslVerification)
-                {
-                    Network.useProxy = true;
-                }
-                else
-                {
-                    Network.useProxy = false;
-                }
-#endif
-            }
+            set { disableSslVerification = value; }
         }
         #endregion
 

@@ -260,23 +260,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
             public bool DisableSslVerification
             {
                 get { return disableSslVerification; }
-                set
-                {
-#if UNITY_2018_2_12_OR_NEWER
-                Log.Warning("WSConnector", "Please use Unity 2018.2.11 or earlier to disable ssl verification.")
-#else
-                    disableSslVerification = value;
-
-                    if (disableSslVerification)
-                    {
-                        Network.useProxy = true;
-                    }
-                    else
-                    {
-                        Network.useProxy = false;
-                    }
-#endif
-                }
+                set { disableSslVerification = value; }
             }
             #endregion
         }
