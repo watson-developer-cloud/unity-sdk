@@ -525,6 +525,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// ISO 639-1 code indicating the language to use in the analysis
         /// </summary>
         public string language { get; set; }
+        /// <summary>
+        /// Sets the maximum number of characters that are processed by the service
+        /// </summary>
+        public int? limit_text_characters { get; set; }
     }
 
     [fsObject(Converter = typeof(FeaturesConverter))]
@@ -637,7 +641,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// Maximum number of entities to return
         /// </summary>
-        public int limit { get; set; }
+        public int? limit { get; set; }
         /// <summary>
         /// Enter a custom model ID to override the standard entity detection model
         /// </summary>
@@ -645,11 +649,17 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// Set this to true to return sentiment information for detected entities
         /// </summary>
-        public bool sentiment { get; set; }
+        public bool? sentiment { get; set; }
         /// <summary>
         /// Set this to true to analyze emotion for detected keywords
         /// </summary>
-        public bool emotion { get; set; }
+        public bool? emotion { get; set; }
+        /// <summary>
+        /// Set this to true to return locations of entity mentions
+        /// </summary>
+        public bool? mentions { get; set; }
+    }
+
     #region Entities Options Converter
     public class EntitiesOptionsConverter : fsConverter
     {
@@ -871,6 +881,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             if (parameters.xpath != null)
                 serialization.Add("xpath", new fsData(parameters.xpath));
+
+            if (parameters.limit_text_characters != null)
+                serialization.Add("limit_text_characters", new fsData((int)parameters.limit_text_characters));
 
             fsData tempData = null;
             _serializer.TrySerialize(parameters.features, out tempData);
