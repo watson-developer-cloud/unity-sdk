@@ -631,7 +631,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(EntitiesOptionsConverter))]
     public class EntitiesOptions
     {
         /// <summary>
@@ -650,7 +650,66 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// Set this to true to analyze emotion for detected keywords
         /// </summary>
         public bool emotion { get; set; }
+    #region Entities Options Converter
+    public class EntitiesOptionsConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(EntitiesOptions);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            EntitiesOptions entitiesOptions = (EntitiesOptions)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (entitiesOptions.limit != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.limit, out tempData);
+                serialization.Add("limit", tempData);
+            }
+
+            if (entitiesOptions.model != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.model, out tempData);
+                serialization.Add("model", tempData);
+            }
+
+            if (entitiesOptions.sentiment != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.sentiment, out tempData);
+                serialization.Add("sentiment", tempData);
+            }
+
+            if (entitiesOptions.emotion != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.emotion, out tempData);
+                serialization.Add("emotion", tempData);
+            }
+
+            if (entitiesOptions.mentions != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.mentions, out tempData);
+                serialization.Add("mentions", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
     }
+        #endregion
 
     [fsObject]
     public class KeywordsOptions
