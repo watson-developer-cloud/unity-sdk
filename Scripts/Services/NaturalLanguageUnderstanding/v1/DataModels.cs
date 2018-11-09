@@ -859,31 +859,49 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
             if (parameters.text != null)
+            {
                 serialization.Add("text", new fsData(parameters.text));
+            }
 
             if (parameters.url != null)
+            {
                 serialization.Add("url", new fsData(parameters.url));
+            }
 
             if (parameters.html != null)
+            {
                 serialization.Add("html", new fsData(parameters.html));
+            }
 
             if (parameters.clean != null)
+            {
                 serialization.Add("clean", new fsData((bool)parameters.clean));
+            }
 
             if (parameters.xpath != null)
+            {
                 serialization.Add("xpath", new fsData(parameters.xpath));
+            }
 
             if (parameters.fallback_to_raw != null)
+            {
                 serialization.Add("fallback_to_raw", new fsData((bool)parameters.fallback_to_raw));
-
+            }
+            
             if (parameters.return_analyzed_text != null)
+            {
                 serialization.Add("return_analyzed_text", new fsData((bool)parameters.return_analyzed_text));
+            }
 
             if (parameters.xpath != null)
+            {
                 serialization.Add("xpath", new fsData(parameters.xpath));
+            }
 
             if (parameters.limit_text_characters != null)
+            {
                 serialization.Add("limit_text_characters", new fsData((int)parameters.limit_text_characters));
+            }
 
             fsData tempData = null;
             _serializer.TrySerialize(parameters.features, out tempData);
