@@ -137,9 +137,17 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         public bool CreateSession(SuccessCallback<SessionResponse> successCallback, FailCallback failCallback, String assistantId, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
+            {
+                throw new ArgumentNullException("successCallback is required for CreateSession");
+            }
             if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            {
+                throw new ArgumentNullException("failCallback is required for CreateSession");
+            }
+            if(string.IsNullOrEmpty(assistantId))
+            {
+                throw new ArgumentException("assistantId is required for CreateSession");
+            }
 
             CreateSessionRequestObj req = new CreateSessionRequestObj();
             req.SuccessCallback = successCallback;
@@ -241,9 +249,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         public bool DeleteSession(SuccessCallback<object> successCallback, FailCallback failCallback, String assistantId, String sessionId, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
+            {
+                throw new ArgumentNullException("successCallback is required for DeleteSession");
+            }
             if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            {
+                throw new ArgumentNullException("failCallback is required for DeleteSession");
+            }
+            if(string.IsNullOrEmpty(assistantId))
+            {
+                throw new ArgumentException("assistantId is required for DeleteSession");
+            }
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentException("sessionId is required for DeleteSession");
+            }
 
             DeleteSessionRequestObj req = new DeleteSessionRequestObj();
             req.SuccessCallback = successCallback;
@@ -347,9 +367,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         public bool Message(SuccessCallback<MessageResponse> successCallback, FailCallback failCallback, String assistantId, String sessionId, MessageRequest request = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
+            {
+                throw new ArgumentNullException("successCallback is required for Message");
+            }
             if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            {
+                throw new ArgumentNullException("failCallback is required for Message");
+            }
+            if (string.IsNullOrEmpty(assistantId))
+            {
+                throw new ArgumentException("assistantId is required for Message");
+            }
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentException("sessionId is required for Message");
+            }
 
             MessageRequestObj req = new MessageRequestObj();
             req.SuccessCallback = successCallback;
