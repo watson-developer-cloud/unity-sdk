@@ -23,6 +23,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
@@ -97,6 +98,16 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
         }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Constructor
@@ -160,6 +171,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyReq req = new ClassifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -253,6 +266,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyReq req = new ClassifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -371,6 +386,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectFacesReq req = new DetectFacesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -449,6 +466,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DetectFacesReq req = new DetectFacesReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -551,6 +570,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersBriefReq req = new GetClassifiersBriefReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -650,6 +671,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifiersVerboseReq req = new GetClassifiersVerboseReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -751,6 +774,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetClassifierReq req = new GetClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -904,6 +929,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             TrainClassifierReq req = new TrainClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1068,6 +1095,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             TrainClassifierReq req = new TrainClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1116,6 +1145,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DeleteClassifierReq req = new DeleteClassifierReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1128,7 +1159,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
-            req.Delete = true;
 
             return connector.Send(req);
         }
@@ -1182,6 +1212,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             GetCoreMLModelRequest req = new GetCoreMLModelRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1283,6 +1315,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1294,7 +1328,6 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["customer_id"] = customerId;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
-            req.Delete = true;
 
             req.OnResponse = OnDeleteUserDataResponse;
 

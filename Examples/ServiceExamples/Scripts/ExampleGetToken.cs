@@ -17,7 +17,7 @@
 
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,10 +81,10 @@ public class ExampleGetToken : MonoBehaviour
             Url = _conversationUrl
         };
 
-        Conversation conversation = new Conversation(credentials);
-        conversation.VersionDate = _conversationVersionDate;
+        Assistant assistant = new Assistant(credentials);
+        assistant.VersionDate = _conversationVersionDate;
 
-        conversation.Message(OnMessage, OnFail, _conversationWorkspaceId, "hello");
+        assistant.Message(OnMessage, OnFail, _conversationWorkspaceId);
     }
 
     private void OnMessage(object resp, Dictionary<string, object> customData)

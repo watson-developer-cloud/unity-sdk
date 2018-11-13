@@ -35,8 +35,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         //private string _token = "<authentication-token>";
 
         TextToSpeech _textToSpeech;
-        string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
-        string _testConversationString = "<phoneme alphabet=\\\"ipa\\\" ph=\\\"\\u02c8\\u025b\\u0259\\u02c8\\u0279\\u0259n\\\">Arin</phoneme>";
+        //string _testString = "<speak version=\"1.0\"><say-as interpret-as=\"letters\">I'm sorry</say-as>. <prosody pitch=\"150Hz\">This is Text to Speech!</prosody><express-as type=\"GoodNews\">I'm sorry. This is Text to Speech!</express-as></speak>";
+        //string _testConversationString = "<phoneme alphabet=\\\"ipa\\\" ph=\\\"\\u02c8\\u025b\\u0259\\u02c8\\u0279\\u0259n\\\">Arin</phoneme>";
 
         string _createdCustomizationId;
         CustomVoiceUpdate _customVoiceUpdate;
@@ -45,8 +45,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         string _customizationDescription = "A text to speech voice customization created within Unity.";
         string _testWord = "Watson";
 
-        private bool _synthesizeTested = false;
-        private bool _synthesizeConversationTested = false;
+        //private bool _synthesizeTested = false;
+        //private bool _synthesizeConversationTested = false;
         private bool _getVoicesTested = false;
         private bool _getVoiceTested = false;
         private bool _getPronuciationTested = false;
@@ -107,19 +107,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             _textToSpeech = new TextToSpeech(credentials);
 
-            //  Synthesize
-            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize.");
-            _textToSpeech.Voice = VoiceType.en_US_Allison;
-            _textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
-            while (!_synthesizeTested)
-                yield return null;
+            ////  Synthesize
+            //Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize.");
+            //_textToSpeech.Voice = VoiceType.en_US_Allison;
+            //_textToSpeech.ToSpeech(HandleToSpeechCallback, OnFail, _testString, true);
+            //while (!_synthesizeTested)
+            //    yield return null;
 
-            //  Synthesize Conversation string
-            Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
-            _textToSpeech.Voice = VoiceType.en_US_Allison;
-            _textToSpeech.ToSpeech(HandleConversationToSpeechCallback, OnFail, _testConversationString, true);
-            while (!_synthesizeConversationTested)
-                yield return null;
+            ////  Synthesize Conversation string
+            //Log.Debug("TestTextToSpeech.RunTest()", "Attempting synthesize a string as returned by Watson Conversation.");
+            //_textToSpeech.Voice = VoiceType.en_US_Allison;
+            //_textToSpeech.ToSpeech(HandleConversationToSpeechCallback, OnFail, _testConversationString, true);
+            //while (!_synthesizeConversationTested)
+            //    yield return null;
 
             //	Get Voices
             Log.Debug("TestTextToSpeech.RunTest()", "Attempting to get voices.");
@@ -257,35 +257,35 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             yield break;
         }
 
-        void HandleToSpeechCallback(AudioClip clip, Dictionary<string, object> customData)
-        {
-            PlayClip(clip);
-        }
+        //void HandleToSpeechCallback(AudioClip clip, Dictionary<string, object> customData)
+        //{
+        //    PlayClip(clip);
+        //}
 
-        private void PlayClip(AudioClip clip)
-        {
-            if (Application.isPlaying && clip != null)
-            {
-                GameObject audioObject = new GameObject("AudioObject");
-                AudioSource source = audioObject.AddComponent<AudioSource>();
-                source.spatialBlend = 0.0f;
-                source.loop = false;
-                source.clip = clip;
-                source.Play();
+        //private void PlayClip(AudioClip clip)
+        //{
+        //    if (Application.isPlaying && clip != null)
+        //    {
+        //        GameObject audioObject = new GameObject("AudioObject");
+        //        AudioSource source = audioObject.AddComponent<AudioSource>();
+        //        source.spatialBlend = 0.0f;
+        //        source.loop = false;
+        //        source.clip = clip;
+        //        source.Play();
 
-                GameObject.Destroy(audioObject, clip.length);
+        //        GameObject.Destroy(audioObject, clip.length);
 
-                _synthesizeTested = true;
-            }
-        }
+        //        _synthesizeTested = true;
+        //    }
+        //}
 
-        private void HandleConversationToSpeechCallback(AudioClip clip, Dictionary<string, object> customData)
-        {
-            if (clip != null)
-            {
-                _synthesizeConversationTested = true;
-            }
-        }
+        //private void HandleConversationToSpeechCallback(AudioClip clip, Dictionary<string, object> customData)
+        //{
+        //    if (clip != null)
+        //    {
+        //        _synthesizeConversationTested = true;
+        //    }
+        //}
 
         private void OnGetVoices(Voices voices, Dictionary<string, object> customData)
         {

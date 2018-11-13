@@ -15,7 +15,9 @@ echo "Attempting to run UnitySDK integration Tests..."
   -logFile $(pwd)/integrationTests.log \
   -projectPath $(pwd)/Travis/UnityTestProject \
   -executemethod IBM.Watson.DeveloperCloud.Editor.TravisIntegrationTests.RunTests \
+  -noUpm
   -quit
+
 if [ $? = 0 ] ; then
   echo "UnitTest COMPLETED! Exited with $?"
   echo 'Test logs'

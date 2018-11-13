@@ -3,8 +3,8 @@
 set -e
 
 BASE_URL=https://netstorage.unity3d.com/unity
-HASH=46dda1414e51
-VERSION=2017.2.0f3
+HASH=83fbdcd35118
+VERSION=2018.2.13f1
 
 download() {
  file=$1
@@ -34,4 +34,3 @@ if [ ! -d "Unity" ] ; then
 fi
 
 install "MacEditorInstaller/Unity-$VERSION.pkg"
-install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"

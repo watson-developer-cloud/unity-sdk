@@ -242,13 +242,26 @@ namespace IBM.Watson.DeveloperCloud.Connection
             /// </summary>
             public ResponseEvent OnResponse { get; set; }
             /// <summary>
-            /// This callback is invoked to provide progress on the WWW download.
+            /// This callback is invoked to provide progress on the UntiyWebRequest download.
             /// </summary>
             public ProgressEvent OnDownloadProgress { get; set; }
             /// <summary>
             /// This callback is invoked to provide upload progress.
             /// </summary>
             public ProgressEvent OnUploadProgress { get; set; }
+            /// <summary>
+            /// The http method for use with UnityWebRequest.
+            /// </summary>
+            public string HttpMethod { get; set; }
+            private bool disableSslVerification = false;
+            /// <summary>
+            /// Gets and sets the option to disable ssl verification
+            /// </summary>
+            public bool DisableSslVerification
+            {
+                get { return disableSslVerification; }
+                set { disableSslVerification = value; }
+            }
             #endregion
         }
         #endregion
@@ -288,7 +301,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             connector.URL = credentials.Url + function;
             connector.Authentication = credentials;
             if (connector.Authentication.HasIamTokenData())
+            {
                 connector.Authentication.GetToken();
+            }
 
             return connector;
         }
@@ -304,7 +319,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
         public bool Send(Request request)
         {
             if (request == null)
+            {
                 throw new ArgumentNullException("request");
+            }
 
             _requests.Enqueue(request);
 
@@ -332,7 +349,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (Authentication != null)
             {
                 if (headers == null)
+                {
                     throw new ArgumentNullException("headers");
+                }
 
                 if (Authentication.HasWatsonAuthenticationToken())
                 {
@@ -342,7 +361,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, Authentication.CreateAuthorization());
                 }
-                else if(Authentication.HasIamTokenData())
+                else if (Authentication.HasIamTokenData())
                 {
                     headers.Add(AUTHENTICATION_AUTHORIZATION_HEADER, string.Format("Bearer {0}", Authentication.IamAccessToken));
                 }
@@ -351,7 +370,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
             if (Headers != null)
             {
                 foreach (var kp in Headers)
+                {
                     headers[kp.Key] = kp.Value;
+                }
             }
 
             headers.Add("User-Agent", Constants.String.Version);
@@ -363,19 +384,25 @@ namespace IBM.Watson.DeveloperCloud.Connection
             _activeConnections += 1;
 #if UNITY_EDITOR
             if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+            {
                 yield return null;
+            }
 #else
-                yield return null;
+            yield return null;
 #endif
 
             while (_requests.Count > 0)
             {
                 Request req = _requests.Dequeue();
                 if (req.Cancel)
+                {
                     continue;
+                }
                 string url = URL;
                 if (!string.IsNullOrEmpty(req.Function))
+                {
                     url += req.Function;
+                }
 
                 StringBuilder args = null;
                 foreach (var kp in req.Parameters)
@@ -384,39 +411,62 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     var value = kp.Value;
 
                     if (value is string)
-                        value = WWW.EscapeURL((string)value);             // escape the value
+                    {
+                        value = UnityWebRequest.EscapeURL((string)value);
+                    }
                     else if (value is byte[])
-                        value = Convert.ToBase64String((byte[])value);    // convert any byte data into base64 string
-                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float || value is bool)
+                    {
+                        value = Convert.ToBase64String((byte[])value);
+                    }
+                    else if (value is Int32 || value is Int64 || value is UInt32 || value is UInt64 || value is float)
+                    {
                         value = value.ToString();
+                    }
+                    else if (value is bool)
+                    {
+                        value = value.ToString().ToLower();
+                    }
                     else if (value != null)
+                    {
                         Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported parameter value type {0}", value.GetType().Name);
+                    }
                     else
+                    {
                         Log.Error("RESTConnector.ProcessRequestQueue()", "Parameter {0} value is null", key);
+                    }
 
                     if (args == null)
+                    {
                         args = new StringBuilder();
+                    }
                     else
-                        args.Append("&");                  // append separator
+                    {
+                        args.Append("&");
+                    }
 
-                    args.Append(key + "=" + value);       // append key=value
+                    args.Append(key + "=" + value);
                 }
 
                 if (args != null && args.Length > 0)
+                {
                     url += "?" + args.ToString();
+                }
 
                 AddHeaders(req.Headers);
 
                 Response resp = new Response();
 
                 DateTime startTime = DateTime.Now;
-                if (!req.Delete && !req.Post)
+                UnityWebRequest unityWebRequest = null;
+                if (req.Forms != null || req.Send != null)
                 {
-                    WWW www = null;
+                    //  POST and PUT with data
                     if (req.Forms != null)
                     {
                         if (req.Send != null)
+                        {
                             Log.Warning("RESTConnector", "Do not use both Send & Form fields in a Request object.");
+                        }
 
                         WWWForm form = new WWWForm();
                         try
@@ -424,374 +474,194 @@ namespace IBM.Watson.DeveloperCloud.Connection
                             foreach (var formData in req.Forms)
                             {
                                 if (formData.Value.IsBinary)
+                                {
                                     form.AddBinaryData(formData.Key, formData.Value.Contents, formData.Value.FileName, formData.Value.MimeType);
+                                }
                                 else if (formData.Value.BoxedObject is string)
+                                {
                                     form.AddField(formData.Key, (string)formData.Value.BoxedObject);
+                                }
                                 else if (formData.Value.BoxedObject is int)
+                                {
                                     form.AddField(formData.Key, (int)formData.Value.BoxedObject);
+                                }
                                 else if (formData.Value.BoxedObject != null)
+                                {
                                     Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported form field type {0}", formData.Value.BoxedObject.GetType().ToString());
+                                }
                             }
                             foreach (var headerData in form.headers)
+                            {
                                 req.Headers[headerData.Key] = headerData.Value;
+                            }
                         }
                         catch (Exception e)
                         {
                             Log.Error("RESTConnector.ProcessRequestQueue()", "Exception when initializing WWWForm: {0}", e.ToString());
                         }
-                        www = new WWW(url, form.data, req.Headers);
+                        unityWebRequest = UnityWebRequest.Post(url, form);
                     }
-                    else if (req.Send == null)
-                        www = new WWW(url, null, req.Headers);
-                    else
-                        www = new WWW(url, req.Send, req.Headers);
-
-#if ENABLE_DEBUGGING
-                    Log.Debug("RESTConnector", "URL: {0}", url);
-#endif
-
-                    // wait for the request to complete.
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-                    while (!www.isDone)
+                    else if (req.Send != null)
                     {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        if (req.OnUploadProgress != null)
-                            req.OnUploadProgress(www.uploadProgress);
-                        if (req.OnDownloadProgress != null)
-                            req.OnDownloadProgress(www.progress);
-
-#if UNITY_EDITOR
-                        if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
-                            yield return null;
-#else
-                        yield return null;
-#endif
+                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod);
+                        unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
+                        unityWebRequest.SetRequestHeader("Content-Type", "application/json");
                     }
-
-                    if (req.Cancel)
-                        continue;
-
-                    bool bError = false;
-                    Error error = null;
-                    if (!string.IsNullOrEmpty(www.error))
-                    {
-                        long nErrorCode = -1;
-                        int nSeperator = www.error.IndexOf(' ');
-                        if (nSeperator > 0 && long.TryParse(www.error.Substring(0, nSeperator).Trim(), out nErrorCode))
-                        {
-                            switch (nErrorCode)
-                            {
-                                case HTTP_STATUS_OK:
-                                case HTTP_STATUS_CREATED:
-                                case HTTP_STATUS_ACCEPTED:
-                                    bError = false;
-                                    break;
-                                default:
-                                    bError = true;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            bError = true;
-                        }
-
-                        error = new Error()
-                        {
-                            URL = url,
-                            ErrorCode = resp.HttpResponseCode = nErrorCode,
-                            ErrorMessage = www.error,
-                            Response = www.text,
-                            ResponseHeaders = www.responseHeaders
-                        };
-
-                        if (bError)
-                            Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.text) ? "" : www.text);
-                        else
-                            Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, nErrorCode, www.error,
-                                string.IsNullOrEmpty(www.text) ? "" : www.text);
-                    }
-                    if (!www.isDone)
-                    {
-                        Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
-                        bError = true;
-                    }
-                    /*if (!bError && (www.bytes == null || www.bytes.Length == 0))
-                    {
-                        Log.Warning("RESTConnector.ProcessRequestQueue()", "No data recevied for URL: {0}", url);
-                        bError = true;
-                    }*/
-
-
-                    // generate the Response object now..
-                    if (!bError)
-                    {
-                        resp.Success = true;
-                        resp.Data = www.bytes;
-                        resp.HttpResponseCode = GetResponseCode(www);
-                    }
-                    else
-                    {
-                        resp.Success = false;
-                        resp.Error = error;
-                    }
-
-                    resp.Headers = www.responseHeaders;
-
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-
-                    // if the response is over a threshold, then log with status instead of debug
-                    if (resp.ElapsedTime > LogResponseTime)
-                        Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
-
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
-
-                    www.Dispose();
-                }
-                else if(req.Post)
-                {
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-
-                    PostRequest postReq = new PostRequest();
-                    Runnable.Run(postReq.Send(url, req.Headers));
-                    while (!postReq.IsComplete)
-                    {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        yield return null;
-                    }
-
-                    if (req.Cancel)
-                        continue;
-
-                    resp.Success = postReq.Success;
-                    resp.Data = postReq.Data;
-                    resp.Error = postReq.Error;
-                    resp.HttpResponseCode = postReq.HttpResponseCode;
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    resp.Headers = postReq.ResponseHeaders;
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
                 }
                 else
                 {
+                    //  GET, DELETE and POST without data
+                    unityWebRequest = new UnityWebRequest();
+                    unityWebRequest.url = url;
+                    unityWebRequest.method = req.HttpMethod;
+                }
 
+                foreach (KeyValuePair<string, string> kvp in req.Headers)
+                {
+                    unityWebRequest.SetRequestHeader(kvp.Key, kvp.Value);
+                }
+
+                unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
+
+                if (req.DisableSslVerification)
+                {
+                    unityWebRequest.certificateHandler = new AcceptAllCertificates();
+                }
+                else
+                {
+                    unityWebRequest.certificateHandler = null;
+                }
+
+#if UNITY_2017_2_OR_NEWER
+                unityWebRequest.SendWebRequest();
+#else
+                www.Send();
+#endif
 #if ENABLE_DEBUGGING
-                    Log.Debug("RESTConnector.ProcessRequestQueue90", "Delete Request URL: {0}", url);
+                Log.Debug("RESTConnector", "URL: {0}", url);
 #endif
 
-                    float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
-
-                    DeleteRequest deleteReq = new DeleteRequest();
-                    Runnable.Run(deleteReq.Send(url, req.Headers));
-                    while (!deleteReq.IsComplete)
+                // wait for the request to complete.
+                float timeout = Mathf.Max(Constants.Config.Timeout, req.Timeout);
+                while (!unityWebRequest.isDone)
+                {
+                    if (req.Cancel)
                     {
-                        if (req.Cancel)
-                            break;
-                        if ((DateTime.Now - startTime).TotalSeconds > timeout)
-                            break;
-                        yield return null;
+                        break;
+                    }
+                    if ((DateTime.Now - startTime).TotalSeconds > timeout)
+                    {
+                        break;
+                    }
+                    if (req.OnUploadProgress != null)
+                    {
+                        req.OnUploadProgress(unityWebRequest.uploadProgress);
+                    }
+                    if (req.OnDownloadProgress != null)
+                    {
+                        req.OnDownloadProgress(unityWebRequest.downloadProgress);
                     }
 
-                    if (req.Cancel)
-                        continue;
-
-                    resp.Success = deleteReq.Success;
-                    resp.Data = deleteReq.Data;
-                    resp.Error = deleteReq.Error;
-                    resp.HttpResponseCode = deleteReq.HttpResponseCode;
-                    resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
-                    resp.Headers = deleteReq.ResponseHeaders;
-                    if (req.OnResponse != null)
-                        req.OnResponse(req, resp);
+#if UNITY_EDITOR
+                    if (!UnityEditorInternal.InternalEditorUtility.inBatchMode)
+                    {
+                        yield return null;
+                    }
+#else
+                    yield return null;
+#endif
                 }
+
+                if (req.Cancel)
+                {
+                    continue;
+                }
+
+                bool bError = false;
+                Error error = null;
+                if (!string.IsNullOrEmpty(unityWebRequest.error))
+                {
+                    switch (unityWebRequest.responseCode)
+                    {
+                        case HTTP_STATUS_OK:
+                        case HTTP_STATUS_CREATED:
+                        case HTTP_STATUS_ACCEPTED:
+                            bError = false;
+                            break;
+                        default:
+                            bError = true;
+                            break;
+                    }
+
+                    error = new Error()
+                    {
+                        URL = url,
+                        ErrorCode = unityWebRequest.responseCode,
+                        ErrorMessage = unityWebRequest.error,
+                        Response = unityWebRequest.downloadHandler.text,
+                        ResponseHeaders = unityWebRequest.GetResponseHeaders()
+                    };
+
+                    if (bError)
+                    {
+                        Log.Error("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, unityWebRequest.responseCode, unityWebRequest.error,
+                            string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                    }
+                    else
+                    {
+                        Log.Warning("RESTConnector.ProcessRequestQueue()", "URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", url, unityWebRequest.responseCode, unityWebRequest.error,
+                            string.IsNullOrEmpty(unityWebRequest.downloadHandler.text) ? "" : unityWebRequest.downloadHandler.text);
+                    }
+                }
+                if (!unityWebRequest.isDone)
+                {
+                    Log.Error("RESTConnector.ProcessRequestQueue()", "Request timed out for URL: {0}", url);
+                    bError = true;
+                }
+
+                // generate the Response object now..
+                if (!bError)
+                {
+                    resp.Success = true;
+                    resp.Data = unityWebRequest.downloadHandler.data;
+                    resp.HttpResponseCode = unityWebRequest.responseCode;
+                }
+                else
+                {
+                    resp.Success = false;
+                    resp.Error = error;
+                }
+
+                resp.Headers = unityWebRequest.GetResponseHeaders();
+
+                resp.ElapsedTime = (float)(DateTime.Now - startTime).TotalSeconds;
+
+                // if the response is over a threshold, then log with status instead of debug
+                if (resp.ElapsedTime > LogResponseTime)
+                {
+                    Log.Warning("RESTConnector.ProcessRequestQueue()", "Request {0} completed in {1} seconds.", url, resp.ElapsedTime);
+                }
+
+                if (req.OnResponse != null)
+                {
+                    req.OnResponse(req, resp);
+                }
+
+                unityWebRequest.Dispose();
             }
 
-            // reduce the connection count before we exit..
+            // reduce the connection count before we exit.
             _activeConnections -= 1;
             yield break;
         }
-
-        public static int GetResponseCode(WWW request)
-        {
-            int ret = -1;
-            if (request.responseHeaders == null)
-            {
-                Log.Error("RESTConnector.GetResponseCode()", "no response headers.");
-            }
-            else
-            {
-                if (!request.responseHeaders.ContainsKey("STATUS"))
-                {
-                    Log.Error("RESTConnector.GetResponseCode()", "response headers has no STATUS.");
-                }
-                else
-                {
-                    ret = ParseResponseCode(request.responseHeaders["STATUS"]);
-                }
-            }
-
-            return ret;
-        }
-
-        public static int ParseResponseCode(string statusLine)
-        {
-            int ret = -1;
-
-            string[] components = statusLine.Split(' ');
-            if (components.Length < 3)
-            {
-                Log.Error("RESTConnector.ParseResponseCode()", "invalid response status: " + statusLine);
-            }
-            else
-            {
-                if (!int.TryParse(components[1], out ret))
-                {
-                    Log.Error("RESTConnector.ParseResponseCode()", "invalid response code: " + components[1]);
-                }
-            }
-
-            return ret;
-        }
-
-        private class DeleteRequest
-        {
-            public string URL { get; set; }
-            public Dictionary<string, string> Headers { get; set; }
-            public bool IsComplete { get; set; }
-            public bool Success { get; set; }
-            public long HttpResponseCode { get; set; }
-            public byte[] Data { get; set; }
-            public Error Error { get; set; }
-            public Dictionary<string, string> ResponseHeaders { get; set; }
-
-            public IEnumerator Send(string url, Dictionary<string, string> headers)
-            {
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, Send: {0}", url);
-#endif
-
-                URL = url;
-                Headers = new Dictionary<string, string>();
-                foreach (var kp in headers)
-                {
-                    if (kp.Key != "User-Agent")
-                        Headers[kp.Key] = kp.Value;
-                }
-
-#if !NETFX_CORE
-                // This fixes the exception thrown by self-signed certificates.
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-#endif
-
-#if ENABLE_DEBUGGING
-                Log.Debug("DeleteRequest.Send()", "DeleteRequest, ProcessRequest {0}", URL);
-#endif
-                UnityWebRequest deleteReq = UnityWebRequest.Delete(URL);
-                deleteReq.method = UnityWebRequest.kHttpVerbDELETE;
-                deleteReq.downloadHandler = new DownloadHandlerBuffer();
-
-                foreach (var kp in Headers)
-                    deleteReq.SetRequestHeader(kp.Key, kp.Value);
-#if UNITY_2017_2_OR_NEWER
-                yield return deleteReq.SendWebRequest();
-#else
-                yield return deleteReq.Send();
-#endif
-                Error error = null;
-                if (!string.IsNullOrEmpty(deleteReq.error))
-                {
-                    error = new Error()
-                    {
-                        URL = url,
-                        ErrorCode = deleteReq.responseCode,
-                        ErrorMessage = deleteReq.error,
-                        Response = deleteReq.downloadHandler.text,
-                        ResponseHeaders = deleteReq.GetResponseHeaders()
-                    };
-                }
-
-                Success = deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_OK || deleteReq.responseCode == HTTP_STATUS_NO_CONTENT || deleteReq.responseCode == HTTP_STATUS_ACCEPTED;
-                HttpResponseCode = deleteReq.responseCode;
-                ResponseHeaders = deleteReq.GetResponseHeaders();
-                Data = deleteReq.downloadHandler.data;
-                Error = error;
-                IsComplete = true;
-            }
-        };
-
-        private class PostRequest
-        {
-            public string URL { get; set; }
-            public Dictionary<string, string> Headers { get; set; }
-            public bool IsComplete { get; set; }
-            public bool Success { get; set; }
-            public long HttpResponseCode { get; set; }
-            public byte[] Data { get; set; }
-            public Error Error { get; set; }
-            public Dictionary<string, string> ResponseHeaders { get; set; }
-
-            public IEnumerator Send(string url, Dictionary<string, string> headers)
-            {
-#if ENABLE_DEBUGGING
-                Log.Debug("PostRequest.Send()", "PostRequest, Send: {0}", url);
-#endif
-
-                URL = url;
-                Headers = new Dictionary<string, string>();
-                foreach (var kp in headers)
-                {
-                    if (kp.Key != "User-Agent")
-                        Headers[kp.Key] = kp.Value;
-                }
-
-#if !NETFX_CORE
-                // This fixes the exception thrown by self-signed certificates.
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-#endif
-
-#if ENABLE_DEBUGGING
-                Log.Debug("PostRequest.Send()", "PostRequest, ProcessRequest {0}", URL);
-#endif
-                UnityWebRequest postReq = UnityWebRequest.Get(URL);
-                postReq.method = UnityWebRequest.kHttpVerbPOST;
-                postReq.downloadHandler = new DownloadHandlerBuffer();
-
-                foreach (var kp in Headers)
-                    postReq.SetRequestHeader(kp.Key, kp.Value);
-#if UNITY_2017_2_OR_NEWER
-                yield return postReq.SendWebRequest();
-#else
-                yield return postReq.Send();
-#endif
-                Error error = null;
-                if (!string.IsNullOrEmpty(postReq.error))
-                {
-                    error = new Error()
-                    {
-                        URL = url,
-                        ErrorCode = postReq.responseCode,
-                        ErrorMessage = postReq.error,
-                        Response = postReq.downloadHandler.text,
-                        ResponseHeaders = postReq.GetResponseHeaders()
-                    };
-                }
-
-                Success = postReq.responseCode == HTTP_STATUS_OK || postReq.responseCode == HTTP_STATUS_CREATED || postReq.responseCode == HTTP_STATUS_NO_CONTENT || postReq.responseCode == HTTP_STATUS_ACCEPTED;
-                HttpResponseCode = postReq.responseCode;
-                ResponseHeaders = postReq.GetResponseHeaders();
-                Data = postReq.downloadHandler.data;
-                Error = error;
-                IsComplete = true;
-            }
-        };
         #endregion
+    }
+
+    class AcceptAllCertificates : CertificateHandler
+    {
+        protected override bool ValidateCertificate(byte[] certificateData)
+        {
+            return true;
+        }
     }
 }
