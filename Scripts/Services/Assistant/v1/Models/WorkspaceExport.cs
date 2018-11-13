@@ -71,7 +71,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>The current status of the workspace.</value>
         [fsProperty("status")]
-        public StatusEnum? Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// The name of the workspace.
         /// </summary>

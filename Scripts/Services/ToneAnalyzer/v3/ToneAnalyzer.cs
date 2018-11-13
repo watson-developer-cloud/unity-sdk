@@ -23,6 +23,7 @@ using System.Text;
 using MiniJSON;
 using System;
 using FullSerializer;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
 {
@@ -79,6 +80,16 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                     _url = _credentials.Url;
                 }
             }
+        }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
         }
         #endregion
 
@@ -141,10 +152,12 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
             GetToneAnalyzerRequest req = new GetToneAnalyzerRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }

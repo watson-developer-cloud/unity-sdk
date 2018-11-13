@@ -23,7 +23,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using MiniJSON;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -75,6 +75,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
                     _url = _credentials.Url;
                 }
             }
+        }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
         }
         #endregion
 
@@ -155,16 +165,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             MessageReq req = new MessageReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
             req.Send = Encoding.UTF8.GetBytes(reqString);
             req.OnResponse = MessageResp;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -194,7 +206,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Workspaces);
             if (connector == null)
                 return false;
-            
+
             IDictionary<string, string> requestDict = new Dictionary<string, string>();
             if (messageRequest.context != null)
                 requestDict.Add("context", Json.Serialize(messageRequest.context));
@@ -210,7 +222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 
             int iterator = 0;
             StringBuilder stringBuilder = new StringBuilder("{");
-            foreach(KeyValuePair<string, string> property in requestDict)
+            foreach (KeyValuePair<string, string> property in requestDict)
             {
                 string delimeter = iterator < requestDict.Count - 1 ? "," : "";
                 stringBuilder.Append(string.Format("\"{0}\": {1}{2}", property.Key, property.Value, delimeter));
@@ -223,16 +235,18 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             MessageReq req = new MessageReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.Function = "/" + workspaceID + "/message";
             req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = MessageResp;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
@@ -327,6 +341,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -337,7 +353,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             }
             req.Parameters["customer_id"] = customerId;
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
 
             req.OnResponse = OnDeleteUserDataResponse;
 
