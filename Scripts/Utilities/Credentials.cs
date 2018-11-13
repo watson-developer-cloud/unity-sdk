@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Utilities
 {
@@ -84,6 +85,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             }
         }
         private IamTokenData _tokenData = null;
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification for getting an IAM token.
+        /// </summary>
+        public bool DisableSslVerificationDisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Callback delegates
@@ -258,9 +268,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             RequestIamTokenRequest req = new RequestIamTokenRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRequestIamTokenResponse;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -349,9 +361,11 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             RefreshIamTokenRequest req = new RefreshIamTokenRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
             req.OnResponse = OnRefreshIamTokenResponse;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {

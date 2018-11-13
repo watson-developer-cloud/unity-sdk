@@ -706,6 +706,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
             WWW www = new WWW(_acousticResourceUrl);
+            while (!www.isDone)
+            {
+                yield return null;
+            }
             yield return www;
 
             Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");

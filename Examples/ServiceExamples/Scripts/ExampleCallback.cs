@@ -17,7 +17,7 @@
 
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
+using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System.Collections.Generic;
@@ -51,8 +51,8 @@ namespace IBM.Watson.DeveloperCloud.Examples
 
             //  Create conversation instance
             Credentials conversationCredentials = new Credentials(_conversationUsername, _conversationPassword, _conversationUrl);
-            Conversation conversation = new Conversation(conversationCredentials);
-            conversation.VersionDate = "2017-05-26";
+            Assistant assistant = new Assistant(conversationCredentials);
+            assistant.VersionDate = "2017-05-26";
 
             //  Create discovery instance
             Credentials discoveryCredentials = new Credentials(_discoveryUsername, _discoveryPassword, _discoveryUrl);
@@ -60,11 +60,12 @@ namespace IBM.Watson.DeveloperCloud.Examples
             discovery.VersionDate = "2016-12-01";
 
             //  Call with generic callbacks
-            conversation.Message(OnSuccess, OnFail, _workspaceId, "");
+
+            assistant.Message(OnSuccess, OnFail, _workspaceId);
             discovery.GetEnvironments(OnSuccess, OnFail);
 
             //  Call with sepcific callbacks
-            conversation.Message(OnMessage, OnMessageFail, _workspaceId, "");
+            assistant.Message(OnMessage, OnMessageFail, _workspaceId);
             discovery.GetEnvironments(OnGetEnvironments, OnGetEnvironmentsFail);
         }
 

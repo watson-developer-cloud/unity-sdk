@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 {
@@ -81,6 +82,16 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                 }
             }
         }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Constructor
@@ -121,8 +132,8 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
         #region Profile
         private const string ProfileEndpoint = "/v3/profile";
 
-        public bool GetProfile(SuccessCallback<Profile> successCallback, 
-            FailCallback failCallback, 
+        public bool GetProfile(SuccessCallback<Profile> successCallback,
+            FailCallback failCallback,
             string source,
             string contentType = ContentType.TextPlain,
             string contentLanguage = ContentLanguage.English,
@@ -147,11 +158,14 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
 
             GetProfileRequest req = new GetProfileRequest();
             req.SuccessCallback = successCallback;
+            req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
