@@ -525,6 +525,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// ISO 639-1 code indicating the language to use in the analysis
         /// </summary>
         public string language { get; set; }
+        /// <summary>
+        /// Sets the maximum number of characters that are processed by the service
+        /// </summary>
+        public int? limit_text_characters { get; set; }
     }
 
     [fsObject(Converter = typeof(FeaturesConverter))]
@@ -631,13 +635,13 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         }
     }
 
-    [fsObject]
+    [fsObject(Converter = typeof(EntitiesOptionsConverter))]
     public class EntitiesOptions
     {
         /// <summary>
         /// Maximum number of entities to return
         /// </summary>
-        public int limit { get; set; }
+        public int? limit { get; set; }
         /// <summary>
         /// Enter a custom model ID to override the standard entity detection model
         /// </summary>
@@ -645,12 +649,77 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// <summary>
         /// Set this to true to return sentiment information for detected entities
         /// </summary>
-        public bool sentiment { get; set; }
+        public bool? sentiment { get; set; }
         /// <summary>
         /// Set this to true to analyze emotion for detected keywords
         /// </summary>
-        public bool emotion { get; set; }
+        public bool? emotion { get; set; }
+        /// <summary>
+        /// Set this to true to return locations of entity mentions
+        /// </summary>
+        public bool? mentions { get; set; }
     }
+
+    #region Entities Options Converter
+    public class EntitiesOptionsConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(EntitiesOptions);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            EntitiesOptions entitiesOptions = (EntitiesOptions)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (entitiesOptions.limit != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.limit, out tempData);
+                serialization.Add("limit", tempData);
+            }
+
+            if (entitiesOptions.model != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.model, out tempData);
+                serialization.Add("model", tempData);
+            }
+
+            if (entitiesOptions.sentiment != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.sentiment, out tempData);
+                serialization.Add("sentiment", tempData);
+            }
+
+            if (entitiesOptions.emotion != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.emotion, out tempData);
+                serialization.Add("emotion", tempData);
+            }
+
+            if (entitiesOptions.mentions != null)
+            {
+                _serializer.TrySerialize(entitiesOptions.mentions, out tempData);
+                serialization.Add("mentions", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+        #endregion
 
     [fsObject]
     public class KeywordsOptions
@@ -790,28 +859,49 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 
             Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
             if (parameters.text != null)
+            {
                 serialization.Add("text", new fsData(parameters.text));
+            }
 
             if (parameters.url != null)
+            {
                 serialization.Add("url", new fsData(parameters.url));
+            }
 
             if (parameters.html != null)
+            {
                 serialization.Add("html", new fsData(parameters.html));
+            }
 
             if (parameters.clean != null)
+            {
                 serialization.Add("clean", new fsData((bool)parameters.clean));
+            }
 
             if (parameters.xpath != null)
+            {
                 serialization.Add("xpath", new fsData(parameters.xpath));
+            }
 
             if (parameters.fallback_to_raw != null)
+            {
                 serialization.Add("fallback_to_raw", new fsData((bool)parameters.fallback_to_raw));
-
+            }
+            
             if (parameters.return_analyzed_text != null)
+            {
                 serialization.Add("return_analyzed_text", new fsData((bool)parameters.return_analyzed_text));
+            }
 
             if (parameters.xpath != null)
+            {
                 serialization.Add("xpath", new fsData(parameters.xpath));
+            }
+
+            if (parameters.limit_text_characters != null)
+            {
+                serialization.Add("limit_text_characters", new fsData((int)parameters.limit_text_characters));
+            }
 
             fsData tempData = null;
             _serializer.TrySerialize(parameters.features, out tempData);
