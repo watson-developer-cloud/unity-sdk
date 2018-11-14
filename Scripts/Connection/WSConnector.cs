@@ -228,9 +228,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
             }
             //  Germany
-            else if (URL.StartsWith("https://gateway-fra."))
+            else if (URL.StartsWith("https://stream-fra."))
             {
-                URL = URL.Replace("https://gateway-fra.", "wss://stream-fra.");
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
             }
             //  US East
             else if (URL.StartsWith("https://gateway-wdc."))
@@ -241,6 +241,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             else if (URL.StartsWith("https://gateway-syd."))
             {
                 URL = URL.Replace("https://gateway-syd.", "wss://gateway-syd.");
+            }
+            //  Tokyo
+            else if (URL.StartsWith("https://gateway-tok."))
+            {
+                URL = URL.Replace("https://gateway-tok.", "wss://gateway-tok.");
             }
             else
             {
