@@ -89,7 +89,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <summary>
         /// Gets and sets the option to disable ssl verification for getting an IAM token.
         /// </summary>
-        public bool DisableSslVerificationDisableSslVerification
+        public bool DisableSslVerification
         {
             get { return disableSslVerification; }
             set { disableSslVerification = value; }
