@@ -43,7 +43,11 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _sessionId;
 
         private bool _createSessionTested = false;
-        private bool _messageTested = false;
+        private bool _messageTested0 = false;
+        private bool _messageTested1 = false;
+        private bool _messageTested2 = false;
+        private bool _messageTested3 = false;
+        private bool _messageTested4 = false;
         private bool _deleteSessionTested = false;
 
         public override IEnumerator RunTest()
@@ -98,14 +102,74 @@ namespace Assets.Watson.Scripts.UnitTests
             }
 
             Log.Debug("TestAssistantV2.RunTest()", "Attempting to Message");
-            _service.Message(OnMessage, OnFail, _assistantId, _sessionId);
+            _service.Message(OnMessage0, OnFail, _assistantId, _sessionId);
 
-            while (!_messageTested)
+            while (!_messageTested0)
             {
                 yield return null;
             }
 
-            Log.Debug("TestAssistantV2.RunTest()", "Attempting to DeleteSession");
+            Log.Debug("TestAssistantV2.RunTest()", "Are you open on Christmas?");
+            MessageRequest messageRequest1 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "Are you open on Christmas?"
+                }
+            };
+            _service.Message(OnMessage1, OnFail, _assistantId, _sessionId, messageRequest1);
+
+            while (!_messageTested1)
+            {
+                yield return null;
+            }
+
+            Log.Debug("TestAssistantV2.RunTest()", "What are your hours?");
+            MessageRequest messageRequest2 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "What are your hours?"
+                }
+            };
+            _service.Message(OnMessage2, OnFail, _assistantId, _sessionId, messageRequest2);
+
+            while (!_messageTested2)
+            {
+                yield return null;
+            }
+
+            Log.Debug("TestAssistantV2.RunTest()", "I'd like to make an appointment for 12pm.");
+            MessageRequest messageRequest3 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "I'd like to make an appointment for 12pm."
+                }
+            };
+            _service.Message(OnMessage3, OnFail, _assistantId, _sessionId, messageRequest3);
+
+            while (!_messageTested3)
+            {
+                yield return null;
+            }
+
+            Log.Debug("TestAssistantV2.RunTest()", "On Friday please.");
+            MessageRequest messageRequest4 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "On Friday please."
+                }
+            };
+            _service.Message(OnMessage4, OnFail, _assistantId, _sessionId, messageRequest4);
+
+            while (!_messageTested4)
+            {
+                yield return null;
+            }
+
+            Log.Debug("TestAssistantV2.RunTest()", "Attempting to delete session");
             _service.DeleteSession(OnDeleteSession, OnFail, _assistantId, _sessionId);
 
             while (!_deleteSessionTested)
@@ -121,10 +185,44 @@ namespace Assets.Watson.Scripts.UnitTests
             _deleteSessionTested = true;
         }
 
-        private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
+        private void OnMessage0(MessageResponse response, Dictionary<string, object> customData)
         {
-            Test(response != null);
-            _messageTested = true;
+            Test(!string.IsNullOrEmpty(response.Output.Generic[0].Text));
+            Log.Debug("TestAssistantV2.OnMessage0()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested0 = true;
+        }
+
+        private void OnMessage1(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Test(!string.IsNullOrEmpty(response.Output.Generic[0].Text));
+            Test(response.Output.Entities[0].Value == "christmas");
+            Test(response.Output.Entities[0].Entity == "holiday");
+            Log.Debug("TestAssistantV2.OnMessage1()", "response: {0}", response.Output.Generic[0].Text);
+
+            _messageTested1 = true;
+        }
+
+        private void OnMessage2(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Test(!string.IsNullOrEmpty(response.Output.Generic[0].Text));
+            Test(response.Output.Intents[0].Intent == "Customer_Care_Store_Hours");
+            Log.Debug("TestAssistantV2.OnMessage2()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested2 = true;
+        }
+
+        private void OnMessage3(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Test(!string.IsNullOrEmpty(response.Output.Generic[0].Text));
+            Test(response.Output.Intents[0].Intent == "Customer_Care_Appointments");
+            Log.Debug("TestAssistantV2.OnMessage3()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested3 = true;
+        }
+        private void OnMessage4(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Test(!string.IsNullOrEmpty(response.Output.Generic[0].Text));
+            Test(response.Output.Intents[0].Intent == "Customer_Care_Appointments");
+            Log.Debug("TestAssistantV2.OnMessage4()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested4 = true;
         }
 
         private void OnCreateSession(SessionResponse response, Dictionary<string, object> customData)
