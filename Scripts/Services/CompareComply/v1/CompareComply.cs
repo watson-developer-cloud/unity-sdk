@@ -1085,10 +1085,26 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(function))
+                throw new ArgumentNullException("function");
+            if(inputCredentialsFile == null)
+                throw new ArgumentNullException("inputCredentialsFile");
+            if (string.IsNullOrEmpty(inputBucketLocation))
+                throw new ArgumentNullException("inputBucketLocation");
+            if (string.IsNullOrEmpty(inputBucketName))
+                throw new ArgumentNullException("inputBucketName");
+            if (outputCredentialsFile == null)
+                throw new ArgumentNullException("outputCredentialsFile");
+            if (string.IsNullOrEmpty(outputBucketLocation))
+                throw new ArgumentNullException("outputBucketLocation");
+            if (string.IsNullOrEmpty(outputBucketName))
+                throw new ArgumentNullException("outputBucketName");
 
             CreateBatchRequestObj req = new CreateBatchRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1097,33 +1113,21 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["inputCredentialsFile"] = new RESTConnector.Form(inputCredentialsFile, "file", "application/json");
-            if (inputBucketLocation != null)
-            {
-                req.Forms["inputBucketLocation"] = new RESTConnector.Form("inputBucketLocation");
-            }
-            if (inputBucketName != null)
-            {
-                req.Forms["inputBucketName"] = new RESTConnector.Form("inputBucketName");
-            }
-            req.Forms["outputCredentialsFile"] = new RESTConnector.Form(outputCredentialsFile, "file", "application/json");
-            if (outputBucketLocation != null)
-            {
-                req.Forms["outputBucketLocation"] = new RESTConnector.Form("outputBucketLocation");
-            }
-            if (outputBucketName != null)
-            {
-                req.Forms["outputBucketName"] = new RESTConnector.Form("outputBucketName");
-            }
-            if (!string.IsNullOrEmpty(function))
-                req.Parameters["function"] = function;
+            req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, "file", "application/json");
+            req.Forms["input_bucket_location"] = new RESTConnector.Form(inputBucketLocation);
+            req.Forms["input_bucket_name"] = new RESTConnector.Form(inputBucketName);
+            req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, "file", "application/json");
+            req.Forms["output_bucket_location"] = new RESTConnector.Form(outputBucketLocation);
+            req.Forms["output_bucket_name"] = new RESTConnector.Form(outputBucketName);
+            req.Parameters["function"] = function;
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnCreateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/batches");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
                 return false;
 
@@ -1204,10 +1208,14 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(batchId))
+                throw new ArgumentNullException("batchId");
 
             GetBatchRequestObj req = new GetBatchRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1219,7 +1227,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/batches/{batchId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)
                 return false;
 
@@ -1303,6 +1311,8 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             GetBatchesRequestObj req = new GetBatchesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1314,7 +1324,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/batches");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
                 return false;
 
@@ -1402,10 +1412,16 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if(!string.IsNullOrEmpty(batchId))
+                throw new ArgumentNullException("batchId");
+            if (!string.IsNullOrEmpty(action))
+                throw new ArgumentNullException("action");
 
             UpdateBatchRequestObj req = new UpdateBatchRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPUT;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1421,7 +1437,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnUpdateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/batches/{batchId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)
                 return false;
 
