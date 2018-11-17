@@ -32,6 +32,11 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         [fsProperty("feedback_id")]
         public string FeedbackId { get; set; }
         /// <summary>
+        /// An optional identifier of the user submitting feedback.
+        /// </summary>
+        [fsProperty("user_id")]
+        public string UserId { get; set; }
+        /// <summary>
         /// A timestamp identifying the creation time of the feedback entry.
         /// </summary>
         [fsProperty("created")]

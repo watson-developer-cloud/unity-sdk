@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System;
 using System.Collections.Generic;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
@@ -39,4 +40,46 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public List<Category> Categories { get; set; }
     }
 
+    #region UpdatedLabelsIn Converter
+    public class UpdatedLabelsInConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(UpdatedLabelsIn);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            UpdatedLabelsIn UpdatedLabelsIn = (UpdatedLabelsIn)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (UpdatedLabelsIn.Types != null && UpdatedLabelsIn.Types.Count > 0)
+            {
+                _serializer.TrySerialize(UpdatedLabelsIn.Types, out tempData);
+                serialization.Add("types", tempData);
+            }
+
+            if (UpdatedLabelsIn.Categories != null && UpdatedLabelsIn.Categories.Count > 0)
+            {
+                _serializer.TrySerialize(UpdatedLabelsIn.Categories, out tempData);
+                serialization.Add("categories", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

@@ -582,10 +582,14 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (feedbackData == null)
+                throw new ArgumentNullException("feedbackData");
 
             AddFeedbackRequestObj req = new AddFeedbackRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -594,10 +598,17 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+
+            fsData data = null;
+            _serializer.TrySerialize(feedbackData, out data);
+            string json = data.ToString().Replace('\"', '"');
+            req.Send = Encoding.UTF8.GetBytes(json);
+
+            req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/feedback");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
                 return false;
 
@@ -685,6 +696,8 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             DeleteFeedbackRequestObj req = new DeleteFeedbackRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -698,7 +711,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnDeleteFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/feedback/{feedbackId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
                 return false;
 
@@ -781,10 +794,14 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(feedbackId))
+                throw new ArgumentNullException("feedbackId");
 
             GetFeedbackRequestObj req = new GetFeedbackRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -798,7 +815,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnGetFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/feedback/{feedbackId}");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
                 return false;
 
@@ -920,6 +937,8 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             ListFeedbackRequestObj req = new ListFeedbackRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -963,7 +982,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
                 req.Parameters["include_total"] = includeTotal;
             req.OnResponse = OnListFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v1/feedback");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
                 return false;
 

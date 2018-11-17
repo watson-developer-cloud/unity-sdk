@@ -28,35 +28,6 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
     public class UpdatedLabelsOut
     {
         /// <summary>
-        /// The type of modification the feedback entry in the `updated_labels` array. Possible values are `added`,
-        /// `not_changed`, and `removed`.
-        /// </summary>
-        public enum ModificationEnum
-        {
-            /// <summary>
-            /// Enum added for added
-            /// </summary>
-            [EnumMember(Value = "added")]
-            added,
-            /// <summary>
-            /// Enum notChanged for not_changed
-            /// </summary>
-            [EnumMember(Value = "not_changed")]
-            not_changed,
-            /// <summary>
-            /// Enum removed for removed
-            /// </summary>
-            [EnumMember(Value = "removed")]
-            removed
-        }
-
-        /// <summary>
-        /// The type of modification the feedback entry in the `updated_labels` array. Possible values are `added`,
-        /// `not_changed`, and `removed`.
-        /// </summary>
-        [fsProperty("modification")]
-        public ModificationEnum? Modification { get; set; }
-        /// <summary>
         /// Description of the action specified by the element and whom it affects.
         /// </summary>
         [fsProperty("types")]

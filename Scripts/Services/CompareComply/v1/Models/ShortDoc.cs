@@ -16,13 +16,15 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
     /// <summary>
     /// Brief information about the input document.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(ShortDocConverter))]
     public class ShortDoc
     {
         /// <summary>
@@ -37,4 +39,68 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public string Hash { get; set; }
     }
 
+    #region ShortDocConverter Converter
+    public class ShortDocConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(ShortDoc);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            if (data.Type != fsDataType.Object)
+            {
+                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+            }
+
+            var myType = (ShortDoc)instance;
+            Dictionary<string, fsData> dataDict = data.AsDictionary;
+            if (dataDict.ContainsKey("title"))
+            {
+                if (!dataDict["title"].IsNull)
+                    myType.Title = dataDict["title"].AsString;
+            }
+            if (dataDict.ContainsKey("hash"))
+            {
+                if (!dataDict["hash"].IsNull)
+                    myType.Hash = dataDict["hash"].AsString;
+            }
+            return fsResult.Success;
+        }
+
+        public override object CreateInstance(fsData data, Type storageType)
+        {
+            return new ShortDoc();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            ShortDoc shortDoc = (ShortDoc)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (!string.IsNullOrEmpty(shortDoc.Title))
+            {
+                _serializer.TrySerialize(shortDoc.Title, out tempData);
+                serialization.Add("title", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(shortDoc.Hash))
+            {
+                _serializer.TrySerialize(shortDoc.Hash, out tempData);
+                serialization.Add("hash", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

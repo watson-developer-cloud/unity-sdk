@@ -16,13 +16,15 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
     /// <summary>
     /// Feedback data for submission.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(FeedbackDataInputConverter))]
     public class FeedbackDataInput
     {
         /// <summary>
@@ -78,4 +80,94 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public UpdatedLabelsIn UpdatedLabels { get; set; }
     }
 
+    #region FeedbackDataInput Converter
+    public class FeedbackDataInputConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(FeedbackDataInput);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            FeedbackDataInput feedbackDataInput = (FeedbackDataInput)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.UserId))
+            {
+                _serializer.TrySerialize(feedbackDataInput.UserId, out tempData);
+                serialization.Add("user_id", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.Comment))
+            {
+                _serializer.TrySerialize(feedbackDataInput.Comment, out tempData);
+                serialization.Add("comment", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.FeedbackType))
+            {
+                _serializer.TrySerialize(feedbackDataInput.FeedbackType, out tempData);
+                serialization.Add("feedback_type", tempData);
+            }
+
+            if (feedbackDataInput.Document != null)
+            {
+                _serializer.TrySerialize(feedbackDataInput.Document, out tempData);
+                serialization.Add("document", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.ModelId))
+            {
+                _serializer.TrySerialize(feedbackDataInput.ModelId, out tempData);
+                serialization.Add("model_id", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.ModelVersion))
+            {
+                _serializer.TrySerialize(feedbackDataInput.ModelVersion, out tempData);
+                serialization.Add("model_version", tempData);
+            }
+
+            if (feedbackDataInput.Location != null)
+            {
+                _serializer.TrySerialize(feedbackDataInput.Location, out tempData);
+                serialization.Add("location", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackDataInput.Text))
+            {
+                _serializer.TrySerialize(feedbackDataInput.Text, out tempData);
+                serialization.Add("text", tempData);
+            }
+
+            if (feedbackDataInput.OriginalLabels != null)
+            {
+                _serializer.TrySerialize(feedbackDataInput.OriginalLabels, out tempData);
+                serialization.Add("original_labels", tempData);
+            }
+
+            if (feedbackDataInput.UpdatedLabels != null)
+            {
+                _serializer.TrySerialize(feedbackDataInput.UpdatedLabels, out tempData);
+                serialization.Add("updated_labels", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

@@ -120,32 +120,192 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             byte[] contractB = File.ReadAllBytes(contractBFilepath);
             byte[] table = File.ReadAllBytes(tableFilepath);
 
-            compareComply.ConvertToHtml(OnConvertToHtml, OnFail, contractA, fileContentType:"application/pdf");
-            while(!convertToHtmlTested)
+            //compareComply.ConvertToHtml(OnConvertToHtml, OnFail, contractA, fileContentType:"application/pdf");
+            //while(!convertToHtmlTested)
+            //{
+            //    yield return null;
+            //}
+
+            //compareComply.ClassifyElements(OnClassifyElements, OnFail, contractA);
+            //while (!classifyElementsTested)
+            //{
+            //    yield return null;
+            //}
+
+            //compareComply.ExtractTables(OnExtractTables, OnFail, table);
+            //while (!extractTablesTested)
+            //{
+            //    yield return null;
+            //}
+
+            //compareComply.CompareDocuments(OnCompareDocuments, OnFail, contractA, contractB, file1ContentType:"application/pdf", file2ContentType:"application/pdf");
+            //while(!compareDocumentsTested)
+            //{
+            //    yield return null;
+            //}
+
+            DateTime before = new DateTime(2018, 11, 15);
+            DateTime after = new DateTime(2018, 11, 14);
+            compareComply.ListFeedback(
+                successCallback: OnListFeedback,
+                failCallback: OnFail,
+                feedbackType: "element_classification",
+                before: before,
+                after: after,
+                documentTitle: "unity-test-feedback-doc", 
+                modelId: "contracts", 
+                modelVersion: "2.0.0", 
+                categoryRemoved: "Responsibilities", 
+                categoryAdded: "Amendments", 
+                categoryNotChanged: "Audits", 
+                typeRemoved: "End User:Exclusion", 
+                typeAdded: "Disclaimer:Buyer", 
+                typeNotChanged: "Obligation:IBM", 
+                pageLimit: 1
+                );
+            while (!listFeedbackTested)
             {
                 yield return null;
             }
 
-            compareComply.ClassifyElements(OnClassifyElements, OnFail, contractA);
-            while (!classifyElementsTested)
+
+            #region Feedback Data
+            FeedbackInput feedbackData = new FeedbackInput()
+            {
+                UserId = "user_id_123x",
+                Comment = "Test feedback comment",
+                FeedbackData = new FeedbackDataInput()
+                {
+                    FeedbackType = "element_classification",
+                    Document = new ShortDoc()
+                    {
+                        Hash = "",
+                        Title = "doc title"
+                    },
+                    ModelId = "contracts",
+                    ModelVersion = "11.00",
+                    Location = new Location()
+                    {
+                        Begin = 241,
+                        End = 237
+                    },
+                    Text = "1. IBM will provide a Senior Managing Consultant / expert resource, for up to 80 hours, to assist Florida Power & Light (FPL) with the creation of an IT infrastructure unit cost model for existing infrastructure.",
+                    OriginalLabels = new OriginalLabelsIn()
+                    {
+                        Types = new List<TypeLabel>()
+                        {
+                            new TypeLabel()
+                            {
+                                Label = new Label()
+                                {
+                                    Nature = "Obligation",
+                                    Party= "IBM"
+                                },
+                                ProvenanceIds = new List<string>()
+                                {
+                                    "85f5981a-ba91-44f5-9efa-0bd22e64b7bc",
+                                    "ce0480a1-5ef1-4c3e-9861-3743b5610795"
+                                }
+                            },
+                            new TypeLabel()
+                            {
+                                Label = new Label()
+                                {
+                                    Nature = "End User",
+                                    Party= "Exclusion"
+                                },
+                                ProvenanceIds = new List<string>()
+                                {
+                                    "85f5981a-ba91-44f5-9efa-0bd22e64b7bc",
+                                    "ce0480a1-5ef1-4c3e-9861-3743b5610795"
+                                }
+                            }
+                        },
+                        Categories = new List<Category>()
+                        {
+                            new Category()
+                            {
+                                Label = "Responsibilities",
+                                ProvenanceIds = new List<string>(){ }
+                            },
+                            new Category()
+                            {
+                                Label = "Amendments",
+                                ProvenanceIds = new List<string>(){ }
+                            }
+                        }
+                    },
+                    UpdatedLabels = new UpdatedLabelsIn()
+                    {
+                        Types = new List<TypeLabel>()
+                        {
+                            new TypeLabel()
+                            {
+                                Label = new Label()
+                                {
+                                    Nature = "Obligation",
+                                    Party = "IBM"
+                                }
+                            },
+                            new TypeLabel()
+                            {
+                                Label = new Label()
+                                {
+                                    Nature = "Disclaimer",
+                                    Party = "buyer"
+                                }
+                            }
+                        },
+                        Categories = new List<Category>()
+                        {
+                            new Category()
+                            {
+                                Label = "Responsibilities",
+                            },
+                            new Category()
+                            {
+                                Label = "Audits"
+                            }
+                        }
+                    }
+                }
+            };
+            #endregion
+
+            compareComply.AddFeedback(
+                successCallback: OnAddFeedback,
+                failCallback: OnFail,
+                feedbackData: feedbackData
+                );
+            while (!addFeedbackTested)
             {
                 yield return null;
             }
 
-            compareComply.ExtractTables(OnExtractTables, OnFail, table);
-            while (!extractTablesTested)
+            compareComply.GetFeedback(
+                successCallback: OnGetFeedback,
+                failCallback: OnFail,
+                feedbackId: feedbackId,
+                modelId: "contracts"
+                );
+            while(!getFeedbackTested)
             {
                 yield return null;
             }
 
-            compareComply.CompareDocuments(OnCompareDocuments, OnFail, contractA, contractB, file1ContentType:"application/pdf", file2ContentType:"application/pdf");
-            while(!compareDocumentsTested)
+            compareComply.DeleteFeedback(
+                successCallback: OnDeleteFeedback,
+                failCallback: OnFail,
+                feedbackId: feedbackId,
+                modelId: "contracts"
+                );
+            while (!deleteFeedbackTested)
             {
                 yield return null;
             }
+
+            Log.Debug("TestCompareComplyV1.RunTests()", "Compare and Comply integration tests complete!");
         }
-
-        
 
         private void OnConvertToHtml(HTMLReturn response, Dictionary<string, object> customData)
         {
@@ -176,6 +336,39 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test(response != null);
             Test(response.Documents[0].Html.Contains("HairPopMetal4Evah"));
             compareDocumentsTested = true;
+        }
+
+        private void OnListFeedback(FeedbackList response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnListFeedback()", "ListFeedback Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Feedback != null);
+            listFeedbackTested = true;
+        }
+
+        private void OnAddFeedback(FeedbackReturn response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnAddFeedback()", "AddFeedback Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.FeedbackId));
+            feedbackId = response.FeedbackId;
+            addFeedbackTested = true;
+        }
+
+        private void OnGetFeedback(GetFeedback response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnGetFeedback()", "GetFeedback Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.FeedbackId));
+            getFeedbackTested = true;
+        }
+
+        private void OnDeleteFeedback(FeedbackDeleted response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnGetFeedback()", "GetFeedback Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.Message));
+            deleteFeedbackTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

@@ -16,13 +16,15 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
-namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
+namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
     /// <summary>
     /// The feedback to be added to an element in the document.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(FeedbackInputConverter))]
     public class FeedbackInput
     {
         /// <summary>
@@ -42,4 +44,52 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public FeedbackDataInput FeedbackData { get; set; }
     }
 
+    #region FeedbackInput Converter
+    public class FeedbackInputConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(FeedbackInput);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            FeedbackInput feedbackInput = (FeedbackInput)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (!string.IsNullOrEmpty(feedbackInput.UserId))
+            {
+                _serializer.TrySerialize(feedbackInput.UserId, out tempData);
+                serialization.Add("user_id", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(feedbackInput.Comment))
+            {
+                _serializer.TrySerialize(feedbackInput.Comment, out tempData);
+                serialization.Add("comment", tempData);
+            }
+
+            if (feedbackInput.FeedbackData != null)
+            {
+                _serializer.TrySerialize(feedbackInput.FeedbackData, out tempData);
+                serialization.Add("feedback_data", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

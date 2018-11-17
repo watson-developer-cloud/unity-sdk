@@ -16,6 +16,8 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
@@ -23,7 +25,7 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
     /// A pair of `nature` and `party` objects. The `nature` object identifies the effect of the element on the
     /// identified `party`, and the `party` object identifies the affected party.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(LabelConverter))]
     public class Label
     {
         /// <summary>
@@ -38,4 +40,57 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public string Party { get; set; }
     }
 
+    #region Label Converter
+    public class LabelConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(Label);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            if (data.Type != fsDataType.Object)
+            {
+                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+            }
+
+            var myType = (Label)instance;
+            Dictionary<string, fsData> dataDict = data.AsDictionary;
+            if (!dataDict["nature"].IsNull)
+                myType.Nature = dataDict["nature"].AsString;
+            if (!dataDict["party"].IsNull)
+                myType.Party = dataDict["party"].AsString;
+            return fsResult.Success;
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            Label label = (Label)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (!string.IsNullOrEmpty(label.Nature))
+            {
+                _serializer.TrySerialize(label.Nature, out tempData);
+                serialization.Add("nature", tempData);
+            }
+
+            if (!string.IsNullOrEmpty(label.Party))
+            {
+                _serializer.TrySerialize(label.Party, out tempData);
+                serialization.Add("party", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

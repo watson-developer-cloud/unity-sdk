@@ -16,14 +16,17 @@
 */
 
 using FullSerializer;
+using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
     /// <summary>
     /// Information defining an element's subject matter.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(CategoryConverter))]
     public class Category
     {
         /// <summary>
@@ -36,6 +39,127 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         /// </summary>
         [fsProperty("provenance_ids")]
         public List<string> ProvenanceIds { get; set; }
+        /// <summary>
+        /// A string identifying the type of modification the feedback entry in the `updated_labels` array. Possible
+        /// values are `added`, `unchanged`, and `removed`.
+        /// </summary>
+        public enum ModificationEnum
+        {
+            /// <summary>
+            /// Enum added for added
+            /// </summary>
+            [EnumMember(Value = "added")]
+            added,
+            /// <summary>
+            /// Enum notChanged for unchanged
+            /// </summary>
+            [EnumMember(Value = "unchanged")]
+            unchanged,
+            /// <summary>
+            /// Enum removed for removed
+            /// </summary>
+            [EnumMember(Value = "removed")]
+            removed
+        }
+
+        /// <summary>
+        /// A string identifying the type of modification the feedback entry in the `updated_labels` array. Possible
+        /// values are `added`, `unchanged`, and `removed`.
+        /// </summary>
+        [fsProperty("modification")]
+        public ModificationEnum? Modification { get; set; }
     }
 
+    #region CategoryConverter Converter
+    public class CategoryConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(Category);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            if (data.Type != fsDataType.Object)
+            {
+                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+            }
+
+            var myType = (Category)instance;
+            Dictionary<string, fsData> dataDict = data.AsDictionary;
+            if (dataDict.ContainsKey("label"))
+            {
+                if (!dataDict["label"].IsNull)
+                {
+                    myType.Label = dataDict["label"].AsString;
+                }
+            }
+
+            if (dataDict.ContainsKey("provenance_ids"))
+            {
+                if (!dataDict["provenance_ids"].IsNull && dataDict["provenance_ids"].IsList)
+                {
+                    List<fsData> dataList = dataDict["provenance_ids"].AsList;
+                    List<string> dataStringList = new List<string>();
+                    foreach (fsData fsDataString in dataList)
+                    {
+                        dataStringList.Add(fsDataString.AsString);
+                    }
+                    myType.ProvenanceIds = dataStringList;
+                }
+            }
+
+            if (dataDict.ContainsKey("modification"))
+            {
+                if (dataDict.ContainsKey("modification"))
+                {
+                    if (!dataDict["modification"].IsNull)
+                    {
+                        if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.added.ToString())
+                            myType.Modification = Category.ModificationEnum.added;
+                        if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.removed.ToString())
+                            myType.Modification = Category.ModificationEnum.removed;
+                        if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.unchanged.ToString())
+                            myType.Modification = Category.ModificationEnum.unchanged;
+                    }
+                }
+            }
+
+            return fsResult.Success;
+        }
+
+        public override object CreateInstance(fsData data, Type storageType)
+        {
+            return new Category();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            Category category = (Category)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (category.Label != null)
+            {
+                _serializer.TrySerialize(category.Label, out tempData);
+                serialization.Add("label", tempData);
+            }
+
+            if (category.ProvenanceIds != null && category.ProvenanceIds.Count > 0)
+            {
+                _serializer.TrySerialize(category.ProvenanceIds, out tempData);
+                serialization.Add("provenance_ids", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }

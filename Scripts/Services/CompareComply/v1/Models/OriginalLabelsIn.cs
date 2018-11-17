@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System;
 using System.Collections.Generic;
 
 namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
@@ -23,7 +24,7 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
     /// <summary>
     /// The original labeling from the input document, without the submitted feedback.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(OriginalLabelsInConverter))]
     public class OriginalLabelsIn
     {
         /// <summary>
@@ -39,4 +40,46 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         public List<Category> Categories { get; set; }
     }
 
+    #region OriginalLabelsIn Converter
+    public class OriginalLabelsInConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(OriginalLabelsIn);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            OriginalLabelsIn originalLabelsIn = (OriginalLabelsIn)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+            
+            if (originalLabelsIn.Types != null && originalLabelsIn.Types.Count > 0)
+            {
+                _serializer.TrySerialize(originalLabelsIn.Types, out tempData);
+                serialization.Add("types", tempData);
+            }
+
+            if (originalLabelsIn.Categories != null && originalLabelsIn.Categories.Count > 0)
+            {
+                _serializer.TrySerialize(originalLabelsIn.Categories, out tempData);
+                serialization.Add("categories", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+    }
+    #endregion
 }
