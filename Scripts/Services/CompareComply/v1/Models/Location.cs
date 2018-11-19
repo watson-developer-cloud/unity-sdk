@@ -59,19 +59,40 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 
             var myType = (Location)instance;
             Dictionary<string, fsData> dataDict = data.AsDictionary;
-            if (!dataDict["begin"].IsNull)
+            if (dataDict.ContainsKey("begin"))
             {
-                string beginString = dataDict["begin"].AsString;
-                long beginLong;
-                long.TryParse(beginString, out beginLong);
-                myType.Begin = beginLong;
+                if (!dataDict["begin"].IsNull)
+                {
+                    if (dataDict["begin"].IsString)
+                    {
+                        string beginString = dataDict["begin"].AsString;
+                        long beginLong;
+                        long.TryParse(beginString, out beginLong);
+                        myType.Begin = beginLong;
+                    }
+                    else if (dataDict["begin"].IsInt64)
+                    {
+                        myType.Begin = dataDict["begin"].AsInt64;
+                    }
+                }
             }
-            if (!dataDict["end"].IsNull)
+
+            if (dataDict.ContainsKey("end"))
             {
-                string endString = dataDict["end"].AsString;
-                long endLong;
-                long.TryParse(endString, out endLong);
-                myType.End = endLong;
+                if (!dataDict["end"].IsNull)
+                {
+                    if (dataDict["end"].IsString)
+                    {
+                        string endString = dataDict["end"].AsString;
+                        long endLong;
+                        long.TryParse(endString, out endLong);
+                        myType.Begin = endLong;
+                    }
+                    else if (dataDict["end"].IsInt64)
+                    {
+                        myType.End = dataDict["end"].AsInt64;
+                    }
+                }
             }
             return fsResult.Success;
         }

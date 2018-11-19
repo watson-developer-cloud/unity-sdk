@@ -46,7 +46,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool createBatchTested = false;
         private bool listBatchesTested = false;
         private bool getBatchTestsed = false;
-        private bool upddateBatchTested = false;
+        private bool updateBatchTested = false;
 
         private string feedbackId;
         private string batchId;
@@ -62,6 +62,9 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             contractAFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/compare-comply/contract_A.pdf";
             contractBFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/compare-comply/contract_B.pdf";
             tableFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/compare-comply/TestTable.pdf";
+
+            string objectStorageCredentialsInputFilepath = "../sdk-credentials/cloud-object-storage-credentials-input.json";
+            string objectStorageCredentialsOutputFilepath = "../sdk-credentials/cloud-object-storage-credentials-output.json";
 
             #region Get Credentials
             //VcapCredentials vcapCredentials = new VcapCredentials();
@@ -120,29 +123,32 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             byte[] contractB = File.ReadAllBytes(contractBFilepath);
             byte[] table = File.ReadAllBytes(tableFilepath);
 
-            //compareComply.ConvertToHtml(OnConvertToHtml, OnFail, contractA, fileContentType:"application/pdf");
-            //while(!convertToHtmlTested)
-            //{
-            //    yield return null;
-            //}
+            byte[] objectStorageCredentialsInputData = File.ReadAllBytes(objectStorageCredentialsInputFilepath);
+            byte[] objectStorageCredentialsOutputData = File.ReadAllBytes(objectStorageCredentialsOutputFilepath);
 
-            //compareComply.ClassifyElements(OnClassifyElements, OnFail, contractA);
-            //while (!classifyElementsTested)
-            //{
-            //    yield return null;
-            //}
+            compareComply.ConvertToHtml(OnConvertToHtml, OnFail, contractA, fileContentType: "application/pdf");
+            while (!convertToHtmlTested)
+            {
+                yield return null;
+            }
 
-            //compareComply.ExtractTables(OnExtractTables, OnFail, table);
-            //while (!extractTablesTested)
-            //{
-            //    yield return null;
-            //}
+            compareComply.ClassifyElements(OnClassifyElements, OnFail, contractA);
+            while (!classifyElementsTested)
+            {
+                yield return null;
+            }
 
-            //compareComply.CompareDocuments(OnCompareDocuments, OnFail, contractA, contractB, file1ContentType:"application/pdf", file2ContentType:"application/pdf");
-            //while(!compareDocumentsTested)
-            //{
-            //    yield return null;
-            //}
+            compareComply.ExtractTables(OnExtractTables, OnFail, table);
+            while (!extractTablesTested)
+            {
+                yield return null;
+            }
+
+            compareComply.CompareDocuments(OnCompareDocuments, OnFail, contractA, contractB, file1ContentType: "application/pdf", file2ContentType: "application/pdf");
+            while (!compareDocumentsTested)
+            {
+                yield return null;
+            }
 
             DateTime before = new DateTime(2018, 11, 15);
             DateTime after = new DateTime(2018, 11, 14);
@@ -152,15 +158,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 feedbackType: "element_classification",
                 before: before,
                 after: after,
-                documentTitle: "unity-test-feedback-doc", 
-                modelId: "contracts", 
-                modelVersion: "2.0.0", 
-                categoryRemoved: "Responsibilities", 
-                categoryAdded: "Amendments", 
-                categoryNotChanged: "Audits", 
-                typeRemoved: "End User:Exclusion", 
-                typeAdded: "Disclaimer:Buyer", 
-                typeNotChanged: "Obligation:IBM", 
+                documentTitle: "unity-test-feedback-doc",
+                modelId: "contracts",
+                modelVersion: "2.0.0",
+                categoryRemoved: "Responsibilities",
+                categoryAdded: "Amendments",
+                categoryNotChanged: "Audits",
+                typeRemoved: "End User:Exclusion",
+                typeAdded: "Disclaimer:Buyer",
+                typeNotChanged: "Obligation:IBM",
                 pageLimit: 1
                 );
             while (!listFeedbackTested)
@@ -288,7 +294,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 feedbackId: feedbackId,
                 modelId: "contracts"
                 );
-            while(!getFeedbackTested)
+            while (!getFeedbackTested)
             {
                 yield return null;
             }
@@ -304,9 +310,56 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
             }
 
+            compareComply.ListBatches(
+                successCallback: OnListBatches,
+                failCallback: OnFail
+                );
+            while (!listBatchesTested)
+            {
+                yield return null;
+            }
+
+            compareComply.CreateBatch(
+                successCallback: OnCreateBatch,
+                failCallback: OnFail,
+                function: "html_conversion",
+                inputCredentialsFile: objectStorageCredentialsInputData,
+                inputBucketLocation: "us-south",
+                inputBucketName: "compare-comply-integration-test-bucket-input",
+                outputCredentialsFile: objectStorageCredentialsOutputData,
+                outputBucketLocation: "us-south",
+                outputBucketName: "compare-comply-integration-test-bucket-output"
+                );
+            while (!createBatchTested)
+            {
+                yield return null;
+            }
+
+            compareComply.GetBatch(
+                successCallback: OnGetBatch,
+                failCallback: OnFail,
+                batchId: batchId
+                );
+            while(!getBatchTestsed)
+            {
+                yield return null;
+            }
+
+            compareComply.UpdateBatch(
+                successCallback: OnUpdateBatch,
+                failCallback: OnFail,
+                batchId: batchId,
+                action: "rescan",
+                modelId: "contracts"
+                );
+            while(!updateBatchTested)
+            {
+                yield return null;
+            }
+
             Log.Debug("TestCompareComplyV1.RunTests()", "Compare and Comply integration tests complete!");
         }
-
+        
         private void OnConvertToHtml(HTMLReturn response, Dictionary<string, object> customData)
         {
             Log.Debug("TestCompareComplyV1.OnConvertToHtml()", "ConvertToHtml Response: {0}", customData["json"].ToString());
@@ -369,6 +422,39 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test(response != null);
             Test(!string.IsNullOrEmpty(response.Message));
             deleteFeedbackTested = true;
+        }
+
+        private void OnListBatches(Batches response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnListBatches()", "ListBatches Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response._Batches != null);
+            listBatchesTested = true;
+        }
+
+        private void OnCreateBatch(BatchStatus response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnCreateBatch()", "OnCreateBatch Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.BatchId));
+            batchId = response.BatchId;
+            createBatchTested = true;
+        }
+
+        private void OnGetBatch(BatchStatus response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnGetBatch()", "OnGetBatch Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.BatchId));
+            getBatchTestsed = true;
+        }
+
+        private void OnUpdateBatch(BatchStatus response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnUpdateBatch()", "OnUpdateBatch Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.BatchId));
+            updateBatchTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
