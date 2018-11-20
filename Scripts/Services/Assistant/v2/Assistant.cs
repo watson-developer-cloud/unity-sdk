@@ -20,7 +20,6 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.WatsonDeveloperCloud.Assistant.v2;
-using MiniJSON;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -23,7 +23,6 @@ using IBM.Watson.DeveloperCloud.Services.Assistant.v2;
 using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.WatsonDeveloperCloud.Assistant.v2;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
