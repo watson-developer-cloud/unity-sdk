@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using System.Collections.Generic;
 
 namespace IBM.WatsonDeveloperCloud.Assistant.v2
 {
@@ -34,7 +35,7 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
         /// Contains information specific to particular skills within the Assistant.
         /// </summary>
         [fsProperty("skills")]
-        public object Skills { get; set; }
+        public Dictionary<string, object> Skills { get; set; }
     }
 
 }

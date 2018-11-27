@@ -15,6 +15,7 @@
 *
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
@@ -62,6 +63,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         private bool _messageTested2 = false;
         private bool _messageTested3 = false;
         private bool _messageTested4 = false;
+        private bool _messageWithContextTested = false;
         private bool _deleteSessionTested = false;
         private string _sessionId;
 
@@ -184,6 +186,48 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
                 yield return null;
             }
 
+            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to nmessage with custom context myName:Watson");
+
+            // create Dictionary with variables to pass
+            Dictionary<string, object> user_defined = new Dictionary<string, object>();
+            user_defined.Add("myName", "Watson");
+
+            // create Dictionary for the skill and add the `user_defined` Dictionary
+            //  the key must be named `user_defined`
+            Dictionary<string, object> mainSkill = new Dictionary<string, object>();
+            mainSkill.Add("user_defined", user_defined);
+
+            // create Dictionary for the skills and add the `mainSkill` Dictionary
+            // the key must be named `main skill` (note the space in the key)
+            Dictionary<string, object> skills = new Dictionary<string, object>();
+            skills.Add("main skill", mainSkill);
+
+            // create the MesageRequest with the `skills` Dictionary set in `Context`. 
+            // Be sure to have `ReturnContext` set to true in the `Options`
+            MessageRequest messageRequestWithContext = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    MessageType = MessageInput.MessageTypeEnum.text,
+                    Text = "",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true,
+                        AlternateIntents = true
+                    }
+                },
+                Context = new MessageContext()
+                {
+                    Skills = skills
+                }
+            };
+
+            _service.Message(OnMessageWithContext, OnFail, _assistantId, _sessionId, messageRequestWithContext);
+            while (!_messageWithContextTested)
+            {
+                yield return null;
+            }
+
             Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to delete session");
             _service.DeleteSession(OnDeleteSession, OnFail, _assistantId, _sessionId);
 
@@ -193,6 +237,23 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             }
 
             Log.Debug("ExampleAssistantV2.Examples()", "Assistant examples complete.");
+        }
+
+        private void OnMessageWithContext(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Dictionary<string, object> skills = response.Context.Skills as Dictionary<string, object>;
+            object mainSkill;
+            skills.TryGetValue("main skill", out mainSkill);
+            Dictionary<string, object> mainSkillDictionary = mainSkill as Dictionary<string, object>;
+            object userDefined;
+            mainSkillDictionary.TryGetValue("user_defined", out userDefined);
+            Dictionary<string, object> userDefinedDictionary = userDefined as Dictionary<string, object>;
+            object myName;
+            userDefinedDictionary.TryGetValue("myName", out myName);
+            string myNameOutput = myName.ToString();
+
+            Log.Debug("ExampleAssistantV2.OnMessageWithContext()", "context: myName:{0}", myNameOutput);
+            _messageWithContextTested = true;
         }
 
         private void OnDeleteSession(object response, Dictionary<string, object> customData)
