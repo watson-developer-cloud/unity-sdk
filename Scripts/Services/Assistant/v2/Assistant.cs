@@ -397,20 +397,14 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
                 }
             }
 
-            IDictionary<string, string> requestDict = new Dictionary<string, string>();
-            int iterator = 0;
-            StringBuilder stringBuilder = new StringBuilder("{");
-            foreach (KeyValuePair<string, string> property in requestDict)
+            if (request != null)
             {
-                string delimeter = iterator < requestDict.Count - 1 ? "," : "";
-                stringBuilder.Append(string.Format("\"{0}\": {1}{2}", property.Key, property.Value, delimeter));
-                iterator++;
+                fsData data = null;
+                _serializer.TrySerialize(request, out data);
+                string json = data.ToString().Replace('\"', '"');
+                req.Send = Encoding.UTF8.GetBytes(json);
             }
-            stringBuilder.Append("}");
 
-            string stringToSend = stringBuilder.ToString();
-
-            req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnMessageResponse;
