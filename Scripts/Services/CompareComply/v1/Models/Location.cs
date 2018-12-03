@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using FullSerializer.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -52,47 +53,14 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 
         public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
         {
-            if (data.Type != fsDataType.Object)
+            if (data.IsString == false)
             {
-                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+                return fsResult.Fail("Type converter requires a string");
             }
-
-            var myType = (Location)instance;
-            Dictionary<string, fsData> dataDict = data.AsDictionary;
-            if (dataDict.ContainsKey("begin"))
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
             {
-                if (!dataDict["begin"].IsNull)
-                {
-                    if (dataDict["begin"].IsString)
-                    {
-                        string beginString = dataDict["begin"].AsString;
-                        long beginLong;
-                        long.TryParse(beginString, out beginLong);
-                        myType.Begin = beginLong;
-                    }
-                    else if (dataDict["begin"].IsInt64)
-                    {
-                        myType.Begin = dataDict["begin"].AsInt64;
-                    }
-                }
-            }
-
-            if (dataDict.ContainsKey("end"))
-            {
-                if (!dataDict["end"].IsNull)
-                {
-                    if (dataDict["end"].IsString)
-                    {
-                        string endString = dataDict["end"].AsString;
-                        long endLong;
-                        long.TryParse(endString, out endLong);
-                        myType.Begin = endLong;
-                    }
-                    else if (dataDict["end"].IsInt64)
-                    {
-                        myType.End = dataDict["end"].AsInt64;
-                    }
-                }
+                return fsResult.Fail("Unable to find type " + data.AsString);
             }
             return fsResult.Success;
         }

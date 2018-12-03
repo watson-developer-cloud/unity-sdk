@@ -16,7 +16,7 @@
 */
 
 using FullSerializer;
-using IBM.Watson.DeveloperCloud.Utilities;
+using FullSerializer.Internal;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -83,54 +83,15 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 
         public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
         {
-            if (data.Type != fsDataType.Object)
+            if (data.IsString == false)
             {
-                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+                return fsResult.Fail("Type converter requires a string");
             }
-
-            var myType = (TypeLabel)instance;
-            Dictionary<string, fsData> dataDict = data.AsDictionary;
-
-            if (dataDict.ContainsKey("label"))
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
             {
-                if (!dataDict["label"].IsNull)
-                {
-                    Label typeLabel = new Label();
-                    object obj = typeLabel;
-                    var r = _serializer.TryDeserialize(dataDict["label"], obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-                    myType.Label = typeLabel;
-                }
+                return fsResult.Fail("Unable to find type " + data.AsString);
             }
-
-            if (dataDict.ContainsKey("provenance_ids"))
-            {
-                if (!dataDict["provenance_ids"].IsNull && dataDict["provenance_ids"].IsList)
-                {
-                    List<fsData> dataList = dataDict["provenance_ids"].AsList;
-                    List<string> dataStringList = new List<string>();
-                    foreach (fsData fsDataString in dataList)
-                    {
-                        dataStringList.Add(fsDataString.AsString);
-                    }
-                    myType.ProvenanceIds = dataStringList;
-                }
-            }
-
-            if (dataDict.ContainsKey("modification"))
-            {
-                if (!dataDict["modification"].IsNull)
-                {
-                    if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.added.ToString())
-                        myType.Modification = TypeLabel.ModificationEnum.added;
-                    if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.removed.ToString())
-                        myType.Modification = TypeLabel.ModificationEnum.removed;
-                    if (dataDict["modification"].AsString == TypeLabel.ModificationEnum.unchanged.ToString())
-                        myType.Modification = TypeLabel.ModificationEnum.unchanged;
-                }
-            }
-            
             return fsResult.Success;
         }
 

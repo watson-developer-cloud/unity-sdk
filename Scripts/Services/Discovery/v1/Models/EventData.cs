@@ -85,7 +85,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             {
                 return fsResult.Fail("Type converter requires a string");
             }
-
             instance = fsTypeCache.GetType(data.AsString);
             if (instance == null)
             {

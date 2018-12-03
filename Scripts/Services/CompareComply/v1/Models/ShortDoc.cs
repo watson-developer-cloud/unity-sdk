@@ -16,6 +16,7 @@
 */
 
 using FullSerializer;
+using FullSerializer.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -51,22 +52,14 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 
         public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
         {
-            if (data.Type != fsDataType.Object)
+            if (data.IsString == false)
             {
-                return fsResult.Fail("Expected object fsData type but got " + data.Type);
+                return fsResult.Fail("Type converter requires a string");
             }
-
-            var myType = (ShortDoc)instance;
-            Dictionary<string, fsData> dataDict = data.AsDictionary;
-            if (dataDict.ContainsKey("title"))
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
             {
-                if (!dataDict["title"].IsNull)
-                    myType.Title = dataDict["title"].AsString;
-            }
-            if (dataDict.ContainsKey("hash"))
-            {
-                if (!dataDict["hash"].IsNull)
-                    myType.Hash = dataDict["hash"].AsString;
+                return fsResult.Fail("Unable to find type " + data.AsString);
             }
             return fsResult.Success;
         }
