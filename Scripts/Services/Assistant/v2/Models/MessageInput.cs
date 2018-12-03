@@ -15,6 +15,7 @@
 *
 */
 using FullSerializer;
+using FullSerializer.Internal;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -86,7 +87,22 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
 
         public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
         {
-            throw new NotImplementedException();
+            if (data.IsString == false)
+            {
+                return fsResult.Fail("Type converter requires a string");
+            }
+
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
+            {
+                return fsResult.Fail("Unable to find type " + data.AsString);
+            }
+            return fsResult.Success;
+        }
+
+        public override object CreateInstance(fsData data, Type storageType)
+        {
+            return new MessageInput();
         }
 
         public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
