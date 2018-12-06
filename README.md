@@ -68,6 +68,7 @@ The credentials for each service contain either a `username`, `password` and end
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
 * [Assistant V1](/Scripts/Services/Assistant/v1)
 * [Assistant V2](/Scripts/Services/Assistant/v2) (private beta)
+* [Compare Comply V1](/Scripts/Services/CompareComply/v1)
 * [Conversation](/Scripts/Services/Conversation/v1) (deprecated - Use Assistant V1 or Assistant V2)
 * [Discovery](/Scripts/Services/Discovery/v1)
 * [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
