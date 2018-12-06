@@ -38,20 +38,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
         [SerializeField]
         private string _versionDate;
-        [Header("CF Authentication")]
-        [Tooltip("The authentication username.")]
-        [SerializeField]
-        private string _username;
-        [Tooltip("The authentication password.")]
-        [SerializeField]
-        private string _password;
         [Header("IAM Authentication")]
         [Tooltip("The IAM apikey.")]
         [SerializeField]
         private string _iamApikey;
-        [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-        [SerializeField]
-        private string _iamUrl;
         #endregion
 
         private Assistant _service;
@@ -73,32 +63,25 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 
         private IEnumerator CreateService()
         {
+            if (string.IsNullOrEmpty(_iamApikey))
+            {
+                throw new WatsonException("Plesae provide IAM ApiKey for the service.");
+            }
+
             //  Create credential and instantiate service
             Credentials credentials = null;
-            if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
-            {
-                //  Authenticate using username and password
-                credentials = new Credentials(_username, _password, _serviceUrl);
-            }
-            else if (!string.IsNullOrEmpty(_iamApikey))
-            {
-                //  Authenticate using iamApikey
-                TokenOptions tokenOptions = new TokenOptions()
-                {
-                    IamApiKey = _iamApikey,
-                    IamUrl = _iamUrl
-                };
 
-                credentials = new Credentials(tokenOptions, _serviceUrl);
-
-                //  Wait for tokendata
-                while (!credentials.HasIamTokenData())
-                    yield return null;
-            }
-            else
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
             {
-                throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
-            }
+                IamApiKey = _iamApikey
+            };
+
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _service = new Assistant(credentials);
             _service.VersionDate = _versionDate;

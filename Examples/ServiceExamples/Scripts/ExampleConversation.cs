@@ -48,9 +48,6 @@ public class ExampleConversation : MonoBehaviour
     [Tooltip("The IAM apikey.")]
     [SerializeField]
     private string _iamApikey;
-    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-    [SerializeField]
-    private string _iamUrl;
     #endregion
 
     private Conversation _service;
@@ -81,8 +78,7 @@ public class ExampleConversation : MonoBehaviour
             //  Authenticate using iamApikey
             TokenOptions tokenOptions = new TokenOptions()
             {
-                IamApiKey = _iamApikey,
-                IamUrl = _iamUrl
+                IamApiKey = _iamApikey
             };
 
             credentials = new Credentials(tokenOptions, _serviceUrl);

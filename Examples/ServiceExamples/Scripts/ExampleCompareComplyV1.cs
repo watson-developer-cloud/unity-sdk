@@ -72,6 +72,11 @@ public class ExampleCompareComplyV1 : MonoBehaviour
 
     private IEnumerator CreateService()
     {
+        if (string.IsNullOrEmpty(_iamApikey))
+        {
+            throw new WatsonException("Plesae provide IAM ApiKey for the service.");
+        }
+
         //  Create credential and instantiate service
         Credentials credentials = null;
         //  Authenticate using iamApikey
