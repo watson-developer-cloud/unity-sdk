@@ -67,50 +67,44 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             string objectStorageCredentialsOutputFilepath = "../sdk-credentials/cloud-object-storage-credentials-output.json";
 
             #region Get Credentials
-            //VcapCredentials vcapCredentials = new VcapCredentials();
-            //fsData data = null;
+            VcapCredentials vcapCredentials = new VcapCredentials();
+            fsData data = null;
 
-            //string result = null;
-            //string credentialsFilepath = "../sdk-credentials/credentials.json";
+            string result = null;
+            string credentialsFilepath = "../sdk-credentials/credentials.json";
 
-            ////  Load credentials file if it exists. If it doesn't exist, don't run the tests.
-            //if (File.Exists(credentialsFilepath))
-            //    result = File.ReadAllText(credentialsFilepath);
-            //else
-            //    yield break;
+            //  Load credentials file if it exists. If it doesn't exist, don't run the tests.
+            if (File.Exists(credentialsFilepath))
+                result = File.ReadAllText(credentialsFilepath);
+            else
+                yield break;
 
-            ////  Add in a parent object because Unity does not like to deserialize root level collection types.
-            //result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
+            //  Add in a parent object because Unity does not like to deserialize root level collection types.
+            result = Utility.AddTopLevelObjectToJson(result, "VCAP_SERVICES");
 
-            ////  Convert json to fsResult
-            //fsResult r = fsJsonParser.Parse(result, out data);
-            //if (!r.Succeeded)
-            //    throw new WatsonException(r.FormattedMessages);
+            //  Convert json to fsResult
+            fsResult r = fsJsonParser.Parse(result, out data);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
 
-            ////  Convert fsResult to VcapCredentials
-            //object obj = vcapCredentials;
-            //r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-            //if (!r.Succeeded)
-            //    throw new WatsonException(r.FormattedMessages);
+            //  Convert fsResult to VcapCredentials
+            object obj = vcapCredentials;
+            r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+            if (!r.Succeeded)
+                throw new WatsonException(r.FormattedMessages);
 
-            ////  Set credentials from imported credntials
-            //Credential credential = vcapCredentials.GetCredentialByname("compare-comply-v1-sdk-wdc")[0].Credentials;
-            //_url = credential.Url.ToString();
+            //  Set credentials from imported credntials
+            Credential credential = vcapCredentials.GetCredentialByname("compare-comply-sdk")[0].Credentials;
+            _url = credential.Url.ToString();
 
-            ////  Create credential and instantiate service
-            //TokenOptions tokenOptions = new TokenOptions()
-            //{
-            //    IamApiKey = credential.IamApikey,
-            //    IamUrl = credential.IamUrl
-            //};
-            #endregion
-
+            //  Create credential and instantiate service
             TokenOptions tokenOptions = new TokenOptions()
             {
-                IamUrl = "https://iam.stage1.bluemix.net/identity/token"
+                IamApiKey = credential.IamApikey
             };
+            #endregion
 
-            Credentials credentials = new Credentials(tokenOptions, "https://gateway-s.watsonplatform.net/compare-comply/api");
+            Credentials credentials = new Credentials(tokenOptions, credential.Url);
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
@@ -288,11 +282,18 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
             }
 
+            //  temporary fix for a bug requiring `x-watson-metadata` header
+            Dictionary<string, object> customData = new Dictionary<string, object>();
+            Dictionary<string, string> customHeaders = new Dictionary<string, string>();
+            customHeaders.Add("x-watson-metadata", "customer_id=sdk-test-customer-id");
+            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+
             compareComply.GetFeedback(
                 successCallback: OnGetFeedback,
                 failCallback: OnFail,
                 feedbackId: feedbackId,
-                modelId: "contracts"
+                modelId: "contracts",
+                customData: customData
                 );
             while (!getFeedbackTested)
             {
