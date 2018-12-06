@@ -70,7 +70,6 @@ To get started with the Watson Services in Unity, click on each service below to
 * [Assistant V2](/Scripts/Services/Assistant/v2) (private beta)
 * [Conversation](/Scripts/Services/Conversation/v1) (deprecated - Use Assistant V1 or Assistant V2)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2) (deprecated - Use LanguageTranslator V3)
 * [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
