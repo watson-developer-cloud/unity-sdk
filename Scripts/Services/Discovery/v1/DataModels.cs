@@ -803,6 +803,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// 'fr', 'fre', 'fra', 'it', 'ita', 'pt', 'por', 'ru', 'rus', 'es', 'spa', 'sv', 'swe']
         /// </summary>
         public string language { get; set; }
+        /// <summary>
+        /// Options which are specific to a particular enrichment.
+        /// </summary>
+        public NluEnrichmentFeatures features { get; set; }
     }
 
     /// <summary>
@@ -1128,6 +1132,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         [fsProperty("session_token")]
         public string SessionToken { get; set; }
+        /// <summary>
+        /// The number of duplicates removed.
+        /// </summary>
+        [fsProperty("duplicates_removed")]
+        public int duplicatesRemoved { get; set; }
+        /// <summary>
+        /// An object contain retrieval type information.
+        /// </summary>
+        [fsProperty("retrieval_details")]
+        public RetrievalDetails retrievalDetails { get; set; }
 
         public override string ToString()
         {
