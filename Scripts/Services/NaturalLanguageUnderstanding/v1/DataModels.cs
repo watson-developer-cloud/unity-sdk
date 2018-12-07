@@ -132,6 +132,10 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     public class KeywordsResult
     {
         /// <summary>
+        /// Number of times the keyword appears in the analyzed text
+        /// </summary>
+        public int count { get; set; }
+        /// <summary>
         /// Relevance score from 0 to 1. Higher values indicate greater relevance 
         /// </summary>
         public float relevance { get; set; }
@@ -478,6 +482,22 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         /// Model description
         /// </summary>
         public string description { get; set; }
+        /// <summary>
+        /// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding
+        /// </summary>
+        public string workspace_id { get; set; }
+        /// <summary>
+        /// The model version, if it was manually provided in Watson Knowledge Studio
+        /// </summary>
+        public string version { get; set; }
+        /// <summary>
+        /// The description of the version, if it was manually provided in Watson Knowledge Studio
+        /// </summary>
+        public string version_description { get; set; }
+        /// <summary>
+        /// A dateTime indicating when the model was created
+        /// </summary>
+        public DateTime created { get; set; }
     }
 
     [fsObject]
@@ -822,7 +842,14 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
     }
 
     [fsObject]
-    public class CategoriesOptions { }
+    public class CategoriesOptions
+    {
+        /// <summary>
+        /// Returns a five-level taxonomy of the content. The top three categories are returned.
+        /// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
+        /// </summary>
+        public int? limit { get; set; }
+    }
 
     #region Version
     /// <summary>

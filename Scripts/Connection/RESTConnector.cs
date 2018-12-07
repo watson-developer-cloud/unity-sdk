@@ -426,6 +426,10 @@ namespace IBM.Watson.DeveloperCloud.Connection
                     {
                         value = value.ToString().ToLower();
                     }
+                    else if (value is DateTime)
+                    {
+                        value = String.Format("{0:yyyy/MM/dd+HH:mm:ss}", value);
+                    }
                     else if (value != null)
                     {
                         Log.Warning("RESTConnector.ProcessRequestQueue()", "Unsupported parameter value type {0}", value.GetType().Name);
