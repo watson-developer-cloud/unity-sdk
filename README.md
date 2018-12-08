@@ -68,9 +68,9 @@ The credentials for each service contain either a `username`, `password` and end
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
 * [Assistant V1](/Scripts/Services/Assistant/v1)
 * [Assistant V2](/Scripts/Services/Assistant/v2) (private beta)
+* [Compare Comply V1](/Scripts/Services/CompareComply/v1)
 * [Conversation](/Scripts/Services/Conversation/v1) (deprecated - Use Assistant V1 or Assistant V2)
 * [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator V2](/Scripts/Services/LanguageTranslator/v2) (deprecated - Use LanguageTranslator V3)
 * [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
 * [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
 * [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
@@ -346,6 +346,21 @@ private void OnGetToken(AuthenticationToken authenticationToken, string customDa
 
 ## Streaming outside of US South region
 Watson services have upgraded their hosts to TLS 1.2. The US South region has a TLS 1.0 endpoint that will work for streaming but if you are streaming in other regions you will need to use Unity 2018.2 and set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. In lower versions of Unity you will need to create the Speech to Text instance in US South.
+
+## Disabling SSL verification
+You can disable SSL verifciation when making a service call.
+```cs
+//  Create credential and instantiate service
+Credentials credentials = new Credentials(<username>, <password>, <service-url>);
+
+credentials.DisableSslVerification = true;
+_service = new Assistant(credentials);
+_service.VersionDate = <version-date>;
+_service.DisableSslVerification = true;
+```
+
+## IBM Cloud Private
+The Watson Unity SDK does not support IBM Cloud Private because connection via proxy is not supported in UnityWebRequest. 
 
 ## Documentation
 Documentation can be found [here][documentation]. You can also access the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).

@@ -16,13 +16,15 @@
 */
 
 using FullSerializer;
+using System;
+using System.Collections.Generic;
 
 namespace IBM.WatsonDeveloperCloud.Assistant.v2
 {
     /// <summary>
     /// Optional properties that control how the assistant responds.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(MessageInputOptionsConverter))]
     public class MessageInputOptions
     {
         /// <summary>
@@ -50,4 +52,58 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
         public bool? ReturnContext { get; set; }
     }
 
+    #region Create Value Converter
+    public class MessageInputOptionsConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(MessageInputOptions);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            MessageInputOptions messageInputOptions = (MessageInputOptions)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (messageInputOptions.Debug != null)
+            {
+                _serializer.TrySerialize(messageInputOptions.Debug, out tempData);
+                serialization.Add("debug", tempData);
+            }
+
+            if (messageInputOptions.Restart != null)
+            {
+                _serializer.TrySerialize(messageInputOptions.Restart, out tempData);
+                serialization.Add("restart", tempData);
+            }
+
+            if (messageInputOptions.AlternateIntents != null)
+            {
+                _serializer.TrySerialize(messageInputOptions.AlternateIntents, out tempData);
+                serialization.Add("alternate_intents", tempData);
+            }
+
+            if (messageInputOptions.ReturnContext != null)
+            {
+                _serializer.TrySerialize(messageInputOptions.ReturnContext, out tempData);
+                serialization.Add("return_context", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+        #endregion
+    }
 }

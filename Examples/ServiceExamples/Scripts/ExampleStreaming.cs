@@ -46,7 +46,7 @@ public class ExampleStreaming : MonoBehaviour
     private string _iamApikey;
     [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
     [SerializeField]
-    private string _iamUrl;
+    private string _iamTokenUrl;
 
     [Header("Parameters")]
     // https://www.ibm.com/watson/developercloud/speech-to-text/api/v1/curl.html?curl#get-model
@@ -85,7 +85,7 @@ public class ExampleStreaming : MonoBehaviour
             TokenOptions tokenOptions = new TokenOptions()
             {
                 IamApiKey = _iamApikey,
-                IamUrl = _iamUrl
+                IamUrl = _iamTokenUrl
             };
 
             credentials = new Credentials(tokenOptions, _serviceUrl);

@@ -15,6 +15,8 @@
 *
 */
 using FullSerializer;
+using FullSerializer.Internal;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -23,7 +25,7 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
     /// <summary>
     /// The user input.
     /// </summary>
-    [fsObject]
+    [fsObject(Converter = typeof(MessageInputConverter))]
     public class MessageInput
     {
         /// <summary>
@@ -73,4 +75,85 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
         public string SuggestionId { get; set; }
     }
 
+    #region Message Input Converter
+    public class MessageInputConverter : fsConverter
+    {
+        private fsSerializer _serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(MessageInput);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            if (data.IsString == false)
+            {
+                return fsResult.Fail("Type converter requires a string");
+            }
+
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
+            {
+                return fsResult.Fail("Unable to find type " + data.AsString);
+            }
+            return fsResult.Success;
+        }
+
+        public override object CreateInstance(fsData data, Type storageType)
+        {
+            return new MessageInput();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            MessageInput messageInput = (MessageInput)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+
+            fsData tempData = null;
+
+            if (messageInput.MessageType != null)
+            {
+                _serializer.TrySerialize(messageInput.MessageType, out tempData);
+                serialization.Add("message_type", tempData);
+            }
+
+            if (messageInput.Text != null)
+            {
+                _serializer.TrySerialize(messageInput.Text, out tempData);
+                serialization.Add("text", tempData);
+            }
+
+            if (messageInput.Options != null)
+            {
+                _serializer.TrySerialize(messageInput.Options, out tempData);
+                serialization.Add("options", tempData);
+            }
+
+            if (messageInput.Intents != null)
+            {
+                _serializer.TrySerialize(messageInput.Intents, out tempData);
+                serialization.Add("intents", tempData);
+            }
+
+            if (messageInput.Entities != null)
+            {
+                _serializer.TrySerialize(messageInput.Entities, out tempData);
+                serialization.Add("entities", tempData);
+            }
+
+            if (messageInput.SuggestionId != null)
+            {
+                _serializer.TrySerialize(messageInput.SuggestionId, out tempData);
+                serialization.Add("suggestion_id", tempData);
+            }
+
+            serialized = new fsData(serialization);
+
+            return fsResult.Success;
+        }
+        #endregion
+    }
 }

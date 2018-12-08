@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
@@ -95,6 +96,16 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
             }
         }
+
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
         #endregion
 
         #region Constructor
@@ -156,6 +167,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetEnvironmentsRequest req = new GetEnvironmentsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -247,21 +260,21 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         public bool AddEnvironment(SuccessCallback<Environment> successCallback, FailCallback failCallback, string name = default(string), string description = default(string), SizeEnum? size = null, Dictionary<string, object> customData = null)
         {
             CreateEnvironmentRequest createEnvironmentRequest = new CreateEnvironmentRequest();
-            if(!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
                 createEnvironmentRequest.Name = name;
             }
 
-            if(!string.IsNullOrEmpty(description))
+            if (!string.IsNullOrEmpty(description))
             {
                 createEnvironmentRequest.Description = description;
             }
 
-            if(size != null)
+            if (size != null)
             {
                 createEnvironmentRequest.Size = size;
             }
-            
+
 
             return AddEnvironment(successCallback, failCallback, createEnvironmentRequest, customData);
         }
@@ -286,6 +299,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             AddEnvironmentRequest req = new AddEnvironmentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -327,6 +342,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             AddEnvironmentRequest req = new AddEnvironmentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -431,6 +448,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetEnvironmentRequest req = new GetEnvironmentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -528,6 +547,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteEnvironmentRequest req = new DeleteEnvironmentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -538,7 +559,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteEnvironmentResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Environment, environmentID));
             if (connector == null)
@@ -627,6 +647,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetConfigurationsRequest req = new GetConfigurationsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -765,6 +787,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             AddConfigurationRequest req = new AddConfigurationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -868,6 +892,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetConfigurationRequest req = new GetConfigurationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -968,6 +994,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteConfigurationRequest req = new DeleteConfigurationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -978,7 +1006,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteConfigurationResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Configuration, environmentID, configurationID));
             if (connector == null)
@@ -1092,7 +1119,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 throw new WatsonException(string.Format("Failed to load content: {0}", e.Message));
             }
 
-            string contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+            string contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
 
             return PreviewConfiguration(successCallback, failCallback, environmentID, configurationID, configurationFilePath, contentData, contentMimeType, metadata, customData);
         }
@@ -1137,6 +1164,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             PreviewConfigurationRequest req = new PreviewConfigurationRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1260,6 +1289,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetCollectionsRequest req = new GetCollectionsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1397,6 +1428,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             AddCollectionRequest req = new AddCollectionRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1500,6 +1533,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetCollectionRequest req = new GetCollectionRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1600,6 +1635,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteCollectionRequest req = new DeleteCollectionRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1610,7 +1647,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCollectionResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Collection, environmentID, collectionID));
             if (connector == null)
@@ -1701,6 +1737,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetFieldsRequest req = new GetFieldsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -1825,7 +1863,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             try
             {
                 contentData = File.ReadAllBytes(contentFilePath);
-                contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+                contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
             }
             catch (Exception e)
             {
@@ -1974,6 +2012,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             AddDocumentRequest req = new AddDocumentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2089,6 +2129,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteDocumentRequest req = new DeleteDocumentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2099,7 +2141,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteDocumentResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Document, environmentID, collectionID, documentID));
             if (connector == null)
@@ -2193,6 +2234,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetDocumentRequest req = new GetDocumentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2311,7 +2354,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             try
             {
                 contentData = File.ReadAllBytes(contentFilePath);
-                contentMimeType = Utility.GetMimeType(Path.GetExtension(contentFilePath));
+                contentMimeType = Utilities.Utility.GetMimeType(Path.GetExtension(contentFilePath));
             }
             catch (Exception e)
             {
@@ -2460,6 +2503,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             UpdateDocumentRequest req = new UpdateDocumentRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2625,7 +2670,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             {
                 throw new ArgumentNullException("environmentId");
             }
-            if(collectionIds == null || collectionIds.Count < 1)
+            if (collectionIds == null || collectionIds.Count < 1)
             {
                 throw new ArgumentNullException("collectionId");
             }
@@ -2633,6 +2678,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             FederatedQueryRequestObj req = new FederatedQueryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2807,6 +2854,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             FederatedQueryNoticesRequestObj req = new FederatedQueryNoticesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -2987,6 +3036,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryRequestObj req = new QueryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3121,6 +3172,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryEntitiesRequestObj req = new QueryEntitiesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3274,6 +3327,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryNoticesRequestObj req = new QueryNoticesRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3303,7 +3358,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
             if (highlight != null)
                 req.Parameters["highlight"] = highlight;
-            if(passagesFields != null)
+            if (passagesFields != null)
                 req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
             if (passagesCount != null)
                 req.Parameters["passages.count"] = passagesCount;
@@ -3408,6 +3463,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryRelationsRequestObj req = new QueryRelationsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3516,6 +3573,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateExpansionsRequestObj req = new CreateExpansionsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3621,6 +3680,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteExpansionsRequestObj req = new DeleteExpansionsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3631,7 +3692,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteExpansionsResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
@@ -3697,6 +3757,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             ListExpansionsRequestObj req = new ListExpansionsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3796,6 +3858,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateTokenizationDictionaryRequestObj req = new CreateTokenizationDictionaryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3900,6 +3964,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteTokenizationDictionaryRequestObj req = new DeleteTokenizationDictionaryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -3975,6 +4041,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetTokenizationDictionaryStatusRequestObj req = new GetTokenizationDictionaryStatusRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4073,6 +4141,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteUserDataRequestObj req = new DeleteUserDataRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4083,7 +4153,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["customer_id"] = customerId;
             req.Parameters["version"] = VersionDate;
-            req.Delete = true;
 
             req.OnResponse = OnDeleteUserDataResponse;
 
@@ -4174,6 +4243,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             ListCredentialsRequest req = new ListCredentialsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Headers["Content-Type"] = "application/json";
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -4280,6 +4351,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateCredentialsRequest req = new CreateCredentialsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4388,6 +4461,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             DeleteCredentialsRequest req = new DeleteCredentialsRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4398,7 +4473,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCredentialsResponse;
-            req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialEndpoint, environmentID, credentialId));
             if (connector == null)
@@ -4494,6 +4568,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetCredentialRequest req = new GetCredentialRequest();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             req.Headers["Content-Type"] = "application/json";
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -4596,6 +4672,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateEventRequestObj req = new CreateEventRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4705,6 +4783,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetMetricsEventRateRequestObj req = new GetMetricsEventRateRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4811,6 +4891,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetMetricsQueryRequestObj req = new GetMetricsQueryRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -4919,6 +5001,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetMetricsQueryEventRequestObj req = new GetMetricsQueryEventRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -5026,6 +5110,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetMetricsQueryNoResultsRequestObj req = new GetMetricsQueryNoResultsRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -5130,6 +5216,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             GetMetricsQueryTokenEventRequestObj req = new GetMetricsQueryTokenEventRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -5241,6 +5329,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryLogRequestObj req = new QueryLogRequestObj();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
@@ -5258,7 +5348,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["count"] = count;
             if (offset != null)
                 req.Parameters["offset"] = offset;
-            if(sort != null)
+            if (sort != null)
                 req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
             req.OnResponse = OnQueryLogResponse;
 

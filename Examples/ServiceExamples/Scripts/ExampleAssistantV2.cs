@@ -38,26 +38,20 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
         [SerializeField]
         private string _versionDate;
-        [Header("CF Authentication")]
-        [Tooltip("The authentication username.")]
-        [SerializeField]
-        private string _username;
-        [Tooltip("The authentication password.")]
-        [SerializeField]
-        private string _password;
         [Header("IAM Authentication")]
         [Tooltip("The IAM apikey.")]
         [SerializeField]
         private string _iamApikey;
-        [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-        [SerializeField]
-        private string _iamUrl;
         #endregion
 
         private Assistant _service;
 
         private bool _createSessionTested = false;
-        private bool _messageTested = false;
+        private bool _messageTested0 = false;
+        private bool _messageTested1 = false;
+        private bool _messageTested2 = false;
+        private bool _messageTested3 = false;
+        private bool _messageTested4 = false;
         private bool _deleteSessionTested = false;
         private string _sessionId;
 
@@ -69,32 +63,25 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 
         private IEnumerator CreateService()
         {
+            if (string.IsNullOrEmpty(_iamApikey))
+            {
+                throw new WatsonException("Plesae provide IAM ApiKey for the service.");
+            }
+
             //  Create credential and instantiate service
             Credentials credentials = null;
-            if (!string.IsNullOrEmpty(_username) && !string.IsNullOrEmpty(_password))
-            {
-                //  Authenticate using username and password
-                credentials = new Credentials(_username, _password, _serviceUrl);
-            }
-            else if (!string.IsNullOrEmpty(_iamApikey))
-            {
-                //  Authenticate using iamApikey
-                TokenOptions tokenOptions = new TokenOptions()
-                {
-                    IamApiKey = _iamApikey,
-                    IamUrl = _iamUrl
-                };
 
-                credentials = new Credentials(tokenOptions, _serviceUrl);
-
-                //  Wait for tokendata
-                while (!credentials.HasIamTokenData())
-                    yield return null;
-            }
-            else
+            //  Authenticate using iamApikey
+            TokenOptions tokenOptions = new TokenOptions()
             {
-                throw new WatsonException("Please provide either username and password or IAM apikey to authenticate the service.");
-            }
+                IamApiKey = _iamApikey
+            };
+
+            credentials = new Credentials(tokenOptions, _serviceUrl);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _service = new Assistant(credentials);
             _service.VersionDate = _versionDate;
@@ -104,7 +91,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 
         private IEnumerator Examples()
         {
-            Log.Debug("ExampleAssistantV2.Examples()", "Attempting to CreateSession");
+            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to CreateSession");
             _service.CreateSession(OnCreateSession, OnFail, _assistantId);
 
             while (!_createSessionTested)
@@ -112,15 +99,75 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.Examples()", "Attempting to Message");
-            _service.Message(OnMessage, OnFail, _assistantId, _sessionId);
+            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to Message");
+            _service.Message(OnMessage0, OnFail, _assistantId, _sessionId);
 
-            while (!_messageTested)
+            while (!_messageTested0)
             {
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.Examples()", "Attempting to DeleteSession");
+            Log.Debug("ExampleAssistantV2.RunTest()", "Are you open on Christmas?");
+            MessageRequest messageRequest1 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "Are you open on Christmas?"
+                }
+            };
+            _service.Message(OnMessage1, OnFail, _assistantId, _sessionId, messageRequest1);
+
+            while (!_messageTested1)
+            {
+                yield return null;
+            }
+
+            Log.Debug("ExampleAssistantV2.RunTest()", "What are your hours?");
+            MessageRequest messageRequest2 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "What are your hours?"
+                }
+            };
+            _service.Message(OnMessage2, OnFail, _assistantId, _sessionId, messageRequest2);
+
+            while (!_messageTested2)
+            {
+                yield return null;
+            }
+
+            Log.Debug("ExampleAssistantV2.RunTest()", "I'd like to make an appointment for 12pm.");
+            MessageRequest messageRequest3 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "I'd like to make an appointment for 12pm."
+                }
+            };
+            _service.Message(OnMessage3, OnFail, _assistantId, _sessionId, messageRequest3);
+
+            while (!_messageTested3)
+            {
+                yield return null;
+            }
+
+            Log.Debug("ExampleAssistantV2.RunTest()", "On Friday please.");
+            MessageRequest messageRequest4 = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "On Friday please."
+                }
+            };
+            _service.Message(OnMessage4, OnFail, _assistantId, _sessionId, messageRequest4);
+
+            while (!_messageTested4)
+            {
+                yield return null;
+            }
+
+            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to delete session");
             _service.DeleteSession(OnDeleteSession, OnFail, _assistantId, _sessionId);
 
             while (!_deleteSessionTested)
@@ -137,9 +184,34 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             _createSessionTested = true;
         }
 
-        private void OnMessage(MessageResponse response, Dictionary<string, object> customData)
+        private void OnMessage0(MessageResponse response, Dictionary<string, object> customData)
         {
-            _messageTested = true;
+            Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested0 = true;
+        }
+
+        private void OnMessage1(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Output.Generic[0].Text);
+
+            _messageTested1 = true;
+        }
+
+        private void OnMessage2(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested2 = true;
+        }
+
+        private void OnMessage3(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistantV2.OnMessage3()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested3 = true;
+        }
+        private void OnMessage4(MessageResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Output.Generic[0].Text);
+            _messageTested4 = true;
         }
 
         private void OnCreateSession(SessionResponse response, Dictionary<string, object> customData)

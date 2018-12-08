@@ -37,17 +37,10 @@ public class ExampleVisualRecognition : MonoBehaviour
     [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
     [SerializeField]
     private string _versionDate;
-    [Header("CF Authentication")]
-    [Tooltip("The CF apikey (non-iam).")]
-    [SerializeField]
-    private string _apikey;
     [Header("IAM Authentication")]
     [Tooltip("The IAM apikey.")]
     [SerializeField]
     private string _iamApikey;
-    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-    [SerializeField]
-    private string _iamUrl;
     #endregion
 
     private VisualRecognition _visualRecognition;
@@ -87,26 +80,24 @@ public class ExampleVisualRecognition : MonoBehaviour
 
     private IEnumerator CreateService()
     {
+        if (string.IsNullOrEmpty(_iamApikey))
+        {
+            throw new WatsonException("Plesae provide IAM ApiKey for the service.");
+        }
+
         Credentials credentials = null;
-        if (!string.IsNullOrEmpty(_iamApikey))
-        {
-            //  Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = _iamApikey,
-                IamUrl = _iamUrl
-            };
 
-            credentials = new Credentials(tokenOptions, _serviceUrl);
-
-            //  Wait for tokendata
-            while (!credentials.HasIamTokenData())
-                yield return null;
-        }
-        else
+        //  Authenticate using iamApikey
+        TokenOptions tokenOptions = new TokenOptions()
         {
-            throw new WatsonException("Please provide IAM apikey to authenticate the service.");
-        }
+            IamApiKey = _iamApikey
+        };
+
+        credentials = new Credentials(tokenOptions, _serviceUrl);
+
+        //  Wait for tokendata
+        while (!credentials.HasIamTokenData())
+            yield return null;
 
         //  Create credential and instantiate service
         _visualRecognition = new VisualRecognition(credentials);

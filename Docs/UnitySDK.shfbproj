@@ -72,22 +72,14 @@
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Utilities" isDocumented="True">Various utility classes.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Widgets" isDocumented="True">Widget classes.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services" isDocumented="True">Watson service classes.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.AlchemyAPI.v1" isDocumented="True">Alchemy API version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Conversation.v1" isDocumented="True">Conversation version 1 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ConversationExperimental.v1" isDocumented="True">Experimental Conversation service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DeepQA.v1" isDocumented="True">Deep QA version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.Dialog.v1" isDocumented="True">Dialog version 1 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.DocumentConversion.v1" isDocumented="True">Document Conversiont version 1 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v1" isDocumented="True">Language Translator version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1" isDocumented="True">Natural Language Classifier version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v2" isDocumented="True">Personality Insightst version 2 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.RetrieveAndRank.v1" isDocumented="True">Retrieve and Rankt version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.SpeechToText.v1" isDocumented="True">Speech to Text version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1" isDocumented="True">Text to Speech version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3" isDocumented="True">Tone Analyzer version 3 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.TradeoffAnalytics.v1" isDocumented="True">Tradeoff Analytics version 1 service abstraction.</NamespaceSummaryItem>
       <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3" isDocumented="True">Visual Recognitionr version 3 service abstraction.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="IBM.Watson.DeveloperCloud.Services.LanguageTranslation.v1" isDocumented="True">Language Translation version 1 service abstraction.</NamespaceSummaryItem>
     </NamespaceSummaries>
     <ApiFilter>
       <Filter entryType="Namespace" fullName="" isExposed="False" />

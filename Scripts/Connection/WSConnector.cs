@@ -156,7 +156,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// Headers to pass when making the socket.
         /// </summary>
         private Dictionary<string, string> _headers;
-        public Dictionary<string, string> Headers {
+        public Dictionary<string, string> Headers
+        {
             get
             {
                 if (_headers == null)
@@ -176,9 +177,19 @@ namespace IBM.Watson.DeveloperCloud.Connection
         /// The current state of this connector.
         /// </summary>
         public ConnectionState State { get { return _connectionState; } set { _connectionState = value; } }
-        #endregion
 
-        #region Private Data
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
+#endregion
+
+#region Private Data
         private ConnectionState _connectionState = ConnectionState.CLOSED;
 #if !NETFX_CORE
         private Thread _sendThread = null;
@@ -192,7 +203,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         private int _receiverRoutine = 0;
         private static readonly string https = "https://";
         private static readonly string wss = "wss://";
-        #endregion
+#endregion
 
         /// <summary>
         /// Helper function to convert a HTTP/HTTPS url into a WS/WSS URL.
@@ -217,9 +228,9 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 URL = URL.Replace("https://stream-tls10.", "wss://stream-tls10.");
             }
             //  Germany
-            else if (URL.StartsWith("https://gateway-fra."))
+            else if (URL.StartsWith("https://stream-fra."))
             {
-                URL = URL.Replace("https://gateway-fra.", "wss://stream-fra.");
+                URL = URL.Replace("https://stream-fra.", "wss://stream-fra.");
             }
             //  US East
             else if (URL.StartsWith("https://gateway-wdc."))
@@ -230,6 +241,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             else if (URL.StartsWith("https://gateway-syd."))
             {
                 URL = URL.Replace("https://gateway-syd.", "wss://gateway-syd.");
+            }
+            //  Tokyo
+            else if (URL.StartsWith("https://gateway-tok."))
+            {
+                URL = URL.Replace("https://gateway-tok.", "wss://gateway-tok.");
             }
             else
             {
@@ -409,9 +425,21 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 ws.OnClose += OnWSClose;
                 ws.OnError += OnWSError;
                 ws.OnMessage += OnWSMessage;
+
+                if (DisableSslVerification)
+                {
+                    ws.SslConfiguration.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
+                    {
+                        return true;
+                    };
+                }
+                else
+                {
+                    ws.SslConfiguration.ServerCertificateValidationCallback = null;
+                }
 #if NET_4_6
                 //  Enable TLS 1.1 and TLS 1.2 if we are on .NET 4.x
-                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
+                ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls | SslProtocols.None;
 #else
                 //  .NET 3.x does not support TLS 1.1 or TLS 1.2
                 ws.SslConfiguration.EnabledSslProtocols = SslProtocols.Tls;
