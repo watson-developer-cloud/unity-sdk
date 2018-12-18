@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0618
 
 #define ENABLE_DEBUGGING
 

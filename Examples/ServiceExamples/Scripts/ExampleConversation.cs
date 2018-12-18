@@ -14,6 +14,8 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0649
+#pragma warning disable 0618
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.Conversation.v1;
