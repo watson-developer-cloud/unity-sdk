@@ -25,6 +25,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -704,23 +706,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private IEnumerator DownloadAcousticResource()
         {
-            Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
-            WWW www = new WWW(_acousticResourceUrl);
-            while (!www.isDone)
+            Log.Debug("TestSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
+            using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(_acousticResourceUrl))
             {
-                yield return null;
-            }
-            yield return www;
+                yield return unityWebRequest.SendWebRequest();
 
-            Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
-            _acousticResourceData = www.bytes;
-            _isAudioLoaded = true;
-            www.Dispose();
+                Log.Debug("TestSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
+                _acousticResourceData = unityWebRequest.downloadHandler.data;
+                _isAudioLoaded = true;
+            }
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
         {
-            Log.Error("ExampleSpeechToText.OnFail()", "Error received: {0}", error.ToString());
+            Log.Error("TestSpeechToText.OnFail()", "Error received: {0}", error.ToString());
         }
     }
 }
