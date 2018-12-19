@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0649
 
 using UnityEngine;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
@@ -23,6 +24,8 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 public class ExampleSpeechToText : MonoBehaviour
 {
@@ -699,25 +702,27 @@ public class ExampleSpeechToText : MonoBehaviour
     private IEnumerator DownloadAcousticResource()
     {
         Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "downloading acoustic resource from {0}", _acousticResourceUrl);
-        WWW www = new WWW(_acousticResourceUrl);
-        yield return www;
+        using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(_acousticResourceUrl))
+        {
+            yield return unityWebRequest.SendWebRequest();
 
-        Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
-        _acousticResourceData = www.bytes;
-        _isAudioLoaded = true;
-        www.Dispose();
+            Log.Debug("ExampleSpeechToText.DownloadAcousticResource()", "acoustic resource downloaded");
+            _acousticResourceData = unityWebRequest.downloadHandler.data;
+            _isAudioLoaded = true;
+        }
     }
 
     private IEnumerator DownloadOggResource()
     {
         Log.Debug("ExampleSpeechToText", "downloading ogg resource from {0}", _oggResourceUrl);
-        WWW www = new WWW(_oggResourceUrl);
-        yield return www;
+        using (UnityWebRequest unityWebRequest = UnityWebRequest.Get(_oggResourceUrl))
+        {
+            yield return unityWebRequest.SendWebRequest();
 
-        Log.Debug("ExampleSpeechToText", "ogg resource downloaded");
-        _oggResourceData = www.bytes;
-        _isOggLoaded = true;
-        www.Dispose();
+            Log.Debug("ExampleSpeechToText", "ogg resource downloaded");
+            _oggResourceData = unityWebRequest.downloadHandler.data;
+            _isOggLoaded = true;
+        }
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

@@ -14,6 +14,8 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0649
+
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.Discovery.v1;

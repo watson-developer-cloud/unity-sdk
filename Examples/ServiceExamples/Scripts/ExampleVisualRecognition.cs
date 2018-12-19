@@ -14,6 +14,8 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0649
+
 //  Uncomment to train a new classifier
 //#define TRAIN_CLASSIFIER
 //  Uncommnent to delete the trained classifier
