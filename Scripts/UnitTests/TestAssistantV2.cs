@@ -31,8 +31,6 @@ namespace Assets.Watson.Scripts.UnitTests
 {
     public class TestAssistantV2 : UnitTest
     {
-        private string _username;
-        private string _password;
         private fsSerializer _serializer = new fsSerializer();
 
         private Assistant _service;
@@ -81,13 +79,19 @@ namespace Assets.Watson.Scripts.UnitTests
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
-            _username = credential.Username.ToString();
-            _password = credential.Password.ToString();
-            _url = credential.Url.ToString();
+            //  Create credential and instantiate service
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = credential.IamApikey,
+            };
             _assistantId = credential.AssistantId.ToString();
 
             //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, _url);
+            Credentials credentials = new Credentials(tokenOptions, _url);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;

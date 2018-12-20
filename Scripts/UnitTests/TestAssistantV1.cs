@@ -27,10 +27,8 @@ using System.IO;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
-    class TestAssistantCF : UnitTest
+    class TestAssistantV1 : UnitTest
     {
-        private string _username = null;
-        private string _password = null;
         private string _workspaceId = null;
         private string _createdWorkspaceId;
 
@@ -53,7 +51,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _createdValue = "untiyuntiyalue";
         private static string _createdIntent = "untiyIntent";
         private static string _createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
-        private static string _createdCounterExampleText = "untiyExampleText";
+        private static string _createdCounterExampleText = "untiyExample text";
         private static string _createdSynonym = "untiySynonym";
         private static string _createdExample = "untiyExample";
         private static string _dialogNodeName = "untiyDialognode";
@@ -81,7 +79,6 @@ namespace Assets.Watson.Scripts.UnitTests
         private bool _createValueTested = false;
         private bool _getValueTested = false;
         private bool _updateValueTested = false;
-        private bool _listMentionsTested = false;
         private bool _listSynonymsTested = false;
         private bool _createSynonymTested = false;
         private bool _getSynonymTested = false;
@@ -140,13 +137,18 @@ namespace Assets.Watson.Scripts.UnitTests
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("assistant-sdk")[0].Credentials;
-            _username = credential.Username.ToString();
-            _password = credential.Password.ToString();
-            _url = credential.Url.ToString();
+            //  Create credential and instantiate service
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = credential.IamApikey,
+            };
+
+            Credentials credentials = new Credentials(tokenOptions, credential.Url);
             _workspaceId = credential.WorkspaceId.ToString();
 
-            //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, _url);
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
@@ -315,11 +317,6 @@ namespace Assets.Watson.Scripts.UnitTests
             };
             _service.UpdateEntity(OnUpdateEntity, OnFail, _createdWorkspaceId, _createdEntity, updateEntity);
             while (!_updateEntityTested)
-                yield return null;
-
-            // List Mentions
-            _service.ListMentions(OnListMentions, OnFail, _createdWorkspaceId, updatedEntity);
-            while (!_listMentionsTested)
                 yield return null;
 
             //  List Values
@@ -713,12 +710,6 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("ExampleAssistant.OnListIntents()", "Response: {0}", customData["json"].ToString());
             _listIntentsTested = true;
-        }
-
-        private void OnListMentions(EntityMentionCollection response, Dictionary<string, object> customData)
-        {
-            Log.Debug("ExampleAssistant.OnListMentions()", "Response: {0}", customData["json"].ToString());
-            _listMentionsTested = true;
         }
 
         private void OnMessage(object response, Dictionary<string, object> customData)
