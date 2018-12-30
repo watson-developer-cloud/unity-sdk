@@ -132,6 +132,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
                 throw new ArgumentNullException("successCallback");
             if (failCallback == null)
                 throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("workspaceId");
 
             IDictionary<string, string> requestDict = new Dictionary<string, string>();
             if (request.Context != null)
