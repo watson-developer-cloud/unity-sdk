@@ -33,7 +33,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
 #if TEST_RC
-    public class TestVisualRecognitionRC : UnitTest
+    public class TestVisualRecognition : UnitTest
     {
         private fsSerializer _serializer = new fsSerializer();
 
@@ -94,13 +94,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk-rc")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("visual-recognition-sdk")[0].Credentials;
 
             //  Create credential and instantiate service
             TokenOptions tokenOptions = new TokenOptions()
             {
                 IamApiKey = credential.IamApikey,
-                IamUrl = credential.IamUrl
             };
 
             Credentials credentials = new Credentials(tokenOptions, credential.Url);

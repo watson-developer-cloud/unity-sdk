@@ -29,8 +29,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 {
     public class TestTextToSpeech : UnitTest
     {
-        private string _username = null;
-        private string _password = null;
         private fsSerializer _serializer = new fsSerializer();
         //private string _token = "<authentication-token>";
 
@@ -92,18 +90,19 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Set credentials from imported credntials
             Credential credential = vcapCredentials.GetCredentialByname("text-to-speech-sdk")[0].Credentials;
-            _username = credential.Username.ToString();
-            _password = credential.Password.ToString();
-            _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
-            Credentials credentials = new Credentials(_username, _password, _url);
+            TokenOptions tokenOptions = new TokenOptions()
+            {
+                IamApiKey = credential.IamApikey,
+            };
 
-            //  Or authenticate using token
-            //Credentials credentials = new Credentials(_url)
-            //{
-            //    AuthenticationToken = _token
-            //};
+            //  Create credential and instantiate service
+            Credentials credentials = new Credentials(tokenOptions, credential.Url);
+
+            //  Wait for tokendata
+            while (!credentials.HasIamTokenData())
+                yield return null;
 
             _textToSpeech = new TextToSpeech(credentials);
 

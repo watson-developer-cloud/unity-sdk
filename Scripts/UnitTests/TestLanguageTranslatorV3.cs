@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
-    public class TestLanguageTranslatorV3RC : UnitTest
+    public class TestLanguageTranslatorV3 : UnitTest
     {
         private string _pharseToTranslate = "Hello, welcome to IBM Watson!";
         private fsSerializer _serializer = new fsSerializer();
@@ -72,7 +72,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 throw new WatsonException(r.FormattedMessages);
 
             //  Set credentials from imported credntials
-            Credential credential = vcapCredentials.GetCredentialByname("language-translator-v3-sdk-rc-wdc")[0].Credentials;
+            Credential credential = vcapCredentials.GetCredentialByname("language-translator-sdk")[0].Credentials;
             _url = credential.Url.ToString();
 
             //  Create credential and instantiate service
