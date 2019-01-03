@@ -1254,7 +1254,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-        #region
+        #region CreateAuthorization
         /// <summary>
         /// Create basic authentication header data for REST requests.
         /// </summary>
@@ -1264,6 +1264,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static string CreateAuthorization(string username, string password)
         {
             return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(username + ":" + password));
+        }
+        #endregion
+
+        #region Has Bad First Character
+        public static bool HasBadFirstOrLastCharacter(string value)
+        {
+            return value.StartsWith("{") || value.StartsWith("\"") || value.EndsWith("}") || value.EndsWith("\"");
         }
         #endregion
     }
