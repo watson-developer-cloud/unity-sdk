@@ -18,7 +18,7 @@
 using System;
 using System.IO;
 
-namespace IBM.Watson.DeveloperCloud.Logging
+namespace IBM.Watson.Logging
 {
 #if !UNITY_WEBPLAYER
 

@@ -17,7 +17,7 @@
 
 
 using FullSerializer;
-using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -26,14 +26,14 @@ using UnityEngine;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using IBM.Watson.DeveloperCloud.Connection;
+using IBM.Watson.Connection;
 using System.Collections;
 using UnityEngine.Networking;
 #if NETFX_CORE
 using System.Reflection;
 #endif
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// Utility functions.

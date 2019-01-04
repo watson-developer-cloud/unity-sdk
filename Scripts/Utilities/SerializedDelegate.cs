@@ -20,7 +20,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// This class allows for a delegate to be serialized for a component and method 

@@ -17,7 +17,7 @@
 
 using FullSerializer;
 
-namespace IBM.WatsonDeveloperCloud.Assistant.v2
+namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
     /// DialogNodeOutputOptionsElement

@@ -15,7 +15,7 @@
 *
 */
 
-namespace IBM.Watson.DeveloperCloud.Logging
+namespace IBM.Watson.Logging
 {
     /// <summary>
     /// Any class that implement this interface can be added to the Logger class as a reactor and hook

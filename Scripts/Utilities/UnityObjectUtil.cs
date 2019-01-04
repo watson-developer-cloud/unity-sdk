@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// AudioClip helper functions.

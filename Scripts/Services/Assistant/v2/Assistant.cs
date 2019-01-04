@@ -16,16 +16,15 @@
 */
 
 using FullSerializer;
-using IBM.Watson.DeveloperCloud.Connection;
-using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.WatsonDeveloperCloud.Assistant.v2;
+using IBM.Watson.Connection;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
 
-namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
+namespace IBM.Watson.Assistant.V2
 {
     public class Assistant : IWatsonService
     {

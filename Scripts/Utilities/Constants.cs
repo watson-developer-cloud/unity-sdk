@@ -15,7 +15,7 @@
 *
 */
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// This class wraps all constants.

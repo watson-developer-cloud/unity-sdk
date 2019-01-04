@@ -20,7 +20,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Editor
+namespace IBM.Watson.Editor
 {
     public class WatsonMenu : MonoBehaviour
     {

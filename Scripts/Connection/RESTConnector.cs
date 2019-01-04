@@ -18,8 +18,8 @@
 // uncomment to enable debugging
 //#define ENABLE_DEBUGGING
 
-using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.Utilities;
+using IBM.Watson.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ using System.Net;
 using System.Net.Security;
 #endif
 
-namespace IBM.Watson.DeveloperCloud.Connection
+namespace IBM.Watson.Connection
 {
     /// <summary>
     /// REST connector class.

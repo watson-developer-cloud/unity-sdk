@@ -15,12 +15,12 @@
 *
 */
 
-using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.Logging;
 using System;
 using System.IO;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// AudioClip helper functions.

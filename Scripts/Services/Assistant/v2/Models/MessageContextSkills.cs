@@ -17,7 +17,7 @@
 
 using FullSerializer;
 
-namespace IBM.WatsonDeveloperCloud.Assistant.v2
+namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
     /// Contains information specific to particular skills within the Assistant.

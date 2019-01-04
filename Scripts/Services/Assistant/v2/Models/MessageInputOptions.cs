@@ -19,7 +19,7 @@ using FullSerializer;
 using System;
 using System.Collections.Generic;
 
-namespace IBM.WatsonDeveloperCloud.Assistant.v2
+namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
     /// Optional properties that control how the assistant responds.

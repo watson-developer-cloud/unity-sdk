@@ -18,8 +18,8 @@
 //! Uncomment to enable message debugging
 //#define ENABLE_MESSAGE_DEBUGGING
 
-using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Watson.Logging;
+using IBM.Watson.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Authentication;
@@ -34,7 +34,7 @@ using Windows.Security.Credentials;
 using Windows.Storage.Streams;
 #endif
 
-namespace IBM.Watson.DeveloperCloud.Connection
+namespace IBM.Watson.Connection
 {
     /// <summary>
     /// WebSocket connector class.

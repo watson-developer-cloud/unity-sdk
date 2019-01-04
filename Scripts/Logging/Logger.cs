@@ -15,13 +15,13 @@
 *
 */
 
-using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Debug;
+using IBM.Watson.Utilities;
+using IBM.Watson.Debug;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Logging
+namespace IBM.Watson.Logging
 {
     /// <summary>
     /// All log messages are assigned to a log level, typically reactors have filters and will filter log
@@ -92,9 +92,9 @@ namespace IBM.Watson.DeveloperCloud.Logging
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Logging.LogRecord"/>.
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="IBM.Watson.Logging.LogRecord"/>.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.DeveloperCloud.Logging.LogRecord"/>.</returns>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="IBM.Watson.Logging.LogRecord"/>.</returns>
         public override string ToString()
         {
             return string.Format("[{0}][{1}][{2}] {3}", _timeStamp.ToString("MM/dd/yyyy HH:mm:ss"), _subSystem, _level.ToString(), _message);

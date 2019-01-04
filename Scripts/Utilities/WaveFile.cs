@@ -15,14 +15,14 @@
 *
 */
 
-using IBM.Watson.DeveloperCloud.Logging;
+using IBM.Watson.Logging;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 
-namespace IBM.Watson.DeveloperCloud.Utilities
+namespace IBM.Watson.Utilities
 {
     /// <summary>
     /// WAV Utility functions.

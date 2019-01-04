@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 * limitations under the License.
 *
 */
-namespace IBM.WatsonDeveloperCloud.Assistant.v2
+namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
     /// Additional detailed information about a message response and how it was generated.
