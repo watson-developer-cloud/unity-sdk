@@ -1,4 +1,7 @@
-﻿/**
+﻿
+
+using System.Collections.Generic;
+/**
 * Copyright 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +17,9 @@
 * limitations under the License.
 *
 */
-
 namespace IBM.Watson
 {
-    class WatsonError
+    public class WatsonError
     {
         /// <summary>
         /// The url that generated the error.
@@ -35,5 +37,9 @@ namespace IBM.Watson
         /// The contents of the response from the server.
         /// </summary>
         public string Response { get; set; }
+        /// <summary>
+        /// Dictionary of headers returned by the request.
+        /// </summary>
+        public Dictionary<string, string> ResponseHeaders { get; set; }
     }
 }

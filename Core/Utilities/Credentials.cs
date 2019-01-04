@@ -146,16 +146,9 @@ namespace IBM.Watson.Utilities
         /// Success callback delegate.
         /// </summary>
         /// <typeparam name="T">Type of the returned object.</typeparam>
-        /// <param name="response">The returned object.</param>
+        /// <param name="response">The returned WatsonResponse.</param>
         /// <param name="customData">user defined custom data including raw json.</param>
-        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        /// <summary>
-        /// Fail callback delegate.
-        /// </summary>
-        /// <param name="error">The error object.</param>
-        /// <param name="customData">User defined custom data</param>
-        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        public delegate void Callback<T>(WatsonResponse<T> response, WatsonError error, Dictionary<string, object> customData);
         #endregion
 
         #region Constructors
@@ -260,50 +253,45 @@ namespace IBM.Watson.Utilities
             if (!string.IsNullOrEmpty(_userAcessToken))
             {
                 // 1. use user-managed token
-                OnGetToken(new IamTokenData() { AccessToken = _userAcessToken }, new Dictionary<string, object>());
+                OnGetToken(new WatsonResponse<IamTokenData>() { Result = new IamTokenData() { AccessToken = _userAcessToken } }, new WatsonError(), new Dictionary<string, object>());
             }
             else if (!string.IsNullOrEmpty(_iamTokenData.AccessToken) || IsRefreshTokenExpired())
             {
                 // 2. request an initial token
-                RequestIamToken(OnGetToken, OnGetTokenFail);
+                RequestIamToken(OnGetToken);
             }
             else if (IsTokenExpired())
             {
                 // 3. refresh a token
-                RefreshIamToken(OnGetToken, OnGetTokenFail);
+                RefreshIamToken(OnGetToken);
             }
             else
             {
                 //  4. use valid managed token
-                OnGetToken(new IamTokenData() { AccessToken = _iamTokenData.AccessToken }, new Dictionary<string, object>());
+
+                OnGetToken(new WatsonResponse<IamTokenData>() { Result = new IamTokenData() { AccessToken = _iamTokenData.AccessToken } }, new WatsonError(), new Dictionary<string, object>());
             }
         }
 
-        private void OnGetToken(IamTokenData iamTokenData, Dictionary<string, object> customData)
+        private void OnGetToken(WatsonResponse<IamTokenData> response, WatsonError error, Dictionary<string, object> customData)
         {
-            SaveTokenInfo(iamTokenData);
+            SaveTokenInfo(response.Result);
         }
 
-        private void OnGetTokenFail(RESTConnector.Error error, Dictionary<string, object> customData)
-        {
-            Log.Debug("Credentials.OnGetTokenFail();", "Failed to get IAM Token: {0}", error.ToString());
-        }
         #endregion
 
         #region Request Token
         /// <summary>
         /// Request an IAM token using an API key.
         /// </summary>
-        /// <param name="successCallback">The request callback.</param>
-        /// <param name="failCallback">The fail callback.</param>
+        /// <param name="callback">The request callback.</param>
+        /// <param name="error"> The request error.</param>
         /// <param name="customData">Dictionary of custom data.</param>
         /// <returns></returns>
-        public bool RequestIamToken(SuccessCallback<IamTokenData> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
+        public bool RequestIamToken(Callback<IamTokenData> callback, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
+            if (callback == null)
                 throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
 
             RESTConnector connector = new RESTConnector();
             connector.URL = _iamUrl;
@@ -311,8 +299,7 @@ namespace IBM.Watson.Utilities
                 return false;
 
             RequestIamTokenRequest req = new RequestIamTokenRequest();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
+            req.Callback = callback;
             req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
@@ -337,13 +324,13 @@ namespace IBM.Watson.Utilities
         private class RequestIamTokenRequest : RESTConnector.Request
         {
             public Dictionary<string, object> CustomData { get; set; }
-            public SuccessCallback<IamTokenData> SuccessCallback { get; set; }
-            public FailCallback FailCallback { get; set; }
+            public Callback<IamTokenData> Callback { get; set; }
         }
 
         private void OnRequestIamTokenResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            IamTokenData result = new IamTokenData();
+            WatsonResponse<IamTokenData> response = new WatsonResponse<IamTokenData>();
+            response.Result = new IamTokenData();
             fsData data = null;
             Dictionary<string, object> customData = ((RequestIamTokenRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
@@ -356,7 +343,7 @@ namespace IBM.Watson.Utilities
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = result;
+                    object obj = response.Result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -370,16 +357,8 @@ namespace IBM.Watson.Utilities
                 }
             }
 
-            if (resp.Success)
-            {
-                if (((RequestIamTokenRequest)req).SuccessCallback != null)
-                    ((RequestIamTokenRequest)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((RequestIamTokenRequest)req).FailCallback != null)
-                    ((RequestIamTokenRequest)req).FailCallback(resp.Error, customData);
-            }
+            if (((RequestIamTokenRequest)req).Callback != null)
+                ((RequestIamTokenRequest)req).Callback(response, resp.Error, customData);
         }
         #endregion
 
@@ -387,16 +366,14 @@ namespace IBM.Watson.Utilities
         /// <summary>
         /// Refresh an IAM token using a refresh token.
         /// </summary>
-        /// <param name="successCallback">The success callback.</param>
+        /// <param name="callback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="customData">Dictionary of custom data.</param>
         /// <returns></returns>
-        public bool RefreshIamToken(SuccessCallback<IamTokenData> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
+        public bool RefreshIamToken(Callback<IamTokenData> callback, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
             RESTConnector connector = new RESTConnector();
             connector.URL = _iamUrl;
@@ -404,8 +381,7 @@ namespace IBM.Watson.Utilities
                 return false;
 
             RefreshIamTokenRequest req = new RefreshIamTokenRequest();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
+            req.Callback = callback;
             req.HttpMethod = UnityWebRequest.kHttpVerbGET;
             req.Headers.Add("Content-type", "application/x-www-form-urlencoded");
             req.Headers.Add("Authorization", "Basic Yng6Yng=");
@@ -428,14 +404,14 @@ namespace IBM.Watson.Utilities
 
         private class RefreshIamTokenRequest : RESTConnector.Request
         {
+            public Callback<IamTokenData> Callback { get; set; }
             public Dictionary<string, object> CustomData { get; set; }
-            public SuccessCallback<IamTokenData> SuccessCallback { get; set; }
-            public FailCallback FailCallback { get; set; }
         }
 
         private void OnRefreshIamTokenResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            IamTokenData result = new IamTokenData();
+            WatsonResponse<IamTokenData> response = new WatsonResponse<IamTokenData>();
+            response.Result = new IamTokenData();
             fsData data = null;
             Dictionary<string, object> customData = ((RefreshIamTokenRequest)req).CustomData;
             customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
@@ -448,7 +424,7 @@ namespace IBM.Watson.Utilities
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
 
-                    object obj = result;
+                    object obj = response.Result;
                     r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
                     if (!r.Succeeded)
                         throw new WatsonException(r.FormattedMessages);
@@ -462,16 +438,8 @@ namespace IBM.Watson.Utilities
                 }
             }
 
-            if (resp.Success)
-            {
-                if (((RefreshIamTokenRequest)req).SuccessCallback != null)
-                    ((RefreshIamTokenRequest)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((RefreshIamTokenRequest)req).FailCallback != null)
-                    ((RefreshIamTokenRequest)req).FailCallback(resp.Error, customData);
-            }
+            if (((RefreshIamTokenRequest)req).Callback != null)
+                ((RefreshIamTokenRequest)req).Callback(response, resp.Error, customData);
         }
         #endregion
 

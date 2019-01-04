@@ -26,46 +26,44 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Assistant.V2
 {
-    public class Assistant : IWatsonService
+    public class AssistantService
     {
-        private const string ServiceId = "AssistantV2";
-        private fsSerializer _serializer = new fsSerializer();
-
-        private Credentials _credentials = null;
+        private fsSerializer serializer = new fsSerializer();
+        private Credentials credentials = null;
         /// <summary>
         /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
         public Credentials Credentials
         {
-            get { return _credentials; }
+            get { return credentials; }
             set
             {
-                _credentials = value;
-                if (!string.IsNullOrEmpty(_credentials.Url))
+                credentials = value;
+                if (!string.IsNullOrEmpty(credentials.Url))
                 {
-                    _url = _credentials.Url;
+                    url = credentials.Url;
                 }
             }
         }
 
-        private string _url = "https://gateway.watsonplatform.net/assistant/api";
+        private string url = "https://gateway.watsonplatform.net/assistant/api";
         /// <summary>
         /// Gets and sets the endpoint URL for the service.
         /// </summary>
         public string Url
         {
-            get { return _url; }
-            set { _url = value; }
+            get { return url; }
+            set { url = value; }
         }
 
-        private string _versionDate;
+        private string versionDate;
         /// <summary>
         /// Gets and sets the versionDate of the service.
         /// </summary>
         public string VersionDate
         {
-            get { return _versionDate; }
-            set { _versionDate = value; }
+            get { return versionDate; }
+            set { versionDate = value; }
         }
 
         private bool disableSslVerification = false;
@@ -79,10 +77,10 @@ namespace IBM.Watson.Assistant.V2
         }
 
         /// <summary>
-        /// Assistant constructor.
+        /// AssistantService constructor.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
-        public Assistant(Credentials credentials)
+        public AssistantService(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasIamTokenData())
             {
@@ -104,16 +102,9 @@ namespace IBM.Watson.Assistant.V2
         /// Success callback delegate.
         /// </summary>
         /// <typeparam name="T">Type of the returned object.</typeparam>
-        /// <param name="response">The returned object.</param>
+        /// <param name="response">The returned WatsonResponse.</param>
         /// <param name="customData">user defined custom data including raw json.</param>
-        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        /// <summary>
-        /// Fail callback delegate.
-        /// </summary>
-        /// <param name="error">The error object.</param>
-        /// <param name="customData">User defined custom data</param>
-        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
+        public delegate void Callback<T>(WatsonResponse<T> response, WatsonError error, Dictionary<string, object> customData);
         #endregion
 
         /// <summary>
@@ -122,8 +113,7 @@ namespace IBM.Watson.Assistant.V2
         /// Create a new session. A session is used to send user input to a skill and receive responses. It also
         /// maintains the state of the conversation.
         /// </summary>
-        /// <param name="successCallback">The function that is called when the operation is successful.</param>
-        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="callback">The function that is called when the operation is successful.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
         /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
@@ -133,27 +123,25 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateSession(SuccessCallback<SessionResponse> successCallback, FailCallback failCallback, String assistantId, Dictionary<string, object> customData = null)
+        public bool CreateSession(Callback<SessionResponse> callback, String assistantId, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
+            if (callback == null)
             {
-                throw new ArgumentNullException("successCallback is required for CreateSession");
+                throw new ArgumentNullException("callback is required for CreateSession");
             }
-            if (failCallback == null)
-            {
-                throw new ArgumentNullException("failCallback is required for CreateSession");
-            }
-            if(string.IsNullOrEmpty(assistantId))
+            if (string.IsNullOrEmpty(assistantId))
             {
                 throw new ArgumentException("assistantId is required for CreateSession");
             }
 
-            CreateSessionRequestObj req = new CreateSessionRequestObj();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
-            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
-            req.DisableSslVerification = DisableSslVerification;
-            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            CreateSessionRequestObj req = new CreateSessionRequestObj
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -167,7 +155,9 @@ namespace IBM.Watson.Assistant.V2
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
             if (connector == null)
+            {
                 return false;
+            }
 
             return connector.Send(req);
         }
@@ -177,11 +167,7 @@ namespace IBM.Watson.Assistant.V2
             /// <summary>
             /// The success callback.
             /// </summary>
-            public SuccessCallback<SessionResponse> SuccessCallback { get; set; }
-            /// <summary>
-            /// The fail callback.
-            /// </summary>
-            public FailCallback FailCallback { get; set; }
+            public Callback<SessionResponse> Callback { get; set; }
             /// <summary>
             /// Custom data.
             /// </summary>
@@ -190,41 +176,40 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            SessionResponse result = new SessionResponse();
+            WatsonResponse<SessionResponse> response = new WatsonResponse<SessionResponse>
+            {
+                Result = new SessionResponse()
+            };
+
             fsData data = null;
             Dictionary<string, object> customData = ((CreateSessionRequestObj)req).CustomData;
 
-            if (resp.Success)
+            try
             {
-                try
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                if (!r.Succeeded)
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
+                    throw new WatsonException(r.FormattedMessages);
                 }
-                catch (Exception e)
+
+                object obj = response.Result;
+                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
                 {
-                    Log.Error("Assistant.OnCreateSessionResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
+                    throw new WatsonException(r.FormattedMessages);
                 }
+
+                customData.Add("json", data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Assistant.OnCreateSessionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
-            if (resp.Success)
+            if (((CreateSessionRequestObj)req).Callback != null)
             {
-                if (((CreateSessionRequestObj)req).SuccessCallback != null)
-                    ((CreateSessionRequestObj)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((CreateSessionRequestObj)req).FailCallback != null)
-                    ((CreateSessionRequestObj)req).FailCallback(resp.Error, customData);
+                ((CreateSessionRequestObj)req).Callback(response, resp.Error, customData);
             }
         }
 
@@ -233,8 +218,7 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// Deletes a session explicitly before it times out.
         /// </summary>
-        /// <param name="successCallback">The function that is called when the operation is successful.</param>
-        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="callback">The function that is called when the operation is successful.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
         /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
@@ -245,17 +229,13 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool DeleteSession(SuccessCallback<object> successCallback, FailCallback failCallback, String assistantId, String sessionId, Dictionary<string, object> customData = null)
+        public bool DeleteSession(Callback<object> callback, String assistantId, String sessionId, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
+            if (callback == null)
             {
-                throw new ArgumentNullException("successCallback is required for DeleteSession");
+                throw new ArgumentNullException("callback is required for DeleteSession");
             }
-            if (failCallback == null)
-            {
-                throw new ArgumentNullException("failCallback is required for DeleteSession");
-            }
-            if(string.IsNullOrEmpty(assistantId))
+            if (string.IsNullOrEmpty(assistantId))
             {
                 throw new ArgumentException("assistantId is required for DeleteSession");
             }
@@ -264,12 +244,14 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentException("sessionId is required for DeleteSession");
             }
 
-            DeleteSessionRequestObj req = new DeleteSessionRequestObj();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
-            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
-            req.DisableSslVerification = DisableSslVerification;
-            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            DeleteSessionRequestObj req = new DeleteSessionRequestObj
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -282,7 +264,9 @@ namespace IBM.Watson.Assistant.V2
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
             if (connector == null)
+            {
                 return false;
+            }
 
             return connector.Send(req);
         }
@@ -292,11 +276,7 @@ namespace IBM.Watson.Assistant.V2
             /// <summary>
             /// The success callback.
             /// </summary>
-            public SuccessCallback<object> SuccessCallback { get; set; }
-            /// <summary>
-            /// The fail callback.
-            /// </summary>
-            public FailCallback FailCallback { get; set; }
+            public Callback<object> Callback { get; set; }
             /// <summary>
             /// Custom data.
             /// </summary>
@@ -305,41 +285,40 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            object result = new object();
+            WatsonResponse<object> response = new WatsonResponse<object>
+            {
+                Result = new object()
+            };
+
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteSessionRequestObj)req).CustomData;
 
-            if (resp.Success)
+            try
             {
-                try
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                if (!r.Succeeded)
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
+                    throw new WatsonException(r.FormattedMessages);
                 }
-                catch (Exception e)
+
+                object obj = response.Result;
+                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
                 {
-                    Log.Error("Assistant.OnDeleteSessionResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
+                    throw new WatsonException(r.FormattedMessages);
                 }
+
+                customData.Add("json", data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Assistant.OnDeleteSessionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
-            if (resp.Success)
+            if (((DeleteSessionRequestObj)req).Callback != null)
             {
-                if (((DeleteSessionRequestObj)req).SuccessCallback != null)
-                    ((DeleteSessionRequestObj)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((DeleteSessionRequestObj)req).FailCallback != null)
-                    ((DeleteSessionRequestObj)req).FailCallback(resp.Error, customData);
+                ((DeleteSessionRequestObj)req).Callback(response, resp.Error, customData);
             }
         }
         /// <summary>
@@ -349,8 +328,7 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// There is no rate limit for this operation.
         /// </summary>
-        /// <param name="successCallback">The function that is called when the operation is successful.</param>
-        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="callback">The function that is called when the operation is successful.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
         /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
@@ -363,15 +341,11 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Message(SuccessCallback<MessageResponse> successCallback, FailCallback failCallback, String assistantId, String sessionId, MessageRequest request = null, Dictionary<string, object> customData = null)
+        public bool Message(Callback<MessageResponse> callback, String assistantId, String sessionId, MessageRequest request = null, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
+            if (callback == null)
             {
-                throw new ArgumentNullException("successCallback is required for Message");
-            }
-            if (failCallback == null)
-            {
-                throw new ArgumentNullException("failCallback is required for Message");
+                throw new ArgumentNullException("callback is required for Message");
             }
             if (string.IsNullOrEmpty(assistantId))
             {
@@ -382,12 +356,14 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentException("sessionId is required for Message");
             }
 
-            MessageRequestObj req = new MessageRequestObj();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
-            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
-            req.DisableSslVerification = DisableSslVerification;
-            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            MessageRequestObj req = new MessageRequestObj
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -399,7 +375,7 @@ namespace IBM.Watson.Assistant.V2
             if (request != null)
             {
                 fsData data = null;
-                _serializer.TrySerialize(request, out data);
+                serializer.TrySerialize(request, out data);
                 string json = data.ToString().Replace('\"', '"');
                 req.Send = Encoding.UTF8.GetBytes(json);
             }
@@ -410,7 +386,9 @@ namespace IBM.Watson.Assistant.V2
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
             if (connector == null)
+            {
                 return false;
+            }
 
             return connector.Send(req);
         }
@@ -420,11 +398,7 @@ namespace IBM.Watson.Assistant.V2
             /// <summary>
             /// The success callback.
             /// </summary>
-            public SuccessCallback<MessageResponse> SuccessCallback { get; set; }
-            /// <summary>
-            /// The fail callback.
-            /// </summary>
-            public FailCallback FailCallback { get; set; }
+            public Callback<MessageResponse> Callback { get; set; }
             /// <summary>
             /// Custom data.
             /// </summary>
@@ -433,50 +407,38 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            MessageResponse result = new MessageResponse();
+            WatsonResponse<MessageResponse> response = new WatsonResponse<MessageResponse>();
+            response.Result = new MessageResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
 
-            if (resp.Success)
+            try
             {
-                try
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                if (!r.Succeeded)
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
+                    throw new WatsonException(r.FormattedMessages);
                 }
-                catch (Exception e)
+
+                object obj = response.Result;
+                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
                 {
-                    Log.Error("Assistant.OnMessageResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
+                    throw new WatsonException(r.FormattedMessages);
                 }
+
+                customData.Add("json", data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Assistant.OnMessageResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
-            if (resp.Success)
+            if (((MessageRequestObj)req).Callback != null)
             {
-                if (((MessageRequestObj)req).SuccessCallback != null)
-                    ((MessageRequestObj)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((MessageRequestObj)req).FailCallback != null)
-                    ((MessageRequestObj)req).FailCallback(resp.Error, customData);
+                ((MessageRequestObj)req).Callback(response, resp.Error, customData);
             }
         }
-
-        #region IWatsonService Interface
-        /// <exclude />
-        public string GetServiceID()
-        {
-            return ServiceId;
-        }
-        #endregion
     }
 }

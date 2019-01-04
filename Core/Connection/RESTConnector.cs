@@ -72,7 +72,7 @@ namespace IBM.Watson.Connection
             /// <summary>
             /// Error message if Success is false.
             /// </summary>
-            public Error Error { get; set; }
+            public WatsonError Error { get; set; }
             /// <summary>
             /// The data returned by the request.
             /// </summary>
@@ -91,41 +91,7 @@ namespace IBM.Watson.Connection
             public Dictionary<string, string> Headers { get; set; }
             #endregion
         };
-
-        /// <summary>
-        /// Class to encapsulate an error returned from a server request.
-        /// </summary>
-        public class Error
-        {
-            /// <summary>
-            /// The url that generated the error.
-            /// </summary>
-            public string URL { get; set; }
-            /// <summary>
-            /// The error code returned from the server.
-            /// </summary>
-            public long ErrorCode { get; set; }
-            /// <summary>
-            /// The error message returned from the server.
-            /// </summary>
-            public string ErrorMessage { get; set; }
-            /// <summary>
-            /// The contents of the response from the server.
-            /// </summary>
-            public string Response { get; set; }
-            /// <summary>
-            /// Dictionary of headers returned by the request.
-            /// </summary>
-            public Dictionary<string, string> ResponseHeaders { get; set; }
-
-            public override string ToString()
-            {
-                return string.Format("URL: {0}, ErrorCode: {1}, Error: {2}, Response: {3}", URL, ErrorCode,
-                                     string.IsNullOrEmpty(ErrorMessage) ? "" : ErrorMessage,
-                                     string.IsNullOrEmpty(Response) ? "" : Response);
-            }
-        }
-
+        
         /// <summary>
         /// Multi-part form data class.
         /// </summary>
@@ -297,9 +263,11 @@ namespace IBM.Watson.Connection
 
         public static RESTConnector GetConnector(Credentials credentials, string function)
         {
-            RESTConnector connector = new RESTConnector();
-            connector.URL = credentials.Url + function;
-            connector.Authentication = credentials;
+            RESTConnector connector = new RESTConnector
+            {
+                URL = credentials.Url + function,
+                Authentication = credentials
+            };
             if (connector.Authentication.HasIamTokenData())
             {
                 connector.Authentication.GetToken();
@@ -507,17 +475,22 @@ namespace IBM.Watson.Connection
                     }
                     else if (req.Send != null)
                     {
-                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod);
-                        unityWebRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send);
+                        unityWebRequest = new UnityWebRequest(url, req.HttpMethod)
+                        {
+                            uploadHandler = (UploadHandler)new UploadHandlerRaw(req.Send)
+                        };
+
                         unityWebRequest.SetRequestHeader("Content-Type", "application/json");
                     }
                 }
                 else
                 {
                     //  GET, DELETE and POST without data
-                    unityWebRequest = new UnityWebRequest();
-                    unityWebRequest.url = url;
-                    unityWebRequest.method = req.HttpMethod;
+                    unityWebRequest = new UnityWebRequest
+                    {
+                        url = url,
+                        method = req.HttpMethod
+                    };
                 }
 
                 foreach (KeyValuePair<string, string> kvp in req.Headers)
@@ -582,7 +555,7 @@ namespace IBM.Watson.Connection
                 }
 
                 bool bError = false;
-                Error error = null;
+                WatsonError error = null;
                 if (!string.IsNullOrEmpty(unityWebRequest.error))
                 {
                     switch (unityWebRequest.responseCode)
@@ -597,10 +570,10 @@ namespace IBM.Watson.Connection
                             break;
                     }
 
-                    error = new Error()
+                    error = new WatsonError()
                     {
-                        URL = url,
-                        ErrorCode = unityWebRequest.responseCode,
+                        Url = url,
+                        StatusCode = unityWebRequest.responseCode,
                         ErrorMessage = unityWebRequest.error,
                         Response = unityWebRequest.downloadHandler.text,
                         ResponseHeaders = unityWebRequest.GetResponseHeaders()
