@@ -107,11 +107,16 @@ namespace IBM.Watson.Examples
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "Are you open on Christmas?");
+
             MessageRequest messageRequest1 = new MessageRequest()
             {
                 Input = new MessageInput()
                 {
-                    Text = "Are you open on Christmas?"
+                    Text = "Are you open on Christmas?",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
                 }
             };
             _service.Message(OnMessage1, _assistantId, _sessionId, messageRequest1);
@@ -126,7 +131,11 @@ namespace IBM.Watson.Examples
             {
                 Input = new MessageInput()
                 {
-                    Text = "What are your hours?"
+                    Text = "What are your hours?",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
                 }
             };
             _service.Message(OnMessage2, _assistantId, _sessionId, messageRequest2);
@@ -141,7 +150,11 @@ namespace IBM.Watson.Examples
             {
                 Input = new MessageInput()
                 {
-                    Text = "I'd like to make an appointment for 12pm."
+                    Text = "I'd like to make an appointment for 12pm.",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
                 }
             };
             _service.Message(OnMessage3, _assistantId, _sessionId, messageRequest3);
@@ -152,11 +165,38 @@ namespace IBM.Watson.Examples
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "On Friday please.");
+
+            Dictionary<string, string> userDefinedDictionary = new Dictionary<string, string>();
+            userDefinedDictionary.Add("name", "Watson");
+
+            Dictionary<string, Dictionary<string, string>> skillDictionary = new Dictionary<string, Dictionary<string, string>>();
+            skillDictionary.Add("user_defined", userDefinedDictionary);
+
+            Dictionary<string, Dictionary<string, Dictionary<string, string>>> skills = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+            skills.Add("main skill", skillDictionary);
+
+            //SerializableDictionary<string, string> userDefinedDictionary = new SerializableDictionary<string, string>();
+            //userDefinedDictionary.Add("name", "Watson");
+
+            //SerializableDictionary<string, SerializableDictionary<string, string>> skillDictionary = new SerializableDictionary<string, SerializableDictionary<string, string>>();
+            //skillDictionary.Add("user_defined", userDefinedDictionary);
+
+            //MessageContextSkills skills = new MessageContextSkills();
+            //skills.Add("main skill", skillDictionary);
+
             MessageRequest messageRequest4 = new MessageRequest()
             {
                 Input = new MessageInput()
                 {
-                    Text = "On Friday please."
+                    Text = "On Friday please.",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                },
+                Context = new MessageContext()
+                {
+                    Skills = skills
                 }
             };
             _service.Message(OnMessage4, _assistantId, _sessionId, messageRequest4);
@@ -177,43 +217,44 @@ namespace IBM.Watson.Examples
             Log.Debug("ExampleAssistantV2.Examples()", "Assistant examples complete.");
         }
 
-        private void OnDeleteSession(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteSession(WatsonResponse<object> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
             _createSessionTested = true;
         }
 
-        private void OnMessage0(WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage0(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Result.Output.Generic[0].Text);
             _messageTested0 = true;
         }
 
-        private void OnMessage1(WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage1(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Result.Output.Generic[0].Text);
 
             _messageTested1 = true;
         }
-
-        private void OnMessage2(WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData)
+        
+        private void OnMessage2(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Generic[0].Text);
             _messageTested2 = true;
         }
 
-        private void OnMessage3(WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage3(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage3()", "response: {0}", response.Result.Output.Generic[0].Text);
             _messageTested3 = true;
         }
-        private void OnMessage4(WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage4(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Output.Generic[0].Text);
+            //Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Context.Skills["main skill"]["user_defined"]["name"]);
             _messageTested4 = true;
         }
 
-        private void OnCreateSession(WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateSession(WatsonResponse<SessionResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnCreateSession()", "Session: {0}", response.Result.SessionId);
             _sessionId = response.Result.SessionId;

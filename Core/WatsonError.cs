@@ -1,7 +1,4 @@
-﻿
-
-using System.Collections.Generic;
-/**
+﻿/**
 * Copyright 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +14,9 @@ using System.Collections.Generic;
 * limitations under the License.
 *
 */
+
+using System.Collections.Generic;
+
 namespace IBM.Watson
 {
     public class WatsonError
