@@ -1,7 +1,5 @@
 # Assistant V2  
 
-**Watson Assistant v2 API is released in beta. For details, see the ["Introducing Watson Assistant"](https://www.ibm.com/blogs/watson/2018/03/the-future-of-watson-conversation-watson-assistant/) blog post.**
-
 The IBM Watson™ [Assistant][assistant] service combines machine learning, natural language understanding, and integrated dialog tools to create conversation flows between your apps and your users.
 
 ## Usage
