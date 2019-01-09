@@ -16,15 +16,61 @@
 */
 
 using FullSerializer;
+using FullSerializer.Internal;
+using System;
+using System.Collections.Generic;
 
 namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
     /// Contains information specific to particular skills within the Assistant.
     /// </summary>
-    [fsObject]
-    public class MessageContextSkills
+    [fsObject(Converter = typeof(MessageContextSkillsConverter))]
+    public class MessageContextSkills : Dictionary<string, object>
     {
     }
 
+    public class MessageContextSkillsConverter : fsConverter
+    {
+        private fsSerializer serializer = new fsSerializer();
+
+        public override bool CanProcess(Type type)
+        {
+            return type == typeof(MessageContextSkills);
+        }
+
+        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
+        {
+            if (data.IsString == false)
+            {
+                return fsResult.Fail("Type converter requires a string");
+            }
+
+            instance = fsTypeCache.GetType(data.AsString);
+            if (instance == null)
+            {
+                return fsResult.Fail("Unable to find type " + data.AsString);
+            }
+            return fsResult.Success;
+        }
+
+        public override object CreateInstance(fsData data, Type storageType)
+        {
+            return new MessageContextSkills();
+        }
+
+        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
+        {
+            MessageContextSkills messageContextSkills = (MessageContextSkills)instance;
+            serialized = null;
+
+            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
+            fsData tempData = null;
+
+
+
+            serialized = new fsData(serialization);
+            return fsResult.Success;
+        }
+    }
 }

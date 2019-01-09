@@ -24,7 +24,7 @@ namespace IBM.Watson
         /// <summary>
         /// The status code returned from the server.
         /// </summary>
-        public int StatusCode { get; set; }
+        public long StatusCode { get; set; }
         /// <summary>
         /// Dictionary of headers returned by the request.
         /// </summary>
@@ -33,5 +33,13 @@ namespace IBM.Watson
         /// The deserialized result.
         /// </summary>
         public T Result { get; set; }
+
+        public WatsonResponse()
+        {
+            if(Headers == null)
+            {
+                Headers = new Dictionary<string, object>();
+            }
+        }
     }
 }

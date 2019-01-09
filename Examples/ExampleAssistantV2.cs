@@ -169,10 +169,10 @@ namespace IBM.Watson.Examples
             Dictionary<string, string> userDefinedDictionary = new Dictionary<string, string>();
             userDefinedDictionary.Add("name", "Watson");
 
-            Dictionary<string, Dictionary<string, string>> skillDictionary = new Dictionary<string, Dictionary<string, string>>();
+            Dictionary<string, object> skillDictionary = new Dictionary<string, object>();
             skillDictionary.Add("user_defined", userDefinedDictionary);
 
-            Dictionary<string, Dictionary<string, Dictionary<string, string>>> skills = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+            MessageContextSkills skills = new MessageContextSkills();
             skills.Add("main skill", skillDictionary);
 
             //SerializableDictionary<string, string> userDefinedDictionary = new SerializableDictionary<string, string>();
@@ -249,8 +249,17 @@ namespace IBM.Watson.Examples
         }
         private void OnMessage4(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
-            Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Output.Generic[0].Text);
-            //Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Context.Skills["main skill"]["user_defined"]["name"]);
+            //Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Output.Generic[0].Text);
+
+            object e = response.Result as object;
+            Dictionary<string, object> e2 = e as Dictionary<string, object>;
+            Dictionary<string, object> context = e2["context"] as Dictionary<string, object>;
+            Dictionary<string, object> skills = context["skills"] as Dictionary<string, object>;
+            Dictionary<string, object> main_skill = skills["main skill"] as Dictionary<string, object>;
+            Dictionary<string, object> user_defined = main_skill["user_defined"] as Dictionary<string, object>;
+
+            string name = user_defined["name"] as string;
+            Log.Debug("GenericSerialization", "test: {0}", name);
             _messageTested4 = true;
         }
 

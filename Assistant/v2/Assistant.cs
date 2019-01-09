@@ -411,6 +411,11 @@ namespace IBM.Watson.Assistant.V2
             response.Result = new MessageResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
 
             try
             {
