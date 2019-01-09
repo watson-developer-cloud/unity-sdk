@@ -176,12 +176,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         [fsProperty("context")]
         public object Context { get; set; }
         /// <summary>
-        /// Whether to consider the dialog node during runtime evaluation.  Set to `true` to ignore the 
-        /// dialog node.
-        /// </summary>
-        [fsProperty("disabled")]
-        public bool Disabled { get; set; }
-        /// <summary>
         /// The metadata for the dialog node.
         /// </summary>
         /// <value>The metadata for the dialog node.</value>
