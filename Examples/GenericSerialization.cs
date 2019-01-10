@@ -43,7 +43,7 @@ namespace IBM.Watson.Examples
 
         public T GetValueFromGeneric<T>(Dictionary<string, object> obj)
         {
-            T response = default;
+            T response = default(T);
             return response;
         }
     }

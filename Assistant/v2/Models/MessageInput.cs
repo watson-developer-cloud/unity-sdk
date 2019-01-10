@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+
 using FullSerializer;
 using FullSerializer.Internal;
 using System;

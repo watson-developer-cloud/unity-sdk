@@ -34,7 +34,6 @@ namespace IBM.Watson.Assistant.V2
         /// Contains information specific to particular skills within the Assistant.
         /// </summary>
         [fsProperty("skills")]
-        public MessageContextSkills Skills { get; set; }
+        public object Skills { get; set; }
     }
-
 }
