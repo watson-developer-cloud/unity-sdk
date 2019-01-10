@@ -376,6 +376,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 fsData data = null;
                 serializer.TrySerialize(request, out data);
+                fsSerializer.StripDeserializationMetadata(ref data);
                 string json = data.ToString().Replace('\"', '"');
                 req.Send = Encoding.UTF8.GetBytes(json);
             }

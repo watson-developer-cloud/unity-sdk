@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Copyright 2018 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +16,17 @@
 */
 
 using FullSerializer;
+using IBM.Watson.Utilities;
 
 namespace IBM.Watson.Assistant.V2
 {
     /// <summary>
-    /// State information for the conversation.
+    /// Contains information specific to particular skills within the Assistant.
     /// </summary>
     [fsObject]
-    public class MessageContext
+    public class MessageContextSkills
     {
-        /// <summary>
-        /// Contains information that can be shared by all skills within the Assistant.
-        /// </summary>
-        [fsProperty("global")]
-        public MessageContextGlobal Global { get; set; }
-        /// <summary>
-        /// Contains information specific to particular skills within the Assistant.
-        /// </summary>
-        [fsProperty("skills")]
-        public MessageContextSkills Skills { get; set; }
+        [fsProperty("main skill")]
+        public MessageContextSkill MainSkill { get; set; }
     }
 }

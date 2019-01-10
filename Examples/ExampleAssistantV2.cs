@@ -180,11 +180,13 @@ namespace IBM.Watson.Examples
             SerializableDictionary<string, string> userDefinedDictionary = new SerializableDictionary<string, string>();
             userDefinedDictionary.Add("name", "Watson");
 
-            SerializableDictionary<string, object> skillDictionary = new SerializableDictionary<string, object>();
-            skillDictionary.Add("user_defined", userDefinedDictionary);
+            MessageContextSkill skillDictionary = new MessageContextSkill();
+            skillDictionary.UserDefined = userDefinedDictionary;
 
-            SerializableDictionary<string, object> skills = new SerializableDictionary<string, object>();
-            skills.Add("main skill", skillDictionary);
+            MessageContextSkills skills = new MessageContextSkills();
+            skills.MainSkill = skillDictionary;
+
+
 
             MessageRequest messageRequest4 = new MessageRequest()
             {
@@ -252,12 +254,12 @@ namespace IBM.Watson.Examples
         }
         private void OnMessage4(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
-            object tempSkill = null;
-            (response.Result.Context.Skills as Dictionary<string, object>).TryGetValue("main skill", out tempSkill);
-            object tempUserDefined = null;
-            (tempSkill as Dictionary<string, object>).TryGetValue("user_defined", out tempUserDefined);
-            string tempName = null;
-            (tempUserDefined as Dictionary<string, string>).TryGetValue("name", out tempName);
+            //object tempSkill = null;
+            //(response.Result.Context.Skills as Dictionary<string, object>).TryGetValue("main skill", out tempSkill);
+            //object tempUserDefined = null;
+            //(tempSkill as Dictionary<string, object>).TryGetValue("user_defined", out tempUserDefined);
+            //string tempName = null;
+            //(tempUserDefined as Dictionary<string, string>).TryGetValue("name", out tempName);
 
             //Log.Debug("ExampleAssistantV2.OnMessage4()", "response: {0}", response.Result.Output.Generic[0].Text);
 
