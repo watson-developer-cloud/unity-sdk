@@ -130,8 +130,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 yield return null;
 
             _speechToText = new SpeechToText(credentials);
-            _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
-            _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
+            _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/theJabberwocky-utf8.txt";
+            _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/test-stt-words.json";
             _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
 
             Runnable.Run(DownloadAcousticResource());
