@@ -1587,7 +1587,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         /// <summary>
         /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
         /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
-        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// For more information about personal data and customer IDs, see [**Information security**](https://cloud.ibm.com/docs/services/discovery/information-security.html).
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>

@@ -18,25 +18,20 @@
 using FullSerializer;
 using System.Collections.Generic;
 
-namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
+namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 {
     /// <summary>
-    /// The output of the dialog node. For more information about how to specify dialog node output, see the
-    /// [documentation](https://cloud.ibm.com/docs/services/conversation/dialog-overview.html#complex).
+    /// LanguageModels.
     /// </summary>
-    [fsObject]
-    public class DialogNodeOutput
+    public class LanguageModels
     {
         /// <summary>
-        /// An array of objects describing the output defined for the dialog node.
+        /// An array of `LanguageModel` objects that provides information about each available custom language model.
+        /// The array is empty if the requesting credentials own no custom language models (if no language is specified)
+        /// or own no custom language models for the specified language.
         /// </summary>
-        [fsProperty("generic")]
-        public Dictionary<string, object> Generic { get; set; }
-        /// <summary>
-        /// Options that modify how specified output is handled.
-        /// </summary>
-        [fsProperty("modifiers")]
-        public Dictionary<string, object> Modifiers { get; set; }
+        [fsProperty("customizations")]
+        public List<LanguageModel> Customizations { get; set; }
     }
 
 }

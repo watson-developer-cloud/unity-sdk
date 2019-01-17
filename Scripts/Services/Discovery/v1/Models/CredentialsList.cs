@@ -18,25 +18,18 @@
 using FullSerializer;
 using System.Collections.Generic;
 
-namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
+namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
     /// <summary>
-    /// The output of the dialog node. For more information about how to specify dialog node output, see the
-    /// [documentation](https://cloud.ibm.com/docs/services/conversation/dialog-overview.html#complex).
+    /// CredentialsList.
     /// </summary>
-    [fsObject]
-    public class DialogNodeOutput
+    public class CredentialsList
     {
         /// <summary>
-        /// An array of objects describing the output defined for the dialog node.
+        /// An array of credential definitions that were created for this instance.
         /// </summary>
-        [fsProperty("generic")]
-        public Dictionary<string, object> Generic { get; set; }
-        /// <summary>
-        /// Options that modify how specified output is handled.
-        /// </summary>
-        [fsProperty("modifiers")]
-        public Dictionary<string, object> Modifiers { get; set; }
+        [fsProperty("credentials")]
+        public List<SourceCredentials> Credentials { get; set; }
     }
 
 }

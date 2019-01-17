@@ -1049,9 +1049,9 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         ///
         /// Run Compare and Comply methods over a collection of input documents.
         /// **Important:** Batch processing requires the use of the [IBM Cloud Object Storage
-        /// service](https://console.bluemix.net/docs/services/cloud-object-storage/about-cos.html#about-ibm-cloud-object-storage).
+        /// service](https://cloud.ibm.com/docs/services/cloud-object-storage/about-cos.html#about-ibm-cloud-object-storage).
         /// The use of IBM Cloud Object Storage with Compare and Comply is discussed at [Using batch
-        /// processing](https://console.bluemix.net/docs/services/compare-comply/batching.html#before-you-batch).
+        /// processing](https://cloud.ibm.com/docs/services/compare-comply/batching.html#before-you-batch).
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>

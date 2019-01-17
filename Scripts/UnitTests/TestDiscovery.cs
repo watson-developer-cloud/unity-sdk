@@ -95,8 +95,8 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _queryLogTested = false;
 
         private string _stopwordsFilepath;
-        private bool _createStopwordListTested = false;
-        private bool _deleteStopwordListTested = false;
+        //private bool _createStopwordListTested = false;
+        //private bool _deleteStopwordListTested = false;
 
         private bool _listGatewaysTested = false;
         private bool _createGatewayTested = false;
@@ -836,20 +836,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _queryLogTested = true;
         }
 
-        private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
-            Test(response != null);
-            Test(response.Status == "pending");
-            _createStopwordListTested = true;
-        }
+        //private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        //{
+        //    Log.Debug("TestDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
+        //    Test(response != null);
+        //    Test(response.Status == "pending");
+        //    _createStopwordListTested = true;
+        //}
 
-        private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
-        {
-            Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
-            Test(response != null);
-            _deleteStopwordListTested = true;
-        }
+        //private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
+        //{
+        //    Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
+        //    Test(response != null);
+        //    _deleteStopwordListTested = true;
+        //}
 
         private void OnListGateways(GatewayList response, Dictionary<string, object> customData)
         {

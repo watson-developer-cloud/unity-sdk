@@ -253,24 +253,24 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// </summary>
         public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
         /// </summary>
         [Obsolete("Use LanguageCustomizationId instead.")]
         public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
         /// </summary>
         public string LanguageCustomizationId { get { return _languageCustomizationId; } set { _languageCustomizationId = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://console.bluemix.net/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
         /// </summary>
         public string AcousticCustomizationId { get { return _acoustic_customization_id; } set { _acoustic_customization_id = value; } }
         /// <summary>
-        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://console.bluemix.net/docs/services/speech-to-text/language-use.html#weight.
+        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/language-use.html#weight.
         /// </summary>
         public float? CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
         /// <summary>
-        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://console.bluemix.net/docs/services/speech-to-text/input.html#transmission.
+        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission.
         /// </summary>
         public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
         #endregion
@@ -3715,7 +3715,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// <summary>
         /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
         /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
-        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// For more information about personal data and customer IDs, see [**Information security**](https://cloud.ibm.com/docs/services/discovery/information-security.html).
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>

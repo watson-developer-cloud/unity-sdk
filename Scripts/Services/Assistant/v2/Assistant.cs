@@ -127,7 +127,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         /// <param name="failCallback">The function that is called when the operation fails.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/create-assistant.html#creating-assistants).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <returns><see cref="SessionResponse" />SessionResponse</returns>
@@ -239,7 +239,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         /// <param name="failCallback">The function that is called when the operation fails.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/create-assistant.html#creating-assistants).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
@@ -356,7 +356,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         /// <param name="failCallback">The function that is called when the operation fails.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/create-assistant.html#creating-assistants).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
