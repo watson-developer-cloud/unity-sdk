@@ -97,6 +97,12 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _createStopwordListTested = false;
     private bool _deleteStopwordListTested = false;
 
+    private bool _listGatewaysTested = false;
+    private bool _createGatewayTested = false;
+    private bool _getGatewayTested = false;
+    private bool _deleteGatewayTested = false;
+    private string _createdGatewayId;
+
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
@@ -344,16 +350,40 @@ public class ExampleDiscovery : MonoBehaviour
         using (FileStream fs = File.OpenRead(_stopwordsFilepath))
         {
 
-            Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
+            Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
             _service.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
             while (!_createStopwordListTested)
                 yield return null;
         }
 
         //  Delete stopword list
-        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
         _service.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
         while (!_deleteStopwordListTested)
+            yield return null;
+
+        //  List Gatways
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to list gateways.");
+        _service.ListGateways(OnListGateways, OnFail, _environmentId);
+        while (!_listGatewaysTested)
+            yield return null;
+
+        //  Create Gateway
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to create gateway.");
+        _service.CreateGateway(OnCreateGateway, OnFail, _environmentId);
+        while (!_createGatewayTested)
+            yield return null;
+
+        //  Get Gateway
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to get gateway.");
+        _service.GetGateway(OnGetGateway, OnFail, _environmentId, _createdGatewayId);
+        while (!_getGatewayTested)
+            yield return null;
+
+        //  Delete Gateway
+        Log.Debug("ExampleDiscovery.RunTest()", "Attempting to delete gateway.");
+        _service.GetGateway(OnDelteGateway, OnFail, _environmentId, _createdGatewayId);
+        while (!_deleteGatewayTested)
             yield return null;
 
         //  Delete Collection
@@ -612,6 +642,33 @@ public class ExampleDiscovery : MonoBehaviour
     {
         Log.Debug("ExampleDiscovery.OnDeleteStopwordList()", "Success!");
         _deleteStopwordListTested = true;
+    }
+
+
+    private void OnListGateways(GatewayList response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnListGateways()", "Response: {0}", customData["json"].ToString());
+        _listGatewaysTested = true;
+    }
+
+    private void OnCreateGateway(Gateway response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnCreateGateway()", "Response: {0}", customData["json"].ToString());
+        _createdGatewayId = response.GatewayId;
+        _createGatewayTested = true;
+    }
+
+    private void OnGetGateway(Gateway response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnGetGateway()", "Response: {0}", customData["json"].ToString());
+        _getGatewayTested = true;
+    }
+
+    private void OnDelteGateway(Gateway response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnDelteGateway()", "Response: {0}", customData["json"].ToString());
+        _createdGatewayId = null;
+        _deleteGatewayTested = true;
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

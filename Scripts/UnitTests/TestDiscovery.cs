@@ -98,6 +98,12 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _createStopwordListTested = false;
         private bool _deleteStopwordListTested = false;
 
+        private bool _listGatewaysTested = false;
+        private bool _createGatewayTested = false;
+        private bool _getGatewayTested = false;
+        private bool _deleteGatewayTested = false;
+        private string _createdGatewayId;
+
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
@@ -442,22 +448,45 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isEnvironmentReady)
                 yield return null;
 
-            //  Create stopword list
-            using (FileStream fs = File.OpenRead(_stopwordsFilepath))
-            {
+            ////  Create stopword list
+            //using (FileStream fs = File.OpenRead(_stopwordsFilepath))
+            //{
 
-                Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
-                _discovery.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
-                while (!_createStopwordListTested)
-                    yield return null;
-            }
+            //    Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
+            //    _discovery.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
+            //    while (!_createStopwordListTested)
+            //        yield return null;
+            //}
 
-            //  Delete stopword list
-            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
-            _discovery.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
-            while (!_deleteStopwordListTested)
+            ////  Delete stopword list
+            //Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
+            //_discovery.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
+            //while (!_deleteStopwordListTested)
+            //    yield return null;
+
+            //  List Gatways
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to list gateways.");
+            _discovery.ListGateways(OnListGateways, OnFail, _environmentId);
+            while (!_listGatewaysTested)
                 yield return null;
 
+            //  Create Gateway
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to create gateway.");
+            _discovery.CreateGateway(OnCreateGateway, OnFail, _environmentId);
+            while (!_createGatewayTested)
+                yield return null;
+
+            //  Get Gateway
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to get gateway.");
+            _discovery.GetGateway(OnGetGateway, OnFail, _environmentId, _createdGatewayId);
+            while (!_getGatewayTested)
+                yield return null;
+
+            //  Delete Gateway
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete gateway.");
+            _discovery.GetGateway(OnDelteGateway, OnFail, _environmentId, _createdGatewayId);
+            while (!_deleteGatewayTested)
+                yield return null;
 
             //  Delete Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
@@ -820,6 +849,41 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
             Test(response != null);
             _deleteStopwordListTested = true;
+        }
+
+        private void OnListGateways(GatewayList response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnListGateways()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Gateways != null);
+            _listGatewaysTested = true;
+        }
+
+        private void OnCreateGateway(Gateway response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateGateway()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.GatewayId));
+            _createdGatewayId = response.GatewayId;
+            _createGatewayTested = true;
+        }
+
+        private void OnGetGateway(Gateway response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetGateway()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.GatewayId == _createdGatewayId);
+            _getGatewayTested = true;
+        }
+
+        private void OnDelteGateway(Gateway response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDelteGateway()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(!string.IsNullOrEmpty(response.GatewayId));
+            Test(response.GatewayId == _createdGatewayId);
+            _createdGatewayId = null;
+            _deleteGatewayTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

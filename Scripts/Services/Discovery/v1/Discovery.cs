@@ -5447,6 +5447,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
         /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
         public bool CreateStopwordList(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, FileStream stopwordFile, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
@@ -5643,6 +5644,428 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                     ((DeleteStopwordListRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
+        #endregion
+
+        #region Gateway
+        #region Create Gateway
+        /// <summary>
+        /// Create Gateway.
+        ///
+        /// Create a gateway configuration to use with a remotely installed gateway.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="gatewayName">The name of the gateway to created. (optional)</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="Gateway" />Gateway</returns>
+
+        public bool CreateGateway(SuccessCallback<Gateway> successCallback, FailCallback failCallback, String environmentId, GatewayName gatewayName = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+            {
+                throw new ArgumentNullException("successCallback is required for CreateGateway");
+            }
+            if (failCallback == null)
+            {
+                throw new ArgumentNullException("failCallback is required for CreateGateway");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentException("environmentId is required for CreateGateway");
+            }
+
+            CreateGatewayRequestObj req = new CreateGatewayRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            if (gatewayName != null)
+            {
+                fsData data = null;
+                _serializer.TrySerialize(gatewayName, out data);
+                string json = data.ToString().Replace('\"', '"');
+                req.Send = Encoding.UTF8.GetBytes(json);
+            }
+
+            req.Headers["Content-Type"] = "application/json";
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnCreateGatewayResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class CreateGatewayRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Gateway> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnCreateGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Gateway result = new Gateway();
+            fsData data = null;
+            Dictionary<string, object> customData = ((CreateGatewayRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnCreateGatewayResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((CreateGatewayRequestObj)req).SuccessCallback != null)
+                    ((CreateGatewayRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((CreateGatewayRequestObj)req).FailCallback != null)
+                    ((CreateGatewayRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Get Gateway
+        /// <summary>
+        /// List Gateway Details.
+        ///
+        /// List information about the specified gateway.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="gatewayId">The requested gateway ID.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="Gateway" />Gateway</returns>
+
+        public bool GetGateway(SuccessCallback<Gateway> successCallback, FailCallback failCallback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("environmentId");
+            if (string.IsNullOrEmpty(gatewayId))
+                throw new ArgumentNullException("gatewayId");
+
+            GetGatewayRequestObj req = new GetGatewayRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetGatewayResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetGatewayRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Gateway> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Gateway result = new Gateway();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetGatewayRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetGatewayResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((GetGatewayRequestObj)req).SuccessCallback != null)
+                    ((GetGatewayRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetGatewayRequestObj)req).FailCallback != null)
+                    ((GetGatewayRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region List Gateways
+        /// <summary>
+        /// List Gateways.
+        ///
+        /// List the currently configured gateways.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="GatewayList" />GatewayList</returns>
+        public bool ListGateways(SuccessCallback<GatewayList> successCallback, FailCallback failCallback, string environmentId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("environmentId");
+
+            ListGatewaysRequestObj req = new ListGatewaysRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnListGatewaysResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ListGatewaysRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<GatewayList> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GatewayList result = new GatewayList();
+            fsData data = null;
+            Dictionary<string, object> customData = ((ListGatewaysRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnListGatewaysResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((ListGatewaysRequestObj)req).SuccessCallback != null)
+                    ((ListGatewaysRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((ListGatewaysRequestObj)req).FailCallback != null)
+                    ((ListGatewaysRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Delete Gateway
+        public bool DeleteGateway(SuccessCallback<GatewayDelete> successCallback, FailCallback failCallback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("environmentId");
+            if (string.IsNullOrEmpty(gatewayId))
+                throw new ArgumentNullException("gatewayId");
+
+            DeleteGatewayRequestObj req = new DeleteGatewayRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteGatewayResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteGatewayRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<GatewayDelete> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            GatewayDelete result = new GatewayDelete();
+            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteGatewayRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnDeleteGatewayResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((DeleteGatewayRequestObj)req).SuccessCallback != null)
+                    ((DeleteGatewayRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteGatewayRequestObj)req).FailCallback != null)
+                    ((DeleteGatewayRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
         #endregion
 
         #region IWatsonService Interface
