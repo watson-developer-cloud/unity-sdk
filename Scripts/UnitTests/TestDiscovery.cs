@@ -94,6 +94,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getMetricsQueryTokenEventTested = false;
         private bool _queryLogTested = false;
 
+        private string _stopwordsFilepath;
+        private bool _createStopwordListTested = false;
+        private bool _deleteStopwordListTested = false;
+
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
@@ -143,7 +147,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _discovery.VersionDate = _discoveryVersionDate;
             _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
             _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
-
+            _stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
             //  Get Environments
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
             if (!_discovery.GetEnvironments(OnGetEnvironments, OnFail))
@@ -329,11 +333,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_createEventTested)
                 yield return null;
 
+            //  List Expansions
             Log.Debug("TestDiscovery.RunTests()", "Attempting to list expansions");
             _discovery.ListExpansions(OnListExpansions, OnFail, _environmentId, _createdCollectionId);
             while (!_listExpansionsTested)
                 yield return null;
 
+            // Create Expansions
             Log.Debug("TestDiscovery.RunTests()", "Attempting to create expansion");
             Expansions expansions = new Expansions()
             {
@@ -352,20 +358,24 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     }
                 }
             };
+
             _discovery.CreateExpansions(OnCreateExpansion, OnFail, _environmentId, _createdCollectionId, expansions);
             while (!_createExpansionTested)
                 yield return null;
 
+            // Delete Expansions
             Log.Debug("TestDiscovery.RunTests()", "Attempting to delete expansion");
             _discovery.DeleteExpansions(OnDeleteExpansion, OnFail, _environmentId, _createdCollectionId);
             while (!_deleteExpansionTested)
                 yield return null;
-            
+
+            //  Create japanese collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to create jp collection");
             _discovery.AddCollection(OnCreateJpCollection, OnFail, _environmentId, _createdCollectionName + System.Guid.NewGuid().ToString(), _createdCollectionDescription, _createdConfigurationID, "ja");
             while (!_createJpCollectionTested)
                 yield return null;
 
+            //  Create tokenization dictionary
             TokenDict tokenizationDictionary = new TokenDict()
             {
                 TokenizationRules = new List<TokenDictRule>()
@@ -390,6 +400,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_createTokenizationDictTested)
                 yield return null;
 
+            //  Get tokenization dictionary status
             if (!_getTokenizationDictStatusTested)
             {
                 Log.Debug("TestDiscovery.RunTests()", "Attempting to get tokenization dict status");
@@ -398,6 +409,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     yield return null;
             }
 
+            //  Delete tokenization dictionary
             if (!_deleteTokenizationDictTested)
             {
                 Log.Debug("TestDiscovery.RunTests()", "Attempting to delete tokenization dict");
@@ -406,6 +418,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                     yield return null;
             }
 
+            //  Delete jp collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete jp collection");
             _discovery.DeleteCollection(OnDeleteJpCollection, OnFail, _environmentId, _createdJpCollection);
             while (!_deleteJpCollectionTested)
@@ -428,6 +441,23 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Runnable.Run(CheckEnvironmentState(_waitTime));
             while (!_isEnvironmentReady)
                 yield return null;
+
+            //  Create stopword list
+            using (FileStream fs = File.OpenRead(_stopwordsFilepath))
+            {
+
+                Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
+                _discovery.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
+                while (!_createStopwordListTested)
+                    yield return null;
+            }
+
+            //  Delete stopword list
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
+            _discovery.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
+            while (!_deleteStopwordListTested)
+                yield return null;
+
 
             //  Delete Collection
             Log.Debug("TestDiscovery.RunTest()", "Attempting to delete collection {0}", _createdCollectionId);
@@ -458,7 +488,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             yield break;
         }
-
+        
         private void OnCreateJpCollection(CollectionRef response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnAddJpCollection()", "Discovery - add jp collection Response: added:{0}", customData["json"].ToString());
@@ -499,9 +529,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Test(response != null);
             _createTokenizationDictTested = true;
         }
-
         
-
         private void OnDeleteExpansion(object response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnDeleteExpansion()", "Discovery - delete expansion: deleted");
@@ -777,6 +805,21 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestDiscovery.OnQueryLog()", "Response: {0}", customData["json"].ToString());
             _queryLogTested = true;
+        }
+
+        private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Status == "pending");
+            _createStopwordListTested = true;
+        }
+
+        private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
+            Test(response != null);
+            _deleteStopwordListTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

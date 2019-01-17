@@ -23,6 +23,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using Environment = IBM.Watson.DeveloperCloud.Services.Discovery.v1.Environment;
 
@@ -92,11 +93,17 @@ public class ExampleDiscovery : MonoBehaviour
     private bool _getMetricsQueryTokenEventTested = false;
     private bool _queryLogTested = false;
 
+    private string _stopwordsFilepath;
+    private bool _createStopwordListTested = false;
+    private bool _deleteStopwordListTested = false;
+
     private void Start()
     {
         LogSystem.InstallDefaultReactors();
         _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
         _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/watson_beats_jeopardy.html";
+        _stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
+
         Runnable.Run(CreateService());
     }
 
@@ -331,6 +338,22 @@ public class ExampleDiscovery : MonoBehaviour
         _isEnvironmentReady = false;
         Runnable.Run(CheckEnvironmentState(_waitTime));
         while (!_isEnvironmentReady)
+            yield return null;
+
+        //  Create stopword list
+        using (FileStream fs = File.OpenRead(_stopwordsFilepath))
+        {
+
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
+            _service.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
+            while (!_createStopwordListTested)
+                yield return null;
+        }
+
+        //  Delete stopword list
+        Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
+        _service.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
+        while (!_deleteStopwordListTested)
             yield return null;
 
         //  Delete Collection
@@ -577,6 +600,18 @@ public class ExampleDiscovery : MonoBehaviour
     {
         Log.Debug("ExampleDiscovery.OnQueryLog()", "Response: {0}", customData["json"].ToString());
         _queryLogTested = true;
+    }
+
+    private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
+        _createStopwordListTested = true;
+    }
+
+    private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleDiscovery.OnDeleteStopwordList()", "Success!");
+        _deleteStopwordListTested = true;
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)

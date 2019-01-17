@@ -2754,6 +2754,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryResponse result = new QueryResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((FederatedQueryRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -2923,6 +2924,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryNoticesResponse result = new QueryNoticesResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((FederatedQueryNoticesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3111,6 +3113,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryResponse result = new QueryResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3219,6 +3222,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryEntitiesResponse result = new QueryEntitiesResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryEntitiesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3402,6 +3406,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryNoticesResponse result = new QueryNoticesResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryNoticesRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3510,6 +3515,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             QueryRelationsResponse result = new QueryRelationsResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryRelationsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3621,6 +3627,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Expansions result = new Expansions();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateExpansionsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3720,6 +3727,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             object result = new object();
             Dictionary<string, object> customData = ((DeleteExpansionsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3798,6 +3806,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             Expansions result = new Expansions();
             fsData data = null;
             Dictionary<string, object> customData = ((ListExpansionsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -3906,6 +3915,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             TokenDictStatusResponse result = new TokenDictStatusResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateTokenizationDictionaryRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4005,7 +4015,8 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         {
             object result = new object();
             Dictionary<string, object> customData = ((DeleteTokenizationDictionaryRequestObj)req).CustomData;
-            
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
             if (resp.Success)
             {
                 if (((DeleteTokenizationDictionaryRequestObj)req).SuccessCallback != null)
@@ -4082,6 +4093,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             TokenDictStatusResponse result = new TokenDictStatusResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetTokenizationDictionaryStatusRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4415,7 +4427,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Assistant.OnCreateCredentialsResponse()", "Exception: {0}", e.ToString());
+                    Log.Error("Discovery.OnCreateCredentialsResponse()", "Exception: {0}", e.ToString());
                     resp.Success = false;
                 }
             }
@@ -4720,6 +4732,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             CreateEventResponse result = new CreateEventResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateEventRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4830,6 +4843,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             MetricResponse result = new MetricResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMetricsEventRateRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -4938,6 +4952,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             MetricResponse result = new MetricResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMetricsQueryRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -5048,6 +5063,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             MetricResponse result = new MetricResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMetricsQueryEventRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -5157,6 +5173,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             MetricResponse result = new MetricResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMetricsQueryNoResultsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -5259,6 +5276,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             MetricTokenResponse result = new MetricTokenResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((GetMetricsQueryTokenEventRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -5380,6 +5398,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             LogQueryResponse result = new LogQueryResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((QueryLogRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -5412,6 +5431,216 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             {
                 if (((QueryLogRequestObj)req).FailCallback != null)
                     ((QueryLogRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Stopword List
+        /// <summary>
+        /// Create stopword list.
+        ///
+        /// Upload a custom stopword list to use with the specified collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        public bool CreateStopwordList(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentId, string collectionId, FileStream stopwordFile, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+            {
+                throw new ArgumentNullException("successCallback is required for CreateStopwordList");
+            }
+            if (failCallback == null)
+            {
+                throw new ArgumentNullException("failCallback is required for CreateStopwordList");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentException("environmentId is required for CreateStopwordList");
+            }
+            if (string.IsNullOrEmpty(collectionId))
+            {
+                throw new ArgumentException("collectionId is required for CreateStopwordList");
+            }
+            if (stopwordFile == null)
+            {
+                throw new ArgumentException("stopwordFile is required for CreateStopwordList");
+            }
+
+            CreateStopwordListRequestObj req = new CreateStopwordListRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnCreateStopwordListResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+
+        private class CreateStopwordListRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TokenDictStatusResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TokenDictStatusResponse result = new TokenDictStatusResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((CreateStopwordListRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnCreatStopwordListResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((CreateStopwordListRequestObj)req).SuccessCallback != null)
+                {
+                    ((CreateStopwordListRequestObj)req).SuccessCallback(result, customData);
+                }
+            }
+            else
+            {
+                if (((CreateStopwordListRequestObj)req).FailCallback != null)
+                {
+                    ((CreateStopwordListRequestObj)req).FailCallback(resp.Error, customData);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete a custom stopword list.
+        ///
+        /// Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list
+        /// is used for the collection.
+        /// </summary>
+        /// <param name="successCallback">The function that is called when the operation is successful.</param>
+        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="BaseModel" />BaseModel</returns>
+        public bool DeleteStopwordList(SuccessCallback<object> successCallback, FailCallback failCallback, String environmentId, String collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+            {
+                throw new ArgumentNullException("successCallback is required for DeleteSession");
+            }
+            if (failCallback == null)
+            {
+                throw new ArgumentNullException("failCallback is required for DeleteSession");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentException("environmentId is required for DeleteSession");
+            }
+            if (string.IsNullOrEmpty(collectionId))
+            {
+                throw new ArgumentException("collectionId is required for DeleteSession");
+            }
+
+            DeleteStopwordListRequestObj req = new DeleteStopwordListRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnDeleteStopwordListResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteStopwordListRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            fsData data = null;
+            Dictionary<string, object> customData = ((DeleteStopwordListRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                if (((DeleteStopwordListRequestObj)req).SuccessCallback != null)
+                    ((DeleteStopwordListRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteStopwordListRequestObj)req).FailCallback != null)
+                    ((DeleteStopwordListRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
         #endregion
