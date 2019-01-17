@@ -194,6 +194,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             SessionResponse result = new SessionResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((CreateSessionRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -309,6 +310,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             object result = new object();
             fsData data = null;
             Dictionary<string, object> customData = ((DeleteSessionRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
@@ -437,6 +439,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             MessageResponse result = new MessageResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
 
             if (resp.Success)
             {
