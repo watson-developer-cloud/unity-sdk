@@ -751,8 +751,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["profanity_filter"] = ProfanityFilter;
             start["smart_formatting"] = SmartFormatting;
             start["speaker_labels"] = SpeakerLabels;
-            if (EnableTimestamps != null)
-                start["timestamps"] = EnableTimestamps;
+            start["timestamps"] = EnableTimestamps;
             if (WordAlternativesThreshold != null)
                 start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["word_confidence"] = EnableWordConfidence;
@@ -3721,6 +3720,443 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             {
                 if (((AddAcousticResourceRequest)req).FailCallback != null)
                     ((AddAcousticResourceRequest)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region List Grammars
+        /// <summary>
+        /// List grammars.
+        ///
+        /// Lists information about all grammars from a custom language model. The information includes the total number
+        /// of out-of-vocabulary (OOV) words, name, and status of each grammar. You must use credentials for the
+        /// instance of the service that owns a model to list its grammars.
+        ///
+        /// **See also:** [Listing grammars from a custom language
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/).
+        /// </summary>
+        /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
+        /// for the request. You must make the request with credentials for the instance of the service that owns the
+        /// custom model.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="Grammars" />Grammars</returns>
+        public bool ListGrammars(SuccessCallback<Grammars> successCallback, FailCallback failCallback, string customizationId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+
+            ListGrammarsRequestObj req = new ListGrammarsRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            req.OnResponse = OnListGrammarsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/grammars", customizationId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class ListGrammarsRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Grammars> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnListGrammarsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Grammars result = new Grammars();
+            fsData data = null;
+            Dictionary<string, object> customData = ((ListGrammarsRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("SpeechToText.OnListGrammarsResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((ListGrammarsRequestObj)req).SuccessCallback != null)
+                    ((ListGrammarsRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((ListGrammarsRequestObj)req).FailCallback != null)
+                    ((ListGrammarsRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Add Grammar
+        /// <summary>
+        /// Add a grammar.
+        ///
+        /// Adds a single grammar file to a custom language model. Submit a plain text file in UTF-8 format that defines
+        /// the grammar. Use multiple requests to submit multiple grammar files. You must use credentials for the
+        /// instance of the service that owns a model to add a grammar to it. Adding a grammar does not affect the
+        /// custom language model until you train the model for the new data by using the **Train a custom language
+        /// model** method.
+        ///
+        /// The call returns an HTTP 201 response code if the grammar is valid. The service then asynchronously
+        /// processes the contents of the grammar and automatically extracts new words that it finds. This can take a
+        /// few seconds to complete depending on the size and complexity of the grammar, as well as the current load on
+        /// the service. You cannot submit requests to add additional resources to the custom model or to train the
+        /// model until the service's analysis of the grammar for the current request completes. Use the **Get a
+        /// grammar** method to check the status of the analysis.
+        ///
+        /// The service populates the model's words resource with any word that is recognized by the grammar that is not
+        /// found in the model's base vocabulary. These are referred to as out-of-vocabulary (OOV) words. You can use
+        /// the **List custom words** method to examine the words resource and use other words-related methods to
+        /// eliminate typos and modify how words are pronounced as needed.
+        ///
+        /// To add a grammar that has the same name as an existing grammar, set the `allow_overwrite` parameter to
+        /// `true`; otherwise, the request fails. Overwriting an existing grammar causes the service to process the
+        /// grammar file and extract OOV words anew. Before doing so, it removes any OOV words associated with the
+        /// existing grammar from the model's words resource unless they were also added by another resource or they
+        /// have been modified in some way with the **Add custom words** or **Add a custom word** method.
+        ///
+        /// The service limits the overall amount of data that you can add to a custom model to a maximum of 10 million
+        /// total words from all sources combined. Also, you can add no more than 30 thousand OOV words to a model. This
+        /// includes words that the service extracts from corpora and grammars and words that you add directly.
+        ///
+        /// **See also:**
+        /// * [Working with grammars](https://cloud.ibm.com/docs/services/speech-to-text/)
+        /// * [Add grammars to the custom language model](https://cloud.ibm.com/docs/services/speech-to-text/).
+        /// </summary>
+        /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
+        /// for the request. You must make the request with credentials for the instance of the service that owns the
+        /// custom model.</param>
+        /// <param name="grammarName">The name of the new grammar for the custom language model. Use a localized name
+        /// that matches the language of the custom model and reflects the contents of the grammar.
+        /// * Include a maximum of 128 characters in the name.
+        /// * Do not include spaces, slashes, or backslashes in the name.
+        /// * Do not use the name of an existing grammar or corpus that is already defined for the custom model.
+        /// * Do not use the name `user`, which is reserved by the service to denote custom words that are added or
+        /// modified by the user.</param>
+        /// <param name="grammarFile">A plain text file that contains the grammar in the format specified by the
+        /// `Content-Type` header. Encode the file in UTF-8 (ASCII is a subset of UTF-8). Using any other encoding can
+        /// lead to issues when compiling the grammar or to unexpected results in decoding. The service ignores an
+        /// encoding that is specified in the header of the grammar.</param>
+        /// <param name="contentType">The format (MIME type) of the grammar file:
+        /// * `application/srgs` for Augmented Backus-Naur Form (ABNF), which uses a plain-text representation that is
+        /// similar to traditional BNF grammars.
+        /// * `application/srgs+xml` for XML Form, which uses XML elements to represent the grammar.</param>
+        /// <param name="allowOverwrite">If `true`, the specified grammar overwrites an existing grammar with the same
+        /// name. If `false`, the request fails if a grammar with the same name already exists. The parameter has no
+        /// effect if a grammar with the same name does not already exist. (optional, default to false)</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool AddGrammar(SuccessCallback<object> successCallback, FailCallback failCallback, string customizationId, string grammarName, string grammarFile, string contentType, bool? allowOverwrite = null, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(grammarName))
+                throw new ArgumentNullException("grammarName");
+            if (string.IsNullOrEmpty(grammarFile))
+                throw new ArgumentNullException("grammarFile");
+            if (string.IsNullOrEmpty(contentType))
+                throw new ArgumentNullException("contentType");
+
+            AddGrammarRequestObj req = new AddGrammarRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Headers["Content-Type"] = contentType;
+            req.Send = Encoding.UTF8.GetBytes(grammarFile);
+            req.OnResponse = OnAddGrammarResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class AddGrammarRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnAddGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            Dictionary<string, object> customData = ((AddGrammarRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                if (((AddGrammarRequestObj)req).SuccessCallback != null)
+                    ((AddGrammarRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((AddGrammarRequestObj)req).FailCallback != null)
+                    ((AddGrammarRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Get Grammar
+        /// <summary>
+        /// Get a grammar.
+        ///
+        /// Gets information about a grammar from a custom language model. The information includes the total number of
+        /// out-of-vocabulary (OOV) words, name, and status of the grammar. You must use credentials for the instance of
+        /// the service that owns a model to list its grammars.
+        ///
+        /// **See also:** [Listing grammars from a custom language
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/).
+        /// </summary>
+        /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
+        /// for the request. You must make the request with credentials for the instance of the service that owns the
+        /// custom model.</param>
+        /// <param name="grammarName">The name of the grammar for the custom language model.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="Grammar" />Grammar</returns>
+        public bool GetGrammar(SuccessCallback<Grammar> successCallback, FailCallback failCallback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(grammarName))
+                throw new ArgumentNullException("grammarName");
+
+            GetGrammarRequestObj req = new GetGrammarRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            req.OnResponse = OnGetGrammarResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetGrammarRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<Grammar> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            Grammar result = new Grammar();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetGrammarRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("SpeechToText.OnGetGrammarResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            customData.Add("json", data);
+
+            if (resp.Success)
+            {
+                if (((GetGrammarRequestObj)req).SuccessCallback != null)
+                    ((GetGrammarRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetGrammarRequestObj)req).FailCallback != null)
+                    ((GetGrammarRequestObj)req).FailCallback(resp.Error, customData);
+            }
+        }
+        #endregion
+
+        #region Delete Grammar
+        /// <summary>
+        /// Delete a grammar.
+        ///
+        /// Deletes an existing grammar from a custom language model. The service removes any out-of-vocabulary (OOV)
+        /// words associated with the grammar from the custom model's words resource unless they were also added by
+        /// another resource or they were modified in some way with the **Add custom words** or **Add a custom word**
+        /// method. Removing a grammar does not affect the custom model until you train the model with the **Train a
+        /// custom language model** method. You must use credentials for the instance of the service that owns a model
+        /// to delete its grammar.
+        ///
+        /// **See also:** [Deleting a grammar from a custom language
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/).
+        /// </summary>
+        /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
+        /// for the request. You must make the request with credentials for the instance of the service that owns the
+        /// custom model.</param>
+        /// <param name="grammarName">The name of the grammar for the custom language model.</param>
+        /// <param name="customData">Custom data object to pass data including custom request headers.</param>
+        /// <returns><see cref="BaseModel" />BaseModel</returns>
+        public bool DeleteGrammar(SuccessCallback<object> successCallback, FailCallback failCallback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("customizationId");
+            if (string.IsNullOrEmpty(grammarName))
+                throw new ArgumentNullException("grammarName");
+
+            DeleteGrammarRequestObj req = new DeleteGrammarRequestObj();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbDELETE;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            req.OnResponse = OnDeleteGrammarResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class DeleteGrammarRequestObj : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<object> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnDeleteGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            object result = new object();
+            Dictionary<string, object> customData = ((DeleteGrammarRequestObj)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                if (((DeleteGrammarRequestObj)req).SuccessCallback != null)
+                    ((DeleteGrammarRequestObj)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((DeleteGrammarRequestObj)req).FailCallback != null)
+                    ((DeleteGrammarRequestObj)req).FailCallback(resp.Error, customData);
             }
         }
         #endregion

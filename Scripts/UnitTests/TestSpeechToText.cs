@@ -49,6 +49,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _createdAcousticModelName = "unity-example-acoustic-model";
         private byte[] _acousticResourceData;
         private string _acousticResourceMimeType;
+        private string _grammarFilePath;
 
         private bool _recognizeTested = false;
         private bool _getModelsTested = false;
@@ -83,6 +84,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _deleteCustomizationsTested = false;
         private bool _deleteAcousticResource = false;
         private float _delayTimeInSeconds = 10f;
+
+        private bool _listGrammarsTested = false;
+        private bool _addGrammarTested = false;
+        private bool _getGrammarTested = false;
+        private bool _deleteGrammarTested = false;
+        private string _createdGrammarId;
+        private string _grammarFileContentType = "application/srgs";
+        private string _grammarName = "unity-integration-test-grammar";
 
         public override IEnumerator RunTest()
         {
@@ -132,6 +141,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _speechToText = new SpeechToText(credentials);
             _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/theJabberwocky-utf8.txt";
             _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/test-stt-words.json";
+            _grammarFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/confirm.abnf";
             _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
 
             Runnable.Run(DownloadAcousticResource());
@@ -275,12 +285,6 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isCustomizationReady)
                 yield return null;
 
-            //  Upgrade customization - not currently implemented in service
-            //Log.Debug("TestSpeechToText.Examples()", "Attempting to upgrade customization {0}", _createdCustomizationID);
-            //_speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
-            //while (!_upgradeCustomizationTested)
-            //    yield return null;
-
             //  Delete custom word
             Log.Debug("TestSpeechToText.Examples()", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
             _speechToText.DeleteCustomWord(HandleDeleteCustomWord, OnFail, _createdCustomizationID, words.words[2].word);
@@ -317,6 +321,37 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
             Runnable.Run(Delay(_delayTimeInSeconds));
             while (!_readyToContinue)
+                yield return null;
+
+            //  List Grammars
+            Log.Debug("TestSpeechToText.Examples()", "Attempting to list grammars {0}", _createdCustomizationID);
+            _speechToText.ListGrammars(OnListGrammars, OnFail, _createdCustomizationID);
+            while (!_listGrammarsTested)
+                yield return null;
+
+            //  Add Grammar
+            Log.Debug("TestSpeechToText.Examples()", "Attempting to add grammar {0}", _createdCustomizationID);
+            string grammarFile = File.ReadAllText(_grammarFilePath);
+            _speechToText.AddGrammar(OnAddGrammar, OnFail, _createdCustomizationID, _grammarName, grammarFile, _grammarFileContentType);
+            while (!_addGrammarTested)
+                yield return null;
+
+            //  Get Grammar
+            Log.Debug("TestSpeechToText.Examples()", "Attempting to get grammar {0}", _createdCustomizationID);
+            _speechToText.GetGrammar(OnGetGrammar, OnFail, _createdCustomizationID, _grammarName);
+            while (!_getGrammarTested)
+                yield return null;
+
+            //  Wait for customization
+            _isCustomizationReady = false;
+            Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+            while (!_isCustomizationReady)
+                yield return null;
+
+            //  Delete Grammar
+            Log.Debug("TestSpeechToText.Examples()", "Attempting to delete grammar {0}", _createdCustomizationID);
+            _speechToText.DeleteGrammar(OnDeleteGrammar, OnFail, _createdCustomizationID, _grammarName);
+            while (!_deleteGrammarTested)
                 yield return null;
 
             _readyToContinue = false;
@@ -640,6 +675,36 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestSpeechToText.HandleDeleteAcousticCustomization()", "{0}", customData["json"].ToString());
             Test(success);
             _deleteAcousticCustomizationsTested = true;
+        }
+
+        private void OnListGrammars(Grammars response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestSpeechToText.OnListGrammars()", "{0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response._Grammars != null);
+            _listGrammarsTested = true;
+        }
+
+        private void OnAddGrammar(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestSpeechToText.OnAddGrammar()", "Success!");
+            Test(response != null);
+            _addGrammarTested = true;
+        }
+
+        private void OnGetGrammar(Grammar response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestSpeechToText.OnGetGrammar()", "{0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Name == _grammarName);
+            _getGrammarTested = true;
+        }
+
+        private void OnDeleteGrammar(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestSpeechToText.OnDeleteGrammar()", "Success!");
+            Test(response != null);
+            _deleteGrammarTested = true;
         }
 
         private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)
