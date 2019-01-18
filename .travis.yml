@@ -27,6 +27,7 @@ script:
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
 deploy:
+  - git reset --hard
   - provider: script
     skip_cleanup: true
     script: npx semantic-release
