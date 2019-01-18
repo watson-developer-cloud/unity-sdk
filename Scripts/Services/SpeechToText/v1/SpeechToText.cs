@@ -273,6 +273,14 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission.
         /// </summary>
         public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
+        /// <summary>
+        /// The name of a grammar that is to be used with the recognition request. If you specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize other custom words from the model's words resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html).
+        /// </summary>
+        public string GrammarName { get; set; }
+        /// <summary>
+        /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text/output.html#redaction).
+        /// </summary>
+        public string Redaction { get; set; }
         #endregion
 
         #region Constructor
@@ -748,6 +756,10 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             if (WordAlternativesThreshold != null)
                 start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["word_confidence"] = EnableWordConfidence;
+            if (GrammarName != null)
+                start["grammar_name"] = GrammarName;
+            if (Redaction != null)
+                start["redaction"] = Redaction;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING
