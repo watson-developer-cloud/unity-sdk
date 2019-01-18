@@ -52,6 +52,11 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
         /// </summary>
         [fsProperty("debug")]
         public MessageOutputDebug Debug { get; set; }
+        /// <summary>
+        /// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
+        /// </summary>
+        [fsProperty("user_defined")]
+        public object UserDefined { get; set; }
     }
 
 }

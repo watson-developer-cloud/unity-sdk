@@ -49,19 +49,19 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <value>Entities to use when evaluating the message. Include entities from the previous response to continue using those entities rather than detecting entities in the new input.</value>
         [fsProperty("entities")]
-        public List<RuntimeEntity> Entities { get; set; }
+        public List<object> Entities { get; set; }
         /// <summary>
         /// Intents to use when evaluating the user input. Include intents from the previous response to continue using those intents rather than trying to recognize intents in the new input.
         /// </summary>
         /// <value>Intents to use when evaluating the user input. Include intents from the previous response to continue using those intents rather than trying to recognize intents in the new input.</value>
         [fsProperty("intents")]
-        public List<RuntimeIntent> Intents { get; set; }
+        public List<object> Intents { get; set; }
         /// <summary>
         /// System output. Include the output from the previous response to maintain intermediate information over multiple requests.
         /// </summary>
         /// <value>System output. Include the output from the previous response to maintain intermediate information over multiple requests.</value>
         [fsProperty("output")]
-        public OutputData Output { get; set; }
+        public object Output { get; set; }
     }
 
 }

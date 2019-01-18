@@ -34,7 +34,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// Gets or Sets results
         /// </summary>
         [fsProperty("results")]
-        public List<QueryNoticesResult> Results { get; set; }
+        public List<object> Results { get; set; }
         /// <summary>
         /// Gets or Sets aggregations
         /// </summary>

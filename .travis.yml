@@ -13,6 +13,7 @@ before_install:
 - chmod a+x ./Travis/installUnity.sh
 - npm install -g npm@6.x
 install:
+- pip install bumpversion
 - ./Travis/installUnity.sh
 - npm install @semantic-release/exec
 before_script:

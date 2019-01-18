@@ -164,9 +164,9 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         [fsProperty("previous_sibling")]
         public string PreviousSibling { get; set; }
         /// <summary>
-        /// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).
+        /// The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
         /// </summary>
-        /// <value>The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://console.bluemix.net/docs/services/conversation/dialog-overview.html#complex).</value>
+        /// <value>The output of the dialog node. For more information about how to specify dialog node output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).</value>
         [fsProperty("output")]
         public object Output { get; set; }
         /// <summary>
