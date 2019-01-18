@@ -182,7 +182,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnClassifyResp;
-            req.Headers["Accepted-Language"] = acceptLanguage;
+            req.Headers["Accept-Language"] = acceptLanguage;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["url"] = url;
@@ -282,6 +282,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "multipart/form-data";
             req.Headers["Accept"] = "application/json";
+            req.Headers["Accept-Language"] = acceptLanguage;
 
             if (owners != default(string[]))
                 req.Parameters["owners"] = string.Join(",", owners);
@@ -369,8 +370,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="url">URL.</param>
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
+        /// <param name="acceptLanguage">The language used for the value of `gender_label` in the response. (optional,
+        /// default to en)</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(string url, SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, Dictionary<string, object> customData = null)
+        public bool DetectFaces(string url, SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, string acceptLanguage = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -399,6 +402,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.OnResponse = OnDetectFacesResp;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
+            if (!string.IsNullOrEmpty(acceptLanguage))
+                req.Headers["Accept-Language"] = acceptLanguage;
             req.Parameters["url"] = url;
             req.Parameters["version"] = VersionDate;
 
@@ -412,8 +417,10 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="imagePath">Image path.</param>
+        /// <param name="acceptLanguage">The language used for the value of `gender_label` in the response. (optional,
+        /// default to en)</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, string imagePath, Dictionary<string, object> customData = null)
+        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, string imagePath, string acceptLanguage, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -440,7 +447,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                     Log.Error("VisualRecognition.DetectFaces()", "Failed to upload {0}!", imagePath);
             }
 
-            return DetectFaces(successCallback, failCallback, imageData, customData);
+            return DetectFaces(successCallback, failCallback, imageData, acceptLanguage, customData);
         }
 
         /// <summary>
@@ -449,9 +456,11 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="successCallback">The success callback.</param>
         /// <param name="failCallback">The fail callback.</param>
         /// <param name="imageData">ByteArray of image data.</param>
+        /// <param name="acceptLanguage">The language used for the value of `gender_label` in the response. (optional,
+        /// default to en)</param>
         /// <param name="customData">Custom data.</param>
         /// <returns></returns>
-        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, byte[] imageData, Dictionary<string, object> customData = null)
+        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, byte[] imageData, string acceptLanguage = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
@@ -479,6 +488,8 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.OnResponse = OnDetectFacesResp;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
+            if (!string.IsNullOrEmpty(acceptLanguage))
+                req.Headers["Accept-Language"] = acceptLanguage;
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["images_file"] = new RESTConnector.Form(imageData);
@@ -1296,7 +1307,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <summary>
         /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
         /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
-        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// For more information about personal data and customer IDs, see [**Information security**](https://cloud.ibm.com/docs/services/discovery/information-security.html).
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>

@@ -4444,7 +4444,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>
-        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id` or `request.context.metadata.deployment`. For more information, see the [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax).</param>
+        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id` or `request.context.metadata.deployment`. For more information, see the [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).</param>
         /// <param name="sort">The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`). Supported values are `name`, `updated`, and `workspace_id`. (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to 100)</param>
         /// <param name="cursor">A token identifying the last object from the previous page of results. (optional)</param>
@@ -4554,7 +4554,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <param name="failCallback">The function that is called when the operation fails.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="sort">The attribute by which returned results will be sorted. To reverse the sort order, prefix the value with a minus sign (`-`). Supported values are `name`, `updated`, and `workspace_id`. (optional)</param>
-        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter. For more information, see the [documentation](https://console.bluemix.net/docs/services/conversation/filter-reference.html#filter-query-syntax). (optional)</param>
+        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter. For more information, see the [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax). (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to 100)</param>
         /// <param name="cursor">A token identifying the last object from the previous page of results. (optional)</param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>
@@ -4658,7 +4658,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// <summary>
         /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated with the customer ID. 
         /// You associate a customer ID with data by passing the X-Watson-Metadata header with a request that passes data. 
-        /// For more information about personal data and customer IDs, see [**Information security**](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// For more information about personal data and customer IDs, see [**Information security**](https://cloud.ibm.com/docs/services/discovery/information-security.html).
         /// </summary>
         /// <param name="successCallback">The function that is called when the operation is successful.</param>
         /// <param name="failCallback">The function that is called when the operation fails.</param>

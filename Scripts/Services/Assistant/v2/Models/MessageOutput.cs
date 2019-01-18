@@ -56,7 +56,7 @@ namespace IBM.WatsonDeveloperCloud.Assistant.v2
         /// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
         /// </summary>
         [fsProperty("user_defined")]
-        public dynamic UserDefined { get; set; }
+        public object UserDefined { get; set; }
     }
 
 }

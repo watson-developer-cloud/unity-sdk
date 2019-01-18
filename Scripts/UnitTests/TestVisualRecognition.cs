@@ -163,7 +163,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             //  Detect faces get
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via URL");
-            if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail))
+            if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail, "es"))
                 Log.Debug("TestVisualRecognition.DetectFaces()", "Detect faces failed!");
 
             while (!_detectFacesGetTested)
@@ -172,7 +172,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             //  Detect faces post image
             Log.Debug("TestVisualRecognition.RunTest()", "Attempting to detect faces via image");
             string faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-            if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath))
+            if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath, "es"))
                 Log.Debug("TestVisualRecognition.DetectFaces()", "Detect faces failed!");
 
             while (!_detectFacesPostTested)
@@ -256,6 +256,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestVisualRecognition.OnDetectFacesGet()", "VisualRecognition - DetectFacesGet Response: {0}", customData["json"].ToString());
             Test(multipleImages != null);
+            Test(multipleImages.images[0].faces[0].gender.GenderLabel == "macho");
             _detectFacesGetTested = true;
         }
 
@@ -263,6 +264,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         {
             Log.Debug("TestVisualRecognition.OnDetectFacesPost()", "VisualRecognition - DetectFacesPost Response: {0}", customData["json"].ToString());
             Test(multipleImages != null);
+            Test(multipleImages.images[0].faces[0].gender.GenderLabel == "macho");
             _detectFacesPostTested = true;
         }
 

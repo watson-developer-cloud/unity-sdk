@@ -58,6 +58,7 @@ public class ExampleSpeechToText : MonoBehaviour
     private byte[] _oggResourceData;
     private string _oggResourceMimeType;
     private bool _isOggLoaded = false;
+    private string _grammarFilePath;
 
     private bool _recognizeTested = false;
     private bool _recognizeOggTested = false;
@@ -94,11 +95,20 @@ public class ExampleSpeechToText : MonoBehaviour
     private bool _readyToContinue = false;
     private float _delayTimeInSeconds = 10f;
 
+    private bool _listGrammarsTested = false;
+    private bool _addGrammarTested = false;
+    private bool _getGrammarTested = false;
+    private bool _deleteGrammarTested = false;
+    private string _createdGrammarId;
+    private string _grammarFileContentType = "application/srgs";
+    private string _grammarName = "unity-integration-test-grammar";
+
     void Start()
     {
         LogSystem.InstallDefaultReactors();
-        _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/theJabberwocky-utf8.txt";
-        _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/test-stt-words.json";
+        _customCorpusFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/theJabberwocky-utf8.txt";
+        _customWordsFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/test-stt-words.json";
+        _grammarFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/speech-to-text/confirm.abnf";
         _acousticResourceMimeType = Utility.GetMimeType(Path.GetExtension(_acousticResourceUrl));
         _oggResourceMimeType = Utility.GetMimeType(Path.GetExtension(_oggResourceUrl));
         Runnable.Run(CreateService());
@@ -285,12 +295,6 @@ public class ExampleSpeechToText : MonoBehaviour
         while (!_isCustomizationReady)
             yield return null;
 
-        //  Upgrade customization - not currently implemented in service
-        //Log.Debug("ExampleSpeechToText.Examples()", "Attempting to upgrade customization {0}", _createdCustomizationID);
-        //_speechToText.UpgradeCustomization(HandleUpgradeCustomization, _createdCustomizationID);
-        //while (!_upgradeCustomizationTested)
-        //    yield return null;
-
         //  Delete custom word
         Log.Debug("ExampleSpeechToText.Examples()", "Attempting to delete custom word {1} in customization {0}", _createdCustomizationID, words.words[2].word);
         _service.DeleteCustomWord(HandleDeleteCustomWord, OnFail, _createdCustomizationID, words.words[2].word);
@@ -327,6 +331,37 @@ public class ExampleSpeechToText : MonoBehaviour
         Log.Debug("ExampleSpeechToText.Examples()", string.Format("Delaying delete environment for {0} sec", _delayTimeInSeconds));
         Runnable.Run(Delay(_delayTimeInSeconds));
         while (!_readyToContinue)
+            yield return null;
+
+        //  List Grammars
+        Log.Debug("TestSpeechToText.Examples()", "Attempting to list grammars {0}", _createdCustomizationID);
+        _service.ListGrammars(OnListGrammars, OnFail, _createdCustomizationID);
+        while (!_listGrammarsTested)
+            yield return null;
+
+        //  Add Grammar
+        Log.Debug("TestSpeechToText.Examples()", "Attempting to add grammar {0}", _createdCustomizationID);
+        string grammarFile = File.ReadAllText(_grammarFilePath);
+        _service.AddGrammar(OnAddGrammar, OnFail, _createdCustomizationID, _grammarName, grammarFile, _grammarFileContentType);
+        while (!_addGrammarTested)
+            yield return null;
+
+        //  Get Grammar
+        Log.Debug("TestSpeechToText.Examples()", "Attempting to get grammar {0}", _createdCustomizationID);
+        _service.GetGrammar(OnGetGrammar, OnFail, _createdCustomizationID, _grammarName);
+        while (!_getGrammarTested)
+            yield return null;
+
+        //  Wait for customization
+        _isCustomizationReady = false;
+        Runnable.Run(CheckCustomizationStatus(_createdCustomizationID));
+        while (!_isCustomizationReady)
+            yield return null;
+
+        //  Delete Grammar
+        Log.Debug("TestSpeechToText.Examples()", "Attempting to delete grammar {0}", _createdCustomizationID);
+        _service.DeleteGrammar(OnDeleteGrammar, OnFail, _createdCustomizationID, _grammarName);
+        while (!_deleteGrammarTested)
             yield return null;
 
         _readyToContinue = false;
@@ -637,6 +672,30 @@ public class ExampleSpeechToText : MonoBehaviour
             _deleteAcousticCustomizationsTested = true;
         else
             DeleteAcousticCustomization();
+    }
+
+    private void OnListGrammars(Grammars response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleSpeechToText.OnListGrammars()", "{0}", customData["json"].ToString());
+        _listGrammarsTested = true;
+    }
+
+    private void OnAddGrammar(object response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleSpeechToText.OnAddGrammar()", "Success!");
+        _addGrammarTested = true;
+    }
+
+    private void OnGetGrammar(Grammar response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleSpeechToText.OnGetGrammar()", "{0}", customData["json"].ToString());
+        _getGrammarTested = true;
+    }
+
+    private void OnDeleteGrammar(object response, Dictionary<string, object> customData)
+    {
+        Log.Debug("ExampleSpeechToText.OnDeleteGrammar()", "Success!");
+        _deleteGrammarTested = true;
     }
 
     private IEnumerator CheckCustomizationStatus(string customizationID, float delay = 0.1f)
