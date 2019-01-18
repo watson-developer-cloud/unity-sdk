@@ -174,7 +174,7 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
         /// If true, then we will get interim results while recognizing. The user will then need to check 
         /// the Final flag on the results.
         /// </summary>
-        public bool EnableInterimResults { get; set; }
+        public bool? EnableInterimResults { get; set; }
         /// <summary>
         /// If true, then we will try not to send silent audio clips to the server. This can save bandwidth
         /// when no sound is happening.
@@ -733,7 +733,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["action"] = "start";
             start["content-type"] = "audio/l16;rate=" + _recordingHZ.ToString() + ";channels=1;";
             start["inactivity_timeout"] = InactivityTimeout;
-            start["interim_results"] = EnableInterimResults;
+            if (EnableInterimResults != null)
+                start["interim_results"] = EnableInterimResults;
             if (Keywords != null)
                 start["keywords"] = Keywords;
             if (KeywordsThreshold != null)
@@ -742,7 +743,8 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
             start["profanity_filter"] = ProfanityFilter;
             start["smart_formatting"] = SmartFormatting;
             start["speaker_labels"] = SpeakerLabels;
-            start["timestamps"] = EnableTimestamps;
+            if (EnableTimestamps != null)
+                start["timestamps"] = EnableTimestamps;
             if (WordAlternativesThreshold != null)
                 start["word_alternatives_threshold"] = WordAlternativesThreshold;
             start["word_confidence"] = EnableWordConfidence;
