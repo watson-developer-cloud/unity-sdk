@@ -362,7 +362,7 @@ public class ExampleDiscovery : MonoBehaviour
         while (!_deleteStopwordListTested)
             yield return null;
 
-        //  List Gatways
+        //  List Gateways
         Log.Debug("ExampleDiscovery.RunTest()", "Attempting to list gateways.");
         _service.ListGateways(OnListGateways, OnFail, _environmentId);
         while (!_listGatewaysTested)
