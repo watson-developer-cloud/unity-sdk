@@ -94,7 +94,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getMetricsQueryTokenEventTested = false;
         private bool _queryLogTested = false;
 
-        private string _stopwordsFilepath;
+        //private string _stopwordsFilepath;
         //private bool _createStopwordListTested = false;
         //private bool _deleteStopwordListTested = false;
 
@@ -153,7 +153,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _discovery.VersionDate = _discoveryVersionDate;
             _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
             _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
-            _stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
+            //_stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
             //  Get Environments
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
             if (!_discovery.GetEnvironments(OnGetEnvironments, OnFail))
