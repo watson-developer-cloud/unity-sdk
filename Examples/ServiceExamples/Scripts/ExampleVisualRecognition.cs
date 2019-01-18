@@ -161,7 +161,7 @@ public class ExampleVisualRecognition : MonoBehaviour
 
         //          Detect faces get
         Log.Debug("ExampleVisualRecognition.Examples()", "Attempting to detect faces via URL");
-        if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail))
+        if (!_visualRecognition.DetectFaces(_imageURL, OnDetectFacesGet, OnFail, "es"))
             Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 
         while (!_detectFacesGetTested)
@@ -170,7 +170,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         //          Detect faces post image
         Log.Debug("ExampleVisualRecognition.Examples()", "Attempting to detect faces via image");
         string faceExamplePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/obama.jpg";
-        if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath))
+        if (!_visualRecognition.DetectFaces(OnDetectFacesPost, OnFail, faceExamplePath, "es"))
             Log.Debug("ExampleVisualRecognition.DetectFaces()", "Detect faces failed!");
 
         while (!_detectFacesPostTested)
