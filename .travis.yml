@@ -26,8 +26,8 @@ script:
 - ./Travis/installSDK.sh
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
+- git reset --hard
 deploy:
-  - git reset --hard
   - provider: script
     skip_cleanup: true
     script: npx semantic-release
