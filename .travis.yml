@@ -26,6 +26,7 @@ script:
 - ./Travis/installSDK.sh
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
+- git reset --hard
 deploy:
   - provider: script
     skip_cleanup: true
