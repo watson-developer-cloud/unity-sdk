@@ -2,6 +2,7 @@
   "branch": "master",
   "verifyConditions": [],
   "prepare": [
+    "@semantic-release/git",
     {
       "path": "@semantic-release/exec",
       "cmd": "bumpversion --current-version ${lastRelease.version} --new-version ${nextRelease.version} --allow-dirty --verbose patch"
