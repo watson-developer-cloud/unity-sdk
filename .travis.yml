@@ -16,6 +16,8 @@ install:
 - pip install bumpversion
 - ./Travis/installUnity.sh
 - npm install @semantic-release/exec
+- npm install @semantic-release/git
+- npm install @semantic-release/changelog
 before_script:
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
