@@ -32,44 +32,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// The current status of the workspace.
         /// </summary>
         /// <value>The current status of the workspace.</value>
-        public enum StatusEnum
-        {
-            
-            /// <summary>
-            /// Enum NON_EXISTENT for Non Existent
-            /// </summary>
-            [EnumMember(Value = "Non Existent")]
-            NON_EXISTENT,
-            
-            /// <summary>
-            /// Enum TRAINING for Training
-            /// </summary>
-            [EnumMember(Value = "Training")]
-            TRAINING,
-            
-            /// <summary>
-            /// Enum FAILED for Failed
-            /// </summary>
-            [EnumMember(Value = "Failed")]
-            FAILED,
-            
-            /// <summary>
-            /// Enum AVAILABLE for Available
-            /// </summary>
-            [EnumMember(Value = "Available")]
-            AVAILABLE,
-            
-            /// <summary>
-            /// Enum UNAVAILABLE for Unavailable
-            /// </summary>
-            [EnumMember(Value = "Unavailable")]
-            UNAVAILABLE
-        }
-
-        /// <summary>
-        /// The current status of the workspace.
-        /// </summary>
-        /// <value>The current status of the workspace.</value>
         [fsProperty("status")]
         public string Status { get; set; }
         /// <summary>
