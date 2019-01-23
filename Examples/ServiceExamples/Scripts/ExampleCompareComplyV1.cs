@@ -14,6 +14,7 @@
 * limitations under the License.
 *
 */
+#pragma warning disable 0649
 
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
@@ -43,7 +44,6 @@ public class ExampleCompareComplyV1 : MonoBehaviour
     #endregion
 
     private CompareComply compareComply;
-    private fsSerializer _serializer = new fsSerializer();
     private bool convertToHtmlTested = false;
     private bool classifyElementsTested = false;
     private bool extractTablesTested = false;

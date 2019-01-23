@@ -370,13 +370,21 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
     public class FaceGender
     {
         /// <summary>
-        /// The gener.
+        /// Gender identified by the face. For example, `MALE` or `FEMALE`.
         /// </summary>
-        public string gender { get; set; }
+        [fsProperty("gender")]
+        public string Gender { get; set; }
         /// <summary>
-        /// The gender classification score.
+        /// The word for \"male\" or \"female\" in the language defined by the **Accept-Language** request header.
         /// </summary>
-        public double score { get; set; }
+        [fsProperty("gender_label")]
+        public string GenderLabel { get; set; }
+        /// <summary>
+        /// Confidence score in the range of 0 to 1. A higher score indicates greater confidence in the estimated value
+        /// for the property.
+        /// </summary>
+        [fsProperty("score")]
+        public float? Score { get; set; }
     }
 
     /// <summary>

@@ -213,6 +213,11 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         [fsProperty("title")]
         public string Title { get; set; }
         /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [fsProperty("disabled")]
+        public bool Disabled { get; set; }
+        /// <summary>
         /// The location in the dialog context where output is stored.
         /// </summary>
         /// <value>The location in the dialog context where output is stored.</value>

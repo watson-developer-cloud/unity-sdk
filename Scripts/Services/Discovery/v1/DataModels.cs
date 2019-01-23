@@ -1121,7 +1121,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// <summary>
         /// Array of query results.
         /// </summary>
-        public QueryResult[] results { get; set; }
+        public List<object> results { get; set; }
         /// <summary>
         /// Query aggregations.
         /// </summary>
@@ -1252,200 +1252,6 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     #region Credentials
     [fsObject]
     /// <summary>
-    /// CredentialsList.
-    /// </summary>
-    public class CredentialsList
-    {
-        /// <summary>
-        /// An array of credential definitions that were created for this instance.
-        /// </summary>
-        [fsProperty("credentials")]
-        public List<SourceCredentials> Credentials { get; set; }
-    }
-
-    [fsObject]
-    /// <summary>
-    /// Object containing credential information.
-    /// </summary>
-    public class SourceCredentials
-    {
-        /// <summary>
-        /// The source that this credentials object connects to.
-        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
-        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
-        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// </summary>
-        public enum SourceTypeEnum
-        {
-
-            /// <summary>
-            /// Enum BOX for box
-            /// </summary>
-            [EnumMember(Value = "box")]
-            box,
-
-            /// <summary>
-            /// Enum SALESFORCE for salesforce
-            /// </summary>
-            [EnumMember(Value = "salesforce")]
-            salesforce,
-
-            /// <summary>
-            /// Enum SHAREPOINT for sharepoint
-            /// </summary>
-            [EnumMember(Value = "sharepoint")]
-            sharepoint
-        }
-
-        /// <summary>
-        /// The source that this credentials object connects to.
-        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
-        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
-        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// </summary>
-        [fsProperty("source_type")]
-        public SourceTypeEnum? SourceType { get; set; }
-        /// <summary>
-        /// Unique identifier for this set of credentials.
-        /// </summary>
-        [fsProperty("credential_id")]
-        public virtual string CredentialId { get; private set; }
-        /// <summary>
-        /// Object containing details of the stored credentials.
-        ///
-        /// Obtain credentials for your source from the administrator of the source.
-        /// </summary>
-        [fsProperty("credential_details")]
-        public CredentialDetails CredentialDetails { get; set; }
-    }
-
-
-    [fsObject]
-    /// <summary>
-    /// Object containing details of the stored credentials.
-    ///
-    /// Obtain credentials for your source from the administrator of the source.
-    /// </summary>
-    public class CredentialDetails
-    {
-        /// <summary>
-        /// The authentication method for this credentials definition. The  **credential_type** specified must be
-        /// supported by the **source_type**. The following combinations are possible:
-        ///
-        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
-        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
-        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml`.
-        /// </summary>
-        public enum CredentialTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum OAUTH2 for oauth2
-            /// </summary>
-            [EnumMember(Value = "oauth2")]
-            oauth2,
-            
-            /// <summary>
-            /// Enum SAML for saml
-            /// </summary>
-            [EnumMember(Value = "saml")]
-            saml,
-            
-            /// <summary>
-            /// Enum USERNAME_PASSWORD for username_password
-            /// </summary>
-            [EnumMember(Value = "username_password")]
-            username_password
-        }
-
-        /// <summary>
-        /// The authentication method for this credentials definition. The  **credential_type** specified must be
-        /// supported by the **source_type**. The following combinations are possible:
-        ///
-        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
-        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
-        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml`.
-        /// </summary>
-        [fsProperty("credential_type")]
-        public CredentialTypeEnum? CredentialType { get; set; }
-        /// <summary>
-        /// The **client_id** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `oauth2`.
-        /// </summary>
-        [fsProperty("client_id")]
-        public string ClientId { get; set; }
-        /// <summary>
-        /// The **enterprise_id** of the Box site that these credentials connect to. Only valid, and required, with a
-        /// **source_type** of `box`.
-        /// </summary>
-        [fsProperty("enterprise_id")]
-        public string EnterpriseId { get; set; }
-        /// <summary>
-        /// The **url** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `username_password`.
-        /// </summary>
-        [fsProperty("url")]
-        public string Url { get; set; }
-        /// <summary>
-        /// The **username** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `saml` and `username_password`.
-        /// </summary>
-        [fsProperty("username")]
-        public string Username { get; set; }
-        /// <summary>
-        /// The **organization_url** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `saml`.
-        /// </summary>
-        [fsProperty("organization_url")]
-        public string OrganizationUrl { get; set; }
-        /// <summary>
-        /// The **site_collection.path** of the source that these credentials connect to. Only valid, and required, with
-        /// a **source_type** of `sharepoint`.
-        /// </summary>
-        [fsProperty("site_collection.path")]
-        public string SiteCollectionPath { get; set; }
-        /// <summary>
-        /// The **client_secret** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
-        /// **credentials**.
-        /// </summary>
-        [fsProperty("client_secret")]
-        public string ClientSecret { get; set; }
-        /// <summary>
-        /// The **public_key_id** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
-        /// **credentials**.
-        /// </summary>
-        [fsProperty("public_key_id")]
-        public string PublicKeyId { get; set; }
-        /// <summary>
-        /// The **private_key** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
-        /// **credentials**.
-        /// </summary>
-        [fsProperty("private_key")]
-        public string PrivateKey { get; set; }
-        /// <summary>
-        /// The **passphrase** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `oauth2`. This value is never returned and is only used when creating or modifying
-        /// **credentials**.
-        /// </summary>
-        [fsProperty("passphrase")]
-        public string Passphrase { get; set; }
-        /// <summary>
-        /// The **password** of the source that these credentials connect to. Only valid, and required, with
-        /// **credential_type**s of `saml` and `username_password`.
-        ///
-        /// **Note:** When used with a **source_type** of `salesforce`, the password consists of the Salesforce password
-        /// and a valid Salesforce security token concatenated. This value is never returned and is only used when
-        /// creating or modifying **credentials**.
-        /// </summary>
-        [fsProperty("password")]
-        public string Password { get; set; }
-    }
-
-    [fsObject]
-    /// <summary>
     /// Object returned after credentials are deleted.
     /// </summary>
     public class DeleteCredentials
@@ -1493,20 +1299,22 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// <summary>
             /// Enum BOX for box
             /// </summary>
-            [EnumMember(Value = "box")]
             box,
 
             /// <summary>
             /// Enum SALESFORCE for salesforce
             /// </summary>
-            [EnumMember(Value = "salesforce")]
             salesforce,
 
             /// <summary>
             /// Enum SHAREPOINT for sharepoint
             /// </summary>
-            [EnumMember(Value = "sharepoint")]
-            sharepoint
+            sharepoint,
+
+            /// <summary>
+            /// Enum WEB_CRAWL for web_crawl
+            /// </summary>
+            web_crawl
         }
 
         /// <summary>
@@ -1560,6 +1368,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// </summary>
         [fsProperty("site_collections")]
         public List<SourceOptionsSiteColl> SiteCollections { get; set; }
+        /// <summary>
+        /// Array of Web page URLs to begin crawling the web from. Only valid and required when the **type** field of
+        /// the **source** object is set to `web_crawl`.
+        /// </summary>
+        [fsProperty("urls")]
+        public List<SourceOptionsWebCrawl> Urls { get; set; }
     }
 
     /// <summary>

@@ -38,31 +38,26 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             /// <summary>
             /// Enum NO_DATA for NO_DATA
             /// </summary>
-            [EnumMember(Value = "NO_DATA")]
             NO_DATA,
-            
+
             /// <summary>
             /// Enum INSUFFICENT_DATA for INSUFFICENT_DATA
             /// </summary>
-            [EnumMember(Value = "INSUFFICENT_DATA")]
-            INSUFFICENT_DATA,
+            INSUFFICIENT_DATA,
             
             /// <summary>
             /// Enum TRAINING for TRAINING
             /// </summary>
-            [EnumMember(Value = "TRAINING")]
             TRAINING,
             
             /// <summary>
             /// Enum TRAINED for TRAINED
             /// </summary>
-            [EnumMember(Value = "TRAINED")]
             TRAINED,
             
             /// <summary>
             /// Enum NOT_APPLICABLE for NOT_APPLICABLE
             /// </summary>
-            [EnumMember(Value = "NOT_APPLICABLE")]
             NOT_APPLICABLE
         }
 

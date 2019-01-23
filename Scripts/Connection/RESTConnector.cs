@@ -527,6 +527,8 @@ namespace IBM.Watson.DeveloperCloud.Connection
 
                 unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
 
+#if NET_4_6
+
                 if (req.DisableSslVerification)
                 {
                     unityWebRequest.certificateHandler = new AcceptAllCertificates();
@@ -535,7 +537,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 {
                     unityWebRequest.certificateHandler = null;
                 }
-
+#endif
 #if UNITY_2017_2_OR_NEWER
                 unityWebRequest.SendWebRequest();
 #else
@@ -661,6 +663,7 @@ namespace IBM.Watson.DeveloperCloud.Connection
         #endregion
     }
 
+#if NET_4_6
     class AcceptAllCertificates : CertificateHandler
     {
         protected override bool ValidateCertificate(byte[] certificateData)
@@ -668,4 +671,5 @@ namespace IBM.Watson.DeveloperCloud.Connection
             return true;
         }
     }
+#endif
 }

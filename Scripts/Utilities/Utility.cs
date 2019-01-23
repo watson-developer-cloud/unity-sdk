@@ -1178,7 +1178,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         /// <returns>True if the call succeeds.</returns>
         public static bool GetWatsonToken(OnGetWatsonToken callback, string serviceEndpoint, string username, string password, string tokenName = "")
         {
-            Log.Warning("Utility.GetWatsonToken()", "Authenticating with the `X-Watson-Authorization-Token` header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam) or the README in the IBM Watson SDK you use.");
+            Log.Warning("Utility.GetWatsonToken()", "Authenticating with the `X-Watson-Authorization-Token` header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson/getting-started-iam.html#iam) or the README in the IBM Watson SDK you use.");
             if (callback == null)
                 throw new ArgumentNullException("callback");
             if (string.IsNullOrEmpty(serviceEndpoint))
@@ -1254,7 +1254,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         }
         #endregion
 
-        #region
+        #region CreateAuthorization
         /// <summary>
         /// Create basic authentication header data for REST requests.
         /// </summary>
@@ -1264,6 +1264,13 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static string CreateAuthorization(string username, string password)
         {
             return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(username + ":" + password));
+        }
+        #endregion
+
+        #region Has Bad First Character
+        public static bool HasBadFirstOrLastCharacter(string value)
+        {
+            return value.StartsWith("{") || value.StartsWith("\"") || value.EndsWith("}") || value.EndsWith("\"");
         }
         #endregion
     }

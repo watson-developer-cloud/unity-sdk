@@ -36,12 +36,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         /// An array of intents to be sent along with the user input.
         /// </summary>
         [fsProperty("intents")]
-        public List<RuntimeIntent> Intents { get; set; }
+        public List<object> Intents { get; set; }
         /// <summary>
         /// An array of entities to be sent along with the user input.
         /// </summary>
         [fsProperty("entities")]
-        public List<RuntimeEntity> Entities { get; set; }
+        public List<object> Entities { get; set; }
     }
 
 }
