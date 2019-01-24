@@ -1,0 +1,130 @@
+/**
+* Copyright 2019 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+*/
+
+using System.Collections.Generic;
+using FullSerializer;
+using System;
+
+namespace IBM.Watson.Discovery.v1.Model
+{
+    /// <summary>
+    /// Status information about a submitted document.
+    /// </summary>
+    public class DocumentStatus
+    {
+        /// <summary>
+        /// Status of the document in the ingestion process.
+        /// </summary>
+        public class StatusEnumValue
+        {
+            /// <summary>
+            /// Constant AVAILABLE for available
+            /// </summary>
+            public const string AVAILABLE = "available";
+            /// <summary>
+            /// Constant AVAILABLE_WITH_NOTICES for available with notices
+            /// </summary>
+            public const string AVAILABLE_WITH_NOTICES = "available with notices";
+            /// <summary>
+            /// Constant FAILED for failed
+            /// </summary>
+            public const string FAILED = "failed";
+            /// <summary>
+            /// Constant PROCESSING for processing
+            /// </summary>
+            public const string PROCESSING = "processing";
+            
+        }
+
+        /// <summary>
+        /// The type of the original source file.
+        /// </summary>
+        public class FileTypeEnumValue
+        {
+            /// <summary>
+            /// Constant PDF for pdf
+            /// </summary>
+            public const string PDF = "pdf";
+            /// <summary>
+            /// Constant HTML for html
+            /// </summary>
+            public const string HTML = "html";
+            /// <summary>
+            /// Constant WORD for word
+            /// </summary>
+            public const string WORD = "word";
+            /// <summary>
+            /// Constant JSON for json
+            /// </summary>
+            public const string JSON = "json";
+            
+        }
+
+        /// <summary>
+        /// Status of the document in the ingestion process.
+        /// </summary>
+        [fsProperty("status")]
+        public string Status { get; set; }
+        /// <summary>
+        /// The type of the original source file.
+        /// </summary>
+        [fsProperty("file_type")]
+        public string FileType { get; set; }
+        /// <summary>
+        /// The unique identifier of the document.
+        /// </summary>
+        [fsProperty("document_id")]
+        public virtual string DocumentId { get; private set; }
+        /// <summary>
+        /// The unique identifier for the configuration.
+        /// </summary>
+        [fsProperty("configuration_id")]
+        public virtual string ConfigurationId { get; private set; }
+        /// <summary>
+        /// The creation date of the document in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
+        /// </summary>
+        [fsProperty("created")]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// Date of the most recent document update, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
+        /// </summary>
+        [fsProperty("updated")]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
+        /// Description of the document status.
+        /// </summary>
+        [fsProperty("status_description")]
+        public virtual string StatusDescription { get; private set; }
+        /// <summary>
+        /// Name of the original source file (if available).
+        /// </summary>
+        [fsProperty("filename")]
+        public string Filename { get; set; }
+        /// <summary>
+        /// The SHA-1 hash of the original source file (formatted as a hexadecimal string).
+        /// </summary>
+        [fsProperty("sha1")]
+        public string Sha1 { get; set; }
+        /// <summary>
+        /// Array of notices produced by the document-ingestion process.
+        /// </summary>
+        [fsProperty("notices")]
+        public virtual List<Notice> Notices { get; private set; }
+    }
+
+
+}
