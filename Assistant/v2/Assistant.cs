@@ -97,16 +97,6 @@ namespace IBM.Watson.Assistant.V2
             }
         }
 
-        #region Callback delegates
-        /// <summary>
-        /// Success callback delegate.
-        /// </summary>
-        /// <typeparam name="T">Type of the returned object.</typeparam>
-        /// <param name="response">The returned WatsonResponse.</param>
-        /// <param name="customData">user defined custom data including raw json.</param>
-        public delegate void Callback<T>(WatsonResponse<T> response, WatsonError error, Dictionary<string, object> customData);
-        #endregion
-
         /// <summary>
         /// Create a session.
         ///
@@ -134,7 +124,7 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentException("assistantId is required for CreateSession");
             }
 
-            CreateSessionRequestObj req = new CreateSessionRequestObj
+            RequestObject<SessionResponse> req = new RequestObject<SessionResponse>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -162,18 +152,6 @@ namespace IBM.Watson.Assistant.V2
             return connector.Send(req);
         }
 
-        private class CreateSessionRequestObj : RESTConnector.Request
-        {
-            /// <summary>
-            /// The success callback.
-            /// </summary>
-            public Callback<SessionResponse> Callback { get; set; }
-            /// <summary>
-            /// Custom data.
-            /// </summary>
-            public Dictionary<string, object> CustomData { get; set; }
-        }
-
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WatsonResponse<SessionResponse> response = new WatsonResponse<SessionResponse>
@@ -182,7 +160,7 @@ namespace IBM.Watson.Assistant.V2
             };
 
             fsData data = null;
-            Dictionary<string, object> customData = ((CreateSessionRequestObj)req).CustomData;
+            Dictionary<string, object> customData = ((RequestObject<SessionResponse>)req).CustomData;
 
             try
             {
@@ -207,9 +185,9 @@ namespace IBM.Watson.Assistant.V2
                 resp.Success = false;
             }
 
-            if (((CreateSessionRequestObj)req).Callback != null)
+            if (((RequestObject<SessionResponse>)req).Callback != null)
             {
-                ((CreateSessionRequestObj)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SessionResponse>)req).Callback(response, resp.Error, customData);
             }
         }
 
@@ -244,7 +222,7 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentException("sessionId is required for DeleteSession");
             }
 
-            DeleteSessionRequestObj req = new DeleteSessionRequestObj
+            RequestObject<object> req = new RequestObject<object>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
@@ -271,18 +249,6 @@ namespace IBM.Watson.Assistant.V2
             return connector.Send(req);
         }
 
-        private class DeleteSessionRequestObj : RESTConnector.Request
-        {
-            /// <summary>
-            /// The success callback.
-            /// </summary>
-            public Callback<object> Callback { get; set; }
-            /// <summary>
-            /// Custom data.
-            /// </summary>
-            public Dictionary<string, object> CustomData { get; set; }
-        }
-
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WatsonResponse<object> response = new WatsonResponse<object>
@@ -291,7 +257,7 @@ namespace IBM.Watson.Assistant.V2
             };
 
             fsData data = null;
-            Dictionary<string, object> customData = ((DeleteSessionRequestObj)req).CustomData;
+            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
 
             try
             {
@@ -316,9 +282,9 @@ namespace IBM.Watson.Assistant.V2
                 resp.Success = false;
             }
 
-            if (((DeleteSessionRequestObj)req).Callback != null)
+            if (((RequestObject<object>)req).Callback != null)
             {
-                ((DeleteSessionRequestObj)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
             }
         }
         /// <summary>
@@ -356,7 +322,7 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentException("sessionId is required for Message");
             }
 
-            MessageRequestObj req = new MessageRequestObj
+            RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -394,24 +360,12 @@ namespace IBM.Watson.Assistant.V2
             return connector.Send(req);
         }
 
-        private class MessageRequestObj : RESTConnector.Request
-        {
-            /// <summary>
-            /// The success callback.
-            /// </summary>
-            public Callback<MessageResponse> Callback { get; set; }
-            /// <summary>
-            /// Custom data.
-            /// </summary>
-            public Dictionary<string, object> CustomData { get; set; }
-        }
-
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WatsonResponse<MessageResponse> response = new WatsonResponse<MessageResponse>();
             response.Result = new MessageResponse();
             fsData data = null;
-            Dictionary<string, object> customData = ((MessageRequestObj)req).CustomData;
+            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -441,9 +395,9 @@ namespace IBM.Watson.Assistant.V2
                 resp.Success = false;
             }
 
-            if (((MessageRequestObj)req).Callback != null)
+            if (((RequestObject<MessageResponse>)req).Callback != null)
             {
-                ((MessageRequestObj)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
             }
         }
     }

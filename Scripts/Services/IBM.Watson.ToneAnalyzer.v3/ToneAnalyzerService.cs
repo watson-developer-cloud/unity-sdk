@@ -19,18 +19,17 @@ using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
 using IBM.Watson.Connection;
+using IBM.Watson.Logging;
 using IBM.Watson.ToneAnalyzer.v3.Model;
-using IBM.WatsonDeveloperCloud.Http;
-using IBM.WatsonDeveloperCloud.Service;
-using IBM.WatsonDeveloperCloud.Util;
+using IBM.Watson.Utilities;
 using System;
+using UnityEngine.Networking;
 
 namespace IBM.Watson.ToneAnalyzer.v3
 {
-    public class ToneAnalyzerService : IWatsonService
+    public class ToneAnalyzerService
     {
-        private const string ServiceId = "ToneAnalyzerServicev3";
-        private fsSerializer _serializer = new fsSerializer();
+        private fsSerializer serializer = new fsSerializer();
 
         private Credentials _credentials = null;
         /// <summary>
@@ -69,12 +68,31 @@ namespace IBM.Watson.ToneAnalyzer.v3
             set { _versionDate = value; }
         }
 
+        private bool disableSslVerification = false;
+        /// <summary>
+        /// Gets and sets the option to disable ssl verification
+        /// </summary>
+        public bool DisableSslVerification
+        {
+            get { return disableSslVerification; }
+            set { disableSslVerification = value; }
+        }
+
         /// <summary>
         /// ToneAnalyzerService constructor.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
-        public ToneAnalyzerService(Credentials credentials)
+        public ToneAnalyzerService(string versionDate, Credentials credentials)
         {
+            if (string.IsNullOrEmpty(versionDate))
+            {
+                throw new ArgumentNullException("A versionDate is required to create an instance of ToneAnalyzerService");
+            }
+            else
+            {
+                VersionDate = versionDate;
+            }
+
             if (credentials.HasCredentials() || credentials.HasIamTokenData())
             {
                 Credentials = credentials;
@@ -89,23 +107,6 @@ namespace IBM.Watson.ToneAnalyzer.v3
                 throw new WatsonException("Please provide a username and password or authorization token to use the ToneAnalyzerService service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
-
-        #region Callback delegates
-        /// <summary>
-        /// Success callback delegate.
-        /// </summary>
-        /// <typeparam name="T">Type of the returned object.</typeparam>
-        /// <param name="response">The returned object.</param>
-        /// <param name="customData">user defined custom data including raw json.</param>
-        public delegate void SuccessCallback<T>(T response, Dictionary<string, object> customData);
-
-        /// <summary>
-        /// Fail callback delegate.
-        /// </summary>
-        /// <param name="error">The error object.</param>
-        /// <param name="customData">User defined custom data</param>
-        public delegate void FailCallback(RESTConnector.Error error, Dictionary<string, object> customData);
-        #endregion
 
         /// <summary>
         /// Analyze general tone.
@@ -127,8 +128,7 @@ namespace IBM.Watson.ToneAnalyzer.v3
         /// **See also:** [Using the general-purpose
         /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
         /// </summary>
-        /// <param name="successCallback">The function that is called when the operation is successful.</param>
-        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="toneInput">JSON, plain text, or HTML input that contains the content to be analyzed. For JSON
         /// input, provide an object of type `ToneInput`.</param>
         /// <param name="sentences">Indicates whether the service is to return an analysis of each individual sentence
@@ -156,17 +156,22 @@ namespace IBM.Watson.ToneAnalyzer.v3
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Tone(SuccessCallback<ToneAnalysis> successCallback, FailCallback failCallback, ToneInput toneInput, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null, Dictionary<string, object> customData = null)
+        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            if (callback == null)
+                throw new ArgumentNullException("A callback is required for Tone");
 
-            ToneRequestObj req = new ToneRequestObj();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
-            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (toneInput == null)
+                throw new ArgumentNullException("A toneInput is required for Tone");
+
+            RequestObject<ToneAnalysis> req = new RequestObject<ToneAnalysis>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -174,81 +179,78 @@ namespace IBM.Watson.ToneAnalyzer.v3
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+
             req.Parameters["version"] = VersionDate;
             if(!string.IsNullOrEmpty(contentLanguage))
-            request.Headers["Content-Language"] = contentLanguage;
+            {
+                req.Headers["Content-Language"] = contentLanguage;
+            }
             if(!string.IsNullOrEmpty(acceptLanguage))
-            request.Headers["Accept-Language"] = acceptLanguage;
+            {
+                req.Headers["Accept-Language"] = acceptLanguage;
+            }
             if(!string.IsNullOrEmpty(contentType))
-            request.Headers["Content-Type"] = contentType;
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             if (sentences != null)
-            req.Parameters["sentences"] = sentences;
+            {
+                req.Parameters["sentences"] = sentences;
+            }
             req.Parameters["tones"] = tones != null && tones.Count > 0 ? string.Join(",", tones.ToArray()) : null;
+            if (toneInput != null)
+            {
+                fsData data = null;
+                serializer.TrySerialize(toneInput, out data);
+                fsSerializer.StripDeserializationMetadata(ref data);
+                string json = data.ToString().Replace('\"', '"');
+                req.Send = Encoding.UTF8.GetBytes(json);
+            }
             req.OnResponse = OnToneResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v3/tone");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone");
             if (connector == null)
                 return false;
 
             return connector.Send(req);
         }
 
-        private class ToneRequestObj : RESTConnector.Request
-            {
-                /// <summary>
-                /// The success callback.
-                /// </summary>
-                public SuccessCallback<ToneAnalysis> SuccessCallback { get; set; }
-                /// <summary>
-                /// The fail callback.
-                /// </summary>
-                public FailCallback FailCallback { get; set; }
-                /// <summary>
-                /// Custom data.
-                /// </summary>
-                public Dictionary<string, object> CustomData { get; set; }
-            }
-
         private void OnToneResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            ToneAnalysis result = new ToneAnalysis();
+            WatsonResponse<ToneAnalysis> response = new WatsonResponse<ToneAnalysis>();
+            response.Result = new ToneAnalysis();
             fsData data = null;
-            Dictionary<string, object> customData = ((ToneRequestObj)req).CustomData;
-
-            if (resp.Success)
+            Dictionary<string, object> customData = ((RequestObject<ToneAnalysis>)req).CustomData;
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
-                try
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                if (!r.Succeeded)
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
+                    throw new WatsonException(r.FormattedMessages);
                 }
-                catch (Exception e)
-                {
-                    Log.Error("ToneAnalyzerService.OnToneResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
+
+                object obj = response.Result;
+                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                customData.Add("json", data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("ToneAnalyzerService.OnToneResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
-            if (resp.Success)
-            {
-                if (((ToneRequestObj)req).SuccessCallback != null)
-                    ((ToneRequestObj)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((ToneRequestObj)req).FailCallback != null)
-                    ((ToneRequestObj)req).FailCallback(resp.Error, customData);
-            }
+            if (((RequestObject<ToneAnalysis>)req).Callback != null)
+                ((RequestObject<ToneAnalysis>)req).Callback(response, resp.Error, customData);
         }
-
         /// <summary>
         /// Analyze customer engagement tone.
         ///
@@ -265,8 +267,7 @@ namespace IBM.Watson.ToneAnalyzer.v3
         /// **See also:** [Using the customer-engagement
         /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
         /// </summary>
-        /// <param name="successCallback">The function that is called when the operation is successful.</param>
-        /// <param name="failCallback">The function that is called when the operation fails.</param>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="utterances">An object that contains the content to be analyzed.</param>
         /// <param name="contentLanguage">The language of the input text for the request: English or French. Regional
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input
@@ -281,17 +282,22 @@ namespace IBM.Watson.ToneAnalyzer.v3
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ToneChat(SuccessCallback<UtteranceAnalyses> successCallback, FailCallback failCallback, ToneChatInput utterances, string contentLanguage = null, string acceptLanguage = null, Dictionary<string, object> customData = null)
+        public bool ToneChat(Callback<UtteranceAnalyses> callback, ToneChatInput utterances, string contentLanguage = null, string acceptLanguage = null, Dictionary<string, object> customData = null)
         {
-            if (successCallback == null)
-                throw new ArgumentNullException("successCallback");
-            if (failCallback == null)
-                throw new ArgumentNullException("failCallback");
+            if (callback == null)
+                throw new ArgumentNullException("A callback is required for ToneChat");
 
-            ToneChatRequestObj req = new ToneChatRequestObj();
-            req.SuccessCallback = successCallback;
-            req.FailCallback = failCallback;
-            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            if (utterances == null)
+                throw new ArgumentNullException("A utterances is required for ToneChat");
+
+            RequestObject<UtteranceAnalyses> req = new RequestObject<UtteranceAnalyses>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
             if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
                 foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
@@ -299,82 +305,68 @@ namespace IBM.Watson.ToneAnalyzer.v3
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
+
             req.Parameters["version"] = VersionDate;
             if(!string.IsNullOrEmpty(contentLanguage))
-            request.Headers["Content-Language"] = contentLanguage;
+            {
+                req.Headers["Content-Language"] = contentLanguage;
+            }
             if(!string.IsNullOrEmpty(acceptLanguage))
-            request.Headers["Accept-Language"] = acceptLanguage;
+            {
+                req.Headers["Accept-Language"] = acceptLanguage;
+            }
+            if (utterances != null)
+            {
+                fsData data = null;
+                serializer.TrySerialize(utterances, out data);
+                fsSerializer.StripDeserializationMetadata(ref data);
+                string json = data.ToString().Replace('\"', '"');
+                req.Send = Encoding.UTF8.GetBytes(json);
+            }
             req.OnResponse = OnToneChatResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, $"{this.Url}/v3/tone_chat");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone_chat");
             if (connector == null)
                 return false;
 
             return connector.Send(req);
         }
 
-        private class ToneChatRequestObj : RESTConnector.Request
-            {
-                /// <summary>
-                /// The success callback.
-                /// </summary>
-                public SuccessCallback<UtteranceAnalyses> SuccessCallback { get; set; }
-                /// <summary>
-                /// The fail callback.
-                /// </summary>
-                public FailCallback FailCallback { get; set; }
-                /// <summary>
-                /// Custom data.
-                /// </summary>
-                public Dictionary<string, object> CustomData { get; set; }
-            }
-
         private void OnToneChatResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            UtteranceAnalyses result = new UtteranceAnalyses();
+            WatsonResponse<UtteranceAnalyses> response = new WatsonResponse<UtteranceAnalyses>();
+            response.Result = new UtteranceAnalyses();
             fsData data = null;
-            Dictionary<string, object> customData = ((ToneChatRequestObj)req).CustomData;
-
-            if (resp.Success)
+            Dictionary<string, object> customData = ((RequestObject<UtteranceAnalyses>)req).CustomData;
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
-                try
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                if (!r.Succeeded)
                 {
-                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    object obj = result;
-                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                    if (!r.Succeeded)
-                        throw new WatsonException(r.FormattedMessages);
-
-                    customData.Add("json", data);
+                    throw new WatsonException(r.FormattedMessages);
                 }
-                catch (Exception e)
-                {
-                    Log.Error("ToneAnalyzerService.OnToneChatResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
+
+                object obj = response.Result;
+                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                if (!r.Succeeded)
+                    throw new WatsonException(r.FormattedMessages);
+
+                customData.Add("json", data);
+            }
+            catch (Exception e)
+            {
+                Log.Error("ToneAnalyzerService.OnToneChatResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
-            if (resp.Success)
-            {
-                if (((ToneChatRequestObj)req).SuccessCallback != null)
-                    ((ToneChatRequestObj)req).SuccessCallback(result, customData);
-            }
-            else
-            {
-                if (((ToneChatRequestObj)req).FailCallback != null)
-                    ((ToneChatRequestObj)req).FailCallback(resp.Error, customData);
-            }
+            if (((RequestObject<UtteranceAnalyses>)req).Callback != null)
+                ((RequestObject<UtteranceAnalyses>)req).Callback(response, resp.Error, customData);
         }
-
-        #region IWatsonService Interface
-        /// <exclude />
-        public string GetServiceID()
-        {
-            return ServiceId;
-        }
-        #endregion
     }
 }

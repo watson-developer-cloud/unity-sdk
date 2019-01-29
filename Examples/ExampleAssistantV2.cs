@@ -17,7 +17,6 @@
 #pragma warning disable 0649
 
 using System.Collections;
-using System.Collections.Generic;
 using IBM.Watson.Logging;
 using IBM.Watson.Utilities;
 using IBM.Watson.Assistant.V2;
@@ -29,30 +28,30 @@ namespace IBM.Watson.Examples
     {
         #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
         [Space(10)]
-        [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/assistant/api\"")]
-        [SerializeField]
-        private string _serviceUrl;
-        [Tooltip("The assistantId to run the example.")]
-        [SerializeField]
-        private string _assistantId;
-        [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
-        [SerializeField]
-        private string _versionDate;
-        [Header("IAM Authentication")]
         [Tooltip("The IAM apikey.")]
         [SerializeField]
-        private string _iamApikey;
+        private string iamApikey;
+        [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/assistant/api\"")]
+        [SerializeField]
+        private string serviceUrl;
+        [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]
+        [SerializeField]
+        private string versionDate;
+        [Tooltip("The assistantId to run the example.")]
+        [SerializeField]
+        private string assistantId;
         #endregion
-        private AssistantService _service;
 
-        private bool _createSessionTested = false;
-        private bool _messageTested0 = false;
-        private bool _messageTested1 = false;
-        private bool _messageTested2 = false;
-        private bool _messageTested3 = false;
-        private bool _messageTested4 = false;
-        private bool _deleteSessionTested = false;
-        private string _sessionId;
+        private AssistantService service;
+
+        private bool createSessionTested = false;
+        private bool messageTested0 = false;
+        private bool messageTested1 = false;
+        private bool messageTested2 = false;
+        private bool messageTested3 = false;
+        private bool messageTested4 = false;
+        private bool deleteSessionTested = false;
+        private string sessionId;
 
         private void Start()
         {
@@ -62,7 +61,7 @@ namespace IBM.Watson.Examples
 
         private IEnumerator CreateService()
         {
-            if (string.IsNullOrEmpty(_iamApikey))
+            if (string.IsNullOrEmpty(iamApikey))
             {
                 throw new WatsonException("Plesae provide IAM ApiKey for the service.");
             }
@@ -73,17 +72,17 @@ namespace IBM.Watson.Examples
             //  Authenticate using iamApikey
             TokenOptions tokenOptions = new TokenOptions()
             {
-                IamApiKey = _iamApikey
+                IamApiKey = iamApikey
             };
 
-            credentials = new Credentials(tokenOptions, _serviceUrl);
+            credentials = new Credentials(tokenOptions, serviceUrl);
 
             //  Wait for tokendata
             while (!credentials.HasIamTokenData())
                 yield return null;
 
-            _service = new AssistantService(credentials);
-            _service.VersionDate = _versionDate;
+            service = new AssistantService(credentials);
+            service.VersionDate = versionDate;
 
             Runnable.Run(Examples());
         }
@@ -91,17 +90,17 @@ namespace IBM.Watson.Examples
         private IEnumerator Examples()
         {
             Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to CreateSession");
-            _service.CreateSession(OnCreateSession, _assistantId);
+            service.CreateSession(OnCreateSession, assistantId);
 
-            while (!_createSessionTested)
+            while (!createSessionTested)
             {
                 yield return null;
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to Message");
-            _service.Message(OnMessage0, _assistantId, _sessionId);
+            service.Message(OnMessage0, assistantId, sessionId);
 
-            while (!_messageTested0)
+            while (!messageTested0)
             {
                 yield return null;
             }
@@ -119,9 +118,9 @@ namespace IBM.Watson.Examples
                     }
                 }
             };
-            _service.Message(OnMessage1, _assistantId, _sessionId, messageRequest1);
+            service.Message(OnMessage1, assistantId, sessionId, messageRequest1);
 
-            while (!_messageTested1)
+            while (!messageTested1)
             {
                 yield return null;
             }
@@ -138,9 +137,9 @@ namespace IBM.Watson.Examples
                     }
                 }
             };
-            _service.Message(OnMessage2, _assistantId, _sessionId, messageRequest2);
+            service.Message(OnMessage2, assistantId, sessionId, messageRequest2);
 
-            while (!_messageTested2)
+            while (!messageTested2)
             {
                 yield return null;
             }
@@ -157,9 +156,9 @@ namespace IBM.Watson.Examples
                     }
                 }
             };
-            _service.Message(OnMessage3, _assistantId, _sessionId, messageRequest3);
+            service.Message(OnMessage3, assistantId, sessionId, messageRequest3);
 
-            while (!_messageTested3)
+            while (!messageTested3)
             {
                 yield return null;
             }
@@ -204,17 +203,17 @@ namespace IBM.Watson.Examples
                 }
             };
 
-            _service.Message(OnMessage4, _assistantId, _sessionId, messageRequest4);
+            service.Message(OnMessage4, assistantId, sessionId, messageRequest4);
 
-            while (!_messageTested4)
+            while (!messageTested4)
             {
                 yield return null;
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to delete session");
-            _service.DeleteSession(OnDeleteSession, _assistantId, _sessionId);
+            service.DeleteSession(OnDeleteSession, assistantId, sessionId);
 
-            while (!_deleteSessionTested)
+            while (!deleteSessionTested)
             {
                 yield return null;
             }
@@ -225,32 +224,32 @@ namespace IBM.Watson.Examples
         private void OnDeleteSession(WatsonResponse<object> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
-            _createSessionTested = true;
+            createSessionTested = true;
         }
 
         private void OnMessage0(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Result.Output.Generic[0].Text);
-            _messageTested0 = true;
+            messageTested0 = true;
         }
 
         private void OnMessage1(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Result.Output.Generic[0].Text);
 
-            _messageTested1 = true;
+            messageTested1 = true;
         }
         
         private void OnMessage2(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Generic[0].Text);
-            _messageTested2 = true;
+            messageTested2 = true;
         }
 
         private void OnMessage3(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage3()", "response: {0}", response.Result.Output.Generic[0].Text);
-            _messageTested3 = true;
+            messageTested3 = true;
         }
         private void OnMessage4(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
@@ -272,14 +271,14 @@ namespace IBM.Watson.Examples
 
             //string name = user_defined["name"] as string;
             //Log.Debug("GenericSerialization", "test: {0}", name);
-            _messageTested4 = true;
+            messageTested4 = true;
         }
 
         private void OnCreateSession(WatsonResponse<SessionResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnCreateSession()", "Session: {0}", response.Result.SessionId);
-            _sessionId = response.Result.SessionId;
-            _createSessionTested = true;
+            sessionId = response.Result.SessionId;
+            createSessionTested = true;
         }
     }
 }

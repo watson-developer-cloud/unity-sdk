@@ -65,6 +65,7 @@ namespace IBM.Watson.ToneAnalyzer.v3.Model
         /// <summary>
         /// The unique, non-localized identifier of the tone for the results. The service returns results only for tones
         /// whose scores meet a minimum threshold of 0.5.
+        /// Constants for possible values can be found using ToneChatScore.ToneIdEnumValue
         /// </summary>
         [fsProperty("tone_id")]
         public string ToneId { get; set; }
