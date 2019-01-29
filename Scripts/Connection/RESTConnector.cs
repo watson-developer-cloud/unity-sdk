@@ -375,7 +375,12 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
             }
 
-            headers.Add("User-Agent", Constants.String.Version);
+            headers.Add("User-Agent",
+                string.Format(
+                    "{0} {1} {2}",
+                    Constants.String.Version,
+                    SystemInfo.operatingSystem, Application.version
+                ));
         }
 
         private IEnumerator ProcessRequestQueue()
