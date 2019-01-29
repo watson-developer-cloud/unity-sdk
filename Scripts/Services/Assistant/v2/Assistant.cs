@@ -165,6 +165,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateSessionResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v2;operation_id=CreateSession";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
             if (connector == null)
@@ -281,6 +282,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteSessionResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v2;operation_id=DeleteSession";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
             if (connector == null)
@@ -410,6 +412,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnMessageResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v2;operation_id=Message";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
             if (connector == null)

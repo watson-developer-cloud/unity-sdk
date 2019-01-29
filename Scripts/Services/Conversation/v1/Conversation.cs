@@ -172,6 +172,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.Function = "/" + workspaceID + "/message";
             req.Send = Encoding.UTF8.GetBytes(reqString);
             req.OnResponse = MessageResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=Message";
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -242,6 +243,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.Function = "/" + workspaceID + "/message";
             req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = MessageResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=Message";
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
@@ -355,6 +357,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteUserDataResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteUserData";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
             if (connector == null)

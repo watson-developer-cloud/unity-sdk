@@ -207,6 +207,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetVoicesResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetVoices";
 
             return connector.Send(req);
         }
@@ -305,6 +306,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetVoiceResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetVoice";
 
             return connector.Send(req);
         }
@@ -453,6 +455,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Parameters["accept"] = _audioFormats[_audioFormat];
             req.Parameters["voice"] = _voiceTypes[_voice];
             req.OnResponse = ToSpeechResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=ToSpeech";
 
             if (usePost)
             {
@@ -580,6 +583,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             if (!string.IsNullOrEmpty(customization_id))
                 req.Parameters["customization_id"] = customization_id;
             req.OnResponse = OnGetPronunciationResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetPronunciation";
 
             return connector.Send(req);
         }
@@ -672,6 +676,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetCustomizationsResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetCustomizations";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/customizations");
             if (connector == null)
@@ -785,6 +790,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Headers["Accept"] = "application/json";
             req.Send = Encoding.UTF8.GetBytes(customizationJson);
             req.OnResponse = OnCreateCustomizationResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=CreateCustomization";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/customizations");
             if (connector == null)
@@ -885,6 +891,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             }
             req.Timeout = RequestTimeout;
             req.OnResponse = OnDeleteCustomizationResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=DeleteCustomization";
 
             string service = "/v1/customizations/{0}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
@@ -963,6 +970,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetCustomizationResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetCustomization";
 
             string service = "/v1/customizations/{0}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
@@ -1073,6 +1081,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Headers["Accept"] = "application/json";
             req.Send = Encoding.UTF8.GetBytes(customizationJson);
             req.OnResponse = OnUpdateCustomizationResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=UpdateCustomization";
 
             string service = "/v1/customizations/{0}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
@@ -1153,6 +1162,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetCustomizationWordsResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetCustomizationWords";
 
             string service = "/v1/customizations/{0}/words";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
@@ -1263,6 +1273,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Headers["Accept"] = "application/json";
             req.Send = Encoding.UTF8.GetBytes(customizationJson);
             req.OnResponse = OnAddCustomizationWordsResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=AddCustomizationWords";
 
             string service = "/v1/customizations/{0}/words";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID));
@@ -1345,6 +1356,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             }
             req.Timeout = RequestTimeout;
             req.OnResponse = OnDeleteCustomizationWordResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=DeleteCustomizationWord";
 
             string service = "/v1/customizations/{0}/words/{1}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, word));
@@ -1426,6 +1438,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
                 }
             }
             req.OnResponse = OnGetCustomizationWordResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=GetCustomizationWord";
 
             string service = "/v1/customizations/{0}/words/{1}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, word));
@@ -1538,6 +1551,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Headers["X-HTTP-Method-Override"] = "PUT";
             req.Send = Encoding.UTF8.GetBytes(json);
             req.OnResponse = OnAddCustomizationWordResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=AddCustomizationWord";
 
             string service = "/v1/customizations/{0}/words/{1}";
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(service, customizationID, word));
@@ -1619,6 +1633,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             req.Parameters["customer_id"] = customerId;
 
             req.OnResponse = OnDeleteUserDataResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=text_to_speech;service_version=v1;operation_id=DeleteUserData";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
             if (connector == null)

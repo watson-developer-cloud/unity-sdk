@@ -171,6 +171,7 @@ namespace IBM.Watson.DeveloperCloud.Services.PersonalityInsights.v3
                 }
             }
             req.OnResponse = GetProfileResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=personality_insights;service_version=v3;operation_id=GetProfile";
 
             req.Parameters["raw_scores"] = raw_scores.ToString();
             req.Parameters["csv_headers"] = csv_headers.ToString();

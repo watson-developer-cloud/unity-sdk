@@ -161,6 +161,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnConvertToHtmlResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ConvertToHtml";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/html_conversion");
             if (connector == null)
@@ -269,6 +270,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnClassifyElementsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ClassifyElements";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/element_classification");
             if (connector == null)
@@ -376,6 +378,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnExtractTablesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ExtractTables";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/tables");
             if (connector == null)
@@ -498,6 +501,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnCompareDocumentsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=CompareDocuments";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/comparison");
             if (connector == null)
@@ -607,6 +611,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=AddFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
@@ -710,6 +715,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnDeleteFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=DeleteFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
@@ -814,6 +820,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnGetFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=GetFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
@@ -981,6 +988,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (includeTotal != null)
                 req.Parameters["include_total"] = includeTotal;
             req.OnResponse = OnListFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ListFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
@@ -1126,6 +1134,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnCreateBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=CreateBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
@@ -1226,6 +1235,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=GetBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)
@@ -1323,6 +1333,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ListBatches";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
@@ -1436,6 +1447,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnUpdateBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=UpdateBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)

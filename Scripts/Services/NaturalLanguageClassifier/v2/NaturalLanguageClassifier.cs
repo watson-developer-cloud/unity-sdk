@@ -147,6 +147,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnGetClassifiersResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=GetClassifiers";
 
             return connector.Send(req);
         }
@@ -244,6 +245,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnGetClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=GetClassifier";
 
             return connector.Send(req);
         }
@@ -351,6 +353,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnTrainClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=TrainClassifier";
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["training_metadata"] = new RESTConnector.Form(Encoding.UTF8.GetBytes(Json.Serialize(trainingMetaData)));
             req.Forms["training_data"] = new RESTConnector.Form(Encoding.UTF8.GetBytes(trainingData));
@@ -451,6 +454,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnDeleteClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=DeleteClassifier";
 
             return connector.Send(req);
         }
@@ -529,6 +533,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnClassifyResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=Classify";
             req.Function = "/" + classifierId + "/classify";
             req.Headers["Content-Type"] = "application/json";
 
@@ -633,6 +638,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                 }
             }
             req.OnResponse = OnClassifyCollectionResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=v1;operation_id=ClassifyCollection";
             req.Function = "/" + classifierId + "/classify_collection";
             req.Headers["Content-Type"] = "application/json";
 
