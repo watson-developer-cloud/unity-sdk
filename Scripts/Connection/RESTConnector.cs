@@ -375,11 +375,17 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
             }
 
+            string osInfo = SystemInfo.operatingSystem;
+            int osIndex = osInfo.IndexOf("  ");
+            string os = osInfo.Substring(0, osIndex).Replace(" ", "");
+            string osVersion = osInfo.Substring(osIndex).Replace(" ", "");
             headers.Add("User-Agent",
                 string.Format(
-                    "{0} {1} {2}",
+                    "{0} {1} {2} {3}",
                     Constants.String.Version,
-                    SystemInfo.operatingSystem, Application.version
+                    os, 
+                    osVersion, 
+                    Application.unityVersion
                 ));
         }
 
