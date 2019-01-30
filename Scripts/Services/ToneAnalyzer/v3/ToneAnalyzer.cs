@@ -163,6 +163,7 @@ namespace IBM.Watson.DeveloperCloud.Services.ToneAnalyzer.v3
                 }
             }
             req.OnResponse = GetToneAnalyzerResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=tone_analyzer;service_version=v3;operation_id=GetToneAnalyze";
 
             Dictionary<string, string> upload = new Dictionary<string, string>();
             upload["text"] = "\"" + text + "\"";

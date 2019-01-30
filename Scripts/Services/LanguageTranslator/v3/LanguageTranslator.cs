@@ -210,6 +210,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = TranslateResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetTranslation";
             req.Send = Encoding.UTF8.GetBytes(json);
             req.Headers["accept"] = "application/json";
             req.Headers["Content-Type"] = "application/json";
@@ -334,6 +335,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = GetModelsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetModels";
 
             if (!string.IsNullOrEmpty(sourceFilter))
                 req.Parameters["source"] = sourceFilter;
@@ -440,6 +442,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             }
             req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = GetModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetModel";
 
             return connector.Send(req);
         }
@@ -550,6 +553,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             req.Parameters["base_model_id"] = baseModelId;
             req.Parameters["name"] = customModelName;
             req.OnResponse = OnCreateModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=CreateModel";
 
             byte[] forcedGlossaryData = null;
             byte[] parallelCorpusData = null;
@@ -699,6 +703,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             }
             req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = DeleteModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=DeleteModel";
             return connector.Send(req);
         }
 
@@ -793,6 +798,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = GetLanguagesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetLanguages";
 
             return connector.Send(req);
         }
@@ -894,6 +900,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             req.Headers["Content-Type"] = "text/plain";
             req.Headers["Accept"] = "application/json";
             req.OnResponse = OnIdentifyResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=Identify";
 
             return connector.Send(req);
         }

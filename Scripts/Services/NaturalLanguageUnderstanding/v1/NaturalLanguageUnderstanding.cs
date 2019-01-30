@@ -160,6 +160,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
             req.OnResponse = OnAnalyzeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=Analyze";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
@@ -265,6 +266,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=GetModels";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ModelsEndpoint);
             if (connector == null)
@@ -366,6 +368,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnDeleteModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=DeleteModel";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ModelEndpoint, modelId));
             if (connector == null)

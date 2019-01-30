@@ -375,7 +375,18 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
             }
 
-            headers.Add("User-Agent", Constants.String.Version);
+            string osInfo = SystemInfo.operatingSystem;
+            int osIndex = osInfo.IndexOf("  ");
+            string os = osInfo.Substring(0, osIndex).Replace(" ", "");
+            string osVersion = osInfo.Substring(osIndex).Replace(" ", "");
+            headers.Add("User-Agent",
+                string.Format(
+                    "{0} {1} {2} {3}",
+                    Constants.String.Version,
+                    os, 
+                    osVersion, 
+                    Application.unityVersion
+                ));
         }
 
         private IEnumerator ProcessRequestQueue()
