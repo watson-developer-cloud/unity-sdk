@@ -24,12 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
 {
     public class Assistant : IWatsonService
     {
-        private const string ServiceId = "AssistantV2";
+        private const string ServiceId = "assistant";
         private fsSerializer _serializer = new fsSerializer();
 
         private Credentials _credentials = null;
@@ -77,6 +78,65 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v2
         {
             get { return disableSslVerification; }
             set { disableSslVerification = value; }
+        }
+
+        /// <summary>
+        /// Assistant constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public Assistant()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                string ApiKey = "";
+                string Endpoint = "";
+                string Username = "";
+                string Password = "";
+
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string apiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                if (!string.IsNullOrEmpty(apiKey))
+                    ApiKey = apiKey;
+                string un = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                if (!string.IsNullOrEmpty(un))
+                    Username = un;
+                string pw = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                if (!string.IsNullOrEmpty(pw))
+                    Password = pw;
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, Endpoint);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
         }
 
         /// <summary>

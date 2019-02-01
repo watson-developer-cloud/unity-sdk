@@ -26,6 +26,7 @@ using System;
 using FullSerializer;
 using System.Text.RegularExpressions;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
 {
@@ -60,7 +61,7 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
             { AudioFormatType.WAV, "audio/wav" },
             { AudioFormatType.FLAC, "audio/flac" },
         };
-        private const string ServiceId = "TextToSpeechV1";
+        private const string ServiceId = "text_to_speech";
         private fsSerializer _serializer = new fsSerializer();
         private const float RequestTimeout = 10.0f * 60.0f;
         private Credentials _credentials = null;
@@ -141,6 +142,65 @@ namespace IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// TextToSpeech constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public TextToSpeech()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                string ApiKey = "";
+                string Endpoint = "";
+                string Username = "";
+                string Password = "";
+
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string apiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                if (!string.IsNullOrEmpty(apiKey))
+                    ApiKey = apiKey;
+                string un = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                if (!string.IsNullOrEmpty(un))
+                    Username = un;
+                string pw = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                if (!string.IsNullOrEmpty(pw))
+                    Password = pw;
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
         public TextToSpeech(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())

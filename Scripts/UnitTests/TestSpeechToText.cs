@@ -21,6 +21,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -51,6 +52,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _acousticResourceMimeType;
         private string _grammarFilePath;
 
+        private bool _autoGetModelsTested = false;
         private bool _recognizeTested = false;
         private bool _getModelsTested = false;
         private bool _getModelTested = false;
@@ -96,6 +98,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test SpeechToText using loaded credentials
+            SpeechToText autoSpeechToText = new SpeechToText();
+            while (!autoSpeechToText.Credentials.HasIamTokenData())
+                yield return null;
+            autoSpeechToText.GetModels(OnAutoGetModels, OnFail);
+            while (!_autoGetModelsTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -456,6 +466,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestSpeechToText.RunTest()", "Speech to Text examples complete.");
 
             yield break;
+        }
+
+        private void OnAutoGetModels(ModelSet response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestSpeechToText.OnAutoGetModels()", "{0}", customData["json"].ToString());
+            Test(response.models != null);
+            _autoGetModelsTested = true;
         }
 
         private void DeleteAcousticResource()

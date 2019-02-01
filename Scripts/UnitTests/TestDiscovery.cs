@@ -50,6 +50,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private float _waitTime = 10f;
         private string _sessionToken;
 
+        private bool _autoGetEnvironmentsTested = false;
         private bool _getEnvironmentsTested = false;
         private bool _getEnvironmentTested = false;
         private bool _getConfigurationsTested = false;
@@ -107,6 +108,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test Discovery using loaded credentials
+            Discovery autoDiscovery = new Discovery();
+            while (!autoDiscovery.Credentials.HasIamTokenData())
+                yield return null;
+            autoDiscovery.VersionDate = _discoveryVersionDate;
+            autoDiscovery.GetEnvironments (OnAutoGetEnvironments, OnFail);
+            while (!_autoGetEnvironmentsTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -517,7 +527,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             yield break;
         }
-        
+
+        private void OnAutoGetEnvironments(GetEnvironmentsResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnAutoGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
+            
+            Test(response != null);
+            _autoGetEnvironmentsTested = true;
+        }
+
         private void OnCreateJpCollection(CollectionRef response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnAddJpCollection()", "Discovery - add jp collection Response: added:{0}", customData["json"].ToString());
