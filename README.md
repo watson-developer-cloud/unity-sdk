@@ -179,6 +179,34 @@ void Start()
 }
 ```
 
+### ibm-credentials.env
+You can create an ibm-credentials.env file for authentication. This has the basic format
+```
+VISUAL_RECOGNITION_APIKEY=<visual-recognition-apikey>
+VISUAL_RECOGNITION_URL=<visual-recognition-service-url>
+ASSISTANT_APIKEY=<assistant-apikey>
+ASSISTANT_URL=<assistant-service-url>
+```
+The SDK will search for this file in the following order
+- Path specified by environmental variable `IBM_CREDENTIALS_FILE`
+- System home directory
+- Top level of the project directory
+
+Using a `ibm-credentials.env` file you can easily instantiate and authenticate a service. If you are using an IAM Apikey you will need to invoke this using a coroutine to wait for the authorization token.
+```cs
+public IEnumerator ExampleAutoService()
+{
+    Assistant assistantService = new Assistant();
+    assistantService.VersionDate = _assistantVersionDate;
+
+    //  Wait for authorization token
+    while (!assistantService.Credentials.HasIamTokenData())
+        yield return null;
+        
+    var listWorkspacesResult = assistantService.ListWorkspaces();
+}
+``` 
+
 ## Callbacks
 Success and failure callbacks are required. You can specify the return type in the callback.  
 ```cs

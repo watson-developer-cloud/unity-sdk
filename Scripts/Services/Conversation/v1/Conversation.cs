@@ -24,6 +24,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using MiniJSON;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
 {
@@ -89,7 +90,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Private Data
-        private const string ServiceId = "ConversationV1";
+        private const string ServiceId = "conversation";
         private const string Workspaces = "/v1/workspaces";
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/conversation/api";
@@ -98,6 +99,54 @@ namespace IBM.Watson.DeveloperCloud.Services.Conversation.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Conversation constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public Conversation()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
         /// <summary>
         /// Conversation constructor
         /// </summary>

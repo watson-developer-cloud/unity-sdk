@@ -24,12 +24,13 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using MiniJSON;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     public class Assistant : IWatsonService
     {
-        private const string ServiceId = "Assistantv1";
+        private const string ServiceId = "assistant";
         private fsSerializer _serializer = new fsSerializer();
 
         private Credentials _credentials = null;
@@ -97,6 +98,54 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         #endregion
 
         /// <summary>
+        /// Assistant constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public Assistant()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
+        /// <summary>
         /// Assistant constructor.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
@@ -104,12 +153,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         {
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
-                Credentials = credentials;
-
                 if (string.IsNullOrEmpty(credentials.Url))
                 {
                     credentials.Url = Url;
                 }
+
+                Credentials = credentials;
             }
             else
             {
