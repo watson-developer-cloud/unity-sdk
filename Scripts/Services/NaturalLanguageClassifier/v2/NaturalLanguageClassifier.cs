@@ -46,11 +46,6 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
             var credentialsPaths = Utility.GetCredentialsPaths();
             if (credentialsPaths.Count > 0)
             {
-                string ApiKey = "";
-                string Endpoint = "";
-                string Username = "";
-                string Password = "";
-
                 foreach (string path in credentialsPaths)
                 {
                     if (Utility.LoadEnvFile(path))
@@ -59,15 +54,9 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageClassifier.v1
                     }
                 }
 
-                string apiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
-                if (!string.IsNullOrEmpty(apiKey))
-                    ApiKey = apiKey;
-                string un = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
-                if (!string.IsNullOrEmpty(un))
-                    Username = un;
-                string pw = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
-                if (!string.IsNullOrEmpty(pw))
-                    Password = pw;
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
                 string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
 
                 if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
