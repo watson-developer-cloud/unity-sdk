@@ -381,14 +381,11 @@ namespace IBM.Watson.DeveloperCloud.Connection
             Match m = pattern.Match(osInfo);
             string osVersion = m.Value;
             string os = osInfo.Replace(osVersion, "").Replace(" ", "");
-            if(os.Contains("("))
+            if(os.Contains("()"))
             {
-                os.Replace("(", "");
+                os = os.Replace("()", "-");
             }
-            if (os.Contains(")"))
-            {
-                os.Replace(")", "");
-            }
+
             headers.Add("User-Agent",
                 string.Format(
                     "{0} {1} {2} {3}",
