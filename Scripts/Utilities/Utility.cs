@@ -1271,6 +1271,9 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         #region Has Bad First Character
         public static bool HasBadFirstOrLastCharacter(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
             return value.StartsWith("{") || value.StartsWith("\"") || value.EndsWith("}") || value.EndsWith("\"");
         }
         #endregion
