@@ -45,7 +45,12 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             /// Enum location for Location
             /// </summary>
             [EnumMember(Value = "Location")]
-            Location
+            Location,
+            /// <summary>
+            /// Enum ADDRESS for Address
+            /// </summary>
+            [EnumMember(Value = "Address")]
+            ADDRESS,
         }
 
         /// <summary>

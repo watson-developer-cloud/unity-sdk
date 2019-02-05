@@ -1005,6 +1005,10 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
         /// The number of documents in the collection that failed to be ingested.
         /// </summary>
         public int failed { get; set; }
+        /// <summary>
+        /// The number of documents that have been uploaded to the collection, but have not yet started processing.
+        /// </summary>
+        public virtual long? pending { get; private set; }
     }
 
     /// <summary>

@@ -64,35 +64,42 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         [fsProperty("column_index_end")]
         public long? ColumnIndexEnd { get; set; }
         /// <summary>
-        /// Gets or Sets rowHeaderIds
+        /// An array of values, each being the `id` value of a row header that is applicable to this body cell.
         /// </summary>
         [fsProperty("row_header_ids")]
-        public List<RowHeaderIds> RowHeaderIds { get; set; }
+        public List<string> RowHeaderIds { get; set; }
         /// <summary>
-        /// Gets or Sets rowHeaderTexts
+        /// An array of values, each being the `text` value of a row header that is applicable to this body cell.
         /// </summary>
         [fsProperty("row_header_texts")]
-        public List<RowHeaderTexts> RowHeaderTexts { get; set; }
+        public List<string> RowHeaderTexts { get; set; }
         /// <summary>
-        /// Gets or Sets rowHeaderTextsNormalized
+        /// If you provide customization input, the normalized version of the row header texts according to the
+        /// customization; otherwise, the same value as `row_header_texts`.
         /// </summary>
         [fsProperty("row_header_texts_normalized")]
-        public List<RowHeaderTextsNormalized> RowHeaderTextsNormalized { get; set; }
+        public List<string> RowHeaderTextsNormalized { get; set; }
         /// <summary>
-        /// Gets or Sets columnHeaderIds
+        /// An array of values, each being the `id` value of a column header that is applicable to the current cell.
         /// </summary>
         [fsProperty("column_header_ids")]
-        public List<ColumnHeaderIds> ColumnHeaderIds { get; set; }
+        public List<string> ColumnHeaderIds { get; set; }
         /// <summary>
-        /// Gets or Sets columnHeaderTexts
+        /// An array of values, each being the `id` value of a column header that is applicable to the current cell.
         /// </summary>
         [fsProperty("column_header_texts")]
-        public List<ColumnHeaderTexts> ColumnHeaderTexts { get; set; }
+        public List<string> ColumnHeaderTexts { get; set; }
         /// <summary>
-        /// Gets or Sets columnHeaderTextsNormalized
+        /// If you provide customization input, the normalized version of the column header texts according to the
+        /// customization; otherwise, the same value as `column_header_texts`.
         /// </summary>
         [fsProperty("column_header_texts_normalized")]
-        public List<ColumnHeaderTextsNormalized> ColumnHeaderTextsNormalized { get; set; }
+        public List<string> ColumnHeaderTextsNormalized { get; set; }
+        /// <summary>
+        /// Gets or Sets Attributes
+        /// </summary>
+        [fsProperty("attributes")]
+        public List<Attribute> Attributes { get; set; }
     }
 
 }
