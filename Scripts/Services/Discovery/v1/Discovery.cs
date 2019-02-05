@@ -5649,6 +5649,99 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
         }
 
+        public bool GetStopwordListStatus(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentID, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("collectionId");
+
+            GetStopwordListStatusRequest req = new GetStopwordListStatusRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            req.Headers["Content-Type"] = "application/json";
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnGetStopwordListStatusResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetStopwordListStatus";
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentID, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetStopwordListStatusRequest : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TokenDictStatusResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TokenDictStatusResponse result = new TokenDictStatusResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetStopwordListStatusRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetStopwordListStatusResponse()", "OnGetStopwordListStatusResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetStopwordListStatusRequest)req).SuccessCallback != null)
+                    ((GetStopwordListStatusRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetStopwordListStatusRequest)req).FailCallback != null)
+                    ((GetStopwordListStatusRequest)req).FailCallback(resp.Error, customData);
+            }
+        }
+
         /// <summary>
         /// Delete a custom stopword list.
         ///

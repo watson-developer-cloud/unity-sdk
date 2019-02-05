@@ -27,6 +27,28 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
     public class Parties
     {
         /// <summary>
+        /// A string that identifies the importance of the party.
+        /// </summary>
+        public enum ImportanceEnum
+        {
+
+            /// <summary>
+            /// Enum PRIMARY for Primary
+            /// </summary>
+            Primary,
+
+            /// <summary>
+            /// Enum UNKNOWN for Unknown
+            /// </summary>
+            Unknown
+        }
+
+        /// <summary>
+        /// A string that identifies the importance of the party.
+        /// </summary>
+        [fsProperty("importance")]
+        public ImportanceEnum? Importance { get; set; }
+        /// <summary>
         /// A string identifying the party.
         /// </summary>
         [fsProperty("party")]
