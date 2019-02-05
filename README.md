@@ -179,20 +179,21 @@ void Start()
 }
 ```
 
-### ibm-credentials.env
-You can create an ibm-credentials.env file for authentication. This has the basic format
-```
-VISUAL_RECOGNITION_APIKEY=<visual-recognition-apikey>
-VISUAL_RECOGNITION_URL=<visual-recognition-service-url>
-ASSISTANT_APIKEY=<assistant-apikey>
-ASSISTANT_URL=<assistant-service-url>
-```
-The SDK will search for this file in the following order
-- Path specified by environmental variable `IBM_CREDENTIALS_FILE`
-- System home directory
-- Top level of the project directory
+### Supplying credentials
 
-Using a `ibm-credentials.env` file you can easily instantiate and authenticate a service. If you are using an IAM Apikey you will need to invoke this using a coroutine to wait for the authorization token.
+There are two ways to supply the credentials you found above to the SDK for authentication.
+
+#### Credential file (easier!)
+
+With a credential file, you just need to put the file in the right place and the SDK will do the work of parsing it and authenticating. You can get this file by clicking the **Download** button for the credentials in the **Manage** tab of your service instance.
+
+The file downloaded will be called `ibm-credentials.env`. This is the name the SDK will search for and **must** be preserved unless you want to configure the file path (more on that later). The SDK will look for your `ibm-credentials.env` file in the following places (in order):
+
+- Your system's home directory
+- The top-level directory of the project you're using the SDK in
+
+As long as you set that up correctly, you don't have to worry about setting any authentication options in your code. So, for example, if you created and downloaded the credential file for your Discovery instance, you just need to do the following:
+
 ```cs
 public IEnumerator ExampleAutoService()
 {
@@ -205,7 +206,23 @@ public IEnumerator ExampleAutoService()
         
     var listWorkspacesResult = assistantService.ListWorkspaces();
 }
-``` 
+```
+
+And that's it!
+
+If you're using more than one service at a time in your code and get two different `ibm-credentials.env` files, just put the contents together in one `ibm-credentials.env` file and the SDK will handle assigning credentials to their appropriate services.
+
+If you would like to configure the location/name of your credential file, you can set an environment variable called `IBM_CREDENTIALS_FILE`. **This will take precedence over the locations specified above.** Here's how you can do that:
+
+```bash
+export IBM_CREDENTIALS_FILE="<path>"
+```
+
+where `<path>` is something like `/home/user/Downloads/<file_name>.env`.
+
+#### Manually
+
+If you'd prefer to set authentication values manually in your code, the SDK supports that as well. The way you'll do this depends on what type of credentials your service instance gives you.
 
 ## Callbacks
 Success and failure callbacks are required. You can specify the return type in the callback.  

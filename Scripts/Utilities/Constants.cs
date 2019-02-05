@@ -84,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Default time in seconds after which a call should timeout.
             /// </summary>
-            public static float Timeout = 60f;
+            public static float Timeout = 360f;
         }
 
         /// <summary>
