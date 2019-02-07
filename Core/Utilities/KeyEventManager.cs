@@ -15,11 +15,12 @@
 *
 */
 
+using IBM.Cloud.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// Key press modifiers

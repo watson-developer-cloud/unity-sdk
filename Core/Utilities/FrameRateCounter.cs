@@ -19,7 +19,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// Displays the frame rate of the application.

@@ -15,11 +15,10 @@
 *
 */
 
-using IBM.Watson.Assistant.V2;
-using IBM.Watson.Logging;
 using MiniJSON;
 using System.Collections.Generic;
 using UnityEngine;
+using IBM.Cloud.SDK;
 
 namespace IBM.Watson.Examples
 {

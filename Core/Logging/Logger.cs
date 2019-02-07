@@ -15,13 +15,14 @@
 *
 */
 
-using IBM.Watson.Utilities;
-using IBM.Watson.Debug;
+using IBM.Cloud.SDK.Debug;
+using IBM.Cloud.SDK.Logging;
+using IBM.Cloud.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.Logging
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// All log messages are assigned to a log level, typically reactors have filters and will filter log

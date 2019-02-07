@@ -15,10 +15,10 @@
 *
 */
 
-using IBM.Watson.Connection;
+using IBM.Cloud.SDK.Connection;
 using System.Collections.Generic;
 
-namespace IBM.Watson
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// The request object for all REST requests.

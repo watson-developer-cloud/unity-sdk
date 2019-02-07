@@ -1,5 +1,5 @@
 /**
-* Copyright 2019 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,22 +15,20 @@
 *
 */
 
-using System.Collections.Generic;
 using FullSerializer;
-using IBM.Watson.Connection;
 
-namespace IBM.Watson.ToneAnalyzer.v3.Model
+namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneChatInput.
+    /// ToneInput.
     /// </summary>
-    public class ToneChatInput
+    public class ToneInput
     {
         /// <summary>
-        /// An array of `Utterance` objects that provides the input content that the service is to analyze.
+        /// The input content that the service is to analyze.
         /// </summary>
-        [fsProperty("utterances")]
-        public List<Utterance> Utterances { get; set; }
+        [fsProperty("text")]
+        public string Text { get; set; }
     }
 
 

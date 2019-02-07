@@ -15,7 +15,7 @@
 *
 */
 
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK;
 using UnityEngine;
 
 public class IBMCloudSignup : MonoBehaviour

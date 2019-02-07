@@ -16,9 +16,9 @@
 */
 
 using FullSerializer;
-using IBM.Watson.Connection;
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Connection;
+using IBM.Cloud.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;

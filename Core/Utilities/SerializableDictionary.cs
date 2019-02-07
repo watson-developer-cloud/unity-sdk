@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK.Utilities
 {
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver

@@ -15,7 +15,7 @@
 *
 */
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// This class wraps all constants.

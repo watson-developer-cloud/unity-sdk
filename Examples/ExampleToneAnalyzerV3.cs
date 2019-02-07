@@ -15,14 +15,13 @@
 *
 */
 
-using IBM.Watson.Logging;
-using IBM.Watson.ToneAnalyzer.v3;
-using IBM.Watson.ToneAnalyzer.v3.Model;
-using IBM.Watson.Utilities;
-using System;
+using IBM.Watson.ToneAnalyzer.V3;
+using IBM.Watson.ToneAnalyzer.V3.Model;
+using IBM.Cloud.SDK.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IBM.Cloud.SDK;
 
 namespace IBM.Watson.Examples
 {

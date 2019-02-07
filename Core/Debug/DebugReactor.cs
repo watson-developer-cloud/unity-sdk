@@ -15,9 +15,9 @@
 *
 */
 
-using IBM.Watson.Logging;
+using IBM.Cloud.SDK.Logging;
 
-namespace IBM.Watson.Debug
+namespace IBM.Cloud.SDK.Debug
 {
     /// <summary>
     /// This log reactor logs into the UnityEngine.Debug.Log() function.

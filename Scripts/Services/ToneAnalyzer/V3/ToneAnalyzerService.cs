@@ -1,5 +1,5 @@
 /**
-* Copyright 2019 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,56 +18,64 @@
 using System.Collections.Generic;
 using System.Text;
 using FullSerializer;
-using IBM.Watson.Connection;
-using IBM.Watson.Logging;
-using IBM.Watson.ToneAnalyzer.v3.Model;
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Connection;
+using IBM.Cloud.SDK.Utilities;
+using IBM.Watson.ToneAnalyzer.V3.Model;
 using System;
 using UnityEngine.Networking;
 
-namespace IBM.Watson.ToneAnalyzer.v3
+namespace IBM.Watson.ToneAnalyzer.V3
 {
-    public class ToneAnalyzerService
+    public class ToneAnalyzerService : BaseService
     {
+        private const string serviceId = "tone_analyzer";
         private fsSerializer serializer = new fsSerializer();
 
-        private Credentials _credentials = null;
+        #region Credentials
+        private Credentials credentials = null;
         /// <summary>
         /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
         public Credentials Credentials
         {
-            get { return _credentials; }
+            get { return credentials; }
             set
             {
-                _credentials = value;
-                if (!string.IsNullOrEmpty(_credentials.Url))
+                credentials = value;
+                if (!string.IsNullOrEmpty(credentials.Url))
                 {
-                    _url = _credentials.Url;
+                    url = credentials.Url;
                 }
             }
         }
+        #endregion
 
-        private string _url  = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        #region Url
+        private string url  = "https://gateway.watsonplatform.net/tone-analyzer/api";
         /// <summary>
         /// Gets and sets the endpoint URL for the service.
         /// </summary>
         public string Url
         {
-            get { return _url; }
-            set { _url = value; }
+            get { return url; }
+            set { url = value; }
         }
+        #endregion
 
-        private string _versionDate;
+        #region VersionDate
+        private string versionDate;
         /// <summary>
         /// Gets and sets the versionDate of the service.
         /// </summary>
         public string VersionDate
         {
-            get { return _versionDate; }
-            set { _versionDate = value; }
+            get { return versionDate; }
+            set { versionDate = value; }
         }
+        #endregion
 
+        #region DisableSslVerification
         private bool disableSslVerification = false;
         /// <summary>
         /// Gets and sets the option to disable ssl verification
@@ -77,12 +85,22 @@ namespace IBM.Watson.ToneAnalyzer.v3
             get { return disableSslVerification; }
             set { disableSslVerification = value; }
         }
+        #endregion
 
         /// <summary>
         /// ToneAnalyzerService constructor.
         /// </summary>
+        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        public ToneAnalyzerService(string versionDate) : base(versionDate, serviceId)
+        {
+        }
+
+        /// <summary>
+        /// ToneAnalyzerService constructor.
+        /// </summary>
+        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
         /// <param name="credentials">The service credentials.</param>
-        public ToneAnalyzerService(string versionDate, Credentials credentials)
+        public ToneAnalyzerService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {

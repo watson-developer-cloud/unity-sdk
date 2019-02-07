@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Copyright 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +15,30 @@
 *
 */
 
-using FullSerializer;
-using IBM.Watson.Connection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IBM.Watson.ToneAnalyzer.v3.Model
+namespace IBM.Cloud.SDK
 {
-    /// <summary>
-    /// ToneInput.
-    /// </summary>
-    public class ToneInput
+    public class BaseService
     {
-        /// <summary>
-        /// The input content that the service is to analyze.
-        /// </summary>
-        [fsProperty("text")]
-        public string Text { get; set; }
+        public BaseService(string serviceId)
+        {
+
+        }
+
+        public BaseService(string versionDate, string serviceId)
+        {
+
+        }
+
+        public BaseService(string versionDate, Credentials credentials, string serviceId)
+        {
+
+        }
+
     }
-
-
 }

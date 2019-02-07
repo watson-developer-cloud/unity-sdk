@@ -18,7 +18,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK.Utilities
 {
     class NestedPrefabs : MonoBehaviour
     {

@@ -16,14 +16,15 @@
 */
 
 using FullSerializer;
-using IBM.Watson.Connection;
-using IBM.Watson.Logging;
+using IBM.Cloud.SDK.Connection;
+using IBM.Cloud.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
+using Utility = IBM.Cloud.SDK.Utilities.Utility;
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK
 {
     /// <summary>
     /// Helper class for holding a user and password or authorization token, used by both the WSCOnnector and RESTConnector.

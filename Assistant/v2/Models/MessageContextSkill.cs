@@ -18,7 +18,7 @@
 
 using FullSerializer;
 using FullSerializer.Internal;
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK.Utilities;
 using System;
 using System.Collections.Generic;
 

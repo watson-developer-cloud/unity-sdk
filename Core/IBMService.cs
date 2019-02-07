@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2015 IBM Corp. All Rights Reserved.
+* Copyright 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,18 +15,15 @@
 *
 */
 
-namespace IBM.Cloud.SDK.Logging
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IBM.Cloud.SDK
 {
-    /// <summary>
-    /// Any class that implement this interface can be added to the Logger class as a reactor and hook
-    /// all log messages.
-    /// </summary>
-    public interface ILogReactor
+    class IBMService
     {
-        /// <summary>
-        /// Process a LogRecord object.
-        /// </summary>
-        /// <param name="log">The log record.</param>
-        void ProcessLog(LogRecord log);
     }
 }

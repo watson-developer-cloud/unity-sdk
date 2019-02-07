@@ -16,7 +16,7 @@
 */
 
 using FullSerializer;
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK.Utilities;
 
 namespace IBM.Watson.Assistant.V2
 {

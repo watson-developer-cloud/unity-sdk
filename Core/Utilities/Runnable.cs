@@ -22,10 +22,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 #if ENABLE_RUNNABLE_DEBUGGING
-using IBM.Watson.Logging;
+using IBM.Cloud.SDK.Logging;
 #endif
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK.Utilities
 {
     /// <summary>
     /// Helper class for running co-routines without having to inherit from MonoBehavior.

@@ -17,8 +17,8 @@
 #pragma warning disable 0649
 
 using System.Collections;
-using IBM.Watson.Logging;
-using IBM.Watson.Utilities;
+using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V2;
 using UnityEngine;
 

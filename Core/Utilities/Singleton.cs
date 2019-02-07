@@ -23,7 +23,7 @@ using System;
 using System.Reflection;
 #endif
 
-namespace IBM.Watson.Utilities
+namespace IBM.Cloud.SDK.Utilities
 {
     /// <summary>
     /// Singleton pattern class. This class detects if T is a MonoBehavior and will 

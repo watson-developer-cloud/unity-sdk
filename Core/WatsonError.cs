@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 
-namespace IBM.Watson
+namespace IBM.Cloud.SDK
 {
     public class WatsonError
     {
