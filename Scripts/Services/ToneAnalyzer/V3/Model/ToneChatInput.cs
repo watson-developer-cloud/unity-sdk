@@ -15,19 +15,20 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneInput.
+    /// ToneChatInput.
     /// </summary>
-    public class ToneInput
+    public class ToneChatInput
     {
         /// <summary>
-        /// The input content that the service is to analyze.
+        /// An array of `Utterance` objects that provides the input content that the service is to analyze.
         /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string Text { get; set; }
+        [JsonProperty("utterances", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Utterance> Utterances { get; set; }
     }
 }

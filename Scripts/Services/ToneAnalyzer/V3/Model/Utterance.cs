@@ -15,7 +15,7 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -28,14 +28,12 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// An utterance contributed by a user in the conversation that is to be analyzed. The utterance can contain
         /// multiple sentences.
         /// </summary>
-        [fsProperty("text")]
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
         /// A string that identifies the user who contributed the utterance specified by the `text` parameter.
         /// </summary>
-        [fsProperty("user")]
+        [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
         public string User { get; set; }
     }
-
-
 }

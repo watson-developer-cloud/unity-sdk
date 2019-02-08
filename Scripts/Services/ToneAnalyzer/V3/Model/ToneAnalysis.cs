@@ -16,7 +16,7 @@
 */
 
 using System.Collections.Generic;
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -28,16 +28,14 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// <summary>
         /// An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
         /// </summary>
-        [fsProperty("document_tone")]
+        [JsonProperty("document_tone", NullValueHandling = NullValueHandling.Ignore)]
         public DocumentAnalysis DocumentTone { get; set; }
         /// <summary>
         /// An array of `SentenceAnalysis` objects that provides the results of the analysis for the individual
         /// sentences of the input content. The service returns results only for the first 100 sentences of the input.
         /// The field is omitted if the `sentences` parameter of the request is set to `false`.
         /// </summary>
-        [fsProperty("sentences_tone")]
+        [JsonProperty("sentences_tone", NullValueHandling = NullValueHandling.Ignore)]
         public List<SentenceAnalysis> SentencesTone { get; set; }
     }
-
-
 }

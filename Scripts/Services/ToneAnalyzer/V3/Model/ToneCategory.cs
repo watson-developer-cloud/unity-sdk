@@ -16,7 +16,7 @@
 */
 
 using System.Collections.Generic;
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -28,20 +28,18 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// <summary>
         /// An array of `ToneScore` objects that provides the results for the tones of the category.
         /// </summary>
-        [fsProperty("tones")]
+        [JsonProperty("tones", NullValueHandling = NullValueHandling.Ignore)]
         public List<ToneScore> Tones { get; set; }
         /// <summary>
         /// The unique, non-localized identifier of the category for the results. The service can return results for the
         /// following category IDs: `emotion_tone`, `language_tone`, and `social_tone`.
         /// </summary>
-        [fsProperty("category_id")]
+        [JsonProperty("category_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CategoryId { get; set; }
         /// <summary>
         /// The user-visible, localized name of the category.
         /// </summary>
-        [fsProperty("category_name")]
+        [JsonProperty("category_name", NullValueHandling = NullValueHandling.Ignore)]
         public string CategoryName { get; set; }
     }
-
-
 }

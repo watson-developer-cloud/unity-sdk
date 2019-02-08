@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace IBM.Cloud.SDK.Utilities
 {
@@ -26,7 +27,6 @@ namespace IBM.Cloud.SDK.Utilities
     /// This class allows for a delegate to be serialized for a component and method 
     /// on a given GameObject.
     /// </summary>
-    [Serializable]
     public class SerializedDelegate
     {
         /// <summary>

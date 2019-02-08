@@ -16,7 +16,7 @@
 */
 
 using System.Collections.Generic;
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -29,27 +29,25 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// The unique identifier of the utterance. The first utterance has ID 0, and the ID of each subsequent
         /// utterance is incremented by one.
         /// </summary>
-        [fsProperty("utterance_id")]
+        [JsonProperty("utterance_id", NullValueHandling = NullValueHandling.Ignore)]
         public long? UtteranceId { get; set; }
         /// <summary>
         /// The text of the utterance.
         /// </summary>
-        [fsProperty("utterance_text")]
+        [JsonProperty("utterance_text", NullValueHandling = NullValueHandling.Ignore)]
         public string UtteranceText { get; set; }
         /// <summary>
         /// An array of `ToneChatScore` objects that provides results for the most prevalent tones of the utterance. The
         /// array includes results for any tone whose score is at least 0.5. The array is empty if no tone has a score
         /// that meets this threshold.
         /// </summary>
-        [fsProperty("tones")]
+        [JsonProperty("tones", NullValueHandling = NullValueHandling.Ignore)]
         public List<ToneChatScore> Tones { get; set; }
         /// <summary>
         /// **`2017-09-21`:** An error message if the utterance contains more than 500 characters. The service does not
         /// analyze the utterance. **`2016-05-19`:** Not returned.
         /// </summary>
-        [fsProperty("error")]
+        [JsonProperty("error", NullValueHandling = NullValueHandling.Ignore)]
         public string Error { get; set; }
     }
-
-
 }

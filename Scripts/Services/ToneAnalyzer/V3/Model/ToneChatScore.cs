@@ -15,7 +15,7 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -66,20 +66,18 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// whose scores meet a minimum threshold of 0.5.
         /// Constants for possible values can be found using ToneChatScore.ToneIdEnumValue
         /// </summary>
-        [fsProperty("tone_id")]
+        [JsonProperty("tone_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ToneId { get; set; }
         /// <summary>
         /// The score for the tone in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that
         /// the tone is perceived in the utterance.
         /// </summary>
-        [fsProperty("score")]
+        [JsonProperty("score", NullValueHandling = NullValueHandling.Ignore)]
         public double? Score { get; set; }
         /// <summary>
         /// The user-visible, localized name of the tone.
         /// </summary>
-        [fsProperty("tone_name")]
+        [JsonProperty("tone_name", NullValueHandling = NullValueHandling.Ignore)]
         public string ToneName { get; set; }
     }
-
-
 }

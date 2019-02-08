@@ -15,7 +15,7 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
@@ -32,7 +32,7 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// that the tone is unlikely to be perceived in the content; a score greater than 0.75 indicates a high
         /// likelihood that the tone is perceived.
         /// </summary>
-        [fsProperty("score")]
+        [JsonProperty("score", NullValueHandling = NullValueHandling.Ignore)]
         public double? Score { get; set; }
         /// <summary>
         /// The unique, non-localized identifier of the tone.
@@ -45,14 +45,12 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// `conscientiousness_big5`, `extraversion_big5`, `agreeableness_big5`, and `emotional_range_big5`. The service
         /// returns scores for all tones of a category, regardless of their values.
         /// </summary>
-        [fsProperty("tone_id")]
+        [JsonProperty("tone_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ToneId { get; set; }
         /// <summary>
         /// The user-visible, localized name of the tone.
         /// </summary>
-        [fsProperty("tone_name")]
+        [JsonProperty("tone_name", NullValueHandling = NullValueHandling.Ignore)]
         public string ToneName { get; set; }
     }
-
-
 }

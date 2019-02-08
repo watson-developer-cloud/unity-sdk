@@ -17,11 +17,11 @@
 
 using System.Collections.Generic;
 using System.Text;
-using FullSerializer;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.ToneAnalyzer.V3.Model;
+using Newtonsoft.Json;
 using System;
 using UnityEngine.Networking;
 
@@ -30,8 +30,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
     public class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
-        private fsSerializer serializer = new fsSerializer();
-
         #region Credentials
         private Credentials credentials = null;
         /// <summary>
@@ -218,11 +216,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             req.Parameters["tones"] = tones != null && tones.Count > 0 ? string.Join(",", tones.ToArray()) : null;
             if (toneInput != null)
             {
-                fsData data = null;
-                serializer.TrySerialize(toneInput, out data);
-                fsSerializer.StripDeserializationMetadata(ref data);
-                string json = data.ToString().Replace('\"', '"');
-                req.Send = Encoding.UTF8.GetBytes(json);
+                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
             }
             req.OnResponse = OnToneResponse;
 
@@ -236,8 +230,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private void OnToneResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WatsonResponse<ToneAnalysis> response = new WatsonResponse<ToneAnalysis>();
-            response.Result = new ToneAnalysis();
-            fsData data = null;
             Dictionary<string, object> customData = ((RequestObject<ToneAnalysis>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -247,18 +239,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             try
             {
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                if (!r.Succeeded)
-                {
-                    throw new WatsonException(r.FormattedMessages);
-                }
-
-                object obj = response.Result;
-                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                customData.Add("json", data);
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ToneAnalysis>(json);
+                customData.Add("json", json);
             }
             catch (Exception e)
             {
@@ -335,11 +318,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
             if (utterances != null)
             {
-                fsData data = null;
-                serializer.TrySerialize(utterances, out data);
-                fsSerializer.StripDeserializationMetadata(ref data);
-                string json = data.ToString().Replace('\"', '"');
-                req.Send = Encoding.UTF8.GetBytes(json);
+                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(utterances));
             }
             req.OnResponse = OnToneChatResponse;
 
@@ -354,7 +333,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         {
             WatsonResponse<UtteranceAnalyses> response = new WatsonResponse<UtteranceAnalyses>();
             response.Result = new UtteranceAnalyses();
-            fsData data = null;
             Dictionary<string, object> customData = ((RequestObject<UtteranceAnalyses>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -364,18 +342,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             try
             {
-                fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
-                if (!r.Succeeded)
-                {
-                    throw new WatsonException(r.FormattedMessages);
-                }
-
-                object obj = response.Result;
-                r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
-                if (!r.Succeeded)
-                    throw new WatsonException(r.FormattedMessages);
-
-                customData.Add("json", data);
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<UtteranceAnalyses>(json);
+                customData.Add("json", json);
             }
             catch (Exception e)
             {
