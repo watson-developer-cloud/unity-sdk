@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,34 +15,32 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// DialogSuggestion
+    /// DialogSuggestion.
     /// </summary>
-    [fsObject]
     public class DialogSuggestion
     {
         /// <summary>
         /// The user-facing label for the disambiguation option. This label is taken from the **user_label** property of
         /// the corresponding dialog node.
         /// </summary>
-        [fsProperty("label")]
+        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; set; }
         /// <summary>
         /// An object defining the message input to be sent to the assistant if the user selects the corresponding
         /// disambiguation option.
         /// </summary>
-        [fsProperty("value")]
+        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
         public DialogSuggestionValue Value { get; set; }
         /// <summary>
         /// The dialog output that will be returned from the Watson Assistant service if the user selects the
         /// corresponding option.
         /// </summary>
-        [fsProperty("output")]
+        [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public object Output { get; set; }
     }
-
 }

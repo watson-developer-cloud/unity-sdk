@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,49 +15,45 @@
 *
 */
 
-using FullSerializer;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// Dialog log message details.
     /// </summary>
-    [fsObject]
     public class DialogLogMessage
     {
         /// <summary>
         /// The severity of the log message.
         /// </summary>
-        public enum LevelEnum
+        public class LevelEnumValue
         {
             /// <summary>
-            /// Enum info for info
+            /// Constant INFO for info
             /// </summary>
-            [EnumMember(Value = "info")]
-            info,
+            public const string INFO = "info";
             /// <summary>
-            /// Enum error for error
+            /// Constant ERROR for error
             /// </summary>
-            [EnumMember(Value = "error")]
-            error,
+            public const string ERROR = "error";
             /// <summary>
-            /// Enum warn for warn
+            /// Constant WARN for warn
             /// </summary>
-            [EnumMember(Value = "warn")]
-            warn
+            public const string WARN = "warn";
+            
         }
 
         /// <summary>
         /// The severity of the log message.
+        /// Constants for possible values can be found using DialogLogMessage.LevelEnumValue
         /// </summary>
-        [fsProperty("level")]
-        public LevelEnum? Level { get; set; }
+        [JsonProperty("level", NullValueHandling = NullValueHandling.Ignore)]
+        public string Level { get; set; }
         /// <summary>
         /// The text of the log message.
         /// </summary>
-        [fsProperty("message")]
+        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
     }
-
 }

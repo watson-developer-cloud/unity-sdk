@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,71 +15,64 @@
 *
 */
 
-using FullSerializer;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// DialogNodeAction
+    /// DialogNodeAction.
     /// </summary>
-    [fsObject]
     public class DialogNodeAction
     {
         /// <summary>
         /// The type of action to invoke.
         /// </summary>
-        public enum ActionTypeEnum
+        public class ActionTypeEnumValue
         {
             /// <summary>
-            /// Enum client for client
+            /// Constant CLIENT for client
             /// </summary>
-            [EnumMember(Value = "client")]
-            client,
+            public const string CLIENT = "client";
             /// <summary>
-            /// Enum server for server
+            /// Constant SERVER for server
             /// </summary>
-            [EnumMember(Value = "server")]
-            server,
-
+            public const string SERVER = "server";
             /// <summary>
-            /// Enum WEB_ACTION for web-action
+            /// Constant WEB_ACTION for web-action
             /// </summary>
-            [EnumMember(Value = "web-action")]
-            web_action,
-
+            public const string WEB_ACTION = "web-action";
             /// <summary>
-            /// Enum CLOUD_FUNCTION for cloud-function
+            /// Constant CLOUD_FUNCTION for cloud-function
             /// </summary>
-            [EnumMember(Value = "cloud-function")]
-            cloud_function
+            public const string CLOUD_FUNCTION = "cloud-function";
+            
         }
 
         /// <summary>
         /// The type of action to invoke.
+        /// Constants for possible values can be found using DialogNodeAction.ActionTypeEnumValue
         /// </summary>
-        [fsProperty("type")]
-        public ActionTypeEnum? ActionType { get; set; }
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public string ActionType { get; set; }
         /// <summary>
         /// The name of the action.
         /// </summary>
-        [fsProperty("name")]
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
         /// A map of key/value pairs to be provided to the action.
         /// </summary>
-        [fsProperty("parameters")]
+        [JsonProperty("parameters", NullValueHandling = NullValueHandling.Ignore)]
         public object Parameters { get; set; }
         /// <summary>
         /// The location in the dialog context where the result of the action is stored.
         /// </summary>
-        [fsProperty("result_variable")]
+        [JsonProperty("result_variable", NullValueHandling = NullValueHandling.Ignore)]
         public string ResultVariable { get; set; }
         /// <summary>
         /// The name of the context variable that the client application will use to pass in credentials for the action.
         /// </summary>
-        [fsProperty("credentials")]
+        [JsonProperty("credentials", NullValueHandling = NullValueHandling.Ignore)]
         public string Credentials { get; set; }
     }
-
 }

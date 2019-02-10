@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,27 +15,25 @@
 *
 */
 
-using FullSerializer;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// CaptureGroup
+    /// CaptureGroup.
     /// </summary>
-    [fsObject]
     public class CaptureGroup
     {
         /// <summary>
         /// A recognized capture group for the entity.
         /// </summary>
-        [fsProperty("group")]
+        [JsonProperty("group", NullValueHandling = NullValueHandling.Ignore)]
         public string Group { get; set; }
         /// <summary>
         /// Zero-based character offsets that indicate where the entity value begins and ends in the input text.
         /// </summary>
-        [fsProperty("location")]
-        public List<long> Location { get; set; }
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public List<long?> Location { get; set; }
     }
-
 }

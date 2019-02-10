@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,21 +15,19 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// SessionResponse
+    /// SessionResponse.
     /// </summary>
-    [fsObject]
     public class SessionResponse
     {
         /// <summary>
         /// The session ID.
         /// </summary>
-        [fsProperty("session_id")]
+        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
         public string SessionId { get; set; }
     }
-
 }

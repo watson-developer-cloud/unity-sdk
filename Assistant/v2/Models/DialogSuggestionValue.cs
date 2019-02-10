@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,22 +15,20 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// An object defining the message input to be sent to the assistant if the user selects the corresponding
     /// disambiguation option.
     /// </summary>
-    [fsObject]
     public class DialogSuggestionValue
     {
         /// <summary>
-        /// The user input.
+        /// An input object that includes the input text.
         /// </summary>
-        [fsProperty("input")]
+        [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
         public MessageInput Input { get; set; }
     }
-
 }

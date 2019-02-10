@@ -1,10 +1,5 @@
-
-
-using FullSerializer;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,54 +14,56 @@ using System.Runtime.Serialization;
 * limitations under the License.
 *
 */
-namespace IBM.Watson.Assistant.V2
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// Additional detailed information about a message response and how it was generated.
     /// </summary>
-    [fsObject]
     public class MessageOutputDebug
     {
         /// <summary>
         /// When `branch_exited` is set to `true` by the Assistant, the `branch_exited_reason` specifies whether the
         /// dialog completed by itself or got interrupted.
         /// </summary>
-        public enum BranchExitedReasonEnum
+        public class BranchExitedReasonEnumValue
         {
             /// <summary>
-            /// Enum completed for completed
+            /// Constant COMPLETED for completed
             /// </summary>
-            [EnumMember(Value = "completed")]
-            completed,
+            public const string COMPLETED = "completed";
             /// <summary>
-            /// Enum fallback for fallback
+            /// Constant FALLBACK for fallback
             /// </summary>
-            [EnumMember(Value = "fallback")]
-            fallback
+            public const string FALLBACK = "fallback";
+            
         }
 
         /// <summary>
         /// When `branch_exited` is set to `true` by the Assistant, the `branch_exited_reason` specifies whether the
         /// dialog completed by itself or got interrupted.
+        /// Constants for possible values can be found using MessageOutputDebug.BranchExitedReasonEnumValue
         /// </summary>
-        [fsProperty("branch_exited_reason")]
-        public BranchExitedReasonEnum? BranchExitedReason { get; set; }
+        [JsonProperty("branch_exited_reason", NullValueHandling = NullValueHandling.Ignore)]
+        public string BranchExitedReason { get; set; }
         /// <summary>
         /// An array of objects containing detailed diagnostic information about the nodes that were triggered during
         /// processing of the input message.
         /// </summary>
-        [fsProperty("nodes_visited")]
+        [JsonProperty("nodes_visited", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodesVisited> NodesVisited { get; set; }
         /// <summary>
         /// An array of up to 50 messages logged with the request.
         /// </summary>
-        [fsProperty("log_messages")]
+        [JsonProperty("log_messages", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogLogMessage> LogMessages { get; set; }
         /// <summary>
         /// Assistant sets this to true when this message response concludes or interrupts a dialog.
         /// </summary>
-        [fsProperty("branch_exited")]
+        [JsonProperty("branch_exited", NullValueHandling = NullValueHandling.Ignore)]
         public bool? BranchExited { get; set; }
     }
-
 }

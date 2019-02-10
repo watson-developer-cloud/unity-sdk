@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,27 +15,24 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// A response from the Watson Assistant service.
     /// </summary>
-    [fsObject]
     public class MessageResponse
     {
         /// <summary>
         /// Assistant output to be rendered or processed by the client.
         /// </summary>
-        [fsProperty("output")]
+        [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public MessageOutput Output { get; set; }
         /// <summary>
-        /// The current session context. Included in the response if the `return_context` property of the message input
-        /// was set to `true`.
+        /// State information for the conversation.
         /// </summary>
-        [fsProperty("context")]
+        [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContext Context { get; set; }
     }
-
 }

@@ -30,6 +30,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
     public class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
+
         #region Credentials
         private Credentials credentials = null;
         /// <summary>
@@ -332,7 +333,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private void OnToneChatResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             WatsonResponse<UtteranceAnalyses> response = new WatsonResponse<UtteranceAnalyses>();
-            response.Result = new UtteranceAnalyses();
             Dictionary<string, object> customData = ((RequestObject<UtteranceAnalyses>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

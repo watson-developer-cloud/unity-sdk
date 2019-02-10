@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,95 +15,37 @@
 *
 */
 
-using FullSerializer;
-using System;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// Optional properties that control how the assistant responds.
     /// </summary>
-    [fsObject(Converter = typeof(MessageInputOptionsConverter))]
     public class MessageInputOptions
     {
         /// <summary>
         /// Whether to return additional diagnostic information. Set to `true` to return additional information under
         /// the `output.debug` key.
         /// </summary>
-        [fsProperty("debug")]
+        [JsonProperty("debug", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Debug { get; set; }
         /// <summary>
-        /// Whether to start a new conversation with this user input. Specify `true` to clear the state information
-        /// stored by the session.
+        /// Whether to restart dialog processing at the root of the dialog, regardless of any previously visited nodes.
+        /// **Note:** This does not affect `turn_count` or any other context variables.
         /// </summary>
-        [fsProperty("restart")]
+        [JsonProperty("restart", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Restart { get; set; }
         /// <summary>
         /// Whether to return more than one intent. Set to `true` to return all matching intents.
         /// </summary>
-        [fsProperty("alternate_intents")]
+        [JsonProperty("alternate_intents", NullValueHandling = NullValueHandling.Ignore)]
         public bool? AlternateIntents { get; set; }
         /// <summary>
         /// Whether to return session context with the response. If you specify `true`, the response will include the
         /// `context` property.
         /// </summary>
-        [fsProperty("return_context")]
+        [JsonProperty("return_context", NullValueHandling = NullValueHandling.Ignore)]
         public bool? ReturnContext { get; set; }
-    }
-
-    #region Create Value Converter
-    public class MessageInputOptionsConverter : fsConverter
-    {
-        private fsSerializer _serializer = new fsSerializer();
-
-        public override bool CanProcess(Type type)
-        {
-            return type == typeof(MessageInputOptions);
-        }
-
-        public override fsResult TryDeserialize(fsData data, ref object instance, Type storageType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override fsResult TrySerialize(object instance, out fsData serialized, Type storageType)
-        {
-            MessageInputOptions messageInputOptions = (MessageInputOptions)instance;
-            serialized = null;
-
-            Dictionary<string, fsData> serialization = new Dictionary<string, fsData>();
-
-            fsData tempData = null;
-
-            if (messageInputOptions.Debug != null)
-            {
-                _serializer.TrySerialize(messageInputOptions.Debug, out tempData);
-                serialization.Add("debug", tempData);
-            }
-
-            if (messageInputOptions.Restart != null)
-            {
-                _serializer.TrySerialize(messageInputOptions.Restart, out tempData);
-                serialization.Add("restart", tempData);
-            }
-
-            if (messageInputOptions.AlternateIntents != null)
-            {
-                _serializer.TrySerialize(messageInputOptions.AlternateIntents, out tempData);
-                serialization.Add("alternate_intents", tempData);
-            }
-
-            if (messageInputOptions.ReturnContext != null)
-            {
-                _serializer.TrySerialize(messageInputOptions.ReturnContext, out tempData);
-                serialization.Add("return_context", tempData);
-            }
-
-            serialized = new fsData(serialization);
-
-            return fsResult.Success;
-        }
-        #endregion
     }
 }

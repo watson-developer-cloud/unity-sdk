@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,16 +15,14 @@
 *
 */
 
-using FullSerializer;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// DialogRuntimeResponseGeneric
+    /// DialogRuntimeResponseGeneric.
     /// </summary>
-    [fsObject]
     public class DialogRuntimeResponseGeneric
     {
         /// <summary>
@@ -34,55 +32,49 @@ namespace IBM.Watson.Assistant.V2
         /// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available
         /// for Premium users.
         /// </summary>
-        public enum ResponseTypeEnum
+        public class ResponseTypeEnumValue
         {
             /// <summary>
-            /// Enum text for text
+            /// Constant TEXT for text
             /// </summary>
-            [EnumMember(Value = "text")]
-            text,
+            public const string TEXT = "text";
             /// <summary>
-            /// Enum pause for pause
+            /// Constant PAUSE for pause
             /// </summary>
-            [EnumMember(Value = "pause")]
-            pause,
+            public const string PAUSE = "pause";
             /// <summary>
-            /// Enum image for image
+            /// Constant IMAGE for image
             /// </summary>
-            [EnumMember(Value = "image")]
-            image,
+            public const string IMAGE = "image";
             /// <summary>
-            /// Enum option for option
+            /// Constant OPTION for option
             /// </summary>
-            [EnumMember(Value = "option")]
-            option,
+            public const string OPTION = "option";
             /// <summary>
-            /// Enum connectToAgent for connect_to_agent
+            /// Constant CONNECT_TO_AGENT for connect_to_agent
             /// </summary>
-            [EnumMember(Value = "connect_to_agent")]
-            connectToAgent,
+            public const string CONNECT_TO_AGENT = "connect_to_agent";
             /// <summary>
-            /// Enum suggestion for suggestion
+            /// Constant SUGGESTION for suggestion
             /// </summary>
-            [EnumMember(Value = "suggestion")]
-            suggestion
+            public const string SUGGESTION = "suggestion";
+            
         }
 
         /// <summary>
         /// The preferred type of control to display.
         /// </summary>
-        public enum PreferenceEnum
+        public class PreferenceEnumValue
         {
             /// <summary>
-            /// Enum dropdown for dropdown
+            /// Constant DROPDOWN for dropdown
             /// </summary>
-            [EnumMember(Value = "dropdown")]
-            dropdown,
+            public const string DROPDOWN = "dropdown";
             /// <summary>
-            /// Enum button for button
+            /// Constant BUTTON for button
             /// </summary>
-            [EnumMember(Value = "button")]
-            button
+            public const string BUTTON = "button";
+            
         }
 
         /// <summary>
@@ -91,59 +83,61 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available
         /// for Premium users.
+        /// Constants for possible values can be found using DialogRuntimeResponseGeneric.ResponseTypeEnumValue
         /// </summary>
-        [fsProperty("response_type")]
-        public ResponseTypeEnum? ResponseType { get; set; }
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string ResponseType { get; set; }
         /// <summary>
         /// The preferred type of control to display.
+        /// Constants for possible values can be found using DialogRuntimeResponseGeneric.PreferenceEnumValue
         /// </summary>
-        [fsProperty("preference")]
-        public PreferenceEnum? Preference { get; set; }
+        [JsonProperty("preference", NullValueHandling = NullValueHandling.Ignore)]
+        public string Preference { get; set; }
         /// <summary>
         /// The text of the response.
         /// </summary>
-        [fsProperty("text")]
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
         /// How long to pause, in milliseconds.
         /// </summary>
-        [fsProperty("time")]
+        [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
         public long? Time { get; set; }
         /// <summary>
         /// Whether to send a \"user is typing\" event during the pause.
         /// </summary>
-        [fsProperty("typing")]
+        [JsonProperty("typing", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Typing { get; set; }
         /// <summary>
         /// The URL of the image.
         /// </summary>
-        [fsProperty("source")]
+        [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public string Source { get; set; }
         /// <summary>
         /// The title to show before the response.
         /// </summary>
-        [fsProperty("title")]
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }
         /// <summary>
         /// The description to show with the the response.
         /// </summary>
-        [fsProperty("description")]
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
         /// An array of objects describing the options from which the user can choose.
         /// </summary>
-        [fsProperty("options")]
+        [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeOutputOptionsElement> Options { get; set; }
         /// <summary>
         /// A message to be sent to the human agent who will be taking over the conversation.
         /// </summary>
-        [fsProperty("message_to_human_agent")]
+        [JsonProperty("message_to_human_agent", NullValueHandling = NullValueHandling.Ignore)]
         public string MessageToHumanAgent { get; set; }
         /// <summary>
         /// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant
         /// node.
         /// </summary>
-        [fsProperty("topic")]
+        [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string Topic { get; private set; }
         /// <summary>
         /// An array of objects describing the possible matching dialog nodes from which the user can choose.
@@ -151,8 +145,7 @@ namespace IBM.Watson.Assistant.V2
         /// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for
         /// Premium users.
         /// </summary>
-        [fsProperty("suggestions")]
+        [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; set; }
     }
-
 }

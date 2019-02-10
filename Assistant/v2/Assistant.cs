@@ -19,6 +19,7 @@ using FullSerializer;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
+using IBM.Watson.Assistant.V2.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;

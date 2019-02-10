@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,25 +15,24 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// State information for the conversation.
     /// </summary>
-    [fsObject]
     public class MessageContext
     {
         /// <summary>
         /// Contains information that can be shared by all skills within the Assistant.
         /// </summary>
-        [fsProperty("global")]
+        [JsonProperty("global", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextGlobal Global { get; set; }
         /// <summary>
         /// Contains information specific to particular skills within the Assistant.
         /// </summary>
-        [fsProperty("skills")]
+        [JsonProperty("skills", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextSkills Skills { get; set; }
     }
 }

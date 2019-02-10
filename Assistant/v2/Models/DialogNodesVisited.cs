@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,31 +15,29 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// DialogNodesVisited
+    /// DialogNodesVisited.
     /// </summary>
-    [fsObject]
     public class DialogNodesVisited
     {
         /// <summary>
         /// A dialog node that was triggered during processing of the input message.
         /// </summary>
-        [fsProperty("dialog_node")]
+        [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; set; }
         /// <summary>
         /// The title of the dialog node.
         /// </summary>
-        [fsProperty("title")]
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }
         /// <summary>
         /// The conditions that trigger the dialog node.
         /// </summary>
-        [fsProperty("conditions")]
+        [JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
         public string Conditions { get; set; }
     }
-
 }

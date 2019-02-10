@@ -1,5 +1,5 @@
-﻿/**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+/**
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,18 +15,14 @@
 *
 */
 
-using FullSerializer;
-using IBM.Cloud.SDK.Utilities;
+using System.Collections.Generic;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// Contains information specific to particular skills within the Assistant.
     /// </summary>
-    [fsObject]
-    public class MessageContextSkills
+    public class MessageContextSkills : Dictionary<string, MessageContextSkill>
     {
-        [fsProperty("main skill")]
-        public MessageContextSkill MainSkill { get; set; }
     }
 }

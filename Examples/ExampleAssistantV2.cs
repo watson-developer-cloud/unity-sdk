@@ -20,6 +20,7 @@ using System.Collections;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V2;
+using IBM.Watson.Assistant.V2.Model;
 using UnityEngine;
 
 namespace IBM.Watson.Examples
@@ -179,11 +180,11 @@ namespace IBM.Watson.Examples
             SerializableDictionary<string, string> userDefinedDictionary = new SerializableDictionary<string, string>();
             userDefinedDictionary.Add("name", "Watson");
 
-            MessageContextSkill skillDictionary = new MessageContextSkill();
-            skillDictionary.UserDefined = userDefinedDictionary;
+            //MessageContextSkill skillDictionary = new MessageContextSkill();
+            //skillDictionary.UserDefined = userDefinedDictionary;
 
-            MessageContextSkills skills = new MessageContextSkills();
-            skills.MainSkill = skillDictionary;
+            //MessageContextSkills skills = new MessageContextSkills();
+            //skills.MainSkill = skillDictionary;
 
 
 
@@ -199,7 +200,7 @@ namespace IBM.Watson.Examples
                 },
                 Context = new MessageContext()
                 {
-                    Skills = skills
+                    //Skills = skills
                 }
             };
 

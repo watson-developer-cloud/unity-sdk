@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,48 +15,47 @@
 *
 */
 
-using FullSerializer;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
     /// Assistant output to be rendered or processed by the client.
     /// </summary>
-    [fsObject]
     public class MessageOutput
     {
         /// <summary>
         /// Output intended for any channel. It is the responsibility of the client application to implement the
         /// supported response types.
         /// </summary>
-        [fsProperty("generic")]
+        [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogRuntimeResponseGeneric> Generic { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
-        [fsProperty("intents")]
+        [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
         public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
-        [fsProperty("entities")]
+        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
         public List<RuntimeEntity> Entities { get; set; }
         /// <summary>
         /// An array of objects describing any actions requested by the dialog node.
         /// </summary>
-        [fsProperty("actions")]
+        [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
         /// Additional detailed information about a message response and how it was generated.
         /// </summary>
-        [fsProperty("debug")]
+        [JsonProperty("debug", NullValueHandling = NullValueHandling.Ignore)]
         public MessageOutputDebug Debug { get; set; }
         /// <summary>
-        /// Arbitrary variables that can be read and written to by a particular skill within the Assistant.
+        /// An object containing any custom properties included in the response. This object includes any arbitrary
+        /// properties defined in the dialog JSON editor as part of the dialog node output.
         /// </summary>
-        [fsProperty("user_defined")]
+        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public object UserDefined { get; set; }
     }
-
 }

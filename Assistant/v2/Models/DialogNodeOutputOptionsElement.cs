@@ -1,5 +1,5 @@
 /**
-* Copyright 2018 IBM Corp. All Rights Reserved.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,27 +15,25 @@
 *
 */
 
-using FullSerializer;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// DialogNodeOutputOptionsElement
+    /// DialogNodeOutputOptionsElement.
     /// </summary>
-    [fsObject]
     public class DialogNodeOutputOptionsElement
     {
         /// <summary>
         /// The user-facing label for the option.
         /// </summary>
-        [fsProperty("label")]
+        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; set; }
         /// <summary>
         /// An object defining the message input to be sent to the assistant if the user selects the corresponding
         /// option.
         /// </summary>
-        [fsProperty("value")]
+        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
         public DialogNodeOutputOptionsElementValue Value { get; set; }
     }
-
 }
