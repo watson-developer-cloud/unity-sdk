@@ -25,6 +25,7 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -40,12 +41,22 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _dataPath;
         //private string _token = "<authentication-token>";
 
+        private bool _autoGetProfileTested = false;
         private bool _getProfileTextTested = false;
         private bool _getProfileJsonTested = false;
 
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test PersonalityInsights using loaded credentials
+            PersonalityInsights autoPersonalityInsights = new PersonalityInsights();
+            autoPersonalityInsights.VersionDate = _personalityInsightsVersionDate;
+            while (!autoPersonalityInsights.Credentials.HasIamTokenData())
+                yield return null;
+            autoPersonalityInsights.GetProfile(OnAutoGetProfile, OnFail, _testString, ContentType.TextHtml, ContentLanguage.English);
+            while (!_autoGetProfileTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -105,6 +116,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("ExamplePersonalityInsights.RunTest()", "Personality insights examples complete.");
 
             yield break;
+        }
+
+        private void OnAutoGetProfile(Profile response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExamplePersonaltyInsights.OnAutoGetProfile()", "Personality Insights - GetProfileText Response: {0}", customData["json"].ToString());
+            Test(response.personality != null);
+            _autoGetProfileTested = true;
         }
 
         private void OnGetProfileText(Profile profile, Dictionary<string, object> customData = null)

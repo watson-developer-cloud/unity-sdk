@@ -26,6 +26,34 @@ namespace  IBM.Watson.DeveloperCloud.Services.CompareComply.v1
     public class TerminationDates
     {
         /// <summary>
+        /// The confidence level in the identification of the termination date.
+        /// </summary>
+        public enum ConfidenceLevelEnum
+        {
+
+            /// <summary>
+            /// Enum HIGH for High
+            /// </summary>
+            High,
+
+            /// <summary>
+            /// Enum MEDIUM for Medium
+            /// </summary>
+            Medium,
+
+            /// <summary>
+            /// Enum LOW for Low
+            /// </summary>
+            Low
+        }
+
+        /// <summary>
+        /// The confidence level in the identification of the termination date.
+        /// </summary>
+        [fsProperty("confidence_level")]
+        public ConfidenceLevelEnum? ConfidenceLevel { get; set; }
+
+        /// <summary>
         /// The termination date.
         /// </summary>
         [fsProperty("text")]

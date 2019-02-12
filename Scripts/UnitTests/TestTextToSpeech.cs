@@ -24,6 +24,7 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -45,6 +46,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         //private bool _synthesizeTested = false;
         //private bool _synthesizeConversationTested = false;
+        private bool _autoGetCustomizationsTested = false;
         private bool _getVoicesTested = false;
         private bool _getVoiceTested = false;
         private bool _getPronuciationTested = false;
@@ -61,6 +63,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+            
+            //  Test TextToSpeech using loaded credentials
+            TextToSpeech autoTextToSpeech = new TextToSpeech();
+            while (!autoTextToSpeech.Credentials.HasIamTokenData())
+                yield return null;
+            autoTextToSpeech.GetCustomizations(OnAutoGetCustomizations, OnFail);
+            while (!_autoGetCustomizationsTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -254,6 +264,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestTextToSpeech.RunTest()", "Text to Speech examples complete.");
 
             yield break;
+        }
+
+        private void OnAutoGetCustomizations(Customizations response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestTextToSpeech.OnAutoGetCustomizations()", "{0}", customData["json"].ToString());
+            Test(response.customizations != null);
+            _autoGetCustomizationsTested = true;
         }
 
         //void HandleToSpeechCallback(AudioClip clip, Dictionary<string, object> customData)

@@ -24,12 +24,13 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using MiniJSON;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
 {
     public class Assistant : IWatsonService
     {
-        private const string ServiceId = "Assistantv1";
+        private const string ServiceId = "assistant";
         private fsSerializer _serializer = new fsSerializer();
 
         private Credentials _credentials = null;
@@ -97,6 +98,54 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         #endregion
 
         /// <summary>
+        /// Assistant constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public Assistant()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
+        /// <summary>
         /// Assistant constructor.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
@@ -104,12 +153,12 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
         {
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
             {
-                Credentials = credentials;
-
                 if (string.IsNullOrEmpty(credentials.Url))
                 {
                     credentials.Url = Url;
                 }
+
+                Credentials = credentials;
             }
             else
             {
@@ -178,6 +227,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Headers["Content-Type"] = "application/json";
             req.Send = Encoding.UTF8.GetBytes(stringToSend);
             req.OnResponse = OnMessageResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=Message";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/message", workspaceId));
             if (connector == null)
@@ -272,6 +322,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             string json = data.ToString().Replace('\"', '"');
             req.Send = Encoding.UTF8.GetBytes(json);
             req.OnResponse = OnCreateWorkspaceResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateWorkspace";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
             if (connector == null)
@@ -368,6 +419,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteWorkspaceResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteWorkspace";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
             if (connector == null)
@@ -468,6 +520,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetWorkspaceResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetWorkspace";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
             if (connector == null)
@@ -577,6 +630,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListWorkspacesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListWorkspaces";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
             if (connector == null)
@@ -678,6 +732,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateWorkspaceResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateWorkspace";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
             if (connector == null)
@@ -777,6 +832,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateIntentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateIntent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
             if (connector == null)
@@ -874,6 +930,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteIntentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteIntent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
             if (connector == null)
@@ -975,6 +1032,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetIntentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetIntent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
             if (connector == null)
@@ -1088,6 +1146,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListIntentsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListIntents";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
             if (connector == null)
@@ -1189,6 +1248,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateIntentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateIntent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
             if (connector == null)
@@ -1289,6 +1349,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateExampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateExample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
             if (connector == null)
@@ -1387,6 +1448,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteExampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteExample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
             if (connector == null)
@@ -1487,6 +1549,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnGetExampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetExample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
             if (connector == null)
@@ -1598,6 +1661,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListExamplesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListExamples";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
             if (connector == null)
@@ -1700,6 +1764,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateExampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateExample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
             if (connector == null)
@@ -1799,6 +1864,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateCounterexampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateCounterexample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
             if (connector == null)
@@ -1896,6 +1962,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteCounterexampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteCounterexample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
             if (connector == null)
@@ -1996,6 +2063,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetCounterexampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetCounterexample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
             if (connector == null)
@@ -2107,6 +2175,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListCounterexamplesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListCounterexamples";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
             if (connector == null)
@@ -2208,6 +2277,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateCounterexampleResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateCounterexample";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
             if (connector == null)
@@ -2307,6 +2377,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateEntityResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateEntity";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
             if (connector == null)
@@ -2404,6 +2475,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteEntityResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteEntity";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
             if (connector == null)
@@ -2507,6 +2579,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetEntityResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetEntity";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
             if (connector == null)
@@ -2620,6 +2693,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListEntitiesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListEntities";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
             if (connector == null)
@@ -2721,6 +2795,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateEntityResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateEntity";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
             if (connector == null)
@@ -2833,6 +2908,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListMentionsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListMentions";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity));
             if (connector == null)
@@ -2933,6 +3009,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateValueResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateValue";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
             if (connector == null)
@@ -3031,6 +3108,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteValueResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteValue";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
             if (connector == null)
@@ -3135,6 +3213,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetValueResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetValue";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
             if (connector == null)
@@ -3249,6 +3328,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListValuesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListValues";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
             if (connector == null)
@@ -3351,6 +3431,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateValueResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateValue";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
             if (connector == null)
@@ -3452,6 +3533,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateSynonymResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateSynonym";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
             if (connector == null)
@@ -3551,6 +3633,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteSynonymResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteSynonym";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
             if (connector == null)
@@ -3653,6 +3736,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetSynonymResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetSynonym";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
             if (connector == null)
@@ -3765,6 +3849,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListSynonymsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListSynonyms";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
             if (connector == null)
@@ -3868,6 +3953,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(body, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateSynonymResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateSynonym";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
             if (connector == null)
@@ -3967,6 +4053,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnCreateDialogNodeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=CreateDialogNode";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
             if (connector == null)
@@ -4064,6 +4151,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteDialogNodeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteDialogNode";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
@@ -4164,6 +4252,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetDialogNodeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=GetDialogNode";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
@@ -4274,6 +4363,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (includeAudit != null)
                 req.Parameters["include_audit"] = includeAudit;
             req.OnResponse = OnListDialogNodesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListDialogNodes";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
             if (connector == null)
@@ -4375,6 +4465,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             _serializer.TrySerialize(properties, out data);
             req.Send = Encoding.UTF8.GetBytes(data.ToString());
             req.OnResponse = OnUpdateDialogNodeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=UpdateDialogNode";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
             if (connector == null)
@@ -4482,6 +4573,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListAllLogsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListAllLogs";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
             if (connector == null)
@@ -4589,6 +4681,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             if (!string.IsNullOrEmpty(filter))
                 req.Parameters["filter"] = filter;
             req.OnResponse = OnListLogsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=ListLogs";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/logs", workspaceId));
             if (connector == null)
@@ -4691,6 +4784,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Assistant.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteUserDataResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=v1;operation_id=DeleteUserData";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
             if (connector == null)

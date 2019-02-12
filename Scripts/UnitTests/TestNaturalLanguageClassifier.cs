@@ -44,6 +44,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private List<string> _classifierIds = new List<string>();
         private string _inputString = "Is it hot outside?";
 
+        private bool _autoGetClassifiersTested = false;
         private bool _areAnyClassifiersAvailable = false;
         private bool _getClassifiersTested = false;
         private bool _getClassifierTested = false;
@@ -60,6 +61,14 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test NaturalLanguageClassifier using loaded credentials
+            NaturalLanguageClassifier autoNaturalLanguageClassifier = new NaturalLanguageClassifier();
+            while (!autoNaturalLanguageClassifier.Credentials.HasIamTokenData())
+                yield return null;
+            autoNaturalLanguageClassifier.GetClassifiers(OnAutoGetClassifiers, OnFail);
+            while (!_autoGetClassifiersTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -185,6 +194,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestNaturalLanguageClassifier.RunTest()", "Natural language classifier examples complete.");
 
             yield break;
+        }
+
+        private void OnAutoGetClassifiers(Classifiers response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestNaturalLanguageClassifier.OnAutoGetClassifiers()", "Natural Language Classifier - GetClassifiers  Response: {0}", customData["json"].ToString());
+            Test(response.classifiers != null);
+            _autoGetClassifiersTested = true;
         }
 
         private void OnGetClassifiers(Classifiers classifiers, Dictionary<string, object> customData)

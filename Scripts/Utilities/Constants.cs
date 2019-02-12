@@ -47,7 +47,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
         public static class String
         {
             /// <exclude />
-            public const string Version = "watson-apis-unity-sdk/2.13.1";
+            public const string Version = "watson-apis-unity-sdk-2.15.0";
             /// <exclude />
             public const string DebugDispalyQuality = "Quality: {0}";
             /// <summary>
@@ -84,7 +84,7 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             /// <summary>
             /// Default time in seconds after which a call should timeout.
             /// </summary>
-            public static float Timeout = 60f;
+            public static float Timeout = 360f;
         }
 
         /// <summary>
