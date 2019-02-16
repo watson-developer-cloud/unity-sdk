@@ -149,7 +149,7 @@ void TokenExample()
     };
 
     //  Create credentials using the IAM token options
-     _credentials = new Credentials(iamTokenOptions, "<service-url");
+     _credentials = new Credentials(iamTokenOptions, "<service-url>");
 
     _assistant = new Assistant(_credentials);
     _assistant.VersionDate = "2018-02-16";
