@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
 {
@@ -47,7 +48,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Private Data
-        private const string ServiceId = "VisualRecognitionV3";
+        private const string ServiceId = "visual_recognition";
         private const string ClassifyEndpoint = "/v3/classify";
         private const string DetectFacesEndpoint = "/v3/detect_faces";
         private const string ClassifiersEndpoint = "/v3/classifiers";
@@ -111,6 +112,54 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// VisualRecognition constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public VisualRecognition()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
         public VisualRecognition(Credentials credentials)
         {
             if (!credentials.HasApiKey() && !credentials.HasIamApikey() && !credentials.HasIamAuthorizationToken())
@@ -182,6 +231,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnClassifyResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=Classify";
             req.Headers["Accept-Language"] = acceptLanguage;
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
@@ -277,6 +327,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnClassifyResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=Classify";
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
@@ -400,6 +451,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnDetectFacesResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=DetectFaces";
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             if (!string.IsNullOrEmpty(acceptLanguage))
@@ -486,6 +538,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnDetectFacesResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=DetectFaces";
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             if (!string.IsNullOrEmpty(acceptLanguage))
@@ -596,6 +649,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersBriefResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=GetClassifiersBrief";
 
             return connector.Send(req);
         }
@@ -697,6 +751,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VersionDate;
             req.Timeout = 20.0f * 60.0f;
             req.OnResponse = OnGetClassifiersBriefResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=GetClassifiersVerbose";
 
             return connector.Send(req);
         }
@@ -800,6 +855,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             req.Parameters["version"] = VersionDate;
             req.Parameters["verbose"] = true;
             req.OnResponse = OnGetClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=GetClassifier";
 
             return connector.Send(req);
         }
@@ -951,6 +1007,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnTrainClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=TrainClassifier";
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
@@ -1117,6 +1174,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 }
             }
             req.OnResponse = OnTrainClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=UpdateClassifier";
             if (Credentials.HasApiKey())
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
@@ -1170,6 +1228,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteClassifierResp;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=DeleteClassifier";
 
             return connector.Send(req);
         }
@@ -1237,6 +1296,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["api_key"] = Credentials.ApiKey;
             req.Parameters["version"] = VersionDate;
             req.OnResponse = GetCoreMLModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=GetCoreMLModel";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CoreMLEndpoint, classifierID));
             if (connector == null)
@@ -1341,6 +1401,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
                 req.Parameters["api_key"] = Credentials.ApiKey;
 
             req.OnResponse = OnDeleteUserDataResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=v3;operation_id=DeleteUserData";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/user_data");
             if (connector == null)

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 {
@@ -35,7 +36,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
     public class Discovery : IWatsonService
     {
         #region Private Data
-        private const string ServiceId = "DiscoveryV1";
+        private const string ServiceId = "discovery";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/discovery/api";
@@ -110,6 +111,54 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
 
         #region Constructor
         /// <summary>
+        /// Discovery constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public Discovery()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = System.Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = System.Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = System.Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = System.Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
+        /// <summary>
         /// Discovery constructor.
         /// </summary>
         /// <param name="credentials">The service credentials.</param>
@@ -179,6 +228,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetEnvironmentsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetEnvironments";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, Environments);
             if (connector == null)
@@ -311,6 +361,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddEnvironmentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=AddEnvironment";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             string sendjson = Json.Serialize(addEnvironmentData);
@@ -354,6 +405,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddEnvironmentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=AddEnvironment";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -460,6 +512,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetEnvironmentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetEnvironment";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Environment, environmentID));
             if (connector == null)
@@ -559,6 +612,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteEnvironmentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteEnvironment";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Environment, environmentID));
             if (connector == null)
@@ -663,6 +717,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["name"] = name;
             }
             req.OnResponse = OnGetConfigurationsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetConfigurations";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Configurations, environmentID));
             if (connector == null)
@@ -799,6 +854,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddConfigurationResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=AddConfiguration";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Send = configurationJsonData;
@@ -904,6 +960,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetConfigurationResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetConfiguration";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Configuration, environmentID, configurationID));
             if (connector == null)
@@ -1006,6 +1063,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteConfigurationResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteConfiguration";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Configuration, environmentID, configurationID));
             if (connector == null)
@@ -1176,6 +1234,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnPreviewConfigurationResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=PreviewConfiguration";
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(contentData, "contentData", contentMimeType);
@@ -1305,6 +1364,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
                 req.Parameters["name"] = name;
             }
             req.OnResponse = OnGetCollectionsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetCollections";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Collections, environmentID));
             if (connector == null)
@@ -1440,6 +1500,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddCollectionResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=AddCollection";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Send = collectionData;
@@ -1545,6 +1606,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetCollectionResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetCollection";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Collection, environmentID, collectionID));
             if (connector == null)
@@ -1647,6 +1709,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCollectionResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteCollection";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Collection, environmentID, collectionID));
             if (connector == null)
@@ -1749,6 +1812,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetFieldsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetFields";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Fields, environmentID, collectionID));
             if (connector == null)
@@ -2024,6 +2088,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddDocumentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=AddDocument";
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(contentData, "contentData", contentMimeType);
@@ -2141,6 +2206,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteDocumentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteDocument";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Document, environmentID, collectionID, documentID));
             if (connector == null)
@@ -2246,6 +2312,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetDocumentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetDocument";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(Document, environmentID, collectionID, documentID));
             if (connector == null)
@@ -2515,6 +2582,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnUpdateDocumentResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=UpdateDocument";
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(contentData, "contentData", contentMimeType);
@@ -2725,6 +2793,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Send = Encoding.UTF8.GetBytes(json);
 
             req.OnResponse = OnFederatedQueryResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=FederatedQuery";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
             if (connector == null)
@@ -2895,6 +2964,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (similarFields != null)
                 req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
             req.OnResponse = OnFederatedQueryNoticesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=FederatedQueryNotices";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/notices", environmentId));
             if (connector == null)
@@ -3084,6 +3154,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Send = Encoding.UTF8.GetBytes(json);
 
             req.OnResponse = OnQueryResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=Query";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId));
             if (connector == null)
@@ -3193,6 +3264,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Send = Encoding.UTF8.GetBytes(json);
 
             req.OnResponse = OnQueryEntitiesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=QueryEntities";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
             if (connector == null)
@@ -3377,6 +3449,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (similarFields != null)
                 req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
             req.OnResponse = OnQueryNoticesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=QueryNotices";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId));
             if (connector == null)
@@ -3486,6 +3559,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Send = Encoding.UTF8.GetBytes(json);
 
             req.OnResponse = OnQueryRelationsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=QueryRelations";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_relations", environmentId, collectionId));
             if (connector == null)
@@ -3591,6 +3665,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateExpansionsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateExpansions";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3699,6 +3774,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteExpansionsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteExpansions";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
@@ -3777,6 +3853,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnListExpansionsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=ListExpansions";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
@@ -3879,6 +3956,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateTokenizationDictionaryResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateTokenizationDictionary";
 
             fsData data = null;
             _serializer.TrySerialize(tokenizationDictionary, out data);
@@ -3986,6 +4064,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteTokenizationDictionaryResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteTokenizationDictionary";
             req.Delete = true;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
@@ -4064,6 +4143,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetTokenizationDictionaryStatus";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
             if (connector == null)
@@ -4167,6 +4247,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteUserDataResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteUserData";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
             if (connector == null)
@@ -4268,6 +4349,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnListCredentialsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=ListCredentials";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialsEndpoint, environmentId));
             if (connector == null)
@@ -4381,6 +4463,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Send = Encoding.UTF8.GetBytes(json);
 
             req.OnResponse = OnCreateCredentialsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateCredentials";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialsEndpoint, environmentId));
             if (connector == null)
@@ -4485,6 +4568,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteCredentialsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteCredentials";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialEndpoint, environmentID, credentialId));
             if (connector == null)
@@ -4593,6 +4677,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetCredentialResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetCredential";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(CredentialEndpoint, environmentID, credentialId));
             if (connector == null)
@@ -4696,6 +4781,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateEventResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateEvent";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -4814,6 +4900,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(resultType))
                 req.Parameters["result_type"] = resultType;
             req.OnResponse = OnGetMetricsEventRateResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetMetricsEventRate";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/event_rate");
             if (connector == null)
@@ -4923,6 +5010,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(resultType))
                 req.Parameters["result_type"] = resultType;
             req.OnResponse = OnGetMetricsQueryResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetMetricsQuery";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries");
             if (connector == null)
@@ -5034,6 +5122,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(resultType))
                 req.Parameters["result_type"] = resultType;
             req.OnResponse = OnGetMetricsQueryEventResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetMetricsQueryEvent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_event");
             if (connector == null)
@@ -5144,6 +5233,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (!string.IsNullOrEmpty(resultType))
                 req.Parameters["result_type"] = resultType;
             req.OnResponse = OnGetMetricsQueryNoResultsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetMetricsQueryNoResults";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_no_search_results");
             if (connector == null)
@@ -5247,6 +5337,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (count != null)
                 req.Parameters["count"] = count;
             req.OnResponse = OnGetMetricsQueryTokenEventResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetMetricsQueryTokenEvent";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/top_query_tokens_with_event_rate");
             if (connector == null)
@@ -5369,6 +5460,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             if (sort != null)
                 req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
             req.OnResponse = OnQueryLogResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=QueryLog";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
             if (connector == null)
@@ -5486,6 +5578,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateStopwordListResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateStopwordList";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
@@ -5556,6 +5649,99 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
         }
 
+        public bool GetStopwordListStatus(SuccessCallback<TokenDictStatusResponse> successCallback, FailCallback failCallback, string environmentID, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (successCallback == null)
+                throw new ArgumentNullException("successCallback");
+            if (failCallback == null)
+                throw new ArgumentNullException("failCallback");
+            if (string.IsNullOrEmpty(environmentID))
+                throw new ArgumentNullException("environmentID");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("collectionId");
+
+            GetStopwordListStatusRequest req = new GetStopwordListStatusRequest();
+            req.SuccessCallback = successCallback;
+            req.FailCallback = failCallback;
+            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.DisableSslVerification = DisableSslVerification;
+            req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
+            req.Headers["Content-Type"] = "application/json";
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+            req.Parameters["version"] = VersionDate;
+            req.OnResponse = OnGetStopwordListStatusResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetStopwordListStatus";
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentID, collectionId));
+            if (connector == null)
+                return false;
+
+            return connector.Send(req);
+        }
+
+        private class GetStopwordListStatusRequest : RESTConnector.Request
+        {
+            /// <summary>
+            /// The success callback.
+            /// </summary>
+            public SuccessCallback<TokenDictStatusResponse> SuccessCallback { get; set; }
+            /// <summary>
+            /// The fail callback.
+            /// </summary>
+            public FailCallback FailCallback { get; set; }
+            /// <summary>
+            /// Custom data.
+            /// </summary>
+            public Dictionary<string, object> CustomData { get; set; }
+        }
+
+        private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            TokenDictStatusResponse result = new TokenDictStatusResponse();
+            fsData data = null;
+            Dictionary<string, object> customData = ((GetStopwordListStatusRequest)req).CustomData;
+            customData.Add(Constants.String.RESPONSE_HEADERS, resp.Headers);
+
+            if (resp.Success)
+            {
+                try
+                {
+                    fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    object obj = result;
+                    r = _serializer.TryDeserialize(data, obj.GetType(), ref obj);
+                    if (!r.Succeeded)
+                        throw new WatsonException(r.FormattedMessages);
+
+                    customData.Add("json", data);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Discovery.OnGetStopwordListStatusResponse()", "OnGetStopwordListStatusResponse Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
+            }
+
+            if (resp.Success)
+            {
+                if (((GetStopwordListStatusRequest)req).SuccessCallback != null)
+                    ((GetStopwordListStatusRequest)req).SuccessCallback(result, customData);
+            }
+            else
+            {
+                if (((GetStopwordListStatusRequest)req).FailCallback != null)
+                    ((GetStopwordListStatusRequest)req).FailCallback(resp.Error, customData);
+            }
+        }
+
         /// <summary>
         /// Delete a custom stopword list.
         ///
@@ -5602,6 +5788,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnDeleteStopwordListResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteStopwordList";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
@@ -5699,6 +5886,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnCreateGatewayResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=CreateGateway";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
@@ -5805,6 +5993,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetGatewayResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=GetGateway";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)
@@ -5906,6 +6095,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnListGatewaysResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=ListGateways";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
@@ -6000,6 +6190,7 @@ namespace IBM.Watson.DeveloperCloud.Services.Discovery.v1
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteGatewayResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=v1;operation_id=DeleteGateway";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)

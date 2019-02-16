@@ -20,6 +20,7 @@ using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3;
 using IBM.Watson.DeveloperCloud.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
         private LanguageTranslator _languageTranslator;
 
+        private bool _autoGetLanguagesTested = false;
         private bool _getTranslationTested = false;
         private bool _getModelsTested = false;
         private bool _getModelTested = false;
@@ -44,6 +46,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test LangaugeTranslator using loaded credentials
+            LanguageTranslator autoLanguageTranslator = new LanguageTranslator();
+            while (!autoLanguageTranslator.Credentials.HasIamTokenData())
+                yield return null;
+            autoLanguageTranslator.VersionDate = _versionDate;
+            autoLanguageTranslator.GetLanguages(OnAutoGetLanguages, OnFail);
+            while (!_autoGetLanguagesTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -118,6 +129,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             Log.Debug("TestLanguageTranslator.RunTest()", "Language Translator examples complete.");
 
             yield break;
+        }
+
+        private void OnAutoGetLanguages(Languages response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestLanguageTranslator.OnAutoGetLanguages()", "Language Translator - Get languages response: {0}", customData["json"].ToString());
+            Test(response != null);
+            _autoGetLanguagesTested = true;
         }
 
         private void OnGetModels(TranslationModels models, Dictionary<string, object> customData)

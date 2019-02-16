@@ -23,13 +23,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
 {
     public class NaturalLanguageUnderstanding : IWatsonService
     {
         #region Private Data
-        private const string ServiceId = "NaturalLanguageUnderstandingV1";
+        private const string ServiceId = "natural_language_understanding";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/natural-language-understanding/api";
@@ -93,6 +94,54 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// NaturalLanguageUnderstanding constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public NaturalLanguageUnderstanding()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
         public NaturalLanguageUnderstanding(Credentials credentials)
         {
             if (credentials.HasCredentials() || credentials.HasWatsonAuthenticationToken() || credentials.HasIamTokenData())
@@ -160,6 +209,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
                 }
             }
             req.OnResponse = OnAnalyzeResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=Analyze";
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
@@ -265,6 +315,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnGetModelsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=GetModels";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, ModelsEndpoint);
             if (connector == null)
@@ -366,6 +417,7 @@ namespace IBM.Watson.DeveloperCloud.Services.NaturalLanguageUnderstanding.v1
             }
             req.Parameters["version"] = NaturalLanguageUnderstandingVersion.Version;
             req.OnResponse = OnDeleteModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_understanding;service_version=v1;operation_id=DeleteModel";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format(ModelEndpoint, modelId));
             if (connector == null)

@@ -29,6 +29,7 @@ using FullSerializer;
 using System.IO;
 using System.Collections.Generic;
 using IBM.Watson.DeveloperCloud.Connection;
+using System;
 
 namespace IBM.Watson.DeveloperCloud.UnitTests
 {
@@ -61,11 +62,20 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _classifyPostTested = false;
         private bool _detectFacesGetTested = false;
         private bool _detectFacesPostTested = false;
-
+        private bool _autoGetClassifiersTested = false;
 
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test VisualRecognition using loaded credentials
+            VisualRecognition autoVisualRecognition = new VisualRecognition();
+            autoVisualRecognition.VersionDate = _visualRecognitionVersionDate;
+            while (!autoVisualRecognition.Credentials.HasIamTokenData())
+                yield return null;
+            autoVisualRecognition.GetClassifiersBrief(OnAutoGetClassifiers, OnFail);
+            while (!_autoGetClassifiersTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -201,6 +211,13 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Debug("TestVisualRecognition.RunTest()", "Visual Recogition tests complete");
             yield break;
+        }
+
+        private void OnAutoGetClassifiers(ClassifiersBrief response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestVisualRecognition.OnAutoGetClassifiers()", "VisualRecognition - GetClassifiers Response: {0}", customData["json"].ToString());
+            Test(response.classifiers != null);
+            _autoGetClassifiersTested = true;
         }
 
         private void OnGetClassifiers(ClassifiersBrief classifiers, Dictionary<string, object> customData)

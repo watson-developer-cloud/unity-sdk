@@ -25,6 +25,7 @@ using System;
 using FullSerializer;
 using System.IO;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
 {
@@ -85,13 +86,61 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
         #endregion
 
         #region Private Data
-        private const string ServiceId = "LanguageTranslatorV3";
+        private const string ServiceId = "language_translator";
         private fsSerializer _serializer = new fsSerializer();
         private Credentials _credentials = null;
         private string _url = "https://gateway.watsonplatform.net/language-translator/api";
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// LanguageTranslator constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public LanguageTranslator()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
+        }
+
         public LanguageTranslator(string versionDate, Credentials credentials)
         {
             VersionDate = versionDate;
@@ -210,6 +259,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = TranslateResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetTranslation";
             req.Send = Encoding.UTF8.GetBytes(json);
             req.Headers["accept"] = "application/json";
             req.Headers["Content-Type"] = "application/json";
@@ -334,6 +384,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = GetModelsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetModels";
 
             if (!string.IsNullOrEmpty(sourceFilter))
                 req.Parameters["source"] = sourceFilter;
@@ -440,6 +491,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             }
             req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = GetModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetModel";
 
             return connector.Send(req);
         }
@@ -550,6 +602,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             req.Parameters["base_model_id"] = baseModelId;
             req.Parameters["name"] = customModelName;
             req.OnResponse = OnCreateModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=CreateModel";
 
             byte[] forcedGlossaryData = null;
             byte[] parallelCorpusData = null;
@@ -699,6 +752,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             }
             req.Function = UnityWebRequest.EscapeURL(model_id);
             req.OnResponse = DeleteModelResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=DeleteModel";
             return connector.Send(req);
         }
 
@@ -793,6 +847,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
                 }
             }
             req.OnResponse = GetLanguagesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=GetLanguages";
 
             return connector.Send(req);
         }
@@ -894,6 +949,7 @@ namespace IBM.Watson.DeveloperCloud.Services.LanguageTranslator.v3
             req.Headers["Content-Type"] = "text/plain";
             req.Headers["Accept"] = "application/json";
             req.OnResponse = OnIdentifyResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=v3;operation_id=Identify";
 
             return connector.Send(req);
         }

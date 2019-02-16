@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Text.RegularExpressions;
 
 #if !NETFX_CORE
 using System.Net;
@@ -375,7 +376,24 @@ namespace IBM.Watson.DeveloperCloud.Connection
                 }
             }
 
-            headers.Add("User-Agent", Constants.String.Version);
+            string osInfo = SystemInfo.operatingSystem;
+            Regex pattern = new Regex("\\d+(\\.\\d+)+");
+            Match m = pattern.Match(osInfo);
+            string osVersion = m.Value;
+            string os = osInfo.Replace(osVersion, "").Replace(" ", "");
+            if(os.Contains("()"))
+            {
+                os = os.Replace("()", "-");
+            }
+
+            headers.Add("User-Agent",
+                string.Format(
+                    "{0} {1} {2} {3}",
+                    Constants.String.Version,
+                    os,
+                    osVersion, 
+                    Application.unityVersion
+                ));
         }
 
         private IEnumerator ProcessRequestQueue()

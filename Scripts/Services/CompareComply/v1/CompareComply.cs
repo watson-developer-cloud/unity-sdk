@@ -23,12 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Networking;
+using Utility = IBM.Watson.DeveloperCloud.Utilities.Utility;
 
 namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
 {
     public class CompareComply : IWatsonService
     {
-        private const string ServiceId = "CompareComplyV1";
+        private const string ServiceId = "compare_comply";
         private fsSerializer _serializer = new fsSerializer();
 
         private Credentials credentials = null;
@@ -76,6 +77,54 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
         {
             get { return disableSslVerification; }
             set { disableSslVerification = value; }
+        }
+
+        /// <summary>
+        /// CompareComply constructor. Use this constructor to auto load credentials via ibm-credentials.env file.
+        /// </summary>
+        public CompareComply()
+        {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
+
+                string ApiKey = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(ServiceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", ServiceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    Credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(Credentials.Url))
+                    {
+                        Credentials.Url = Url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    Credentials = new Credentials(Username, Password, Url);
+                }
+            }
         }
 
         /// <summary>
@@ -161,6 +210,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnConvertToHtmlResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ConvertToHtml";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/html_conversion");
             if (connector == null)
@@ -269,6 +319,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnClassifyElementsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ClassifyElements";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/element_classification");
             if (connector == null)
@@ -376,6 +427,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnExtractTablesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ExtractTables";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/tables");
             if (connector == null)
@@ -498,6 +550,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnCompareDocumentsResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=CompareDocuments";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/comparison");
             if (connector == null)
@@ -607,6 +660,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             req.Headers["Content-Type"] = "application/json";
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnAddFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=AddFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
@@ -710,6 +764,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnDeleteFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=DeleteFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
@@ -814,6 +869,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnGetFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=GetFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/feedback/{0}", feedbackId));
             if (connector == null)
@@ -981,6 +1037,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (includeTotal != null)
                 req.Parameters["include_total"] = includeTotal;
             req.OnResponse = OnListFeedbackResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ListFeedback";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/feedback");
             if (connector == null)
@@ -1126,6 +1183,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnCreateBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=CreateBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
@@ -1226,6 +1284,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=GetBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)
@@ -1323,6 +1382,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             }
             req.Parameters["version"] = VersionDate;
             req.OnResponse = OnGetBatchesResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=ListBatches";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/batches");
             if (connector == null)
@@ -1436,6 +1496,7 @@ namespace IBM.Watson.DeveloperCloud.Services.CompareComply.v1
             if (!string.IsNullOrEmpty(modelId))
                 req.Parameters["model_id"] = modelId;
             req.OnResponse = OnUpdateBatchResponse;
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=compare-comply;service_version=v1;operation_id=UpdateBatch";
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/batches/{0}", batchId));
             if (connector == null)

@@ -19,7 +19,6 @@ using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using IBM.Watson.DeveloperCloud.Logging;
 using IBM.Watson.DeveloperCloud.Services.CompareComply.v1;
-using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Utilities;
 using System;
 using System.Collections;
@@ -35,6 +34,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string versionDate = "2018-11-15";
         private CompareComply compareComply;
 
+        private bool autoListFeedbackTested = true;
         private bool convertToHtmlTested = false;
         private bool classifyElementsTested = false;
         private bool extractTablesTested = false;
@@ -65,6 +65,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             string objectStorageCredentialsInputFilepath = "../sdk-credentials/cloud-object-storage-credentials-input.json";
             string objectStorageCredentialsOutputFilepath = "../sdk-credentials/cloud-object-storage-credentials-output.json";
+
+            //  Test CompareComply using loaded credentials
+            CompareComply autoCompareComply = new CompareComply();
+            while (!autoCompareComply.Credentials.HasIamTokenData())
+                yield return null;
+            autoCompareComply.VersionDate = versionDate;
+            autoCompareComply.ListFeedback(OnAutoListFeedback, OnFail);
+            while (!autoListFeedbackTested)
+                yield return null;
 
             #region Get Credentials
             VcapCredentials vcapCredentials = new VcapCredentials();
@@ -360,7 +369,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             Log.Debug("TestCompareComplyV1.RunTests()", "Compare and Comply integration tests complete!");
         }
-        
+
+        private void OnAutoListFeedback(FeedbackList response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestCompareComplyV1.OnAutoListFeedback()", "ListFeedback Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Feedback != null);
+            autoListFeedbackTested = true;
+        }
+
         private void OnConvertToHtml(HTMLReturn response, Dictionary<string, object> customData)
         {
             Log.Debug("TestCompareComplyV1.OnConvertToHtml()", "ConvertToHtml Response: {0}", customData["json"].ToString());

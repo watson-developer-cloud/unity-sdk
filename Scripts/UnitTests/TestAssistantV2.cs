@@ -23,6 +23,7 @@ using IBM.Watson.DeveloperCloud.Services.Assistant.v2;
 using IBM.Watson.DeveloperCloud.UnitTests;
 using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.WatsonDeveloperCloud.Assistant.v2;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -39,6 +40,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private string _assistantId;
         private string _sessionId;
 
+        private bool _autoCreateSessionTested = false;
         private bool _createSessionTested = false;
         private bool _messageTested0 = false;
         private bool _messageTested1 = false;
@@ -95,6 +97,15 @@ namespace Assets.Watson.Scripts.UnitTests
 
             _service = new Assistant(credentials);
             _service.VersionDate = _assistantVersionDate;
+
+            //  Test Assistant using loaded credentials
+            Assistant autoAssisant = new Assistant();
+            while (!autoAssisant.Credentials.HasIamTokenData())
+                yield return null;
+            autoAssisant.VersionDate = _assistantVersionDate;
+            autoAssisant.CreateSession(OnAutoCreateSession, OnFail, _assistantId);
+            while (!_autoCreateSessionTested)
+                yield return null;
 
             Log.Debug("TestAssistantV2.RunTest()", "Attempting to CreateSession");
             _service.CreateSession(OnCreateSession, OnFail, _assistantId);
@@ -179,6 +190,13 @@ namespace Assets.Watson.Scripts.UnitTests
             {
                 yield return null;
             }
+        }
+
+        private void OnAutoCreateSession(SessionResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestAssistantV2.OnAutoCreateSession()", "Session: {0}", response.SessionId);
+            Test(response != null);
+            _autoCreateSessionTested = true;
         }
 
         private void OnDeleteSession(object response, Dictionary<string, object> customData)

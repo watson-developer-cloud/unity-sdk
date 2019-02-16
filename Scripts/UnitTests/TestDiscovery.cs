@@ -50,6 +50,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private float _waitTime = 10f;
         private string _sessionToken;
 
+        private bool _autoGetEnvironmentsTested = false;
         private bool _getEnvironmentsTested = false;
         private bool _getEnvironmentTested = false;
         private bool _getConfigurationsTested = false;
@@ -85,6 +86,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private string _createdJpCollection = null;
         private bool _createJpCollectionTested = false;
         private bool _deleteJpCollectionTested = false;
+        private bool _isTokenizationDictionaryReady = false;
 
         private bool _createEventTested = false;
         private bool _getMetricsEventRateTested = false;
@@ -94,9 +96,11 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         private bool _getMetricsQueryTokenEventTested = false;
         private bool _queryLogTested = false;
 
-        //private string _stopwordsFilepath;
-        //private bool _createStopwordListTested = false;
-        //private bool _deleteStopwordListTested = false;
+        private string _stopwordsFilepath;
+        private bool _createStopwordListTested = false;
+        private bool _getStopwordListTested = false;
+        private bool _deleteStopwordListTested = false;
+        private bool _isStopwordsListReady = false;
 
         private bool _listGatewaysTested = false;
         private bool _createGatewayTested = false;
@@ -107,6 +111,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test Discovery using loaded credentials
+            Discovery autoDiscovery = new Discovery();
+            while (!autoDiscovery.Credentials.HasIamTokenData())
+                yield return null;
+            autoDiscovery.VersionDate = _discoveryVersionDate;
+            autoDiscovery.GetEnvironments (OnAutoGetEnvironments, OnFail);
+            while (!_autoGetEnvironmentsTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -153,7 +166,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _discovery.VersionDate = _discoveryVersionDate;
             _filePathToIngest = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
             _documentFilePath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/constitution.pdf";
-            //_stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
+            _stopwordsFilepath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/Discovery/stopwords.txt";
             //  Get Environments
             Log.Debug("TestDiscovery.RunTest()", "Attempting to get environments");
             if (!_discovery.GetEnvironments(OnGetEnvironments, OnFail))
@@ -381,6 +394,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_createJpCollectionTested)
                 yield return null;
 
+            //Runnable.Run(CheckTokenizationDictionaryState(0f));
+            //while (!_isTokenizationDictionaryReady)
+            //    yield return null;
+
             //  Create tokenization dictionary
             TokenDict tokenizationDictionary = new TokenDict()
             {
@@ -406,6 +423,7 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_createTokenizationDictTested)
                 yield return null;
 
+
             //  Get tokenization dictionary status
             if (!_getTokenizationDictStatusTested)
             {
@@ -414,6 +432,10 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
                 while (!_getTokenizationDictStatusTested)
                     yield return null;
             }
+
+            //Runnable.Run(CheckTokenizationDictionaryState(0f));
+            //while (!_isTokenizationDictionaryReady)
+            //    yield return null;
 
             //  Delete tokenization dictionary
             if (!_deleteTokenizationDictTested)
@@ -448,21 +470,35 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             while (!_isEnvironmentReady)
                 yield return null;
 
-            ////  Create stopword list
-            //using (FileStream fs = File.OpenRead(_stopwordsFilepath))
-            //{
-
-            //    Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
-            //    _discovery.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
-            //    while (!_createStopwordListTested)
-            //        yield return null;
-            //}
-
-            ////  Delete stopword list
-            //Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
-            //_discovery.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
-            //while (!_deleteStopwordListTested)
+            //Runnable.Run(CheckStopwordsListState(0f));
+            //while (!_isStopwordsListReady)
             //    yield return null;
+
+            //  Create stopword list
+            using (FileStream fs = File.OpenRead(_stopwordsFilepath))
+            {
+
+                Log.Debug("TestDiscovery.RunTest()", "Attempting to create stopword list {0}", _createdCollectionId);
+                _discovery.CreateStopwordList(OnCreateStopwordList, OnFail, _environmentId, _createdCollectionId, fs);
+                while (!_createStopwordListTested)
+                    yield return null;
+            }
+
+            //  Get stopword list
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to get stopword list {0}", _createdCollectionId);
+            _discovery.GetStopwordListStatus(OnGetStopwordList, OnFail, _environmentId, _createdCollectionId);
+            while (!_getStopwordListTested)
+                yield return null;
+
+            Runnable.Run(CheckStopwordsListState(0f));
+            while (!_isStopwordsListReady)
+                yield return null;
+
+            //  Delete stopword list
+            Log.Debug("TestDiscovery.RunTest()", "Attempting to delete stopword list {0}", _createdCollectionId);
+            _discovery.DeleteStopwordList(OnDeleteStopwordList, OnFail, _environmentId, _createdCollectionId);
+            while (!_deleteStopwordListTested)
+                yield return null;
 
             //  List Gatways
             Log.Debug("TestDiscovery.RunTest()", "Attempting to list gateways.");
@@ -517,7 +553,15 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
 
             yield break;
         }
-        
+
+        private void OnAutoGetEnvironments(GetEnvironmentsResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnAutoGetEnvironments()", "Discovery - GetEnvironments Response: {0}", customData["json"].ToString());
+            
+            Test(response != null);
+            _autoGetEnvironmentsTested = true;
+        }
+
         private void OnCreateJpCollection(CollectionRef response, Dictionary<string, object> customData)
         {
             Log.Debug("TestDiscovery.OnAddJpCollection()", "Discovery - add jp collection Response: added:{0}", customData["json"].ToString());
@@ -609,6 +653,70 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             else
             {
                 Runnable.Run(CheckEnvironmentState(10f));
+            }
+        }
+        #endregion
+
+        #region Check stopwords list state
+        private IEnumerator CheckStopwordsListState(float waitTime)
+        {
+            yield return new WaitForSeconds(waitTime);
+
+            Log.Debug("TestDiscovery.CheckStopwordsListState()", "Attempting to get stopwords list state");
+            try
+            {
+                _discovery.GetStopwordListStatus(HandleGetStopwordsListState, OnFail, _environmentId, _createdCollectionId);
+            }
+            catch (System.Exception e)
+            {
+                Log.Debug("TestDiscovery.CheckStopwordsListState()", string.Format("Failed to get stopwords list state: {0}", e.Message));
+                Runnable.Run(CheckStopwordsListState(10f));
+            }
+        }
+
+        private void HandleGetStopwordsListState(TokenDictStatusResponse resp, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.HandleGetStopwordsListState()", "Stopwords list is {1}", resp.Status);
+
+            if (resp.Status.ToLower() == "pending")
+            {
+                Runnable.Run(CheckStopwordsListState(10f));
+            }
+            else
+            {
+                _isStopwordsListReady = true;
+            }
+        }
+        #endregion
+
+        #region Check tokenization dictionary state
+        private IEnumerator CheckTokenizationDictionaryState(float waitTime)
+        {
+            yield return new WaitForSeconds(waitTime);
+
+            Log.Debug("TestDiscovery.CheckTokenizationDictionaryState()", "Attempting to get tokenization dictionary state");
+            try
+            {
+                _discovery.GetTokenizationDictionaryStatus(HandleGetTokenizationDictionaryState, OnFail, _environmentId, _createdCollectionId);
+            }
+            catch (System.Exception e)
+            {
+                Log.Debug("TestDiscovery.CheckTokenizationDictionaryState()", string.Format("Failed to get tokenization dictionary state: {0}", e.Message));
+                Runnable.Run(CheckTokenizationDictionaryState(10f));
+            }
+        }
+
+        private void HandleGetTokenizationDictionaryState(TokenDictStatusResponse resp, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.HandleTokenizationDictionaryState()", "Tokenization dictionary state is {1}", resp.Status);
+
+            if (resp.Status.ToLower() == "pending")
+            {
+                Runnable.Run(CheckTokenizationDictionaryState(10f));
+            }
+            else
+            {
+                _isTokenizationDictionaryReady = true;
             }
         }
         #endregion
@@ -836,20 +944,27 @@ namespace IBM.Watson.DeveloperCloud.UnitTests
             _queryLogTested = true;
         }
 
-        //private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
-        //{
-        //    Log.Debug("TestDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
-        //    Test(response != null);
-        //    Test(response.Status == "pending");
-        //    _createStopwordListTested = true;
-        //}
+        private void OnCreateStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnCreateStopwordList()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            Test(response.Status == "pending");
+            _createStopwordListTested = true;
+        }
 
-        //private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
-        //{
-        //    Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
-        //    Test(response != null);
-        //    _deleteStopwordListTested = true;
-        //}
+        private void OnGetStopwordList(TokenDictStatusResponse response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnGetStopwordList()", "Response: {0}", customData["json"].ToString());
+            Test(response != null);
+            _getStopwordListTested = true;
+        }
+
+        private void OnDeleteStopwordList(object response, Dictionary<string, object> customData)
+        {
+            Log.Debug("TestDiscovery.OnDeleteStopwordList()", "Success!");
+            Test(response != null);
+            _deleteStopwordListTested = true;
+        }
 
         private void OnListGateways(GatewayList response, Dictionary<string, object> customData)
         {

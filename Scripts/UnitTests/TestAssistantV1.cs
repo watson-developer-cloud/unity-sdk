@@ -24,6 +24,7 @@ using IBM.Watson.DeveloperCloud.Logging;
 using FullSerializer;
 using IBM.Watson.DeveloperCloud.Connection;
 using System.IO;
+using System;
 
 namespace Assets.Watson.Scripts.UnitTests
 {
@@ -58,6 +59,7 @@ namespace Assets.Watson.Scripts.UnitTests
         private static string _dialogNodeDesc = "Unity SDK Integration test dialog node";
         private static Dictionary<string, object> _context = null;
 
+        private bool _autoListWorkspacesTested = false;
         private bool _listWorkspacesTested = false;
         private bool _createWorkspaceTested = false;
         private bool _getWorkspaceTested = false;
@@ -108,6 +110,15 @@ namespace Assets.Watson.Scripts.UnitTests
         public override IEnumerator RunTest()
         {
             LogSystem.InstallDefaultReactors();
+
+            //  Test Assistant using loaded credentials
+            Assistant autoAssisant = new Assistant();
+            while (!autoAssisant.Credentials.HasIamTokenData())
+                yield return null;
+            autoAssisant.VersionDate = _assistantVersionDate;
+            autoAssisant.ListWorkspaces(OnAutoListWorkspaces, OnFail);
+            while (!_autoListWorkspacesTested)
+                yield return null;
 
             VcapCredentials vcapCredentials = new VcapCredentials();
             fsData data = null;
@@ -477,7 +488,7 @@ namespace Assets.Watson.Scripts.UnitTests
 
             yield break;
         }
-
+        
         private void OnDeleteWorkspace(object response, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistant.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
@@ -778,6 +789,12 @@ namespace Assets.Watson.Scripts.UnitTests
         {
             Log.Debug("ExampleAssistant.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
             _listWorkspacesTested = true;
+        }
+
+        private void OnAutoListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+        {
+            Log.Debug("ExampleAssistant.OnAutoListWorkspaces()", "Response: {0}", customData["json"].ToString());
+            _autoListWorkspacesTested = true;
         }
 
         private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
