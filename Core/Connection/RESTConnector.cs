@@ -122,10 +122,12 @@ namespace IBM.Cloud.SDK.Connection
             /// <param name="contents">The binary data.</param>
             /// <param name="fileName">The filename of the binary data.</param>
             /// <param name="mimeType">The mime type of the data.</param>
-            public Form(byte[] contents, string fileName = null, string mimeType = null)
+            public Form(System.IO.FileStream contents, string fileName = null, string mimeType = null)
             {
                 IsBinary = true;
-                Contents = contents;
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                contents.CopyTo(ms);
+                Contents = ms.ToArray();
                 FileName = fileName;
                 MimeType = mimeType;
             }
@@ -491,6 +493,11 @@ namespace IBM.Cloud.SDK.Connection
                         url = url,
                         method = req.HttpMethod
                     };
+
+                    if(req.HttpMethod == UnityWebRequest.kHttpVerbPOST)
+                    {
+                        unityWebRequest.SetRequestHeader("Content-Type", "application/json");
+                    }
                 }
 
                 foreach (KeyValuePair<string, string> kvp in req.Headers)

@@ -18,8 +18,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IBM.Cloud.SDK;
-using IBM.Watson.Assistant.V2.Model;
 using Newtonsoft.Json;
+using IBM.Watson.Assistant.V2.Model.Handwritten;
 
 namespace IBM.Watson.Examples
 {

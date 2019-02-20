@@ -17,7 +17,7 @@
 
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2.Model
+namespace IBM.Watson.Assistant.V2.Model.Handwritten
 {
     /// <summary>
     /// Contains information that can be shared by all skills within the Assistant.

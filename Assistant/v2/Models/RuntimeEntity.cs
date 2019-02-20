@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace IBM.Watson.Assistant.V2.Model
+namespace IBM.Watson.Assistant.V2.Model.Handwritten
 {
     /// <summary>
     /// A term from the request that was identified as an entity.

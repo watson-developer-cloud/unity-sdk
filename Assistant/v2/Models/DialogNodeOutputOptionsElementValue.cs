@@ -17,7 +17,7 @@
 
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V2.Model
+namespace IBM.Watson.Assistant.V2.Model.Handwritten
 {
     /// <summary>
     /// An object defining the message input to be sent to the assistant if the user selects the corresponding option.

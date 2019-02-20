@@ -30,9 +30,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
     public class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
+        private const string defaultUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
 
         #region Credentials
-        private Credentials credentials = null;
         /// <summary>
         /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
@@ -44,14 +44,13 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 credentials = value;
                 if (!string.IsNullOrEmpty(credentials.Url))
                 {
-                    url = credentials.Url;
+                    Url = credentials.Url;
                 }
             }
         }
         #endregion
 
         #region Url
-        private string url  = "https://gateway.watsonplatform.net/tone-analyzer/api";
         /// <summary>
         /// Gets and sets the endpoint URL for the service.
         /// </summary>
@@ -92,6 +91,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
         public ToneAnalyzerService(string versionDate) : base(versionDate, serviceId)
         {
+            VersionDate = versionDate;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         {
             if (string.IsNullOrEmpty(versionDate))
             {
-                throw new ArgumentNullException("A versionDate is required to create an instance of ToneAnalyzerService");
+                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
             }
             else
             {
@@ -116,12 +116,12 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
                 if (string.IsNullOrEmpty(credentials.Url))
                 {
-                    credentials.Url = Url;
+                    credentials.Url = defaultUrl;
                 }
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the ToneAnalyzerService service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new WatsonException("Please provide a username and password or authorization token to use the ToneAnalyzer service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -177,9 +177,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("A callback is required for Tone");
-
             if (toneInput == null)
-                throw new ArgumentNullException("A toneInput is required for Tone");
+                throw new ArgumentNullException("toneInput is required for Tone");
 
             RequestObject<ToneAnalysis> req = new RequestObject<ToneAnalysis>
             {
@@ -189,41 +188,47 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 CustomData = customData == null ? new Dictionary<string, object>() : customData
             };
 
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
 
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=tone_analyzer;service_version=V3;operation_id=Tone";
             req.Parameters["version"] = VersionDate;
-            if(!string.IsNullOrEmpty(contentLanguage))
+            if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
             }
-            if(!string.IsNullOrEmpty(acceptLanguage))
+            if (!string.IsNullOrEmpty(acceptLanguage))
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-            if(!string.IsNullOrEmpty(contentType))
+            if (!string.IsNullOrEmpty(contentType))
             {
                 req.Headers["Content-Type"] = contentType;
             }
             if (sentences != null)
             {
-                req.Parameters["sentences"] = sentences;
+                req.Parameters["sentences"] = (bool)sentences ? "true" : "false";
             }
             req.Parameters["tones"] = tones != null && tones.Count > 0 ? string.Join(",", tones.ToArray()) : null;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
             if (toneInput != null)
             {
                 req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
             }
+
             req.OnResponse = OnToneResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone");
             if (connector == null)
+            {
                 return false;
+            }
 
             return connector.Send(req);
         }
@@ -288,9 +293,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("A callback is required for ToneChat");
-
             if (utterances == null)
-                throw new ArgumentNullException("A utterances is required for ToneChat");
+                throw new ArgumentNullException("utterances is required for ToneChat");
 
             RequestObject<UtteranceAnalyses> req = new RequestObject<UtteranceAnalyses>
             {
@@ -300,32 +304,38 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 CustomData = customData == null ? new Dictionary<string, object>() : customData
             };
 
-            if(req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
             {
-                foreach(KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
                 {
                     req.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
 
+            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=tone_analyzer;service_version=V3;operation_id=ToneChat";
             req.Parameters["version"] = VersionDate;
-            if(!string.IsNullOrEmpty(contentLanguage))
+            if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
             }
-            if(!string.IsNullOrEmpty(acceptLanguage))
+            if (!string.IsNullOrEmpty(acceptLanguage))
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
             if (utterances != null)
             {
                 req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(utterances));
             }
+
             req.OnResponse = OnToneChatResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone_chat");
             if (connector == null)
+            {
                 return false;
+            }
 
             return connector.Send(req);
         }

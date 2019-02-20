@@ -15,30 +15,65 @@
 *
 */
 
+using IBM.Cloud.SDK.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IBM.Cloud.SDK
 {
     public class BaseService
     {
+        protected Credentials credentials;
+        protected string url;
+
         public BaseService(string serviceId)
         {
+            var credentialsPaths = Utility.GetCredentialsPaths();
+            if (credentialsPaths.Count > 0)
+            {
+                foreach (string path in credentialsPaths)
+                {
+                    if (Utility.LoadEnvFile(path))
+                    {
+                        break;
+                    }
+                }
 
+                string ApiKey = Environment.GetEnvironmentVariable(serviceId.ToUpper() + "_APIKEY");
+                string Username = Environment.GetEnvironmentVariable(serviceId.ToUpper() + "_USERNAME");
+                string Password = Environment.GetEnvironmentVariable(serviceId.ToUpper() + "_PASSWORD");
+                string ServiceUrl = Environment.GetEnvironmentVariable(serviceId.ToUpper() + "_URL");
+
+                if (string.IsNullOrEmpty(ApiKey) && (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)))
+                {
+                    throw new NullReferenceException(string.Format("Either {0}_APIKEY or {0}_USERNAME and {0}_PASSWORD did not exist. Please add credentials with this key in ibm-credentials.env.", serviceId.ToUpper()));
+                }
+
+                if (!string.IsNullOrEmpty(ApiKey))
+                {
+                    TokenOptions tokenOptions = new TokenOptions()
+                    {
+                        IamApiKey = ApiKey
+                    };
+
+                    credentials = new Credentials(tokenOptions, ServiceUrl);
+
+                    if (string.IsNullOrEmpty(credentials.Url))
+                    {
+                        credentials.Url = url;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                {
+                    credentials = new Credentials(Username, Password, url);
+                }
+            }
         }
 
-        public BaseService(string versionDate, string serviceId)
-        {
+        public BaseService(string versionDate, string serviceId) : this(serviceId) { }
 
-        }
+        public BaseService(string versionDate, Credentials credentials, string serviceId) { }
 
-        public BaseService(string versionDate, Credentials credentials, string serviceId)
-        {
-
-        }
-
+        public BaseService(Credentials credentials, string serviceId) { }
     }
 }

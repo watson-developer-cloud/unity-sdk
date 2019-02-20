@@ -18,7 +18,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace IBM.Watson.Assistant.V2.Model
+namespace IBM.Watson.Assistant.V2.Model.Handwritten
 {
     /// <summary>
     /// Contains information specific to particular skills within the Assistant.

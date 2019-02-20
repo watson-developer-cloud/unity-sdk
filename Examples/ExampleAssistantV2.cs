@@ -82,8 +82,7 @@ namespace IBM.Watson.Examples
             while (!credentials.HasIamTokenData())
                 yield return null;
 
-            service = new AssistantService(credentials);
-            service.VersionDate = versionDate;
+            service = new AssistantService(versionDate, credentials);
 
             Runnable.Run(Examples());
         }

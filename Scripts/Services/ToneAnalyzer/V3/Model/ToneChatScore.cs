@@ -28,7 +28,7 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// The unique, non-localized identifier of the tone for the results. The service returns results only for tones
         /// whose scores meet a minimum threshold of 0.5.
         /// </summary>
-        public class ToneIdEnumValue
+        public class ToneIdValue
         {
             /// <summary>
             /// Constant EXCITED for excited
@@ -64,7 +64,7 @@ namespace IBM.Watson.ToneAnalyzer.V3.Model
         /// <summary>
         /// The unique, non-localized identifier of the tone for the results. The service returns results only for tones
         /// whose scores meet a minimum threshold of 0.5.
-        /// Constants for possible values can be found using ToneChatScore.ToneIdEnumValue
+        /// Constants for possible values can be found using ToneChatScore.ToneIdValue
         /// </summary>
         [JsonProperty("tone_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ToneId { get; set; }
