@@ -15,49 +15,109 @@
 *
 */
 
+using IBM.Cloud.SDK;
 using IBM.Watson.Assistant.V2;
+using IBM.Watson.Assistant.V2.Model;
 using NUnit.Framework;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.TestTools;
 
 namespace IBM.Watson.Tests
 {
     public class AssistantV2IntegrationTests
     {
-        public AssistantService service;
+        private AssistantService service;
+        private string versionDate = "2019-02-18";
+        private string assistantId;
+        private string sessionId;
 
-        //// A Test behaves as an ordinary method
-        //[Test]
-        //public void AssistantV2IntegrationTestsSimplePasses()
-        //{
-        //    // Use the Assert class to test conditions
-        //}
-
-        //// A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        //// `yield return null;` to skip a frame.
-        //[UnityTest, Order(0)]
-        //public IEnumerator AssistantV2IntegrationTestsWithEnumeratorPasses()
-        //{
-        //    // Use the Assert class to test conditions.
-        //    // Use yield to skip a frame.
-        //    yield return null;
-        //}
         [SetUp]
         public void TestSetup()
         {
             LogSystem.InstallDefaultReactors();
-            service = new AssistantService("2019-02-18");
         }
 
-        [UnityTest, Order(0)]
-        public void TestCreateSession()
+        [UnityTest]
+        public IEnumerator TestCreateSession()
         {
+            service = new AssistantService(versionDate);
 
+            while (!service.Credentials.HasIamTokenData())
+                yield return null;
+
+            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
+
+            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                Assert.IsNotNull(response.Result);
+                Assert.IsNotNull(response.Result.SessionId);
+            }, assistantId);
+        }
+
+        [UnityTest]
+        public IEnumerator TestMessage()
+        {
+            service = new AssistantService(versionDate);
+
+            while (!service.Credentials.HasIamTokenData())
+                yield return null;
+
+            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
+            sessionId = null;
+
+            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                sessionId = response.Result.SessionId;
+            }, assistantId);
+
+            while (string.IsNullOrEmpty(sessionId))
+                yield return null;
+
+            service.Message((WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                Assert.IsNotNull(response.Result);
+            }, assistantId, sessionId);
+        }
+
+        [UnityTest]
+        public IEnumerator TestDeleteSession()
+        {
+            service = new AssistantService(versionDate);
+
+            while (!service.Credentials.HasIamTokenData())
+                yield return null;
+
+            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
+            sessionId = null;
+
+            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                sessionId = response.Result.SessionId;
+            }, assistantId);
+
+            while (string.IsNullOrEmpty(sessionId))
+                yield return null;
+
+            service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                Assert.IsNotNull(response.Result);
+                sessionId = null;
+            }, assistantId, sessionId);
         }
 
         [TearDown]
         public void TestTearDown()
         {
-
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Assert.IsNotNull(response.Result);
+                    Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
+                }, assistantId, sessionId);
+            }
         }
     }
 }

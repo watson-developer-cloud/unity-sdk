@@ -224,7 +224,7 @@ namespace IBM.Watson.Examples
         private void OnDeleteSession(WatsonResponse<object> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
-            createSessionTested = true;
+            deleteSessionTested = true;
         }
 
         private void OnMessage0(WatsonResponse<MessageResponse> response, WatsonError error, System.Collections.Generic.Dictionary<string, object> customData)
