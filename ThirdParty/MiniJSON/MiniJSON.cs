@@ -29,6 +29,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -289,7 +290,7 @@ namespace MiniJSON {
 
             object ParseNumber() {
                 string number = NextWord;
-
+                var culture = new CultureInfo("en-US");
                 if (number.IndexOf('.') == -1) {
                     long parsedInt;
                     Int64.TryParse(number, out parsedInt);
@@ -297,7 +298,7 @@ namespace MiniJSON {
                 }
 
                 double parsedDouble;
-                Double.TryParse(number, out parsedDouble);
+                Double.TryParse(number, NumberStyles.Any, culture, out parsedDouble);
                 return parsedDouble;
             }
 
