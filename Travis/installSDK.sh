@@ -6,6 +6,7 @@ git clone https://$CREDENTIALS_GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credent
 
 if [ $? = 0 ] ; then
   echo "Credentials install SUCCEEDED! Exited with $?"
+  export IBM_CREDENTIALS_FILE=$(pwd)/Travis/sdk-credentials/ibm-credentials.env
 else
   echo "Credentials install FAILED! Exited with $?"
   exit 1

@@ -79,6 +79,11 @@ namespace IBM.Watson.Tests
             {
                 Assert.IsNotNull(response.Result);
             }, assistantId, sessionId);
+
+            service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+            {
+                sessionId = null;
+            }, assistantId, sessionId);
         }
 
         [UnityTest]
@@ -110,14 +115,14 @@ namespace IBM.Watson.Tests
         [TearDown]
         public void TestTearDown()
         {
-            if (!string.IsNullOrEmpty(sessionId))
-            {
-                service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
-                {
-                    Assert.IsNotNull(response.Result);
-                    Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
-                }, assistantId, sessionId);
-            }
+            //if (!string.IsNullOrEmpty(sessionId))
+            //{
+            //    service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+            //    {
+            //        Assert.IsNotNull(response.Result);
+            //        Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
+            //    }, assistantId, sessionId);
+            //}
         }
     }
 }
