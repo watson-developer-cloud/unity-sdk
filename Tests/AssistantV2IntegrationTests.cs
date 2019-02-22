@@ -29,7 +29,7 @@ namespace IBM.Watson.Tests
     public class AssistantV2IntegrationTests
     {
         private AssistantService service;
-        private string versionDate = "2019-02-18";
+        private string versionDate = "2019-02-13";
         private string assistantId;
         private string sessionId;
 
@@ -37,23 +37,6 @@ namespace IBM.Watson.Tests
         public void TestSetup()
         {
             LogSystem.InstallDefaultReactors();
-        }
-
-        [UnityTest]
-        public IEnumerator TestCreateSession()
-        {
-            service = new AssistantService(versionDate);
-
-            while (!service.Credentials.HasIamTokenData())
-                yield return null;
-
-            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
-
-            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
-            {
-                Assert.IsNotNull(response.Result);
-                Assert.IsNotNull(response.Result.SessionId);
-            }, assistantId);
         }
 
         [UnityTest]
@@ -65,64 +48,207 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
-            sessionId = null;
+            string sessionId = null;
 
-            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
-            {
-                sessionId = response.Result.SessionId;
-            }, assistantId);
+            SessionResponse createSessionResponse = null;
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to CreateSession...");
+            service.CreateSession(
+                callback: (WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    createSessionResponse = response.Result;
+                    sessionId = createSessionResponse.SessionId;
+                    Assert.IsNotNull(createSessionResponse);
+                    Assert.IsNotNull(response.Result.SessionId);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId
+            );
 
-            while (string.IsNullOrEmpty(sessionId))
+            while (createSessionResponse == null)
                 yield return null;
 
-            service.Message((WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
-            {
-                Assert.IsNotNull(response.Result);
-            }, assistantId, sessionId);
+            MessageResponse messageResponse = null;
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId
+            );
 
-            service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
-            {
-                sessionId = null;
-            }, assistantId, sessionId);
-        }
-
-        [UnityTest]
-        public IEnumerator TestDeleteSession()
-        {
-            service = new AssistantService(versionDate);
-
-            while (!service.Credentials.HasIamTokenData())
+            while (messageResponse == null)
                 yield return null;
 
-            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
-            sessionId = null;
-
-            service.CreateSession((WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+            messageResponse = null;
+            MessageRequest messageRequest = new MessageRequest()
             {
-                sessionId = response.Result.SessionId;
-            }, assistantId);
+                Input = new MessageInput()
+                {
+                    Text = "Are you open on Christmas?",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Are you open on Christmas?");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                request: messageRequest
+            );
 
-            while (string.IsNullOrEmpty(sessionId))
+            while (messageResponse == null)
                 yield return null;
 
-            service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+            messageResponse = null;
+            messageRequest = new MessageRequest()
             {
-                Assert.IsNotNull(response.Result);
-                sessionId = null;
-            }, assistantId, sessionId);
+                Input = new MessageInput()
+                {
+                    Text = "What are your hours?",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...What are your hours?");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                request: messageRequest
+            );
+
+            while (messageResponse == null)
+                yield return null;
+
+            messageResponse = null;
+            messageRequest = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "I'd like to make an appointment for 12pm.",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                request: messageRequest
+            );
+
+            while (messageResponse == null)
+                yield return null;
+
+            messageResponse = null;
+            messageRequest = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "On Friday please.",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...On Friday please.");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                request: messageRequest
+            );
+
+            while (messageResponse == null)
+                yield return null;
+
+            messageResponse = null;
+            messageRequest = new MessageRequest()
+            {
+                Input = new MessageInput()
+                {
+                    Text = "Yes.",
+                    Options = new MessageInputOptions()
+                    {
+                        ReturnContext = true
+                    }
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Yes.");
+            service.Message(
+                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                request: messageRequest
+            );
+
+            while (messageResponse == null)
+                yield return null;
+            
+            object deleteSessionResponse = null;
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to DeleteSession...");
+            service.DeleteSession(
+                callback: (WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    deleteSessionResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId
+            );
+
+            while (deleteSessionResponse == null)
+                yield return null;
         }
 
         [TearDown]
-        public void TestTearDown()
-        {
-            //if (!string.IsNullOrEmpty(sessionId))
-            //{
-            //    service.DeleteSession((WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        Assert.IsNotNull(response.Result);
-            //        Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
-            //    }, assistantId, sessionId);
-            //}
-        }
+        public void TestTearDown() { }
     }
 }
