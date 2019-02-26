@@ -27,7 +27,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class ValueExport
     {
         /// <summary>
-        /// Specifies the type of value.
+        /// Specifies the type of entity value.
         /// </summary>
         public class ValueTypeValue
         {
@@ -43,7 +43,7 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// Specifies the type of value.
+        /// Specifies the type of entity value.
         /// Constants for possible values can be found using ValueExport.ValueTypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
@@ -69,12 +69,14 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Updated { get; private set; }
         /// <summary>
-        /// An array containing any synonyms for the entity value.
+        /// An array of synonyms. An entity value can have synonyms or patterns (as indicated by **type**), but not
+        /// both.
         /// </summary>
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Synonyms { get; set; }
         /// <summary>
-        /// An array containing any patterns for the entity value.
+        /// An array of patterns for the entity value. A pattern is specified as a regular expression. An entity value
+        /// can contain synonyms or patterns (as indicated by **type**), but not both.
         /// </summary>
         [JsonProperty("patterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Patterns { get; set; }

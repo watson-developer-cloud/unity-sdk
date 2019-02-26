@@ -193,28 +193,31 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("digress_out_slots", NullValueHandling = NullValueHandling.Ignore)]
         public string DigressOutSlots { get; set; }
         /// <summary>
-        /// The dialog node ID.
+        /// The dialog node ID. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 1024 characters.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNodeId { get; set; }
         /// <summary>
-        /// The description of the dialog node.
+        /// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters,
+        /// and it must be no longer than 128 characters.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
-        /// The condition that triggers the dialog node.
+        /// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
+        /// characters, and it must be no longer than 2048 characters.
         /// </summary>
         [JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
         public string Conditions { get; set; }
         /// <summary>
-        /// The ID of the parent dialog node. This property is not returned if the dialog node has no parent.
+        /// The ID of the parent dialog node.
         /// </summary>
         [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
         public string Parent { get; set; }
         /// <summary>
-        /// The ID of the previous sibling dialog node. This property is not returned if the dialog node has no previous
-        /// sibling.
+        /// The ID of the previous sibling dialog node.
         /// </summary>
         [JsonProperty("previous_sibling", NullValueHandling = NullValueHandling.Ignore)]
         public string PreviousSibling { get; set; }
@@ -225,12 +228,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public DialogNodeOutput Output { get; set; }
         /// <summary>
-        /// The context (if defined) for the dialog node.
+        /// The context for the dialog node.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
         public object Context { get; set; }
         /// <summary>
-        /// Any metadata for the dialog node.
+        /// The metadata for the dialog node.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
         public object Metadata { get; set; }
@@ -250,12 +253,14 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Updated { get; private set; }
         /// <summary>
-        /// The actions for the dialog node.
+        /// An array of objects describing any actions to be invoked by the dialog node.
         /// </summary>
         [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
-        /// The alias used to identify the dialog node.
+        /// The alias used to identify the dialog node. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }

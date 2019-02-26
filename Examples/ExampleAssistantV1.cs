@@ -39,15 +39,15 @@ namespace IBM.Watson.Examples
         private static string createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private static string createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
         private static string createdWorkspaceLanguage = "en";
-        private static string createdEntity = "untiyEntity";
+        private static string createdEntity = "unityEntity";
         private static string createdEntityDescription = "Entity created by the Unity SDK Assistant example script.";
-        private static string createdValue = "untiyuntiyalue";
-        private static string createdIntent = "untiyIntent";
+        private static string createdValue = "unityunityalue";
+        private static string createdIntent = "unityIntent";
         private static string createdIntentDescription = "Intent created by the Unity SDK Assistant example script.";
-        private static string createdCounterExampleText = "untiyExample text";
-        private static string createdSynonym = "untiySynonym";
-        private static string createdExample = "untiyExample";
-        private static string dialogNodeName = "untiyDialognode";
+        private static string createdCounterExampleText = "unityExample text";
+        private static string createdSynonym = "unitySynonym";
+        private static string createdExample = "unityExample";
+        private static string dialogNodeName = "unityDialognode";
         private static string dialogNodeDesc = "Unity SDK Integration test dialog node";
         private Dictionary<string, object> context = null;
 
@@ -122,34 +122,26 @@ namespace IBM.Watson.Examples
             while (!listWorkspacesTested)
                 yield return null;
 
-            //  Create Workspace
-            CreateWorkspace workspace = new CreateWorkspace()
-            {
-                Name = createdWorkspaceName,
-                Description = createdWorkspaceDescription,
-                Language = createdWorkspaceLanguage,
-                LearningOptOut = true
-            };
             Log.Debug("ExampleAssistantV1", "Attempting to CreateWorkspace...");
-            service.CreateWorkspace(OnCreateWorkspace, workspace);
+            service.CreateWorkspace(callback: OnCreateWorkspace, name: createdWorkspaceName, description: createdWorkspaceDescription, language: createdWorkspaceLanguage, learningOptOut: true);
             while (!createWorkspaceTested)
                 yield return null;
 
             //  Get Workspace
             Log.Debug("ExampleAssistantV1", "Attempting to GetWorkspace...");
-            service.GetWorkspace(OnGetWorkspace, createdWorkspaceId);
+            service.GetWorkspace(callback: OnGetWorkspace, workspaceId: createdWorkspaceId);
             while (!getWorkspaceTested)
                 yield return null;
 
-            UpdateWorkspace updateWorkspace = new UpdateWorkspace()
-            {
-                Name = createdWorkspaceName + "Updated",
-            //  Update Workspace
-                Description = createdWorkspaceDescription + "Updated",
-                Language = createdWorkspaceLanguage
-            };
+            //UpdateWorkspace updateWorkspace = new UpdateWorkspace()
+            //{
+            //    Name = createdWorkspaceName + "Updated",
+            ////  Update Workspace
+            //    Description = createdWorkspaceDescription + "Updated",
+            //    Language = createdWorkspaceLanguage
+            //};
             Log.Debug("ExampleAssistantV1", "Attempting to UpdateWorkspace...");
-            service.UpdateWorkspace(OnUpdateWorkspace, createdWorkspaceId, updateWorkspace);
+            service.UpdateWorkspace(callback: OnUpdateWorkspace, workspaceId: createdWorkspaceId, name: createdWorkspaceName + "Updated", description: createdWorkspaceDescription + "Updated", language: createdWorkspaceLanguage);
             while (!updateWorkspaceTested)
                 yield return null;
 
@@ -161,7 +153,7 @@ namespace IBM.Watson.Examples
             //    Input = input
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(OnMessage, workspaceId, messageRequest);
+            //service.Message(callback: OnMessage, workspaceId, messageRequest);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
@@ -173,7 +165,7 @@ namespace IBM.Watson.Examples
             //    Context = context
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(OnMessage, workspaceId, messageRequest0);
+            //service.Message(callback: OnMessage, workspaceId, messageRequest0);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
@@ -185,7 +177,7 @@ namespace IBM.Watson.Examples
             //    Context = context
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(OnMessage, workspaceId, messageRequest1);
+            //service.Message(callback: OnMessage, workspaceId, messageRequest1);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
@@ -197,249 +189,187 @@ namespace IBM.Watson.Examples
             //    Context = context
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(OnMessage, workspaceId, messageRequest2);
+            //service.Message(callback: OnMessage, workspaceId, messageRequest2);
             //while (!messageTested)
             //    yield return null;
 
             //  List Intents
             Log.Debug("ExampleAssistantV1", "Attempting to ListIntents...");
-            service.ListIntents(OnListIntents, createdWorkspaceId);
+            service.ListIntents(callback: OnListIntents, workspaceId: createdWorkspaceId);
             while (!listIntentsTested)
                 yield return null;
 
-            //  Create Intent
-            CreateIntent createIntent = new CreateIntent()
-            {
-                Intent = createdIntent,
-                Description = createdIntentDescription
-            };
+            ////  Create Intent
             Log.Debug("ExampleAssistantV1", "Attempting to CreateIntent...");
-            service.CreateIntent(OnCreateIntent, createdWorkspaceId, createIntent);
+            service.CreateIntent(callback: OnCreateIntent, workspaceId: createdWorkspaceId, intent: createdIntent, description: createdIntentDescription);
             while (!createIntentTested)
                 yield return null;
             //  Get Intent
-            service.GetIntent(OnGetIntent, createdWorkspaceId, createdIntent);
+            service.GetIntent(callback: OnGetIntent, workspaceId: createdWorkspaceId, intent: createdIntent);
             while (!getIntentTested)
                 yield return null;
             //  Update Intents
             string updatedIntent = createdIntent + "Updated";
             string updatedIntentDescription = createdIntentDescription + "Updated";
-            UpdateIntent updateIntent = new UpdateIntent()
-            {
-                Intent = updatedIntent,
-                Description = updatedIntentDescription
-            };
-            service.UpdateIntent(OnUpdateIntent, createdWorkspaceId, createdIntent, updateIntent);
+            service.UpdateIntent(callback: OnUpdateIntent, workspaceId: createdWorkspaceId, intent: createdIntent, newIntent: updatedIntent, newDescription: updatedIntentDescription);
             while (!updateIntentTested)
                 yield return null;
 
             //  List Examples
-            service.ListExamples(OnListExamples, createdWorkspaceId, updatedIntent);
+            service.ListExamples(callback: OnListExamples, workspaceId: createdWorkspaceId, intent: updatedIntent);
             while (!listExamplesTested)
                 yield return null;
             //  Create Examples
-            CreateExample createExample = new CreateExample()
-            {
-                Text = createdExample
-            };
-            service.CreateExample(OnCreateExample, createdWorkspaceId, updatedIntent, createExample);
+            service.CreateExample(callback: OnCreateExample, workspaceId: createdWorkspaceId, intent: updatedIntent, text: createdExample);
             while (!createExampleTested)
                 yield return null;
             //  Get Example
-            service.GetExample(OnGetExample, createdWorkspaceId, updatedIntent, createdExample);
+            service.GetExample(callback: OnGetExample, workspaceId: createdWorkspaceId, intent: updatedIntent, createdExample);
             while (!getExampleTested)
                 yield return null;
             //  Update Examples
             string updatedExample = createdExample + "Updated";
-            UpdateExample updateExample = new UpdateExample()
-            {
-                Text = updatedExample
-            };
-            service.UpdateExample(OnUpdateExample, createdWorkspaceId, updatedIntent, createdExample, updateExample);
+            service.UpdateExample(callback: OnUpdateExample, workspaceId: createdWorkspaceId, intent: updatedIntent, text: createdExample, newText: updatedExample);
             while (!updateExampleTested)
                 yield return null;
 
             //  List Entities
-            service.ListEntities(OnListEntities, createdWorkspaceId);
+            service.ListEntities(callback: OnListEntities, workspaceId: createdWorkspaceId);
             while (!listEntitiesTested)
                 yield return null;
             //  Create Entities
-            CreateEntity entity = new CreateEntity()
-            {
-                Entity = createdEntity,
-                Description = createdEntityDescription
-            };
-            service.CreateEntity(OnCreateEntity, createdWorkspaceId, entity);
+            service.CreateEntity(callback: OnCreateEntity, workspaceId: createdWorkspaceId, entity: createdEntity, description: createdEntityDescription);
             while (!createEntityTested)
                 yield return null;
             //  Get Entity
-            service.GetEntity(OnGetEntity, createdWorkspaceId, createdEntity);
+            service.GetEntity(callback: OnGetEntity, workspaceId: createdWorkspaceId, createdEntity);
             while (!getEntityTested)
                 yield return null;
             //  Update Entities
             string updatedEntity = createdEntity + "Updated";
             string updatedEntityDescription = createdEntityDescription + "Updated";
-            UpdateEntity updateEntity = new UpdateEntity()
-            {
-                Entity = updatedEntity,
-                Description = updatedEntityDescription
-            };
-            service.UpdateEntity(OnUpdateEntity, createdWorkspaceId, createdEntity, updateEntity);
+            service.UpdateEntity(callback: OnUpdateEntity, workspaceId: createdWorkspaceId, entity: createdEntity, newEntity: updatedEntity, newDescription: updatedEntityDescription = updatedEntityDescription);
             while (!updateEntityTested)
                 yield return null;
 
             // List Mentinos
-            service.ListMentions(OnListMentions, createdWorkspaceId, updatedEntity);
+            service.ListMentions(callback: OnListMentions, workspaceId: createdWorkspaceId, entity: updatedEntity);
             while (!listMentionsTested)
                 yield return null;
 
             //  List Values
-            service.ListValues(OnListValues, createdWorkspaceId, updatedEntity);
+            service.ListValues(callback: OnListValues, workspaceId: createdWorkspaceId, entity: updatedEntity);
             while (!listValuesTested)
                 yield return null;
             //  Create Values
-            CreateValue value = new CreateValue()
-            {
-                Value = createdValue
-            };
-            service.CreateValue(OnCreateValue, createdWorkspaceId, updatedEntity, value);
+            service.CreateValue(callback: OnCreateValue, workspaceId: createdWorkspaceId, entity: updatedEntity, value: createdValue);
             while (!createValueTested)
                 yield return null;
             //  Get Value
-            service.GetValue(OnGetValue, createdWorkspaceId, updatedEntity, createdValue);
+            service.GetValue(callback: OnGetValue, workspaceId: createdWorkspaceId, entity: updatedEntity, value: createdValue);
             while (!getValueTested)
                 yield return null;
             //  Update Values
             string updatedValue = createdValue + "Updated";
-            UpdateValue updateValue = new UpdateValue()
-            {
-                Value = updatedValue
-            };
-            service.UpdateValue(OnUpdateValue, createdWorkspaceId, updatedEntity, createdValue, updateValue);
+            service.UpdateValue(callback: OnUpdateValue, workspaceId: createdWorkspaceId, entity: updatedEntity, value: createdValue, newValue: updatedValue);
             while (!updateValueTested)
                 yield return null;
 
             //  List Synonyms
-            service.ListSynonyms(OnListSynonyms, createdWorkspaceId, updatedEntity, updatedValue);
+            service.ListSynonyms(callback: OnListSynonyms, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue);
             while (!listSynonymsTested)
                 yield return null;
             //  Create Synonyms
-            CreateSynonym synonym = new CreateSynonym()
-            {
-                Synonym = createdSynonym
-            };
-            service.CreateSynonym(OnCreateSynonym, createdWorkspaceId, updatedEntity, updatedValue, synonym);
+            service.CreateSynonym(callback: OnCreateSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, synonym: createdSynonym);
             while (!createSynonymTested)
                 yield return null;
             //  Get Synonym
-            service.GetSynonym(OnGetSynonym, createdWorkspaceId, updatedEntity, updatedValue, createdSynonym);
+            service.GetSynonym(callback: OnGetSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, synonym: createdSynonym);
             while (!getSynonymTested)
                 yield return null;
             //  Update Synonyms
             string updatedSynonym = createdSynonym + "Updated";
-            UpdateSynonym updateSynonym = new UpdateSynonym()
-            {
-                Synonym = updatedSynonym
-            };
-            service.UpdateSynonym(OnUpdateSynonym, createdWorkspaceId, updatedEntity, updatedValue, createdSynonym, updateSynonym);
+            service.UpdateSynonym(callback: OnUpdateSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, synonym: createdSynonym, newSynonym: updatedSynonym);
             while (!updateSynonymTested)
                 yield return null;
 
             //  List Dialog Nodes
-            service.ListDialogNodes(OnListDialogNodes, createdWorkspaceId);
+            service.ListDialogNodes(callback: OnListDialogNodes, workspaceId: createdWorkspaceId);
             while (!listDialogNodesTested)
                 yield return null;
             //  Create Dialog Nodes
-            CreateDialogNode createDialogNode = new CreateDialogNode()
-            {
-                DialogNode = dialogNodeName,
-                Description = dialogNodeDesc
-            };
-            service.CreateDialogNode(OnCreateDialogNode, createdWorkspaceId, createDialogNode);
+            service.CreateDialogNode(callback: OnCreateDialogNode, workspaceId: createdWorkspaceId, dialogNode: dialogNodeName, description: dialogNodeDesc);
             while (!createDialogNodeTested)
                 yield return null;
             //  Get Dialog Node
-            service.GetDialogNode(OnGetDialogNode, createdWorkspaceId, dialogNodeName);
+            service.GetDialogNode(callback: OnGetDialogNode, workspaceId: createdWorkspaceId, dialogNode: dialogNodeName);
             while (!getDialogNodeTested)
                 yield return null;
             //  Update Dialog Nodes
             string updatedDialogNodeName = dialogNodeName + "Updated";
             string updatedDialogNodeDescription = dialogNodeDesc + "Updated";
-            UpdateDialogNode updateDialogNode = new UpdateDialogNode()
-            {
-                DialogNode = updatedDialogNodeName,
-                Description = updatedDialogNodeDescription
-            };
-            service.UpdateDialogNode(OnUpdateDialogNode, createdWorkspaceId, dialogNodeName, updateDialogNode);
+            service.UpdateDialogNode(callback: OnUpdateDialogNode, workspaceId: createdWorkspaceId, dialogNode: dialogNodeName, newDialogNode: updatedDialogNodeName, newDescription: updatedDialogNodeDescription);
             while (!updateDialogNodeTested)
                 yield return null;
 
             //  List Logs In Workspace
-            service.ListLogs(OnListLogs, createdWorkspaceId);
+            service.ListLogs(callback: OnListLogs, workspaceId: createdWorkspaceId);
             while (!listLogsInWorkspaceTested)
                 yield return null;
             //  List All Logs
             var filter = "(language::en,request.context.metadata.deployment::deployment_1)";
-            service.ListAllLogs(OnListAllLogs, filter);
+            service.ListAllLogs(callback: OnListAllLogs, filter);
             while (!listAllLogsTested)
                 yield return null;
 
             //  List Counterexamples
-            service.ListCounterexamples(OnListCounterexamples, createdWorkspaceId);
+            service.ListCounterexamples(callback: OnListCounterexamples, workspaceId: createdWorkspaceId);
             while (!listCounterexamplesTested)
                 yield return null;
             //  Create Counterexamples
-            CreateCounterexample example = new CreateCounterexample()
-            {
-                Text = createdCounterExampleText
-            };
-            service.CreateCounterexample(OnCreateCounterexample, createdWorkspaceId, example);
+            service.CreateCounterexample(callback: OnCreateCounterexample, workspaceId: createdWorkspaceId, text: createdCounterExampleText);
             while (!createCounterexampleTested)
                 yield return null;
             //  Get Counterexample
-            service.GetCounterexample(OnGetCounterexample, createdWorkspaceId, createdCounterExampleText);
+            service.GetCounterexample(callback: OnGetCounterexample, workspaceId: createdWorkspaceId, createdCounterExampleText);
             while (!getCounterexampleTested)
                 yield return null;
             //  Update Counterexamples
             string updatedCounterExampleText = createdCounterExampleText + "Updated";
-            UpdateCounterexample updateCounterExample = new UpdateCounterexample()
-            {
-                Text = updatedCounterExampleText
-            };
-            service.UpdateCounterexample(OnUpdateCounterexample, createdWorkspaceId, createdCounterExampleText, updateCounterExample);
+            service.UpdateCounterexample(callback: OnUpdateCounterexample, workspaceId: createdWorkspaceId, text: createdCounterExampleText, newText: updatedCounterExampleText);
             while (!updateCounterexampleTested)
                 yield return null;
 
             //  Delete Counterexample
-            service.DeleteCounterexample(OnDeleteCounterexample, createdWorkspaceId, updatedCounterExampleText);
+            service.DeleteCounterexample(callback: OnDeleteCounterexample, workspaceId: createdWorkspaceId, updatedCounterExampleText);
             while (!deleteCounterexampleTested)
                 yield return null;
             //  Delete Dialog Node
-            service.DeleteDialogNode(OnDeleteDialogNode, createdWorkspaceId, updatedDialogNodeName);
+            service.DeleteDialogNode(callback: OnDeleteDialogNode, workspaceId: createdWorkspaceId, updatedDialogNodeName);
             while (!deleteDialogNodeTested)
                 yield return null;
             //  Delete Synonym
-            service.DeleteSynonym(OnDeleteSynonym, createdWorkspaceId, updatedEntity, updatedValue, updatedSynonym);
+            service.DeleteSynonym(callback: OnDeleteSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, updatedSynonym);
             while (!deleteSynonymTested)
                 yield return null;
             //  Delete Value
-            service.DeleteValue(OnDeleteValue, createdWorkspaceId, updatedEntity, updatedValue);
+            service.DeleteValue(callback: OnDeleteValue, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue);
             while (!deleteValueTested)
                 yield return null;
             //  Delete Entity
-            service.DeleteEntity(OnDeleteEntity, createdWorkspaceId, updatedEntity);
+            service.DeleteEntity(callback: OnDeleteEntity, workspaceId: createdWorkspaceId, entity: updatedEntity);
             while (!deleteEntityTested)
                 yield return null;
             //  Delete Example
-            service.DeleteExample(OnDeleteExample, createdWorkspaceId, updatedIntent, updatedExample);
+            service.DeleteExample(callback: OnDeleteExample, workspaceId: createdWorkspaceId, intent: updatedIntent, updatedExample);
             while (!deleteExampleTested)
                 yield return null;
             //  Delete Intent
-            service.DeleteIntent(OnDeleteIntent, createdWorkspaceId, updatedIntent);
+            service.DeleteIntent(callback: OnDeleteIntent, workspaceId: createdWorkspaceId, intent: updatedIntent);
             while (!deleteIntentTested)
                 yield return null;
             //  Delete Workspace
-            service.DeleteWorkspace(OnDeleteWorkspace, createdWorkspaceId);
+            service.DeleteWorkspace(callback: OnDeleteWorkspace, workspaceId: createdWorkspaceId);
             while (!deleteWorkspaceTested)
                 yield return null;
 
@@ -747,7 +677,7 @@ namespace IBM.Watson.Examples
             foreach (Workspace workspace in response.Result.Workspaces)
             {
                 if (workspace.Name.Contains("unity"))
-                    service.DeleteWorkspace(OnDeleteWorkspace, workspace.WorkspaceId);
+                    service.DeleteWorkspace(callback: OnDeleteWorkspace, workspace.WorkspaceId);
             }
 
             listWorkspacesTested = true;

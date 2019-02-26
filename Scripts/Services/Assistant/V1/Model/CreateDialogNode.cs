@@ -216,7 +216,7 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
         public string Parent { get; set; }
         /// <summary>
-        /// The ID of the previous dialog node.
+        /// The ID of the previous sibling dialog node.
         /// </summary>
         [JsonProperty("previous_sibling", NullValueHandling = NullValueHandling.Ignore)]
         public string PreviousSibling { get; set; }

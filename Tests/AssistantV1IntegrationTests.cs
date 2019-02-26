@@ -70,13 +70,9 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            MessageRequest messageRequest = new MessageRequest()
+            var input = new InputData()
             {
-                Context = context,
-                Input = new InputData()
-                {
-                    Text = "Are you open on Christmas?"
-                }
+                Text = "Are you open on Christmas?"
             };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Are you open on Christmas?");
             service.Message(
@@ -88,7 +84,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                request: messageRequest,
+                input: input, 
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -96,13 +93,9 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new InputData()
             {
-                Context = context,
-                Input = new InputData()
-                {
-                    Text = "What are your hours?"
-                }
+                Text = "What are your hours?"
             };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...What are your hours?");
             service.Message(
@@ -114,7 +107,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                request: messageRequest,
+                input: input,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -122,13 +116,9 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new InputData()
             {
-                Context = context,
-                Input = new InputData()
-                {
-                    Text = "I'd like to make an appointment for 12pm."
-                }
+                Text = "I'd like to make an appointment for 12pm."
             };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
             service.Message(
@@ -140,7 +130,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                request: messageRequest,
+                input: input,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -148,13 +139,9 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new InputData()
             {
-                Context = context,
-                Input = new InputData()
-                {
-                    Text = "On Friday please."
-                }
+                Text = "On Friday please."
             };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...On Friday please.");
             service.Message(
@@ -166,7 +153,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                request: messageRequest,
+                input: input,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -174,13 +162,9 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new InputData()
             {
-                Context = context,
-                Input = new InputData()
-                {
-                    Text = "Yes."
-                }
+                Text = "Yes."
             };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Yes.");
             service.Message(
@@ -192,7 +176,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                request: messageRequest,
+                input: input,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -230,14 +215,6 @@ namespace IBM.Watson.Tests
             while (listWorkspaceResponse == null)
                 yield return null;
 
-            CreateWorkspace createWorkspace = new CreateWorkspace()
-            {
-                Name = createdWorkspaceName,
-                Description = createdWorkspaceDescription,
-                Language = createdWorkspaceLanguage,
-                LearningOptOut = true
-            };
-
             Workspace createWorkspaceResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to CreateWorkspace...");
             service.CreateWorkspace(
@@ -250,19 +227,16 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(!string.IsNullOrEmpty(createdWorkspaceId));
                     Assert.IsNull(error);
                 },
-                properties: createWorkspace
+                name: createdWorkspaceName,
+                description: createdWorkspaceDescription,
+                language: createdWorkspaceLanguage,
+                learningOptOut: true
             );
 
             while (createWorkspaceResponse == null)
                 yield return null;
 
             Workspace updateWorkspaceResponse = null;
-            UpdateWorkspace updateWorkspace = new UpdateWorkspace()
-            {
-                Name = createdWorkspaceName + "Updated",
-                Description = createdWorkspaceDescription + "Updated",
-                Language = createdWorkspaceLanguage
-            };
             Log.Debug("AssistantV1IntegrationTests", "Attempting to UpdateWorkspace...");
             service.UpdateWorkspace(
                 callback: (WatsonResponse<Workspace> response, WatsonError error, Dictionary<string, object> customData) =>
@@ -277,7 +251,9 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: createdWorkspaceId,
-                properties: updateWorkspace
+                name: createdWorkspaceName + "Updated",
+                description: createdWorkspaceDescription + "Updated",
+                language: createdWorkspaceLanguage
             );
 
             while (updateWorkspaceResponse == null)

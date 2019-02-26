@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V1.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -134,20 +135,31 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="request">The message to be sent. This includes the user's input, along with optional intents,
-        /// entities, and context from the last response. (optional)</param>
+        /// <param name="input">An input object that includes the input text. (optional)</param>
+        /// <param name="alternateIntents">Whether to return more than one intent. Set to `true` to return all matching
+        /// intents. (optional, default to false)</param>
+        /// <param name="context">State information for the conversation. To maintain state, include the context from
+        /// the previous response. (optional)</param>
+        /// <param name="entities">Entities to use when evaluating the message. Include entities from the previous
+        /// response to continue using those entities rather than detecting entities in the new input.
+        /// (optional)</param>
+        /// <param name="intents">Intents to use when evaluating the user input. Include intents from the previous
+        /// response to continue using those intents rather than trying to recognize intents in the new input.
+        /// (optional)</param>
+        /// <param name="output">An output object that includes the response to the user, the dialog nodes that were
+        /// triggered, and messages from the log. (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
-        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageRequest request = null, bool? nodesVisitedDetails = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, Dictionary<string, object> customData = null, InputData input = null, bool? alternateIntents = null, Context context = null, List<RuntimeEntity> entities = null, List<RuntimeIntent> intents = null, OutputData output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Message");
+                throw new ArgumentNullException("`callback` is required for `Message`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for Message");
+                throw new ArgumentNullException("`workspaceId` is required for `Message`");
 
             RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
@@ -173,10 +185,21 @@ namespace IBM.Watson.Assistant.V1
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (request != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request));
-            }
+
+            JObject bodyObject = new JObject();
+            if (input != null)
+                bodyObject["input"] = JToken.FromObject(input);
+            if (alternateIntents != null)
+                bodyObject["alternate_intents"] = JToken.FromObject(alternateIntents);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
+            if (intents != null && intents.Count > 0)
+                bodyObject["intents"] = JToken.FromObject(intents);
+            if (output != null)
+                bodyObject["output"] = JToken.FromObject(output);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnMessageResponse;
 
@@ -223,18 +246,29 @@ namespace IBM.Watson.Assistant.V1
         /// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="properties">The content of the new workspace.
-        ///
-        /// The maximum size for this data is 50MB. If you need to import a larger workspace, consider importing the
-        /// workspace without intents and entities and then adding them separately. (optional)</param>
-        /// <returns><see cref="Workspace" />Workspace</returns>
+        /// <param name="name">The name of the workspace. This string cannot contain carriage return, newline, or tab
+        /// characters, and it must be no longer than 64 characters. (optional)</param>
+        /// <param name="description">The description of the workspace. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
+        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
+        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
+        /// false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateWorkspace(Callback<Workspace> callback, CreateWorkspace properties = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Workspace" />Workspace</returns>
+        public bool CreateWorkspace(Callback<Workspace> callback, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateWorkspace");
+                throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
 
             RequestObject<Workspace> req = new RequestObject<Workspace>
             {
@@ -256,10 +290,29 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(language))
+                bodyObject["language"] = language;
+            if (intents != null && intents.Count > 0)
+                bodyObject["intents"] = JToken.FromObject(intents);
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
 
@@ -306,16 +359,16 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteWorkspace(Callback<object> callback, string workspaceId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteWorkspace");
+                throw new ArgumentNullException("`callback` is required for `DeleteWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteWorkspace");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteWorkspace`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -390,16 +443,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="sort">Indicates how the returned workspace data will be sorted. This parameter is valid only if
         /// **export**=`true`. Specify `sort=stable` to sort all workspace objects by unique identifier, in ascending
         /// alphabetical order. (optional)</param>
-        /// <returns><see cref="WorkspaceExport" />WorkspaceExport</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetWorkspace(Callback<WorkspaceExport> callback, string workspaceId, bool? export = null, bool? includeAudit = null, string sort = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="WorkspaceExport" />WorkspaceExport</returns>
+        public bool GetWorkspace(Callback<WorkspaceExport> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null, string sort = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetWorkspace");
+                throw new ArgumentNullException("`callback` is required for `GetWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetWorkspace");
+                throw new ArgumentNullException("`workspaceId` is required for `GetWorkspace`");
 
             RequestObject<WorkspaceExport> req = new RequestObject<WorkspaceExport>
             {
@@ -485,14 +538,14 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
+        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListWorkspaces");
+                throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
 
             RequestObject<WorkspaceCollection> req = new RequestObject<WorkspaceCollection>
             {
@@ -579,10 +632,21 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="properties">Valid data defining the new and updated workspace content.
-        ///
-        /// The maximum size for this data is 50MB. If you need to import a larger amount of workspace data, consider
-        /// importing components such as intents and entities using separate operations. (optional)</param>
+        /// <param name="name">The name of the workspace. This string cannot contain carriage return, newline, or tab
+        /// characters, and it must be no longer than 64 characters. (optional)</param>
+        /// <param name="description">The description of the workspace. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
+        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
+        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
+        /// false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the workspace. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data includes **entities** and
@@ -591,16 +655,16 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
-        /// <returns><see cref="Workspace" />Workspace</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, UpdateWorkspace properties = null, bool? append = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Workspace" />Workspace</returns>
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, bool? append = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateWorkspace");
+                throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateWorkspace");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateWorkspace`");
 
             RequestObject<Workspace> req = new RequestObject<Workspace>
             {
@@ -626,10 +690,29 @@ namespace IBM.Watson.Assistant.V1
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(language))
+                bodyObject["language"] = language;
+            if (intents != null && intents.Count > 0)
+                bodyObject["intents"] = JToken.FromObject(intents);
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
 
@@ -676,19 +759,25 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="body">The content of the new intent.</param>
-        /// <returns><see cref="Intent" />Intent</returns>
+        /// <param name="intent">The name of the intent. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+        /// - It cannot begin with the reserved prefix `sys-`.
+        /// - It must be no longer than 128 characters.</param>
+        /// <param name="description">The description of the intent. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="examples">An array of user input examples for the intent. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, CreateIntent body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string description = null, List<CreateExample> examples = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateIntent");
+                throw new ArgumentNullException("`callback` is required for `CreateIntent`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateIntent");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateIntent");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateIntent`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `CreateIntent`");
 
             RequestObject<Intent> req = new RequestObject<Intent>
             {
@@ -710,10 +799,15 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(intent))
+                bodyObject["intent"] = intent;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (examples != null && examples.Count > 0)
+                bodyObject["examples"] = JToken.FromObject(examples);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateIntentResponse;
 
@@ -761,18 +855,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteIntent(Callback<object> callback, string workspaceId, string intent, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteIntent");
+                throw new ArgumentNullException("`callback` is required for `DeleteIntent`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteIntent");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteIntent`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for DeleteIntent");
+                throw new ArgumentNullException("`intent` is required for `DeleteIntent`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -845,18 +939,18 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="IntentExport" />IntentExport</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetIntent(Callback<IntentExport> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="IntentExport" />IntentExport</returns>
+        public bool GetIntent(Callback<IntentExport> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetIntent");
+                throw new ArgumentNullException("`callback` is required for `GetIntent`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetIntent");
+                throw new ArgumentNullException("`workspaceId` is required for `GetIntent`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for GetIntent");
+                throw new ArgumentNullException("`intent` is required for `GetIntent`");
 
             RequestObject<IntentExport> req = new RequestObject<IntentExport>
             {
@@ -943,16 +1037,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="IntentCollection" />IntentCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="IntentCollection" />IntentCollection</returns>
+        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListIntents");
+                throw new ArgumentNullException("`callback` is required for `ListIntents`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListIntents");
+                throw new ArgumentNullException("`workspaceId` is required for `ListIntents`");
 
             RequestObject<IntentCollection> req = new RequestObject<IntentCollection>
             {
@@ -1044,26 +1138,24 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <param name="body">The updated content of the intent.
-        ///
-        /// Any elements included in the new data will completely replace the equivalent existing elements, including
-        /// all subelements. (Previously existing subelements are not retained unless they are also included in the new
-        /// data.) For example, if you update the user input examples for an intent, the previously existing examples
-        /// are discarded and replaced with the new examples specified in the update.</param>
-        /// <returns><see cref="Intent" />Intent</returns>
+        /// <param name="newIntent">The name of the intent. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+        /// - It cannot begin with the reserved prefix `sys-`.
+        /// - It must be no longer than 128 characters. (optional)</param>
+        /// <param name="newDescription">The description of the intent. (optional)</param>
+        /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, UpdateIntent body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string newIntent = null, string newDescription = null, List<CreateExample> newExamples = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateIntent");
+                throw new ArgumentNullException("`callback` is required for `UpdateIntent`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateIntent");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateIntent`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for UpdateIntent");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateIntent");
+                throw new ArgumentNullException("`intent` is required for `UpdateIntent`");
 
             RequestObject<Intent> req = new RequestObject<Intent>
             {
@@ -1085,10 +1177,15 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newIntent))
+                bodyObject["intent"] = newIntent;
+            if (!string.IsNullOrEmpty(newDescription))
+                bodyObject["description"] = newDescription;
+            if (newExamples != null && newExamples.Count > 0)
+                bodyObject["examples"] = JToken.FromObject(newExamples);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateIntentResponse;
 
@@ -1136,21 +1233,26 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <param name="body">The content of the new user input example.</param>
-        /// <returns><see cref="Example" />Example</returns>
+        /// <param name="text">The text of a user input example. This string must conform to the following restrictions:
+        ///
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 1024 characters.</param>
+        /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, CreateExample body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Example" />Example</returns>
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, List<Mentions> mentions = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateExample");
+                throw new ArgumentNullException("`callback` is required for `CreateExample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateExample");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateExample`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for CreateExample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateExample");
+                throw new ArgumentNullException("`intent` is required for `CreateExample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `CreateExample`");
 
             RequestObject<Example> req = new RequestObject<Example>
             {
@@ -1172,10 +1274,13 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            if (mentions != null && mentions.Count > 0)
+                bodyObject["mentions"] = JToken.FromObject(mentions);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateExampleResponse;
 
@@ -1224,20 +1329,20 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
         /// <param name="text">The text of the user input example.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteExample(Callback<object> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteExample");
+                throw new ArgumentNullException("`callback` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteExample");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for DeleteExample");
+                throw new ArgumentNullException("`intent` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for DeleteExample");
+                throw new ArgumentNullException("`text` is required for `DeleteExample`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1307,20 +1412,20 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="text">The text of the user input example.</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Example" />Example</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Example" />Example</returns>
+        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetExample");
+                throw new ArgumentNullException("`callback` is required for `GetExample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetExample");
+                throw new ArgumentNullException("`workspaceId` is required for `GetExample`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for GetExample");
+                throw new ArgumentNullException("`intent` is required for `GetExample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for GetExample");
+                throw new ArgumentNullException("`text` is required for `GetExample`");
 
             RequestObject<Example> req = new RequestObject<Example>
             {
@@ -1400,18 +1505,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="ExampleCollection" />ExampleCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ExampleCollection" />ExampleCollection</returns>
+        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListExamples");
+                throw new ArgumentNullException("`callback` is required for `ListExamples`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListExamples");
+                throw new ArgumentNullException("`workspaceId` is required for `ListExamples`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for ListExamples");
+                throw new ArgumentNullException("`intent` is required for `ListExamples`");
 
             RequestObject<ExampleCollection> req = new RequestObject<ExampleCollection>
             {
@@ -1499,23 +1604,26 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
         /// <param name="text">The text of the user input example.</param>
-        /// <param name="body">The new text of the user input example.</param>
-        /// <returns><see cref="Example" />Example</returns>
+        /// <param name="newText">The text of the user input example. This string must conform to the following
+        /// restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 1024 characters. (optional)</param>
+        /// <param name="newMentions">An array of contextual entity mentions. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, UpdateExample body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Example" />Example</returns>
+        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, string newText = null, List<Mentions> newMentions = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateExample");
+                throw new ArgumentNullException("`callback` is required for `UpdateExample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateExample");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateExample`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("intent is required for UpdateExample");
+                throw new ArgumentNullException("`intent` is required for `UpdateExample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for UpdateExample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateExample");
+                throw new ArgumentNullException("`text` is required for `UpdateExample`");
 
             RequestObject<Example> req = new RequestObject<Example>
             {
@@ -1537,10 +1645,13 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newText))
+                bodyObject["text"] = newText;
+            if (newMentions != null && newMentions.Count > 0)
+                bodyObject["mentions"] = JToken.FromObject(newMentions);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateExampleResponse;
 
@@ -1588,19 +1699,23 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="body">The content of the new counterexample.</param>
-        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        /// <param name="text">The text of a user input marked as irrelevant input. This string must conform to the
+        /// following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters
+        /// - It cannot consist of only whitespace characters
+        /// - It must be no longer than 1024 characters.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, CreateCounterexample body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateCounterexample");
+                throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateCounterexample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateCounterexample");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateCounterexample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `CreateCounterexample`");
 
             RequestObject<Counterexample> req = new RequestObject<Counterexample>
             {
@@ -1622,10 +1737,11 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCounterexampleResponse;
 
@@ -1674,18 +1790,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteCounterexample(Callback<object> callback, string workspaceId, string text, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteCounterexample");
+                throw new ArgumentNullException("`callback` is required for `DeleteCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteCounterexample");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteCounterexample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for DeleteCounterexample");
+                throw new ArgumentNullException("`text` is required for `DeleteCounterexample`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1755,18 +1871,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Counterexample" />Counterexample</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetCounterexample");
+                throw new ArgumentNullException("`callback` is required for `GetCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetCounterexample");
+                throw new ArgumentNullException("`workspaceId` is required for `GetCounterexample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for GetCounterexample");
+                throw new ArgumentNullException("`text` is required for `GetCounterexample`");
 
             RequestObject<Counterexample> req = new RequestObject<Counterexample>
             {
@@ -1846,16 +1962,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="CounterexampleCollection" />CounterexampleCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="CounterexampleCollection" />CounterexampleCollection</returns>
+        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListCounterexamples");
+                throw new ArgumentNullException("`callback` is required for `ListCounterexamples`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListCounterexamples");
+                throw new ArgumentNullException("`workspaceId` is required for `ListCounterexamples`");
 
             RequestObject<CounterexampleCollection> req = new RequestObject<CounterexampleCollection>
             {
@@ -1943,21 +2059,19 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <param name="body">The text of the counterexample.</param>
-        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        /// <param name="newText">The text of a user input counterexample. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, UpdateCounterexample body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null, string newText = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateCounterexample");
+                throw new ArgumentNullException("`callback` is required for `UpdateCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateCounterexample");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateCounterexample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for UpdateCounterexample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateCounterexample");
+                throw new ArgumentNullException("`text` is required for `UpdateCounterexample`");
 
             RequestObject<Counterexample> req = new RequestObject<Counterexample>
             {
@@ -1979,10 +2093,11 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newText))
+                bodyObject["text"] = newText;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateCounterexampleResponse;
 
@@ -2029,19 +2144,29 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="properties">The content of the new entity.</param>
-        /// <returns><see cref="Entity" />Entity</returns>
+        /// <param name="entity">The name of the entity. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+        /// - It must be no longer than 64 characters.
+        ///
+        /// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system
+        /// entity that you want to enable. (Any entity content specified with the request is ignored.).</param>
+        /// <param name="description">The description of the entity. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="metadata">Any metadata related to the value. (optional)</param>
+        /// <param name="values">An array of objects describing the entity values. (optional)</param>
+        /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, CreateEntity properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string description = null, object metadata = null, List<CreateValue> values = null, bool? fuzzyMatch = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateEntity");
+                throw new ArgumentNullException("`callback` is required for `CreateEntity`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateEntity");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for CreateEntity");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateEntity`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `CreateEntity`");
 
             RequestObject<Entity> req = new RequestObject<Entity>
             {
@@ -2063,10 +2188,19 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(entity))
+                bodyObject["entity"] = entity;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (values != null && values.Count > 0)
+                bodyObject["values"] = JToken.FromObject(values);
+            if (fuzzyMatch != null)
+                bodyObject["fuzzy_match"] = JToken.FromObject(fuzzyMatch);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateEntityResponse;
 
@@ -2114,18 +2248,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteEntity(Callback<object> callback, string workspaceId, string entity, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteEntity");
+                throw new ArgumentNullException("`callback` is required for `DeleteEntity`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteEntity");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteEntity`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for DeleteEntity");
+                throw new ArgumentNullException("`entity` is required for `DeleteEntity`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2198,18 +2332,18 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="EntityExport" />EntityExport</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetEntity(Callback<EntityExport> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="EntityExport" />EntityExport</returns>
+        public bool GetEntity(Callback<EntityExport> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetEntity");
+                throw new ArgumentNullException("`callback` is required for `GetEntity`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetEntity");
+                throw new ArgumentNullException("`workspaceId` is required for `GetEntity`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for GetEntity");
+                throw new ArgumentNullException("`entity` is required for `GetEntity`");
 
             RequestObject<EntityExport> req = new RequestObject<EntityExport>
             {
@@ -2296,16 +2430,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="EntityCollection" />EntityCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="EntityCollection" />EntityCollection</returns>
+        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListEntities");
+                throw new ArgumentNullException("`callback` is required for `ListEntities`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListEntities");
+                throw new ArgumentNullException("`workspaceId` is required for `ListEntities`");
 
             RequestObject<EntityCollection> req = new RequestObject<EntityCollection>
             {
@@ -2397,25 +2531,27 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
-        /// <param name="properties">The updated content of the entity. Any elements included in the new data will
-        /// completely replace the equivalent existing elements, including all subelements. (Previously existing
-        /// subelements are not retained unless they are also included in the new data.) For example, if you update the
-        /// values for an entity, the previously existing values are discarded and replaced with the new values
-        /// specified in the update.</param>
-        /// <returns><see cref="Entity" />Entity</returns>
+        /// <param name="newEntity">The name of the entity. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+        /// - It cannot begin with the reserved prefix `sys-`.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="newDescription">The description of the entity. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
+        /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
+        /// <param name="newValues">An array of entity values. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, UpdateEntity properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string newEntity = null, string newDescription = null, object newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateEntity");
+                throw new ArgumentNullException("`callback` is required for `UpdateEntity`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateEntity");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateEntity`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for UpdateEntity");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for UpdateEntity");
+                throw new ArgumentNullException("`entity` is required for `UpdateEntity`");
 
             RequestObject<Entity> req = new RequestObject<Entity>
             {
@@ -2437,10 +2573,19 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newEntity))
+                bodyObject["entity"] = newEntity;
+            if (!string.IsNullOrEmpty(newDescription))
+                bodyObject["description"] = newDescription;
+            if (newMetadata != null)
+                bodyObject["metadata"] = JToken.FromObject(newMetadata);
+            if (newFuzzyMatch != null)
+                bodyObject["fuzzy_match"] = JToken.FromObject(newFuzzyMatch);
+            if (newValues != null && newValues.Count > 0)
+                bodyObject["values"] = JToken.FromObject(newValues);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateEntityResponse;
 
@@ -2494,18 +2639,18 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="EntityMentionCollection" />EntityMentionCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListMentions(Callback<EntityMentionCollection> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="EntityMentionCollection" />EntityMentionCollection</returns>
+        public bool ListMentions(Callback<EntityMentionCollection> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListMentions");
+                throw new ArgumentNullException("`callback` is required for `ListMentions`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListMentions");
+                throw new ArgumentNullException("`workspaceId` is required for `ListMentions`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for ListMentions");
+                throw new ArgumentNullException("`entity` is required for `ListMentions`");
 
             RequestObject<EntityMentionCollection> req = new RequestObject<EntityMentionCollection>
             {
@@ -2580,21 +2725,37 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
-        /// <param name="properties">The new entity value.</param>
-        /// <returns><see cref="Value" />Value</returns>
+        /// <param name="value">The text of the entity value. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters.</param>
+        /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
+        /// <param name="synonyms">An array containing any synonyms for the entity value. You can provide either
+        /// synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following
+        /// restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="patterns">An array of patterns for the entity value. You can provide either synonyms or
+        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// characters. For more information about how to specify a pattern, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// (optional)</param>
+        /// <param name="type">Specifies the type of value. (optional, default to synonyms)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, CreateValue properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Value" />Value</returns>
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, object metadata = null, List<string> synonyms = null, List<string> patterns = null, string type = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateValue");
+                throw new ArgumentNullException("`callback` is required for `CreateValue`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateValue");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateValue`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for CreateValue");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for CreateValue");
+                throw new ArgumentNullException("`entity` is required for `CreateValue`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `CreateValue`");
 
             RequestObject<Value> req = new RequestObject<Value>
             {
@@ -2616,10 +2777,19 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(value))
+                bodyObject["value"] = value;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (synonyms != null && synonyms.Count > 0)
+                bodyObject["synonyms"] = JToken.FromObject(synonyms);
+            if (patterns != null && patterns.Count > 0)
+                bodyObject["patterns"] = JToken.FromObject(patterns);
+            if (!string.IsNullOrEmpty(type))
+                bodyObject["type"] = type;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateValueResponse;
 
@@ -2668,20 +2838,20 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteValue(Callback<object> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteValue");
+                throw new ArgumentNullException("`callback` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteValue");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for DeleteValue");
+                throw new ArgumentNullException("`entity` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for DeleteValue");
+                throw new ArgumentNullException("`value` is required for `DeleteValue`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2754,20 +2924,20 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="ValueExport" />ValueExport</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetValue(Callback<ValueExport> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ValueExport" />ValueExport</returns>
+        public bool GetValue(Callback<ValueExport> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetValue");
+                throw new ArgumentNullException("`callback` is required for `GetValue`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetValue");
+                throw new ArgumentNullException("`workspaceId` is required for `GetValue`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for GetValue");
+                throw new ArgumentNullException("`entity` is required for `GetValue`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for GetValue");
+                throw new ArgumentNullException("`value` is required for `GetValue`");
 
             RequestObject<ValueExport> req = new RequestObject<ValueExport>
             {
@@ -2854,18 +3024,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="ValueCollection" />ValueCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ValueCollection" />ValueCollection</returns>
+        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListValues");
+                throw new ArgumentNullException("`callback` is required for `ListValues`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListValues");
+                throw new ArgumentNullException("`workspaceId` is required for `ListValues`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for ListValues");
+                throw new ArgumentNullException("`entity` is required for `ListValues`");
 
             RequestObject<ValueCollection> req = new RequestObject<ValueCollection>
             {
@@ -2958,28 +3128,37 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <param name="properties">The updated content of the entity value.
+        /// <param name="newValue">The text of the entity value. This string must conform to the following restrictions:
         ///
-        /// Any elements included in the new data will completely replace the equivalent existing elements, including
-        /// all subelements. (Previously existing subelements are not retained unless they are also included in the new
-        /// data.) For example, if you update the synonyms for an entity value, the previously existing synonyms are
-        /// discarded and replaced with the new synonyms specified in the update.</param>
-        /// <returns><see cref="Value" />Value</returns>
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="newMetadata">Any metadata related to the entity value. (optional)</param>
+        /// <param name="newType">Specifies the type of value. (optional, default to synonyms)</param>
+        /// <param name="newSynonyms">An array of synonyms for the entity value. You can provide either synonyms or
+        /// patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="newPatterns">An array of patterns for the entity value. You can provide either synonyms or
+        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// characters. For more information about how to specify a pattern, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, UpdateValue properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Value" />Value</returns>
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, object newMetadata = null, string newType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateValue");
+                throw new ArgumentNullException("`callback` is required for `UpdateValue`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateValue");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateValue`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for UpdateValue");
+                throw new ArgumentNullException("`entity` is required for `UpdateValue`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for UpdateValue");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for UpdateValue");
+                throw new ArgumentNullException("`value` is required for `UpdateValue`");
 
             RequestObject<Value> req = new RequestObject<Value>
             {
@@ -3001,10 +3180,19 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newValue))
+                bodyObject["value"] = newValue;
+            if (newMetadata != null)
+                bodyObject["metadata"] = JToken.FromObject(newMetadata);
+            if (!string.IsNullOrEmpty(newType))
+                bodyObject["type"] = newType;
+            if (newSynonyms != null && newSynonyms.Count > 0)
+                bodyObject["synonyms"] = JToken.FromObject(newSynonyms);
+            if (newPatterns != null && newPatterns.Count > 0)
+                bodyObject["patterns"] = JToken.FromObject(newPatterns);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateValueResponse;
 
@@ -3053,23 +3241,26 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <param name="body">The new synonym.</param>
-        /// <returns><see cref="Synonym" />Synonym</returns>
+        /// <param name="synonym">The text of the synonym. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, CreateSynonym body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Synonym" />Synonym</returns>
+        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateSynonym");
+                throw new ArgumentNullException("`callback` is required for `CreateSynonym`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateSynonym");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateSynonym`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for CreateSynonym");
+                throw new ArgumentNullException("`entity` is required for `CreateSynonym`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for CreateSynonym");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateSynonym");
+                throw new ArgumentNullException("`value` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(synonym))
+                throw new ArgumentNullException("`synonym` is required for `CreateSynonym`");
 
             RequestObject<Synonym> req = new RequestObject<Synonym>
             {
@@ -3091,10 +3282,11 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(synonym))
+                bodyObject["synonym"] = synonym;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateSynonymResponse;
 
@@ -3144,22 +3336,22 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="synonym">The text of the synonym.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteSynonym(Callback<object> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteSynonym");
+                throw new ArgumentNullException("`callback` is required for `DeleteSynonym`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteSynonym");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteSynonym`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for DeleteSynonym");
+                throw new ArgumentNullException("`entity` is required for `DeleteSynonym`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for DeleteSynonym");
+                throw new ArgumentNullException("`value` is required for `DeleteSynonym`");
             if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("synonym is required for DeleteSynonym");
+                throw new ArgumentNullException("`synonym` is required for `DeleteSynonym`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3230,22 +3422,22 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="synonym">The text of the synonym.</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Synonym" />Synonym</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Synonym" />Synonym</returns>
+        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetSynonym");
+                throw new ArgumentNullException("`callback` is required for `GetSynonym`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetSynonym");
+                throw new ArgumentNullException("`workspaceId` is required for `GetSynonym`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for GetSynonym");
+                throw new ArgumentNullException("`entity` is required for `GetSynonym`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for GetSynonym");
+                throw new ArgumentNullException("`value` is required for `GetSynonym`");
             if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("synonym is required for GetSynonym");
+                throw new ArgumentNullException("`synonym` is required for `GetSynonym`");
 
             RequestObject<Synonym> req = new RequestObject<Synonym>
             {
@@ -3326,20 +3518,20 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="SynonymCollection" />SynonymCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="SynonymCollection" />SynonymCollection</returns>
+        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListSynonyms");
+                throw new ArgumentNullException("`callback` is required for `ListSynonyms`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListSynonyms");
+                throw new ArgumentNullException("`workspaceId` is required for `ListSynonyms`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for ListSynonyms");
+                throw new ArgumentNullException("`entity` is required for `ListSynonyms`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for ListSynonyms");
+                throw new ArgumentNullException("`value` is required for `ListSynonyms`");
 
             RequestObject<SynonymCollection> req = new RequestObject<SynonymCollection>
             {
@@ -3428,25 +3620,26 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="synonym">The text of the synonym.</param>
-        /// <param name="body">The updated entity value synonym.</param>
-        /// <returns><see cref="Synonym" />Synonym</returns>
+        /// <param name="newSynonym">The text of the synonym. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, UpdateSynonym body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Synonym" />Synonym</returns>
+        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null, string newSynonym = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateSynonym");
+                throw new ArgumentNullException("`callback` is required for `UpdateSynonym`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateSynonym");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateSynonym`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("entity is required for UpdateSynonym");
+                throw new ArgumentNullException("`entity` is required for `UpdateSynonym`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value is required for UpdateSynonym");
+                throw new ArgumentNullException("`value` is required for `UpdateSynonym`");
             if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("synonym is required for UpdateSynonym");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateSynonym");
+                throw new ArgumentNullException("`synonym` is required for `UpdateSynonym`");
 
             RequestObject<Synonym> req = new RequestObject<Synonym>
             {
@@ -3468,10 +3661,11 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newSynonym))
+                bodyObject["synonym"] = newSynonym;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateSynonymResponse;
 
@@ -3518,19 +3712,49 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="properties">A CreateDialogNode object defining the content of the new dialog node.</param>
-        /// <returns><see cref="DialogNode" />DialogNode</returns>
+        /// <param name="dialogNode">The dialog node ID. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 1024 characters.</param>
+        /// <param name="description">The description of the dialog node. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="conditions">The condition that will trigger the dialog node. This string cannot contain
+        /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+        /// (optional)</param>
+        /// <param name="parent">The ID of the parent dialog node. (optional)</param>
+        /// <param name="previousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
+        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// (optional)</param>
+        /// <param name="context">The context for the dialog node. (optional)</param>
+        /// <param name="metadata">The metadata for the dialog node. (optional)</param>
+        /// <param name="nextStep">The next step to execute following this dialog node. (optional)</param>
+        /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
+        /// (optional)</param>
+        /// <param name="title">The alias used to identify the dialog node. This string must conform to the following
+        /// restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="type">How the dialog node is processed. (optional)</param>
+        /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
+        /// <param name="variable">The location in the dialog context where output is stored. (optional)</param>
+        /// <param name="digressIn">Whether this top-level dialog node can be digressed into. (optional)</param>
+        /// <param name="digressOut">Whether this dialog node can be returned to after a digression. (optional)</param>
+        /// <param name="digressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
+        /// (optional)</param>
+        /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
+        /// users. This string must be no longer than 512 characters. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, CreateDialogNode properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DialogNode" />DialogNode</returns>
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, object context = null, object metadata = null, DialogNodeNextStep nextStep = null, List<DialogNodeAction> actions = null, string title = null, string type = null, string eventName = null, string variable = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateDialogNode");
+                throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for CreateDialogNode");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for CreateDialogNode");
+                throw new ArgumentNullException("`workspaceId` is required for `CreateDialogNode`");
+            if (string.IsNullOrEmpty(dialogNode))
+                throw new ArgumentNullException("`dialogNode` is required for `CreateDialogNode`");
 
             RequestObject<DialogNode> req = new RequestObject<DialogNode>
             {
@@ -3552,10 +3776,45 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(dialogNode))
+                bodyObject["dialog_node"] = dialogNode;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(conditions))
+                bodyObject["conditions"] = conditions;
+            if (!string.IsNullOrEmpty(parent))
+                bodyObject["parent"] = parent;
+            if (!string.IsNullOrEmpty(previousSibling))
+                bodyObject["previous_sibling"] = previousSibling;
+            if (output != null)
+                bodyObject["output"] = JToken.FromObject(output);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (nextStep != null)
+                bodyObject["next_step"] = JToken.FromObject(nextStep);
+            if (actions != null && actions.Count > 0)
+                bodyObject["actions"] = JToken.FromObject(actions);
+            if (!string.IsNullOrEmpty(title))
+                bodyObject["title"] = title;
+            if (!string.IsNullOrEmpty(type))
+                bodyObject["type"] = type;
+            if (!string.IsNullOrEmpty(eventName))
+                bodyObject["event_name"] = eventName;
+            if (!string.IsNullOrEmpty(variable))
+                bodyObject["variable"] = variable;
+            if (!string.IsNullOrEmpty(digressIn))
+                bodyObject["digress_in"] = digressIn;
+            if (!string.IsNullOrEmpty(digressOut))
+                bodyObject["digress_out"] = digressOut;
+            if (!string.IsNullOrEmpty(digressOutSlots))
+                bodyObject["digress_out_slots"] = digressOutSlots;
+            if (!string.IsNullOrEmpty(userLabel))
+                bodyObject["user_label"] = userLabel;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateDialogNodeResponse;
 
@@ -3603,18 +3862,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteDialogNode");
+                throw new ArgumentNullException("`callback` is required for `DeleteDialogNode`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for DeleteDialogNode");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
-                throw new ArgumentNullException("dialogNode is required for DeleteDialogNode");
+                throw new ArgumentNullException("`dialogNode` is required for `DeleteDialogNode`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3683,18 +3942,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="DialogNode" />DialogNode</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DialogNode" />DialogNode</returns>
+        public bool GetDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetDialogNode");
+                throw new ArgumentNullException("`callback` is required for `GetDialogNode`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for GetDialogNode");
+                throw new ArgumentNullException("`workspaceId` is required for `GetDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
-                throw new ArgumentNullException("dialogNode is required for GetDialogNode");
+                throw new ArgumentNullException("`dialogNode` is required for `GetDialogNode`");
 
             RequestObject<DialogNode> req = new RequestObject<DialogNode>
             {
@@ -3773,16 +4032,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
+        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListDialogNodes");
+                throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListDialogNodes");
+                throw new ArgumentNullException("`workspaceId` is required for `ListDialogNodes`");
 
             RequestObject<DialogNodeCollection> req = new RequestObject<DialogNodeCollection>
             {
@@ -3869,26 +4128,50 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
-        /// <param name="properties">The updated content of the dialog node.
-        ///
-        /// Any elements included in the new data will completely replace the equivalent existing elements, including
-        /// all subelements. (Previously existing subelements are not retained unless they are also included in the new
-        /// data.) For example, if you update the actions for a dialog node, the previously existing actions are
-        /// discarded and replaced with the new actions specified in the update.</param>
-        /// <returns><see cref="DialogNode" />DialogNode</returns>
+        /// <param name="newDialogNode">The dialog node ID. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 1024 characters. (optional)</param>
+        /// <param name="newDescription">The description of the dialog node. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
+        /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
+        /// (optional)</param>
+        /// <param name="newParent">The ID of the parent dialog node. (optional)</param>
+        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
+        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// (optional)</param>
+        /// <param name="newContext">The context for the dialog node. (optional)</param>
+        /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
+        /// <param name="newNextStep">The next step to execute following this dialog node. (optional)</param>
+        /// <param name="newTitle">The alias used to identify the dialog node. This string must conform to the following
+        /// restrictions:
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// - It must be no longer than 64 characters. (optional)</param>
+        /// <param name="newType">How the dialog node is processed. (optional)</param>
+        /// <param name="newEventName">How an `event_handler` node is processed. (optional)</param>
+        /// <param name="newVariable">The location in the dialog context where output is stored. (optional)</param>
+        /// <param name="newActions">An array of objects describing any actions to be invoked by the dialog node.
+        /// (optional)</param>
+        /// <param name="newDigressIn">Whether this top-level dialog node can be digressed into. (optional)</param>
+        /// <param name="newDigressOut">Whether this dialog node can be returned to after a digression.
+        /// (optional)</param>
+        /// <param name="newDigressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
+        /// (optional)</param>
+        /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
+        /// users. This string must be no longer than 512 characters. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, UpdateDialogNode properties, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DialogNode" />DialogNode</returns>
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, object newContext = null, object newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateDialogNode");
+                throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for UpdateDialogNode");
+                throw new ArgumentNullException("`workspaceId` is required for `UpdateDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
-                throw new ArgumentNullException("dialogNode is required for UpdateDialogNode");
-            if (properties == null)
-                throw new ArgumentNullException("properties is required for UpdateDialogNode");
+                throw new ArgumentNullException("`dialogNode` is required for `UpdateDialogNode`");
 
             RequestObject<DialogNode> req = new RequestObject<DialogNode>
             {
@@ -3910,10 +4193,45 @@ namespace IBM.Watson.Assistant.V1
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (properties != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(properties));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newDialogNode))
+                bodyObject["dialog_node"] = newDialogNode;
+            if (!string.IsNullOrEmpty(newDescription))
+                bodyObject["description"] = newDescription;
+            if (!string.IsNullOrEmpty(newConditions))
+                bodyObject["conditions"] = newConditions;
+            if (!string.IsNullOrEmpty(newParent))
+                bodyObject["parent"] = newParent;
+            if (!string.IsNullOrEmpty(newPreviousSibling))
+                bodyObject["previous_sibling"] = newPreviousSibling;
+            if (newOutput != null)
+                bodyObject["output"] = JToken.FromObject(newOutput);
+            if (newContext != null)
+                bodyObject["context"] = JToken.FromObject(newContext);
+            if (newMetadata != null)
+                bodyObject["metadata"] = JToken.FromObject(newMetadata);
+            if (newNextStep != null)
+                bodyObject["next_step"] = JToken.FromObject(newNextStep);
+            if (!string.IsNullOrEmpty(newTitle))
+                bodyObject["title"] = newTitle;
+            if (!string.IsNullOrEmpty(newType))
+                bodyObject["type"] = newType;
+            if (!string.IsNullOrEmpty(newEventName))
+                bodyObject["event_name"] = newEventName;
+            if (!string.IsNullOrEmpty(newVariable))
+                bodyObject["variable"] = newVariable;
+            if (newActions != null && newActions.Count > 0)
+                bodyObject["actions"] = JToken.FromObject(newActions);
+            if (!string.IsNullOrEmpty(newDigressIn))
+                bodyObject["digress_in"] = newDigressIn;
+            if (!string.IsNullOrEmpty(newDigressOut))
+                bodyObject["digress_out"] = newDigressOut;
+            if (!string.IsNullOrEmpty(newDigressOutSlots))
+                bodyObject["digress_out_slots"] = newDigressOutSlots;
+            if (!string.IsNullOrEmpty(newUserLabel))
+                bodyObject["user_label"] = newUserLabel;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateDialogNodeResponse;
 
@@ -3970,16 +4288,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
         /// 100)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <returns><see cref="LogCollection" />LogCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListAllLogs(Callback<LogCollection> callback, string filter, string sort = null, long? pageLimit = null, string cursor = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="LogCollection" />LogCollection</returns>
+        public bool ListAllLogs(Callback<LogCollection> callback, string filter, Dictionary<string, object> customData = null, string sort = null, long? pageLimit = null, string cursor = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListAllLogs");
+                throw new ArgumentNullException("`callback` is required for `ListAllLogs`");
             if (string.IsNullOrEmpty(filter))
-                throw new ArgumentNullException("filter is required for ListAllLogs");
+                throw new ArgumentNullException("`filter` is required for `ListAllLogs`");
 
             RequestObject<LogCollection> req = new RequestObject<LogCollection>
             {
@@ -4072,16 +4390,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
         /// 100)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <returns><see cref="LogCollection" />LogCollection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="LogCollection" />LogCollection</returns>
+        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, Dictionary<string, object> customData = null, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListLogs");
+                throw new ArgumentNullException("`callback` is required for `ListLogs`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("workspaceId is required for ListLogs");
+                throw new ArgumentNullException("`workspaceId` is required for `ListLogs`");
 
             RequestObject<LogCollection> req = new RequestObject<LogCollection>
             {
@@ -4166,16 +4484,16 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteUserData");
+                throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
             if (string.IsNullOrEmpty(customerId))
-                throw new ArgumentNullException("customerId is required for DeleteUserData");
+                throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
