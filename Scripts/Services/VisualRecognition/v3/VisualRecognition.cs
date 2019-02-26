@@ -345,7 +345,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             if (imageData != null)
             {
                 req.Forms = new Dictionary<string, RESTConnector.Form>();
-                req.Forms.Add("images_file", new RESTConnector.Form(imageData, imageMimeType));
+                req.Forms.Add("images_file", new RESTConnector.Form(imageData, "image" + Utility.GetExtension(imageMimeType), imageMimeType));
             }
 
             return connector.Send(req);
