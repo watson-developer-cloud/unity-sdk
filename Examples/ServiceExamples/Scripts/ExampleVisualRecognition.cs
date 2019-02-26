@@ -152,7 +152,7 @@ public class ExampleVisualRecognition : MonoBehaviour
         Log.Debug("ExampleVisualRecognition.Examples()", "Attempting to classify via image on file system");
         string imagesPath = Application.dataPath + "/Watson/Examples/ServiceExamples/TestData/visual-recognition-classifiers/giraffe_to_classify.jpg";
         string[] owners = { "IBM", "me" };
-        string[] classifierIDs = { "default", _classifierID };
+        string[] classifierIDs = { "default" };
         if (!_visualRecognition.Classify(OnClassifyPost, OnFail, imagesPath, owners, classifierIDs, 0.5f))
             Log.Debug("ExampleVisualRecognition.Classify()", "Classify image failed!");
 
