@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -30,7 +31,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of up to 50 messages logged with the request.
         /// </summary>
         [JsonProperty("log_messages", NullValueHandling = NullValueHandling.Ignore)]
-        public List<LogMessage> LogMessages { get; set; }
+        public List<Dictionary<string, JObject>> LogMessages { get; set; }
         /// <summary>
         /// An array of responses to the user.
         /// </summary>

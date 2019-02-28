@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -226,7 +227,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public DialogNodeOutput Output { get; set; }
+        public Dictionary<string, JObject> Output { get; set; }
         /// <summary>
         /// The context for the dialog node.
         /// </summary>

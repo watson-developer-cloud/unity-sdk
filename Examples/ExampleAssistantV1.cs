@@ -133,63 +133,50 @@ namespace IBM.Watson.Examples
             while (!getWorkspaceTested)
                 yield return null;
 
-            //UpdateWorkspace updateWorkspace = new UpdateWorkspace()
-            //{
-            //    Name = createdWorkspaceName + "Updated",
-            ////  Update Workspace
-            //    Description = createdWorkspaceDescription + "Updated",
-            //    Language = createdWorkspaceLanguage
-            //};
             Log.Debug("ExampleAssistantV1", "Attempting to UpdateWorkspace...");
             service.UpdateWorkspace(callback: OnUpdateWorkspace, workspaceId: createdWorkspaceId, name: createdWorkspaceName + "Updated", description: createdWorkspaceDescription + "Updated", language: createdWorkspaceLanguage);
             while (!updateWorkspaceTested)
                 yield return null;
 
             //  Message
-            //Dictionary<string, object> input = new Dictionary<string, object>();
-            //input.Add("text", inputString);
-            //MessageRequest messageRequest = new MessageRequest()
+            Dictionary<string, object> input = new Dictionary<string, object>();
+            input.Add("text", inputString);
+            //InputData input = new InputData()
             //{
-            //    Input = input
+            //    Text = inputString
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(callback: OnMessage, workspaceId, messageRequest);
+            //service.Message(callback: OnMessage, workspaceId: workspaceId, input: input);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
 
-            //input["text"] = conversationString0;
-            //MessageRequest messageRequest0 = new MessageRequest()
+            //input = new InputData()
             //{
-            //    Input = input,
-            //    Context = context
+            //    Text = conversationString0
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(callback: OnMessage, workspaceId, messageRequest0);
+            //service.Message(callback: OnMessage, workspaceId: workspaceId, input: input, context: context);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
 
-            //input["text"] = conversationString1;
-            //MessageRequest messageRequest1 = new MessageRequest()
+            //input = new InputData()
             //{
-            //    Input = input,
-            //    Context = context
+            //    Text = conversationString1
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(callback: OnMessage, workspaceId, messageRequest1);
+            //service.Message(callback: OnMessage, workspaceId: workspaceId, input: input, context: context);
             //while (!messageTested)
             //    yield return null;
             //messageTested = false;
 
-            //input["text"] = conversationString2;
-            //MessageRequest messageRequest2 = new MessageRequest()
+            //input = new InputData()
             //{
-            //    Input = input,
-            //    Context = context
+            //    Text = conversationString2
             //};
             //Log.Debug("ExampleAssistantV1", "Attempting to Message...");
-            //service.Message(callback: OnMessage, workspaceId, messageRequest2);
+            //service.Message(callback: OnMessage, workspaceId: workspaceId, input: input, context: context);
             //while (!messageTested)
             //    yield return null;
 
@@ -612,10 +599,11 @@ namespace IBM.Watson.Examples
             listIntentsTested = true;
         }
 
-        private void OnMessage(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage(WatsonResponse<Dictionary<string, object>> response, WatsonError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnMessage()", "Response: {0}", customData["json"].ToString());
 
+            context = response.Result["context"] as Dictionary<string, object>;
             ////  Convert resp to fsdata
             //fsData fsdata = null;
             //fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);

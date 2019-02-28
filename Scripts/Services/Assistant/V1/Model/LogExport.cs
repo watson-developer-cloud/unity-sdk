@@ -15,7 +15,9 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -33,7 +35,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The response sent by the workspace, including the output text, detected intents and entities, and context.
         /// </summary>
         [JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageResponse Response { get; set; }
+        public Dictionary<string, JObject> Response { get; set; }
         /// <summary>
         /// A unique identifier for the logged event.
         /// </summary>
