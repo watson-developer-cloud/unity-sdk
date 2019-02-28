@@ -472,7 +472,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
         /// <param name="acceptLanguage">The language used for the value of `gender_label` in the response. (optional,
         /// default to en)</param>
         /// <param name="customData">Custom data.</param>
-        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, string imagePath, string acceptLanguage, Dictionary<string, object> customData = null)
+        public bool DetectFaces(SuccessCallback<DetectedFaces> successCallback, FailCallback failCallback, string imagePath, string acceptLanguage = null, Dictionary<string, object> customData = null)
         {
             if (successCallback == null)
                 throw new ArgumentNullException("successCallback");
