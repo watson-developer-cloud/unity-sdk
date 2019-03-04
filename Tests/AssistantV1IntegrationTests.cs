@@ -55,7 +55,7 @@ namespace IBM.Watson.Tests
             Dictionary<string, JObject> messageResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...");
             service.Message(
-                callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<Dictionary<string, JObject>> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -210,7 +210,7 @@ namespace IBM.Watson.Tests
             WorkspaceCollection listWorkspaceResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to ListWorkspaces...");
             service.ListWorkspaces(
-                callback: (WatsonResponse<WorkspaceCollection> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<WorkspaceCollection> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     listWorkspaceResponse = response.Result;
@@ -230,7 +230,7 @@ namespace IBM.Watson.Tests
             Workspace createWorkspaceResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to CreateWorkspace...");
             service.CreateWorkspace(
-                callback: (WatsonResponse<Workspace> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     createWorkspaceResponse = response.Result;
@@ -251,7 +251,7 @@ namespace IBM.Watson.Tests
             Workspace updateWorkspaceResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to UpdateWorkspace...");
             service.UpdateWorkspace(
-                callback: (WatsonResponse<Workspace> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     updateWorkspaceResponse = response.Result;
@@ -274,7 +274,7 @@ namespace IBM.Watson.Tests
             object deleteWorkspaceResponse = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to DeleteWorkspace...");
             service.DeleteWorkspace(
-                callback: (WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     deleteWorkspaceResponse = response.Result;

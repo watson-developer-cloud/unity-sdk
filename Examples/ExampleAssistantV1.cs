@@ -365,241 +365,241 @@ namespace IBM.Watson.Examples
             yield break;
         }
 
-        private void OnListMentions(WatsonResponse<EntityMentionCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListMentions(DetailedResponse<EntityMentionCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListMentions()", "Response: {0}", customData["json"].ToString());
             listMentionsTested = true;
         }
 
-        private void OnDeleteWorkspace(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteWorkspace(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
             deleteWorkspaceTested = true;
         }
 
-        private void OnDeleteIntent(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteIntent(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
             deleteIntentTested = true;
         }
 
-        private void OnDeleteExample(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteExample(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
             deleteExampleTested = true;
         }
 
-        private void OnDeleteEntity(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteEntity(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
             deleteEntityTested = true;
         }
 
-        private void OnDeleteValue(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteValue(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
             deleteValueTested = true;
         }
 
-        private void OnDeleteSynonym(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteSynonym(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
             deleteSynonymTested = true;
         }
 
-        private void OnDeleteDialogNode(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteDialogNode(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
             deleteDialogNodeTested = true;
         }
 
-        private void OnDeleteCounterexample(WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnDeleteCounterexample(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
             deleteCounterexampleTested = true;
         }
 
-        private void OnUpdateCounterexample(WatsonResponse<Counterexample> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateCounterexample()", "Response: {0}", customData["json"].ToString());
             updateCounterexampleTested = true;
         }
 
-        private void OnGetCounterexample(WatsonResponse<Counterexample> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetCounterexample()", "Response: {0}", customData["json"].ToString());
             getCounterexampleTested = true;
         }
 
-        private void OnCreateCounterexample(WatsonResponse<Counterexample> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateCounterexample()", "Response: {0}", customData["json"].ToString());
             createCounterexampleTested = true;
         }
 
-        private void OnListCounterexamples(WatsonResponse<CounterexampleCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListCounterexamples(DetailedResponse<CounterexampleCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListCounterexamples()", "Response: {0}", customData["json"].ToString());
             listCounterexamplesTested = true;
         }
 
-        private void OnListAllLogs(WatsonResponse<LogCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListAllLogs(DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListAllLogs()", "Response: {0}", customData["json"].ToString());
             listAllLogsTested = true;
         }
 
-        private void OnListLogs(WatsonResponse<LogCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListLogs(DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListLogs()", "Response: {0}", customData["json"].ToString());
             listLogsInWorkspaceTested = true;
         }
 
-        private void OnUpdateDialogNode(WatsonResponse<DialogNode> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateDialogNode()", "Response: {0}", customData["json"].ToString());
             updateDialogNodeTested = true;
         }
 
-        private void OnGetDialogNode(WatsonResponse<DialogNode> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetDialogNode()", "Response: {0}", customData["json"].ToString());
             getDialogNodeTested = true;
         }
 
-        private void OnCreateDialogNode(WatsonResponse<DialogNode> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateDialogNode()", "Response: {0}", customData["json"].ToString());
             createDialogNodeTested = true;
         }
 
-        private void OnListDialogNodes(WatsonResponse<DialogNodeCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListDialogNodes(DetailedResponse<DialogNodeCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListDialogNodes()", "Response: {0}", customData["json"].ToString());
             listDialogNodesTested = true;
         }
 
-        private void OnUpdateSynonym(WatsonResponse<Synonym> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateSynonym()", "Response: {0}", customData["json"].ToString());
             updateSynonymTested = true;
         }
 
-        private void OnGetSynonym(WatsonResponse<Synonym> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetSynonym()", "Response: {0}", customData["json"].ToString());
             getSynonymTested = true;
         }
 
-        private void OnCreateSynonym(WatsonResponse<Synonym> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateSynonym()", "Response: {0}", customData["json"].ToString());
             createSynonymTested = true;
         }
 
-        private void OnListSynonyms(WatsonResponse<SynonymCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListSynonyms(DetailedResponse<SynonymCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListSynonyms()", "Response: {0}", customData["json"].ToString());
             listSynonymsTested = true;
         }
 
-        private void OnUpdateValue(WatsonResponse<Value> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateValue()", "Response: {0}", customData["json"].ToString());
             updateValueTested = true;
         }
 
-        private void OnGetValue(WatsonResponse<ValueExport> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetValue(DetailedResponse<ValueExport> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetValue()", "Response: {0}", customData["json"].ToString());
             getValueTested = true;
         }
 
-        private void OnCreateValue(WatsonResponse<Value> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateValue()", "Response: {0}", customData["json"].ToString());
             createValueTested = true;
         }
 
-        private void OnListValues(WatsonResponse<ValueCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListValues(DetailedResponse<ValueCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListValues()", "Response: {0}", customData["json"].ToString());
             listValuesTested = true;
         }
 
-        private void OnUpdateEntity(WatsonResponse<Entity> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateEntity()", "Response: {0}", customData["json"].ToString());
             updateEntityTested = true;
         }
 
-        private void OnGetEntity(WatsonResponse<EntityExport> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetEntity(DetailedResponse<EntityExport> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetEntity()", "Response: {0}", customData["json"].ToString());
             getEntityTested = true;
         }
 
-        private void OnCreateEntity(WatsonResponse<Entity> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateEntity()", "Response: {0}", customData["json"].ToString());
             createEntityTested = true;
         }
 
-        private void OnListEntities(WatsonResponse<EntityCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListEntities(DetailedResponse<EntityCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListEntities()", "Response: {0}", customData["json"].ToString());
             listEntitiesTested = true;
         }
 
-        private void OnUpdateExample(WatsonResponse<Example> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateExample()", "Response: {0}", customData["json"].ToString());
             updateExampleTested = true;
         }
 
-        private void OnGetExample(WatsonResponse<Example> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetExample()", "Response: {0}", customData["json"].ToString());
             getExampleTested = true;
         }
 
-        private void OnCreateExample(WatsonResponse<Example> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateExample()", "Response: {0}", customData["json"].ToString());
             createExampleTested = true;
         }
 
-        private void OnListExamples(WatsonResponse<ExampleCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListExamples(DetailedResponse<ExampleCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListExamples()", "Response: {0}", customData["json"].ToString());
             listExamplesTested = true;
         }
 
-        private void OnUpdateIntent(WatsonResponse<Intent> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateIntent()", "Response: {0}", customData["json"].ToString());
             updateIntentTested = true;
         }
 
-        private void OnGetIntent(WatsonResponse<IntentExport> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetIntent(DetailedResponse<IntentExport> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetIntent()", "Response: {0}", customData["json"].ToString());
             getIntentTested = true;
         }
 
-        private void OnCreateIntent(WatsonResponse<Intent> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateIntent()", "Response: {0}", customData["json"].ToString());
             createIntentTested = true;
         }
 
-        private void OnListIntents(WatsonResponse<IntentCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListIntents(DetailedResponse<IntentCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListIntents()", "Response: {0}", customData["json"].ToString());
             listIntentsTested = true;
         }
 
-        private void OnMessage(WatsonResponse<Dictionary<string, object>> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnMessage(DetailedResponse<Dictionary<string, object>> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnMessage()", "Response: {0}", customData["json"].ToString());
 
@@ -639,26 +639,26 @@ namespace IBM.Watson.Examples
             messageTested = true;
         }
 
-        private void OnUpdateWorkspace(WatsonResponse<Workspace> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnUpdateWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
             updateWorkspaceTested = true;
         }
 
-        private void OnGetWorkspace(WatsonResponse<WorkspaceExport> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnGetWorkspace(DetailedResponse<WorkspaceExport> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
             getWorkspaceTested = true;
         }
 
-        private void OnCreateWorkspace(WatsonResponse<Workspace> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnCreateWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
             createdWorkspaceId = response.Result.WorkspaceId;
             createWorkspaceTested = true;
         }
 
-        private void OnListWorkspaces(WatsonResponse<WorkspaceCollection> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
 

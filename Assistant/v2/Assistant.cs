@@ -94,7 +94,7 @@ namespace IBM.Watson.Assistant.V2.Handwritten
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -155,7 +155,7 @@ namespace IBM.Watson.Assistant.V2.Handwritten
 
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SessionResponse> response = new WatsonResponse<SessionResponse>
+            DetailedResponse<SessionResponse> response = new DetailedResponse<SessionResponse>
             {
                 Result = new SessionResponse()
             };
@@ -168,14 +168,14 @@ namespace IBM.Watson.Assistant.V2.Handwritten
                 fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 object obj = response.Result;
                 r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 customData.Add("json", data);
@@ -252,7 +252,7 @@ namespace IBM.Watson.Assistant.V2.Handwritten
 
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>
+            DetailedResponse<object> response = new DetailedResponse<object>
             {
                 Result = new object()
             };
@@ -265,14 +265,14 @@ namespace IBM.Watson.Assistant.V2.Handwritten
                 fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 object obj = response.Result;
                 r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 customData.Add("json", data);
@@ -363,7 +363,7 @@ namespace IBM.Watson.Assistant.V2.Handwritten
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<MessageResponse> response = new WatsonResponse<MessageResponse>();
+            DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
             response.Result = new MessageResponse();
             fsData data = null;
             Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
@@ -378,14 +378,14 @@ namespace IBM.Watson.Assistant.V2.Handwritten
                 fsResult r = fsJsonParser.Parse(Encoding.UTF8.GetString(resp.Data), out data);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 object obj = response.Result;
                 r = serializer.TryDeserialize(data, obj.GetType(), ref obj);
                 if (!r.Succeeded)
                 {
-                    throw new WatsonException(r.FormattedMessages);
+                    throw new IBMException(r.FormattedMessages);
                 }
 
                 customData.Add("json", data);

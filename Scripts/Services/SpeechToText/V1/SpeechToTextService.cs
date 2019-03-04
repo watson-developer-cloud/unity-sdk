@@ -103,7 +103,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the SpeechToText service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the SpeechToText service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -160,7 +160,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SpeechModel> response = new WatsonResponse<SpeechModel>();
+            DetailedResponse<SpeechModel> response = new DetailedResponse<SpeechModel>();
             Dictionary<string, object> customData = ((RequestObject<SpeechModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -232,7 +232,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SpeechModels> response = new WatsonResponse<SpeechModels>();
+            DetailedResponse<SpeechModels> response = new DetailedResponse<SpeechModels>();
             Dictionary<string, object> customData = ((RequestObject<SpeechModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -571,7 +571,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnRecognizeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SpeechRecognitionResults> response = new WatsonResponse<SpeechRecognitionResults>();
+            DetailedResponse<SpeechRecognitionResults> response = new DetailedResponse<SpeechRecognitionResults>();
             Dictionary<string, object> customData = ((RequestObject<SpeechRecognitionResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -655,7 +655,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnCheckJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<RecognitionJob> response = new WatsonResponse<RecognitionJob>();
+            DetailedResponse<RecognitionJob> response = new DetailedResponse<RecognitionJob>();
             Dictionary<string, object> customData = ((RequestObject<RecognitionJob>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -732,7 +732,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnCheckJobsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<RecognitionJobs> response = new WatsonResponse<RecognitionJobs>();
+            DetailedResponse<RecognitionJobs> response = new DetailedResponse<RecognitionJobs>();
             Dictionary<string, object> customData = ((RequestObject<RecognitionJobs>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1126,7 +1126,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnCreateJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<RecognitionJob> response = new WatsonResponse<RecognitionJob>();
+            DetailedResponse<RecognitionJob> response = new DetailedResponse<RecognitionJob>();
             Dictionary<string, object> customData = ((RequestObject<RecognitionJob>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1204,7 +1204,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1318,7 +1318,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnRegisterCallbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<RegisterStatus> response = new WatsonResponse<RegisterStatus>();
+            DetailedResponse<RegisterStatus> response = new DetailedResponse<RegisterStatus>();
             Dictionary<string, object> customData = ((RequestObject<RegisterStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1399,7 +1399,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnUnregisterCallbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1483,7 +1483,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnCreateLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<LanguageModel> response = new WatsonResponse<LanguageModel>();
+            DetailedResponse<LanguageModel> response = new DetailedResponse<LanguageModel>();
             Dictionary<string, object> customData = ((RequestObject<LanguageModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1562,7 +1562,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1640,7 +1640,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<LanguageModel> response = new WatsonResponse<LanguageModel>();
+            DetailedResponse<LanguageModel> response = new DetailedResponse<LanguageModel>();
             Dictionary<string, object> customData = ((RequestObject<LanguageModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1722,7 +1722,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListLanguageModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<LanguageModels> response = new WatsonResponse<LanguageModels>();
+            DetailedResponse<LanguageModels> response = new DetailedResponse<LanguageModels>();
             Dictionary<string, object> customData = ((RequestObject<LanguageModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1802,7 +1802,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnResetLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1927,7 +1927,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnTrainLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2015,7 +2015,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnUpgradeLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2158,7 +2158,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnAddCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2243,7 +2243,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2325,7 +2325,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Corpus> response = new WatsonResponse<Corpus>();
+            DetailedResponse<Corpus> response = new DetailedResponse<Corpus>();
             Dictionary<string, object> customData = ((RequestObject<Corpus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2404,7 +2404,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListCorporaResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Corpora> response = new WatsonResponse<Corpora>();
+            DetailedResponse<Corpora> response = new DetailedResponse<Corpora>();
             Dictionary<string, object> customData = ((RequestObject<Corpora>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2523,7 +2523,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnAddWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2651,7 +2651,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnAddWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2738,7 +2738,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2821,7 +2821,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Word> response = new WatsonResponse<Word>();
+            DetailedResponse<Word> response = new DetailedResponse<Word>();
             Dictionary<string, object> customData = ((RequestObject<Word>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2922,7 +2922,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Words> response = new WatsonResponse<Words>();
+            DetailedResponse<Words> response = new DetailedResponse<Words>();
             Dictionary<string, object> customData = ((RequestObject<Words>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3064,7 +3064,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnAddGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3149,7 +3149,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3231,7 +3231,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Grammar> response = new WatsonResponse<Grammar>();
+            DetailedResponse<Grammar> response = new DetailedResponse<Grammar>();
             Dictionary<string, object> customData = ((RequestObject<Grammar>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3310,7 +3310,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListGrammarsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Grammars> response = new WatsonResponse<Grammars>();
+            DetailedResponse<Grammars> response = new DetailedResponse<Grammars>();
             Dictionary<string, object> customData = ((RequestObject<Grammars>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3394,7 +3394,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnCreateAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AcousticModel> response = new WatsonResponse<AcousticModel>();
+            DetailedResponse<AcousticModel> response = new DetailedResponse<AcousticModel>();
             Dictionary<string, object> customData = ((RequestObject<AcousticModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3473,7 +3473,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3551,7 +3551,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AcousticModel> response = new WatsonResponse<AcousticModel>();
+            DetailedResponse<AcousticModel> response = new DetailedResponse<AcousticModel>();
             Dictionary<string, object> customData = ((RequestObject<AcousticModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3633,7 +3633,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListAcousticModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AcousticModels> response = new WatsonResponse<AcousticModels>();
+            DetailedResponse<AcousticModels> response = new DetailedResponse<AcousticModels>();
             Dictionary<string, object> customData = ((RequestObject<AcousticModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3713,7 +3713,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnResetAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3826,7 +3826,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnTrainAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3927,7 +3927,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnUpgradeAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4126,7 +4126,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnAddAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4210,7 +4210,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4305,7 +4305,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnGetAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AudioListing> response = new WatsonResponse<AudioListing>();
+            DetailedResponse<AudioListing> response = new DetailedResponse<AudioListing>();
             Dictionary<string, object> customData = ((RequestObject<AudioListing>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4386,7 +4386,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnListAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AudioResources> response = new WatsonResponse<AudioResources>();
+            DetailedResponse<AudioResources> response = new DetailedResponse<AudioResources>();
             Dictionary<string, object> customData = ((RequestObject<AudioResources>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4471,7 +4471,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

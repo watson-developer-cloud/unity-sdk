@@ -121,7 +121,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the NaturalLanguageUnderstanding service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the NaturalLanguageUnderstanding service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -191,7 +191,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<AnalysisResults> response = new WatsonResponse<AnalysisResults>();
+            DetailedResponse<AnalysisResults> response = new DetailedResponse<AnalysisResults>();
             Dictionary<string, object> customData = ((RequestObject<AnalysisResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -264,7 +264,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DeleteModelResults> response = new WatsonResponse<DeleteModelResults>();
+            DetailedResponse<DeleteModelResults> response = new DetailedResponse<DeleteModelResults>();
             Dictionary<string, object> customData = ((RequestObject<DeleteModelResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -336,7 +336,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ListModelsResults> response = new WatsonResponse<ListModelsResults>();
+            DetailedResponse<ListModelsResults> response = new DetailedResponse<ListModelsResults>();
             Dictionary<string, object> customData = ((RequestObject<ListModelsResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

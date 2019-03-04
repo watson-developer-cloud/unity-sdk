@@ -56,7 +56,7 @@ namespace IBM.Watson.Examples
         {
             if (string.IsNullOrEmpty(iamApikey))
             {
-                throw new WatsonException("Plesae provide IAM ApiKey for the service.");
+                throw new IBMException("Plesae provide IAM ApiKey for the service.");
             }
 
             //  Create credential and instantiate service
@@ -120,7 +120,7 @@ namespace IBM.Watson.Examples
             Log.Debug("ExampleToneAnalyzerV3.Examples()", "Examples complete!");
         }
 
-        private void OnTone(WatsonResponse<ToneAnalysis> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnTone(DetailedResponse<ToneAnalysis> response, IBMError error, Dictionary<string, object> customData)
         {
             if(error != null)
             {
@@ -134,7 +134,7 @@ namespace IBM.Watson.Examples
             toneTested = true;
         }
 
-        private void OnToneChat(WatsonResponse<UtteranceAnalyses> response, WatsonError error, Dictionary<string, object> customData)
+        private void OnToneChat(DetailedResponse<UtteranceAnalyses> response, IBMError error, Dictionary<string, object> customData)
         {
             if (error != null)
             {
