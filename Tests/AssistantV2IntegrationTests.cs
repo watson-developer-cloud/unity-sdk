@@ -53,7 +53,7 @@ namespace IBM.Watson.Tests
             SessionResponse createSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to CreateSession...");
             service.CreateSession(
-                callback: (WatsonResponse<SessionResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<SessionResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     createSessionResponse = response.Result;
@@ -71,7 +71,7 @@ namespace IBM.Watson.Tests
             MessageResponse messageResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -99,7 +99,7 @@ namespace IBM.Watson.Tests
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Are you open on Christmas?");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -128,7 +128,7 @@ namespace IBM.Watson.Tests
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...What are your hours?");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -157,7 +157,7 @@ namespace IBM.Watson.Tests
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -186,7 +186,7 @@ namespace IBM.Watson.Tests
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...On Friday please.");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -215,7 +215,7 @@ namespace IBM.Watson.Tests
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Yes.");
             service.Message(
-                callback: (WatsonResponse<MessageResponse> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
@@ -233,7 +233,7 @@ namespace IBM.Watson.Tests
             object deleteSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to DeleteSession...");
             service.DeleteSession(
-                callback: (WatsonResponse<object> response, WatsonError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
                 {
                     Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     deleteSessionResponse = response.Result;

@@ -121,7 +121,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the PersonalityInsights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the PersonalityInsights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -265,7 +265,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
         private void OnProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Profile> response = new WatsonResponse<Profile>();
+            DetailedResponse<Profile> response = new DetailedResponse<Profile>();
             Dictionary<string, object> customData = ((RequestObject<Profile>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -428,7 +428,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
         private void OnProfileAsCsvResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<System.IO.FileStream> response = new WatsonResponse<System.IO.FileStream>();
+            DetailedResponse<System.IO.FileStream> response = new DetailedResponse<System.IO.FileStream>();
             Dictionary<string, object> customData = ((RequestObject<System.IO.FileStream>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

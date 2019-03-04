@@ -122,7 +122,7 @@ namespace IBM.Watson.Assistant.V1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -214,7 +214,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Dictionary<string, JObject>> response = new WatsonResponse<Dictionary<string, JObject>>();
+            DetailedResponse<Dictionary<string, JObject>> response = new DetailedResponse<Dictionary<string, JObject>>();
             Dictionary<string, object> customData = ((RequestObject<Dictionary<string, JObject>>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -327,7 +327,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Workspace> response = new WatsonResponse<Workspace>();
+            DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
             Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -402,7 +402,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -498,7 +498,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<WorkspaceExport> response = new WatsonResponse<WorkspaceExport>();
+            DetailedResponse<WorkspaceExport> response = new DetailedResponse<WorkspaceExport>();
             Dictionary<string, object> customData = ((RequestObject<WorkspaceExport>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -599,7 +599,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListWorkspacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<WorkspaceCollection> response = new WatsonResponse<WorkspaceCollection>();
+            DetailedResponse<WorkspaceCollection> response = new DetailedResponse<WorkspaceCollection>();
             Dictionary<string, object> customData = ((RequestObject<WorkspaceCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -727,7 +727,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Workspace> response = new WatsonResponse<Workspace>();
+            DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
             Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -822,7 +822,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Intent> response = new WatsonResponse<Intent>();
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
             Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -900,7 +900,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -992,7 +992,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<IntentExport> response = new WatsonResponse<IntentExport>();
+            DetailedResponse<IntentExport> response = new DetailedResponse<IntentExport>();
             Dictionary<string, object> customData = ((RequestObject<IntentExport>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1104,7 +1104,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListIntentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<IntentCollection> response = new WatsonResponse<IntentCollection>();
+            DetailedResponse<IntentCollection> response = new DetailedResponse<IntentCollection>();
             Dictionary<string, object> customData = ((RequestObject<IntentCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1200,7 +1200,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Intent> response = new WatsonResponse<Intent>();
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
             Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1295,7 +1295,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Example> response = new WatsonResponse<Example>();
+            DetailedResponse<Example> response = new DetailedResponse<Example>();
             Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1376,7 +1376,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1463,7 +1463,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Example> response = new WatsonResponse<Example>();
+            DetailedResponse<Example> response = new DetailedResponse<Example>();
             Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1570,7 +1570,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ExampleCollection> response = new WatsonResponse<ExampleCollection>();
+            DetailedResponse<ExampleCollection> response = new DetailedResponse<ExampleCollection>();
             Dictionary<string, object> customData = ((RequestObject<ExampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1666,7 +1666,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Example> response = new WatsonResponse<Example>();
+            DetailedResponse<Example> response = new DetailedResponse<Example>();
             Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1756,7 +1756,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Counterexample> response = new WatsonResponse<Counterexample>();
+            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
             Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1835,7 +1835,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -1920,7 +1920,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Counterexample> response = new WatsonResponse<Counterexample>();
+            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
             Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2025,7 +2025,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListCounterexamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<CounterexampleCollection> response = new WatsonResponse<CounterexampleCollection>();
+            DetailedResponse<CounterexampleCollection> response = new DetailedResponse<CounterexampleCollection>();
             Dictionary<string, object> customData = ((RequestObject<CounterexampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2112,7 +2112,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Counterexample> response = new WatsonResponse<Counterexample>();
+            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
             Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2215,7 +2215,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Entity> response = new WatsonResponse<Entity>();
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
             Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2293,7 +2293,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2385,7 +2385,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<EntityExport> response = new WatsonResponse<EntityExport>();
+            DetailedResponse<EntityExport> response = new DetailedResponse<EntityExport>();
             Dictionary<string, object> customData = ((RequestObject<EntityExport>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2497,7 +2497,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<EntityCollection> response = new WatsonResponse<EntityCollection>();
+            DetailedResponse<EntityCollection> response = new DetailedResponse<EntityCollection>();
             Dictionary<string, object> customData = ((RequestObject<EntityCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2600,7 +2600,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Entity> response = new WatsonResponse<Entity>();
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
             Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2692,7 +2692,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListMentionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<EntityMentionCollection> response = new WatsonResponse<EntityMentionCollection>();
+            DetailedResponse<EntityMentionCollection> response = new DetailedResponse<EntityMentionCollection>();
             Dictionary<string, object> customData = ((RequestObject<EntityMentionCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2804,7 +2804,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Value> response = new WatsonResponse<Value>();
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
             Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2885,7 +2885,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -2979,7 +2979,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ValueExport> response = new WatsonResponse<ValueExport>();
+            DetailedResponse<ValueExport> response = new DetailedResponse<ValueExport>();
             Dictionary<string, object> customData = ((RequestObject<ValueExport>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3093,7 +3093,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListValuesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ValueCollection> response = new WatsonResponse<ValueCollection>();
+            DetailedResponse<ValueCollection> response = new DetailedResponse<ValueCollection>();
             Dictionary<string, object> customData = ((RequestObject<ValueCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3207,7 +3207,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Value> response = new WatsonResponse<Value>();
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
             Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3301,7 +3301,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Synonym> response = new WatsonResponse<Synonym>();
+            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
             Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3385,7 +3385,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3475,7 +3475,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Synonym> response = new WatsonResponse<Synonym>();
+            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
             Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3585,7 +3585,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListSynonymsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SynonymCollection> response = new WatsonResponse<SynonymCollection>();
+            DetailedResponse<SynonymCollection> response = new DetailedResponse<SynonymCollection>();
             Dictionary<string, object> customData = ((RequestObject<SynonymCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3680,7 +3680,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Synonym> response = new WatsonResponse<Synonym>();
+            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
             Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3829,7 +3829,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnCreateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DialogNode> response = new WatsonResponse<DialogNode>();
+            DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
             Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3907,7 +3907,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -3991,7 +3991,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DialogNode> response = new WatsonResponse<DialogNode>();
+            DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
             Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4095,7 +4095,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListDialogNodesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DialogNodeCollection> response = new WatsonResponse<DialogNodeCollection>();
+            DetailedResponse<DialogNodeCollection> response = new DetailedResponse<DialogNodeCollection>();
             Dictionary<string, object> customData = ((RequestObject<DialogNodeCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4246,7 +4246,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnUpdateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DialogNode> response = new WatsonResponse<DialogNode>();
+            DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
             Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4347,7 +4347,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListAllLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<LogCollection> response = new WatsonResponse<LogCollection>();
+            DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
             Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4449,7 +4449,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnListLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<LogCollection> response = new WatsonResponse<LogCollection>();
+            DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
             Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -4531,7 +4531,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

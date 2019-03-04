@@ -121,7 +121,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the VisualRecognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the VisualRecognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -234,7 +234,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ClassifiedImages> response = new WatsonResponse<ClassifiedImages>();
+            DetailedResponse<ClassifiedImages> response = new DetailedResponse<ClassifiedImages>();
             Dictionary<string, object> customData = ((RequestObject<ClassifiedImages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -343,7 +343,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnDetectFacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DetectedFaces> response = new WatsonResponse<DetectedFaces>();
+            DetailedResponse<DetectedFaces> response = new DetailedResponse<DetectedFaces>();
             Dictionary<string, object> customData = ((RequestObject<DetectedFaces>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -457,7 +457,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnCreateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifier> response = new WatsonResponse<Classifier>();
+            DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
             Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -528,7 +528,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -601,7 +601,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnGetClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifier> response = new WatsonResponse<Classifier>();
+            DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
             Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -675,7 +675,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifiers> response = new WatsonResponse<Classifiers>();
+            DetailedResponse<Classifiers> response = new DetailedResponse<Classifiers>();
             Dictionary<string, object> customData = ((RequestObject<Classifiers>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -787,7 +787,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnUpdateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifier> response = new WatsonResponse<Classifier>();
+            DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
             Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -861,7 +861,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnGetCoreMlModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<byte[]> response = new WatsonResponse<byte[]>();
+            DetailedResponse<byte[]> response = new DetailedResponse<byte[]>();
             Dictionary<string, object> customData = ((RequestObject<byte[]>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -943,7 +943,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

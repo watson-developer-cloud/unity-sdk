@@ -121,7 +121,7 @@ namespace IBM.Watson.Assistant.V2
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -180,7 +180,7 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<SessionResponse> response = new WatsonResponse<SessionResponse>();
+            DetailedResponse<SessionResponse> response = new DetailedResponse<SessionResponse>();
             Dictionary<string, object> customData = ((RequestObject<SessionResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -260,7 +260,7 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -350,7 +350,7 @@ namespace IBM.Watson.Assistant.V2
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<MessageResponse> response = new WatsonResponse<MessageResponse>();
+            DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
             Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

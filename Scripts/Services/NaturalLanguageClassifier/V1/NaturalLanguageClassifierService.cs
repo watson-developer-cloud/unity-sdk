@@ -103,7 +103,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the NaturalLanguageClassifier service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the NaturalLanguageClassifier service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -166,7 +166,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classification> response = new WatsonResponse<Classification>();
+            DetailedResponse<Classification> response = new DetailedResponse<Classification>();
             Dictionary<string, object> customData = ((RequestObject<Classification>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -250,7 +250,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnClassifyCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ClassificationCollection> response = new WatsonResponse<ClassificationCollection>();
+            DetailedResponse<ClassificationCollection> response = new DetailedResponse<ClassificationCollection>();
             Dictionary<string, object> customData = ((RequestObject<ClassificationCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -343,7 +343,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnCreateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifier> response = new WatsonResponse<Classifier>();
+            DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
             Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -413,7 +413,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<object> response = new WatsonResponse<object>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -485,7 +485,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnGetClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<Classifier> response = new WatsonResponse<Classifier>();
+            DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
             Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -554,7 +554,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
         private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ClassifierList> response = new WatsonResponse<ClassifierList>();
+            DetailedResponse<ClassifierList> response = new DetailedResponse<ClassifierList>();
             Dictionary<string, object> customData = ((RequestObject<ClassifierList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
