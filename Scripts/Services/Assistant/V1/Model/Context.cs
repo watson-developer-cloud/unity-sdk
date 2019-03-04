@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -35,7 +34,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// For internal use only.
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, JObject> System { get; set; }
+        public JObject System { get; set; }
         /// <summary>
         /// Metadata related to the message.
         /// </summary>
