@@ -153,15 +153,15 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="Dictionary<string, JObject>" />Dictionary<string, JObject></returns>
-        public bool Message(Callback<Dictionary<string, JObject>> callback, string workspaceId, Dictionary<string, object> customData = null, Dictionary<string, JObject> input = null, bool? alternateIntents = null, Dictionary<string, JObject> context = null, List<Dictionary<string, JObject>> entities = null, List<Dictionary<string, JObject>> intents = null, Dictionary<string, JObject> output = null, bool? nodesVisitedDetails = null)
+        /// <returns><see cref="JObject" />JObject</returns>
+        public bool Message(Callback<JObject> callback, string workspaceId, Dictionary<string, object> customData = null, JObject input = null, bool? alternateIntents = null, JObject context = null, List<JObject> entities = null, List<JObject> intents = null, JObject output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `Message`");
 
-            RequestObject<Dictionary<string, JObject>> req = new RequestObject<Dictionary<string, JObject>>
+            RequestObject<JObject> req = new RequestObject<JObject>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -218,8 +218,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<Dictionary<string, JObject>> response = new DetailedResponse<Dictionary<string, JObject>>();
-            Dictionary<string, object> customData = ((RequestObject<Dictionary<string, JObject>>)req).CustomData;
+            DetailedResponse<JObject> response = new DetailedResponse<JObject>();
+            Dictionary<string, object> customData = ((RequestObject<JObject>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -229,7 +229,7 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(json);
+                response.Result = JsonConvert.DeserializeObject<JObject>(json);
                 customData.Add("json", json);
             }
             catch (Exception e)
@@ -238,8 +238,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<Dictionary<string, JObject>>)req).Callback != null)
-                ((RequestObject<Dictionary<string, JObject>>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<JObject>)req).Callback != null)
+                ((RequestObject<JObject>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// Create workspace.
@@ -3895,7 +3895,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, Dictionary<string, JObject> output = null, object context = null, object metadata = null, DialogNodeNextStep nextStep = null, List<DialogNodeAction> actions = null, string title = null, string type = null, string eventName = null, string variable = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, object context = null, object metadata = null, DialogNodeNextStep nextStep = null, List<DialogNodeAction> actions = null, string title = null, string type = null, string eventName = null, string variable = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -4328,7 +4328,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, Dictionary<string, JObject> newOutput = null, object newContext = null, object newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, object newContext = null, object newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");

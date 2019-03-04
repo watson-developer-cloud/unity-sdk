@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -31,6 +30,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An input object that includes the input text.
         /// </summary>
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, JObject> Input { get; set; }
+        public JObject Input { get; set; }
     }
 }

@@ -35,6 +35,8 @@ namespace IBM.Watson.Tests
         private string createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private string createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
         private string createdWorkspaceLanguage = "en";
+        private string intent = "unity-intent";
+        private string intentDescription = "An intent created from the Unity SDK - Please delete this.";
 
         [SetUp]
         public void TestSetup()
@@ -50,33 +52,20 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
-            Dictionary<string, JObject> context = null;
 
-            Dictionary<string, JObject> messageResponse = null;
+            JToken context = null;
+            JObject messageResponse = null;
+            JToken conversationId = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...");
             service.Message(
-                callback: (DetailedResponse<Dictionary<string, JObject>> response, IBMError error, Dictionary<string, object> customData) =>
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
                     messageResponse = response.Result;
-                    messageResponse.TryGetValue("context", out JObject contextObj);
-                    context = contextObj.ToObject<Dictionary<string, JObject>>();
-                    contextObj.TryGetValue("conversation_id", out JToken conversationIdObj);
-                    string conversationId = conversationIdObj.ToString();
-
-                    //context = messageResponse.TryGetValue("context", out context);
-                    //object contextObj;
-                    //messageResponse.TryGetValue("context", out contextObj);
-                    //context = contextObj as Dictionary<string, object>;
-                    //object conversationIdObj;
-                    //context.TryGetValue("conversation_id", out conversationIdObj);
-                    //string conversationId = conversationIdObj as string;
-                    //context = messageResponse["context"] as Dictionary<string, object>;
-
-                    //JToken conversationId;
-                    //mycontext.TryGetValue("conversation_id", out conversationId);
-                    //context = messageResponse["context"] as Dictionary<string, object>;
-                    //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId);
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
@@ -85,113 +74,141 @@ namespace IBM.Watson.Tests
 
             while (messageResponse == null)
                 yield return null;
+            
+            messageResponse = null;
+            JObject input = new JObject();
+            JToken conversationId1 = null;
+            input.Add("text", "Are you open on Christmas?");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Are you open on Christmas?");
+            service.Message(
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    messageResponse = response.Result;
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId1);
 
-            //messageResponse = null;
-            //Dictionary<string, object> input = new Dictionary<string, object>();
-            //input.Add("text", "Are you open on Christmas?");
-            //Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Are you open on Christmas?");
-            //service.Message(
-            //    callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        //Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
-            //        //messageResponse = response.Result;
-            //        //context = messageResponse["context"] as Dictionary<string, object>;
-            //        //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
-            //        //Assert.IsNull(error);
-            //    },
-            //    workspaceId: workspaceId,
-            //    input: input, 
-            //    context: context,
-            //    nodesVisitedDetails: true
-            //);
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId1);
+                    Assert.IsTrue(conversationId1.ToString() == conversationId.ToString());
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input,
+                context: context as JObject,
+                nodesVisitedDetails: true
+            );
 
-            //while (messageResponse == null)
-            //    yield return null;
+            while (messageResponse == null)
+                yield return null;
 
-            //messageResponse = null;
-            //input = new Dictionary<string, object>();
-            //input.Add("text", "What are your hours?");
-            //Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...What are your hours?");
-            //service.Message(
-            //    callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        //Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
-            //        //messageResponse = response.Result;
-            //        //context = messageResponse["context"] as Dictionary<string, object>;
-            //        //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
-            //        //Assert.IsNull(error);
-            //    },
-            //    workspaceId: workspaceId,
-            //    input: input,
-            //    context: context,
-            //    nodesVisitedDetails: true
-            //);
+            messageResponse = null;
+            input = new JObject();
+            JToken conversationId2 = null;
+            input.Add("text", "What are your hours?");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...What are your hours?");
+            service.Message(
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    messageResponse = response.Result;
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId2);
 
-            //while (messageResponse == null)
-            //    yield return null;
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId2);
+                    Assert.IsTrue(conversationId2.ToString() == conversationId.ToString());
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input,
+                context: context as JObject,
+                nodesVisitedDetails: true
+            );
 
-            //messageResponse = null;
-            //input = new Dictionary<string, object>();
-            //input.Add("text", "I'd like to make an appointment for 12pm.");
-            //Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
-            //service.Message(
-            //    callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        //Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
-            //        //messageResponse = response.Result;
-            //        //context = messageResponse["context"] as Dictionary<string, object>;
-            //        //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
-            //        //Assert.IsNull(error);
-            //    },
-            //    workspaceId: workspaceId,
-            //    input: input,
-            //    context: context,
-            //    nodesVisitedDetails: true
-            //);
+            while (messageResponse == null)
+                yield return null;
 
-            //while (messageResponse == null)
-            //    yield return null;
+            messageResponse = null;
+            input = new JObject();
+            JToken conversationId3 = null;
+            input.Add("text", "I'd like to make an appointment for 12pm.");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
+            service.Message(
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    messageResponse = response.Result;
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId3);
 
-            //messageResponse = null;
-            //input = new Dictionary<string, object>();
-            //input.Add("text", "On Friday please.");
-            //Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...On Friday please.");
-            //service.Message(
-            //    callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        //Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
-            //        //messageResponse = response.Result;
-            //        //context = messageResponse["context"] as Dictionary<string, object>;
-            //        //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
-            //        //Assert.IsNull(error);
-            //    },
-            //    workspaceId: workspaceId,
-            //    input: input,
-            //    context: context,
-            //    nodesVisitedDetails: true
-            //);
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId3);
+                    Assert.IsTrue(conversationId3.ToString() == conversationId.ToString());
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input,
+                context: context as JObject,
+                nodesVisitedDetails: true
+            );
 
-            //while (messageResponse == null)
-            //    yield return null;
+            while (messageResponse == null)
+                yield return null;
 
-            //messageResponse = null;
-            //input = new Dictionary<string, object>();
-            //input.Add("text", "Yes.");
-            //Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Yes.");
-            //service.Message(
-            //    callback: (WatsonResponse<Dictionary<string, JObject>> response, WatsonError error, Dictionary<string, object> customData) =>
-            //    {
-            //        //Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
-            //        //messageResponse = response.Result;
-            //        //context = messageResponse["context"] as Dictionary<string, object>;
-            //        //Assert.IsNotNull((messageResponse["context"] as Dictionary<string, object>)["conversationId"]);
-            //        //Assert.IsNull(error);
-            //    },
-            //    workspaceId: workspaceId,
-            //    input: input,
-            //    context: context,
-            //    nodesVisitedDetails: true
-            //);
+            messageResponse = null;
+            input = new JObject();
+            JToken conversationId4 = null;
+            input.Add("text", "On Friday please.");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...On Friday please.");
+            service.Message(
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    messageResponse = response.Result;
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId4);
+
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId4);
+                    Assert.IsTrue(conversationId4.ToString() == conversationId.ToString());
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input,
+                context: context as JObject,
+                nodesVisitedDetails: true
+            );
+
+            while (messageResponse == null)
+                yield return null;
+
+            messageResponse = null;
+            input = new JObject();
+            JToken conversationId5 = null;
+            input.Add("text", "Yes.");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Yes.");
+            service.Message(
+                callback: (DetailedResponse<JObject> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    messageResponse = response.Result;
+                    messageResponse.TryGetValue("context", out context);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse["output"]["generic"][0]["text"]);
+                    (context as JObject).TryGetValue("conversation_id", out conversationId5);
+
+                    Assert.IsNotNull(context);
+                    Assert.IsNotNull(conversationId5);
+                    Assert.IsTrue(conversationId5.ToString() == conversationId.ToString());
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input,
+                context: context as JObject,
+                nodesVisitedDetails: true
+            );
+
+            while (messageResponse == null)
+                yield return null;
 
             while (messageResponse == null)
                 yield return null;
@@ -283,6 +300,121 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: createdWorkspaceId
             );
+
+            while (deleteWorkspaceResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Workspace tests complete!");
+        }
+
+        [UnityTest]
+        public IEnumerator TestIntents()
+        {
+            service = new AssistantService(versionDate);
+            while (!service.Credentials.HasIamTokenData())
+                yield return null;
+
+            workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to ListIntents...");
+            IntentCollection listIntentsResponse = null;
+            service.ListIntents(
+                callback: (DetailedResponse<IntentCollection> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    listIntentsResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId
+            );
+
+            while (listIntentsResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to CreateIntent...");
+            Intent createIntentResponse = null;
+            service.CreateIntent(
+                callback: (DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    createIntentResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsTrue(createIntentResponse.IntentName == intent);
+                    Assert.IsTrue(createIntentResponse.Description == intentDescription);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                intent: intent,
+                description: intentDescription
+            );
+
+            while (createIntentResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to GetIntent...");
+
+            IntentExport getIntentResponse = null;
+            service.GetIntent(
+                callback: (DetailedResponse<IntentExport> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    getIntentResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsTrue(getIntentResponse.IntentName == intent);
+                    Assert.IsTrue(getIntentResponse.Description == intentDescription);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                intent: intent,
+                export: true,
+                includeAudit: true
+            );
+
+            while (getIntentResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to UpdateIntent...");
+            Intent updateIntentResponse = null;
+            string newIntent = intent + "-updated";
+            string newIntentDescription = intentDescription + "-updated";
+            service.UpdateIntent(
+                callback: (DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    updateIntentResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsTrue(updateIntentResponse.IntentName == newIntent);
+                    Assert.IsTrue(updateIntentResponse.Description == newIntentDescription);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                intent: intent,
+                newIntent: newIntent,
+                newDescription: newIntentDescription
+            );
+
+            while (updateIntentResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to DeleteIntent...");
+            object deleteIntentResponse = null;
+            service.DeleteIntent(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    deleteIntentResponse = response.Result;
+                    Assert.IsNotNull(deleteIntentResponse);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                intent: newIntent
+            );
+
+            while (deleteIntentResponse == null)
+                yield return null;
+
+            Log.Debug("AssistantV1IntegrationTests", "Intents tests complete!");
         }
     }
 }
