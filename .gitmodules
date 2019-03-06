@@ -1,0 +1,3 @@
+[submodule "Core"]
+	path = Core
+	url = https://github.com/mediumTaj/IBM.Cloud.SDK.Unity
