@@ -1,8 +1,9 @@
 {
     "name": "IBM.Watson.Tests",
-    "references": [
-        "WatsonUnitySDK"
-    ],
+  "references": [
+    "WatsonUnitySDK",
+    "IBM.Cloud.SDK"
+  ],
     "optionalUnityReferences": [
         "TestAssemblies"
     ],

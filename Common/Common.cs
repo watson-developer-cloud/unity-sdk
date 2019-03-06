@@ -23,7 +23,14 @@ namespace IBM.Watson
 {
     public class Common : MonoBehaviour
     {
+        /// <summary>
+        /// The SDK version.
+        /// </summary>
         public const string Version = "watson-apis-unity-sdk-2.12.0";
+        /// <summary>
+        /// Tracking for onboarding.
+        /// </summary>
+        public const string TrackingQueryParam = "target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity";
         /// <summary>
         /// Returns a set of default headers to use with each request.
         /// </summary>
