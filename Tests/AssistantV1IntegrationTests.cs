@@ -38,21 +38,29 @@ namespace IBM.Watson.Tests
         private string intent = "unity-intent";
         private string intentDescription = "An intent created from the Unity SDK - Please delete this.";
 
-        [SetUp]
-        public void TestSetup()
+        private Workspace createWorkspaceResponse = null;
+        private CounterexampleCollection listCounterexamplesResponse = null;
+        private Counterexample createCounterexampleResponse = null;
+        private Counterexample getCounterexampleResponse = null;
+        private Counterexample updateCounterexampleResponse = null;
+        object deleteCounterexampleResponse = null;
+        object deleteWorkspaceResponse = null;
+
+        [UnitySetUp]
+        public IEnumerator TestSetup()
         {
             LogSystem.InstallDefaultReactors();
-        }
 
-        [UnityTest]
-        public IEnumerator TestMessage()
-        {
             service = new AssistantService(versionDate);
             while (!service.Credentials.HasIamTokenData())
                 yield return null;
+        }
 
+        #region Message
+        [UnityTest]
+        public IEnumerator TestMessage()
+        {
             workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
-
             JToken context = null;
             JObject messageResponse = null;
             JToken conversationId = null;
@@ -74,7 +82,7 @@ namespace IBM.Watson.Tests
 
             while (messageResponse == null)
                 yield return null;
-            
+
             messageResponse = null;
             JObject input = new JObject();
             JToken conversationId1 = null;
@@ -213,15 +221,12 @@ namespace IBM.Watson.Tests
             while (messageResponse == null)
                 yield return null;
         }
+        #endregion
 
+        #region Workspaces
         [UnityTest]
         public IEnumerator TestWorkspaces()
         {
-            service = new AssistantService(versionDate);
-            while (!service.Credentials.HasIamTokenData())
-                yield return null;
-
-            workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
             string createdWorkspaceId = null;
 
             WorkspaceCollection listWorkspaceResponse = null;
@@ -306,14 +311,12 @@ namespace IBM.Watson.Tests
 
             Log.Debug("AssistantV1IntegrationTests", "Workspace tests complete!");
         }
+        #endregion
 
+        #region Intents
         [UnityTest]
         public IEnumerator TestIntents()
         {
-            service = new AssistantService(versionDate);
-            while (!service.Credentials.HasIamTokenData())
-                yield return null;
-
             workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
 
             Log.Debug("AssistantV1IntegrationTests", "Attempting to ListIntents...");
@@ -415,6 +418,192 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             Log.Debug("AssistantV1IntegrationTests", "Intents tests complete!");
+        }
+        #endregion
+
+        [UnityTest, Order(0)]
+        public IEnumerator TestCreateWorkspace()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to CreateWorkspace...");
+            service.CreateWorkspace(
+                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    createWorkspaceResponse = response.Result;
+                    workspaceId = response.Result.WorkspaceId;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsTrue(!string.IsNullOrEmpty(workspaceId));
+                    Assert.IsNull(error);
+                },
+                name: createdWorkspaceName,
+                description: createdWorkspaceDescription,
+                language: createdWorkspaceLanguage,
+                learningOptOut: true
+            );
+
+            while (createWorkspaceResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(1)]
+        public IEnumerator TestListCounterExamples()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to ListCounterexamples...");
+            service.ListCounterexamples(
+                callback: (DetailedResponse<CounterexampleCollection> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    listCounterexamplesResponse = response.Result;
+                    Assert.IsNotNull(listCounterexamplesResponse);
+                    Assert.IsNotNull(listCounterexamplesResponse.Counterexamples);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                pageLimit: 1,
+                includeCount: true,
+                sort: "-text",
+                includeAudit: true
+            );
+
+            while (listCounterexamplesResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(2)]
+        public IEnumerator TestCreateCounterExample()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to CreateCounterexample...");
+            service.CreateCounterexample(
+                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    createCounterexampleResponse = response.Result;
+                    Assert.IsNotNull(createCounterexampleResponse);
+                    Assert.IsNotNull(createCounterexampleResponse.Text);
+                    Assert.IsTrue(createCounterexampleResponse.Text == "unity-CreateCounterExample");
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                text: "unity-CreateCounterExample"
+            );
+
+            while (createCounterexampleResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(3)]
+        public IEnumerator TestGetCounterExample()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to GetCounterexample...");
+            service.GetCounterexample(
+                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    getCounterexampleResponse = response.Result;
+                    Assert.IsNotNull(getCounterexampleResponse);
+                    Assert.IsNotNull(getCounterexampleResponse.Text);
+                    Assert.IsTrue(getCounterexampleResponse.Text == "unity-CreateCounterExample");
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                text: "unity-CreateCounterExample"
+            );
+
+            while (getCounterexampleResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(4)]
+        public IEnumerator TestUpdateCounterExample()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to UpdateCounterexample...");
+            service.UpdateCounterexample(
+                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    updateCounterexampleResponse = response.Result;
+                    Assert.IsNotNull(updateCounterexampleResponse);
+                    Assert.IsNotNull(updateCounterexampleResponse.Text);
+                    Assert.IsTrue(updateCounterexampleResponse.Text == "unity-CreateCounterExample-updated");
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                text: "unity-CreateCounterExample",
+                newText: "unity-CreateCounterExample-updated"
+            );
+
+            while (updateCounterexampleResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(5)]
+        public IEnumerator TestDeleteCounterExample()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to DeleteCounterexample...");
+            service.DeleteCounterexample(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    deleteCounterexampleResponse = response.Result;
+                    Assert.IsNotNull(deleteCounterexampleResponse);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                text: "unity-CreateCounterExample-updated"
+            );
+
+            while (deleteCounterexampleResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(6)]
+        public IEnumerator TestDeleteWorkspace()
+        {
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to DeleteWorkspace...");
+            service.DeleteWorkspace(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", customData["json"].ToString());
+                    deleteWorkspaceResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId
+            );
+
+            while (deleteWorkspaceResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(99)]
+        public IEnumerator Teardown()
+        {
+            WorkspaceCollection listWorkspaceResponse = null;
+            service.ListWorkspaces(
+                callback: (DetailedResponse<WorkspaceCollection> response, IBMError error, Dictionary<string, object> customData) =>
+                {
+                    listWorkspaceResponse = response.Result;
+                }
+            );
+
+            while (listWorkspaceResponse == null)
+                yield return null;
+
+            foreach (Workspace workspace in listWorkspaceResponse.Workspaces)
+            {
+                string workspaceIdToDelete = workspace.WorkspaceId;
+                string workspaceNameToDelete = workspace.Name;
+                if (workspaceNameToDelete.Contains("unity"))
+                {
+                    service.DeleteWorkspace(
+                        callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData) =>
+                        {
+                            Log.Debug("AssistantV1IntegrationTests", "Workspace {0}, {1} deleted!", workspaceNameToDelete, workspaceIdToDelete);
+                        },
+                        workspaceIdToDelete
+                    );
+                }
+            }
         }
     }
 }
