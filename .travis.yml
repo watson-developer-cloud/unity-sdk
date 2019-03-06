@@ -9,7 +9,12 @@ rvm:
 cache:
   directories:
     - ./Unity
+git:
+  submodules: false
 before_install:
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+- sed -i -e 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init --recursive
 - chmod a+x ./Travis/installUnity.sh
 - npm install -g npm@6.x
 install:
