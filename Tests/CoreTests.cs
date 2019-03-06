@@ -15,11 +15,8 @@
 *
 */
 
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace IBM.Watson.Tests
 {
@@ -30,8 +27,8 @@ namespace IBM.Watson.Tests
         {
             Dictionary<string, string> defaultHeaders = Common.GetDefaultheaders("TestSevice", "V1", "TestOperation");
             Assert.IsNotNull(defaultHeaders);
-            Assert.IsTrue(defaultHeaders.Count == 2);
-            
+            Assert.IsTrue(defaultHeaders["X-IBMCloud-SDK-Analytics"] == "service_name=TestSevice;service_version=V1;operation_id=TestOperation");
+            Assert.IsNotNull(defaultHeaders["User-Agent"]);
         }
     }
 }
