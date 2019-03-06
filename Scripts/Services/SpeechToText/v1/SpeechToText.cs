@@ -1298,7 +1298,6 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
                             if (ialternative.Contains("word_confidence"))
                             {
                                 IList iconfidence = ialternative["word_confidence"] as IList;
-
                                 WordConfidence[] confidence = new WordConfidence[iconfidence.Count];
                                 for (int i = 0; i < iconfidence.Count; ++i)
                                 {
@@ -1308,7 +1307,9 @@ namespace IBM.Watson.DeveloperCloud.Services.SpeechToText.v1
 
                                     WordConfidence wc = new WordConfidence();
                                     wc.Word = (string)iwordconf[0];
-                                    wc.Confidence = (double)iwordconf[1];
+                                    string wordConf = iwordconf[1].ToString();
+                                    double.TryParse(wordConf, out double wordConfDouble);
+                                    wc.Confidence = wordConfDouble;
                                     confidence[i] = wc;
                                 }
 
