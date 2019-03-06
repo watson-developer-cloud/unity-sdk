@@ -177,7 +177,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=Message";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "Message"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (nodesVisitedDetails != null)
             {
@@ -286,7 +290,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateWorkspace";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateWorkspace"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -386,7 +394,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteWorkspace";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteWorkspace"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteWorkspaceResponse;
@@ -470,7 +482,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetWorkspace";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetWorkspace"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -563,7 +579,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListWorkspaces";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListWorkspaces"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (pageLimit != null)
             {
@@ -682,7 +702,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateWorkspace";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateWorkspace"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (append != null)
             {
@@ -795,7 +819,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateIntent";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -884,7 +912,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteIntent";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteIntentResponse;
@@ -968,7 +1000,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetIntent";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -1064,7 +1100,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListIntents";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListIntents"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -1173,7 +1213,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateIntent";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -1270,7 +1314,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateExample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -1360,7 +1408,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteExample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteExampleResponse;
@@ -1443,7 +1495,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetExample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (includeAudit != null)
             {
@@ -1534,7 +1590,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListExamples";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListExamples"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (pageLimit != null)
             {
@@ -1641,7 +1701,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateExample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -1733,7 +1797,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateCounterexample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -1819,7 +1887,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteCounterexample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteCounterexampleResponse;
@@ -1900,7 +1972,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetCounterexample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (includeAudit != null)
             {
@@ -1989,7 +2065,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListCounterexamples";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListCounterexamples"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (pageLimit != null)
             {
@@ -2089,7 +2169,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateCounterexample";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -2184,7 +2268,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateEntity";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -2277,7 +2365,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteEntity";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteEntityResponse;
@@ -2361,7 +2453,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetEntity";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -2457,7 +2553,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListEntities";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListEntities"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -2569,7 +2669,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateEntity";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -2668,7 +2772,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListMentions";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListMentions"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -2773,7 +2881,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateValue";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -2869,7 +2981,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteValue";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteValueResponse;
@@ -2955,7 +3071,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetValue";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -3053,7 +3173,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListValues";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListValues"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (export != null)
             {
@@ -3176,7 +3300,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateValue";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -3278,7 +3406,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateSynonym";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -3369,7 +3501,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteSynonym";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteSynonymResponse;
@@ -3455,7 +3591,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetSynonym";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (includeAudit != null)
             {
@@ -3549,7 +3689,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListSynonyms";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListSynonyms"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (pageLimit != null)
             {
@@ -3657,7 +3801,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateSynonym";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -3772,7 +3920,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=CreateDialogNode";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateDialogNode"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -3891,7 +4043,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteDialogNode";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteDialogNode"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteDialogNodeResponse;
@@ -3971,7 +4127,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=GetDialogNode";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetDialogNode"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (includeAudit != null)
             {
@@ -4059,7 +4219,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListDialogNodes";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListDialogNodes"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (pageLimit != null)
             {
@@ -4189,7 +4353,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=UpdateDialogNode";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateDialogNode"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -4315,7 +4483,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListAllLogs";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListAllLogs"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(filter))
             {
@@ -4417,7 +4589,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=ListLogs";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListLogs"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(sort))
             {
@@ -4511,7 +4687,11 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V1;operation_id=DeleteUserData";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteUserData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(customerId))
             {
