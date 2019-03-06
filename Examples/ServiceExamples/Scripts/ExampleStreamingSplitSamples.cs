@@ -108,7 +108,7 @@ public class ExampleStreamingSplitSamples : MonoBehaviour
                 _service.EnableWordConfidence = true;
                 _service.EnableTimestamps = true;
                 _service.SilenceThreshold = 0.01f;
-                _service.MaxAlternatives = 0;
+                _service.MaxAlternatives = 1;
                 _service.EnableInterimResults = true;
                 _service.OnError = OnError;
                 _service.InactivityTimeout = -1;
