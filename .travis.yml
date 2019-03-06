@@ -19,8 +19,8 @@ install:
 before_script:
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
-- chmod a+x ./Travis/runTests.sh
-- chmod a+x ./Travis/build.sh
+# - chmod a+x ./Travis/runTests.sh
+# - chmod a+x ./Travis/build.sh
 script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
