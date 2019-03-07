@@ -47,8 +47,6 @@ namespace IBM.Cloud.SDK
         public static class String
         {
             /// <exclude />
-            public const string Version = "watson-apis-unity-sdk/2.12.0";
-            /// <exclude />
             public const string DebugDispalyQuality = "Quality: {0}";
             /// <summary>
             /// Name for creating custom headers in CustomData.

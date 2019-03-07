@@ -344,8 +344,6 @@ namespace IBM.Cloud.SDK.Connection
                     headers[kp.Key] = kp.Value;
                 }
             }
-
-            headers.Add("User-Agent", Constants.String.Version);
         }
 
         private IEnumerator ProcessRequestQueue()

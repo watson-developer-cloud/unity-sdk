@@ -1,9 +1,0 @@
-﻿{
-  "name": "Tests",
-  "references": [
-    "WatsonUnitySDK"
-  ],
-  "optionalUnityReferences": [
-    "TestAssemblies"
-  ]
-}
