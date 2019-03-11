@@ -217,9 +217,6 @@ namespace IBM.Watson.Tests
 
             while (messageResponse == null)
                 yield return null;
-
-            while (messageResponse == null)
-                yield return null;
         }
         #endregion
 
