@@ -121,7 +121,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the ToneAnalyzer service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the ToneAnalyzer service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -235,7 +235,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
         private void OnToneResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<ToneAnalysis> response = new WatsonResponse<ToneAnalysis>();
+            DetailedResponse<ToneAnalysis> response = new DetailedResponse<ToneAnalysis>();
             Dictionary<string, object> customData = ((RequestObject<ToneAnalysis>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -342,7 +342,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
         private void OnToneChatResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<UtteranceAnalyses> response = new WatsonResponse<UtteranceAnalyses>();
+            DetailedResponse<UtteranceAnalyses> response = new DetailedResponse<UtteranceAnalyses>();
             Dictionary<string, object> customData = ((RequestObject<UtteranceAnalyses>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {

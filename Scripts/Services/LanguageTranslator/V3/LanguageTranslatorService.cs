@@ -121,7 +121,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
             else
             {
-                throw new WatsonException("Please provide a username and password or authorization token to use the LanguageTranslator service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the LanguageTranslator service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
             }
         }
 
@@ -182,7 +182,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnTranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<TranslationResult> response = new WatsonResponse<TranslationResult>();
+            DetailedResponse<TranslationResult> response = new DetailedResponse<TranslationResult>();
             Dictionary<string, object> customData = ((RequestObject<TranslationResult>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -261,7 +261,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnIdentifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<IdentifiedLanguages> response = new WatsonResponse<IdentifiedLanguages>();
+            DetailedResponse<IdentifiedLanguages> response = new DetailedResponse<IdentifiedLanguages>();
             Dictionary<string, object> customData = ((RequestObject<IdentifiedLanguages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -332,7 +332,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnListIdentifiableLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<IdentifiableLanguages> response = new WatsonResponse<IdentifiableLanguages>();
+            DetailedResponse<IdentifiableLanguages> response = new DetailedResponse<IdentifiableLanguages>();
             Dictionary<string, object> customData = ((RequestObject<IdentifiableLanguages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -448,7 +448,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnCreateModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<TranslationModel> response = new WatsonResponse<TranslationModel>();
+            DetailedResponse<TranslationModel> response = new DetailedResponse<TranslationModel>();
             Dictionary<string, object> customData = ((RequestObject<TranslationModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -521,7 +521,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<DeleteModelResult> response = new WatsonResponse<DeleteModelResult>();
+            DetailedResponse<DeleteModelResult> response = new DetailedResponse<DeleteModelResult>();
             Dictionary<string, object> customData = ((RequestObject<DeleteModelResult>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -596,7 +596,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<TranslationModel> response = new WatsonResponse<TranslationModel>();
+            DetailedResponse<TranslationModel> response = new DetailedResponse<TranslationModel>();
             Dictionary<string, object> customData = ((RequestObject<TranslationModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
@@ -684,7 +684,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            WatsonResponse<TranslationModels> response = new WatsonResponse<TranslationModels>();
+            DetailedResponse<TranslationModels> response = new DetailedResponse<TranslationModels>();
             Dictionary<string, object> customData = ((RequestObject<TranslationModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
