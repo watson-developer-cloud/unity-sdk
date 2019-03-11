@@ -1349,6 +1349,15 @@ namespace IBM.Watson.DeveloperCloud.Utilities
             return filePathsToLoad;
         }
         #endregion
+
+        #region String to Double
+        public static double StringToDouble(string input)
+        {
+            double output;
+            double.TryParse(input, out output);
+            return output;
+        }
+        #endregion
     }
 
     /// <summary>
