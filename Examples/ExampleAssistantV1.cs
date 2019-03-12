@@ -509,7 +509,7 @@ namespace IBM.Watson.Examples
             updateValueTested = true;
         }
 
-        private void OnGetValue(DetailedResponse<ValueExport> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetValue()", "Response: {0}", customData["json"].ToString());
             getValueTested = true;
@@ -533,7 +533,7 @@ namespace IBM.Watson.Examples
             updateEntityTested = true;
         }
 
-        private void OnGetEntity(DetailedResponse<EntityExport> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetEntity()", "Response: {0}", customData["json"].ToString());
             getEntityTested = true;
@@ -581,7 +581,7 @@ namespace IBM.Watson.Examples
             updateIntentTested = true;
         }
 
-        private void OnGetIntent(DetailedResponse<IntentExport> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetIntent()", "Response: {0}", customData["json"].ToString());
             getIntentTested = true;
@@ -645,7 +645,7 @@ namespace IBM.Watson.Examples
             updateWorkspaceTested = true;
         }
 
-        private void OnGetWorkspace(DetailedResponse<WorkspaceExport> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV1.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
             getWorkspaceTested = true;
