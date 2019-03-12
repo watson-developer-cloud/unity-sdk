@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -40,6 +41,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// For internal use only.
         /// </summary>
         [JsonProperty("human_agent_assist", NullValueHandling = NullValueHandling.Ignore)]
-        public object HumanAgentAssist { get; set; }
+        public Dictionary<string, object> HumanAgentAssist { get; set; }
     }
 }

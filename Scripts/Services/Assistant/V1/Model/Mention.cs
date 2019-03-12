@@ -15,23 +15,26 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// CreateCounterexample.
+    /// A mention of a contextual entity.
     /// </summary>
-    public class CreateCounterexample
+    public class Mention
     {
         /// <summary>
-        /// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-        ///
-        /// - It cannot contain carriage return, newline, or tab characters
-        /// - It cannot consist of only whitespace characters
-        /// - It must be no longer than 1024 characters.
+        /// The name of the entity.
         /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string Text { get; set; }
+        [JsonProperty("entity", NullValueHandling = NullValueHandling.Ignore)]
+        public string Entity { get; set; }
+        /// <summary>
+        /// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input
+        /// text.
+        /// </summary>
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public List<long?> Location { get; set; }
     }
 }

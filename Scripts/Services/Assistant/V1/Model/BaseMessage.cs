@@ -22,9 +22,9 @@ using Newtonsoft.Json.Linq;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// A request sent to the workspace, including the user input and context.
+    /// BaseMessage.
     /// </summary>
-    public class MessageRequest
+    public class BaseMessage
     {
         /// <summary>
         /// An input object that includes the input text.
@@ -32,7 +32,17 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
         public JObject Input { get; set; }
         /// <summary>
-        /// Whether to return more than one intent. Set to `true` to return all matching intents.
+        /// An array of intents recognized in the user input, sorted in descending order of confidence.
+        /// </summary>
+        [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
+        public List<JObject> Intents { get; set; }
+        /// <summary>
+        /// An array of entities identified in the user input.
+        /// </summary>
+        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
+        public List<JObject> Entities { get; set; }
+        /// <summary>
+        /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>
         [JsonProperty("alternate_intents", NullValueHandling = NullValueHandling.Ignore)]
         public bool? AlternateIntents { get; set; }
@@ -42,22 +52,15 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
         public JObject Context { get; set; }
         /// <summary>
-        /// Entities to use when evaluating the message. Include entities from the previous response to continue using
-        /// those entities rather than detecting entities in the new input.
-        /// </summary>
-        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Entities { get; set; }
-        /// <summary>
-        /// Intents to use when evaluating the user input. Include intents from the previous response to continue using
-        /// those intents rather than trying to recognize intents in the new input.
-        /// </summary>
-        [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Intents { get; set; }
-        /// <summary>
         /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages
         /// from the log.
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public JObject Output { get; set; }
+        /// <summary>
+        /// An array of objects describing any actions requested by the dialog node.
+        /// </summary>
+        [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual List<DialogNodeAction> Actions { get; private set; }
     }
 }

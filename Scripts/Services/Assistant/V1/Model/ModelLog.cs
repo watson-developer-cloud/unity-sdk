@@ -16,25 +16,24 @@
 */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// LogExport.
+    /// ModelLog.
     /// </summary>
-    public class LogExport
+    public class ModelLog
     {
         /// <summary>
         /// A request sent to the workspace, including the user input and context.
         /// </summary>
         [JsonProperty("request", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageRequest Request { get; set; }
+        public BaseMessage Request { get; set; }
         /// <summary>
         /// The response sent by the workspace, including the output text, detected intents and entities, and context.
         /// </summary>
         [JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Response { get; set; }
+        public MessageResponse Response { get; set; }
         /// <summary>
         /// A unique identifier for the logged event.
         /// </summary>

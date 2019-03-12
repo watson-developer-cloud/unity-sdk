@@ -27,7 +27,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Value
     {
         /// <summary>
-        /// Specifies the type of value.
+        /// Specifies the type of entity value.
         /// </summary>
         public class ValueTypeValue
         {
@@ -43,40 +43,50 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// Specifies the type of value.
+        /// Specifies the type of entity value.
         /// Constants for possible values can be found using Value.ValueTypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string ValueType { get; set; }
         /// <summary>
-        /// The text of the entity value.
+        /// The text of the entity value. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string ValueText { get; set; }
+        public string _Value { get; set; }
         /// <summary>
         /// Any metadata related to the entity value.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
-        /// The timestamp for creation of the entity value.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the last update to the entity value.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
-        /// <summary>
-        /// An array containing any synonyms for the entity value.
+        /// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the
+        /// value type), but not both. A synonym must conform to the following resrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Synonyms { get; set; }
         /// <summary>
-        /// An array containing any patterns for the entity value.
+        /// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the
+        /// value type), but not both. A pattern is a regular expression no longer than 512 characters. For more
+        /// information about how to specify a pattern, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// </summary>
         [JsonProperty("patterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Patterns { get; set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
     }
 }

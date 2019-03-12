@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -42,19 +43,29 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
-        /// Any metadata related to the value.
+        /// Any metadata related to the entity.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
-        /// <summary>
-        /// An array of objects describing the entity values.
-        /// </summary>
-        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-        public List<CreateValue> Values { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// Whether to use fuzzy matching for the entity.
         /// </summary>
         [JsonProperty("fuzzy_match", NullValueHandling = NullValueHandling.Ignore)]
         public bool? FuzzyMatch { get; set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
+        /// An array of objects describing the entity values.
+        /// </summary>
+        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+        public List<CreateValue> Values { get; set; }
     }
 }
