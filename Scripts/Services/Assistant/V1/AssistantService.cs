@@ -2842,7 +2842,7 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters.</param>
         /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="type">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="valueType">Specifies the type of entity value. (optional, default to synonyms)</param>
         /// <param name="synonyms">An array of synonyms for the entity value. A value can specify either synonyms or
         /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
@@ -2857,7 +2857,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, Dictionary<string, object> metadata = null, string type = null, List<string> synonyms = null, List<string> patterns = null)
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateValue`");
@@ -2898,8 +2898,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["value"] = value;
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (!string.IsNullOrEmpty(type))
-                bodyObject["type"] = type;
+            if (!string.IsNullOrEmpty(valueType))
+                bodyObject["type"] = valueType;
             if (synonyms != null && synonyms.Count > 0)
                 bodyObject["synonyms"] = JToken.FromObject(synonyms);
             if (patterns != null && patterns.Count > 0)
@@ -3261,7 +3261,7 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="newType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="newValueType">Specifies the type of entity value. (optional, default to synonyms)</param>
         /// <param name="newSynonyms">An array of synonyms for the entity value. A value can specify either synonyms or
         /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
@@ -3276,7 +3276,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, Dictionary<string, object> newMetadata = null, string newType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateValue`");
@@ -3317,8 +3317,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["value"] = newValue;
             if (newMetadata != null)
                 bodyObject["metadata"] = JToken.FromObject(newMetadata);
-            if (!string.IsNullOrEmpty(newType))
-                bodyObject["type"] = newType;
+            if (!string.IsNullOrEmpty(newValueType))
+                bodyObject["type"] = newValueType;
             if (newSynonyms != null && newSynonyms.Count > 0)
                 bodyObject["synonyms"] = JToken.FromObject(newSynonyms);
             if (newPatterns != null && newPatterns.Count > 0)
@@ -3886,7 +3886,7 @@ namespace IBM.Watson.Assistant.V1
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="type">How the dialog node is processed. (optional)</param>
+        /// <param name="nodeType">How the dialog node is processed. (optional)</param>
         /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="variable">The location in the dialog context where output is stored. (optional)</param>
         /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
@@ -3901,7 +3901,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3956,8 +3956,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["next_step"] = JToken.FromObject(nextStep);
             if (!string.IsNullOrEmpty(title))
                 bodyObject["title"] = title;
-            if (!string.IsNullOrEmpty(type))
-                bodyObject["type"] = type;
+            if (!string.IsNullOrEmpty(nodeType))
+                bodyObject["type"] = nodeType;
             if (!string.IsNullOrEmpty(eventName))
                 bodyObject["event_name"] = eventName;
             if (!string.IsNullOrEmpty(variable))
@@ -4321,7 +4321,7 @@ namespace IBM.Watson.Assistant.V1
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="newType">How the dialog node is processed. (optional)</param>
+        /// <param name="newNodeType">How the dialog node is processed. (optional)</param>
         /// <param name="newEventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="newVariable">The location in the dialog context where output is stored. (optional)</param>
         /// <param name="newActions">An array of objects describing any actions to be invoked by the dialog node.
@@ -4337,7 +4337,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4392,8 +4392,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["next_step"] = JToken.FromObject(newNextStep);
             if (!string.IsNullOrEmpty(newTitle))
                 bodyObject["title"] = newTitle;
-            if (!string.IsNullOrEmpty(newType))
-                bodyObject["type"] = newType;
+            if (!string.IsNullOrEmpty(newNodeType))
+                bodyObject["type"] = newNodeType;
             if (!string.IsNullOrEmpty(newEventName))
                 bodyObject["event_name"] = newEventName;
             if (!string.IsNullOrEmpty(newVariable))

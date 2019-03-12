@@ -235,7 +235,7 @@ namespace IBM.Watson.Examples
             //  Update Entities
             string updatedEntity = createdEntity + "Updated";
             string updatedEntityDescription = createdEntityDescription + "Updated";
-            service.UpdateEntity(callback: OnUpdateEntity, workspaceId: createdWorkspaceId, entity: createdEntity, newEntity: updatedEntity, newDescription: updatedEntityDescription = updatedEntityDescription);
+            service.UpdateEntity(callback: OnUpdateEntity, workspaceId: createdWorkspaceId, entity: createdEntity, newEntity: updatedEntity, newDescription: updatedEntityDescription);
             while (!updateEntityTested)
                 yield return null;
 

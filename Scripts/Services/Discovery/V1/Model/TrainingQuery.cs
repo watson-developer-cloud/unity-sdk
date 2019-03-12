@@ -26,22 +26,22 @@ namespace IBM.Watson.Discovery.V1.Model
     public class TrainingQuery
     {
         /// <summary>
-        /// Gets or Sets QueryId
+        /// The query ID associated with the training query.
         /// </summary>
         [JsonProperty("query_id", NullValueHandling = NullValueHandling.Ignore)]
         public string QueryId { get; set; }
         /// <summary>
-        /// Gets or Sets NaturalLanguageQuery
+        /// The natural text query for the training query.
         /// </summary>
         [JsonProperty("natural_language_query", NullValueHandling = NullValueHandling.Ignore)]
         public string NaturalLanguageQuery { get; set; }
         /// <summary>
-        /// Gets or Sets Filter
+        /// The filter used on the collection before the **natural_language_query** is applied.
         /// </summary>
         [JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
         public string Filter { get; set; }
         /// <summary>
-        /// Gets or Sets Examples
+        /// Array of training examples.
         /// </summary>
         [JsonProperty("examples", NullValueHandling = NullValueHandling.Ignore)]
         public List<TrainingExample> Examples { get; set; }

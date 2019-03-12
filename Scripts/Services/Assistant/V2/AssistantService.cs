@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V2.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -134,19 +135,19 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
-        /// <returns><see cref="SessionResponse" />SessionResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="SessionResponse" />SessionResponse</returns>
         public bool CreateSession(Callback<SessionResponse> callback, string assistantId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateSession");
+                throw new ArgumentNullException("`callback` is required for `CreateSession`");
             if (string.IsNullOrEmpty(assistantId))
-                throw new ArgumentNullException("assistantId is required for CreateSession");
+                throw new ArgumentNullException("`assistantId` is required for `CreateSession`");
 
             RequestObject<SessionResponse> req = new RequestObject<SessionResponse>
             {
@@ -164,7 +165,11 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V2;operation_id=CreateSession";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "CreateSession"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnCreateSessionResponse;
@@ -211,22 +216,22 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteSession(Callback<object> callback, string assistantId, string sessionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteSession");
+                throw new ArgumentNullException("`callback` is required for `DeleteSession`");
             if (string.IsNullOrEmpty(assistantId))
-                throw new ArgumentNullException("assistantId is required for DeleteSession");
+                throw new ArgumentNullException("`assistantId` is required for `DeleteSession`");
             if (string.IsNullOrEmpty(sessionId))
-                throw new ArgumentNullException("sessionId is required for DeleteSession");
+                throw new ArgumentNullException("`sessionId` is required for `DeleteSession`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -244,7 +249,11 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V2;operation_id=DeleteSession";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "DeleteSession"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteSessionResponse;
@@ -293,24 +302,26 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
-        /// <param name="request">The message to be sent. This includes the user's input, along with optional content
-        /// such as intents and entities. (optional)</param>
-        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
+        /// <param name="input">An input object that includes the input text. (optional)</param>
+        /// <param name="context">State information for the conversation. The context is stored by the assistant on a
+        /// per-session basis. You can use this property to set or modify context variables, which can also be accessed
+        /// by dialog nodes. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageRequest request = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
+        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, Dictionary<string, object> customData = null, MessageInput input = null, MessageContext context = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Message");
+                throw new ArgumentNullException("`callback` is required for `Message`");
             if (string.IsNullOrEmpty(assistantId))
-                throw new ArgumentNullException("assistantId is required for Message");
+                throw new ArgumentNullException("`assistantId` is required for `Message`");
             if (string.IsNullOrEmpty(sessionId))
-                throw new ArgumentNullException("sessionId is required for Message");
+                throw new ArgumentNullException("`sessionId` is required for `Message`");
 
             RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
@@ -328,14 +339,21 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=conversation;service_version=V2;operation_id=Message";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "Message"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (request != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request));
-            }
+
+            JObject bodyObject = new JObject();
+            if (input != null)
+                bodyObject["input"] = JToken.FromObject(input);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnMessageResponse;
 

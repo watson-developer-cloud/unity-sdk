@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.NaturalLanguageClassifier.V1.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -115,19 +116,19 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to use.</param>
-        /// <param name="body">Phrase to classify.</param>
-        /// <returns><see cref="Classification" />Classification</returns>
+        /// <param name="text">The submitted phrase. The maximum length is 2048 characters.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Classify(Callback<Classification> callback, string classifierId, ClassifyInput body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Classification" />Classification</returns>
+        public bool Classify(Callback<Classification> callback, string classifierId, string text, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Classify");
+                throw new ArgumentNullException("`callback` is required for `Classify`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for Classify");
-            if (body == null)
-                throw new ArgumentNullException("body is required for Classify");
+                throw new ArgumentNullException("`classifierId` is required for `Classify`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `Classify`");
 
             RequestObject<Classification> req = new RequestObject<Classification>
             {
@@ -145,13 +146,18 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=Classify";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "Classify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnClassifyResponse;
 
@@ -199,19 +205,19 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to use.</param>
-        /// <param name="body">Phrase to classify. You can submit up to 30 text phrases in a request.</param>
-        /// <returns><see cref="ClassificationCollection" />ClassificationCollection</returns>
+        /// <param name="collection">The submitted phrases.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ClassifyCollection(Callback<ClassificationCollection> callback, string classifierId, ClassifyCollectionInput body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ClassificationCollection" />ClassificationCollection</returns>
+        public bool ClassifyCollection(Callback<ClassificationCollection> callback, string classifierId, List<ClassifyInput> collection, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ClassifyCollection");
+                throw new ArgumentNullException("`callback` is required for `ClassifyCollection`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for ClassifyCollection");
-            if (body == null)
-                throw new ArgumentNullException("body is required for ClassifyCollection");
+                throw new ArgumentNullException("`classifierId` is required for `ClassifyCollection`");
+            if (collection == null)
+                throw new ArgumentNullException("`collection` is required for `ClassifyCollection`");
 
             RequestObject<ClassificationCollection> req = new RequestObject<ClassificationCollection>
             {
@@ -229,13 +235,18 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=ClassifyCollection";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ClassifyCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (collection != null && collection.Count > 0)
+                bodyObject["collection"] = JToken.FromObject(collection);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnClassifyCollectionResponse;
 
@@ -288,18 +299,18 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <param name="trainingData">Training data in CSV format. Each text value must have at least one class. The
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
         /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).</param>
-        /// <returns><see cref="Classifier" />Classifier</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Classifier" />Classifier</returns>
         public bool CreateClassifier(Callback<Classifier> callback, System.IO.FileStream metadata, System.IO.FileStream trainingData, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateClassifier");
+                throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
             if (metadata == null)
-                throw new ArgumentNullException("metadata is required for CreateClassifier");
+                throw new ArgumentNullException("`metadata` is required for `CreateClassifier`");
             if (trainingData == null)
-                throw new ArgumentNullException("trainingData is required for CreateClassifier");
+                throw new ArgumentNullException("`trainingData` is required for `CreateClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -317,7 +328,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=CreateClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "CreateClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["metadata"] = new RESTConnector.Form(metadata, metadata.Name, "application/json");
             if (metadata != null)
@@ -371,16 +386,16 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to delete.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteClassifier(Callback<object> callback, string classifierId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteClassifier");
+                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for DeleteClassifier");
+                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -398,7 +413,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=DeleteClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "DeleteClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteClassifierResponse;
 
@@ -443,16 +462,16 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to query.</param>
-        /// <returns><see cref="Classifier" />Classifier</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Classifier" />Classifier</returns>
         public bool GetClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetClassifier");
+                throw new ArgumentNullException("`callback` is required for `GetClassifier`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for GetClassifier");
+                throw new ArgumentNullException("`classifierId` is required for `GetClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -470,7 +489,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=GetClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "GetClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetClassifierResponse;
 
@@ -514,14 +537,14 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// Returns an empty array if no classifiers are available.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ClassifierList" />ClassifierList</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ClassifierList" />ClassifierList</returns>
         public bool ListClassifiers(Callback<ClassifierList> callback, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListClassifiers");
+                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
 
             RequestObject<ClassifierList> req = new RequestObject<ClassifierList>
             {
@@ -539,7 +562,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural_language_classifier;service_version=V1;operation_id=ListClassifiers";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ListClassifiers"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnListClassifiersResponse;
 

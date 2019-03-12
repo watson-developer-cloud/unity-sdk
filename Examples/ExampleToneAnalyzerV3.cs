@@ -94,20 +94,18 @@ namespace IBM.Watson.Examples
             };
             service.Tone(callback: OnTone, toneInput: toneInput, sentences: true, tones: tones, contentLanguage: "en", acceptLanguage: "en", contentType: "application/json");
 
-            while(!toneTested)
+            while (!toneTested)
             {
                 yield return null;
             }
 
-            ToneChatInput utterances = new ToneChatInput()
+
+            List<Utterance> utterances = new List<Utterance>()
             {
-                Utterances = new List<Utterance>()
+                new Utterance()
                 {
-                    new Utterance()
-                    {
-                        Text = stringToTestTone,
-                        User = "User 1"
-                    }
+                    Text = stringToTestTone,
+                    User = "User 1"
                 }
             };
             service.ToneChat(callback: OnToneChat, utterances: utterances, contentLanguage: "en", acceptLanguage: "en");
@@ -122,7 +120,7 @@ namespace IBM.Watson.Examples
 
         private void OnTone(DetailedResponse<ToneAnalysis> response, IBMError error, Dictionary<string, object> customData)
         {
-            if(error != null)
+            if (error != null)
             {
                 Log.Debug("ExampleToneAnalyzerV3.OnTone()", "Error: {0}: {1}", error.StatusCode, error.ErrorMessage);
             }

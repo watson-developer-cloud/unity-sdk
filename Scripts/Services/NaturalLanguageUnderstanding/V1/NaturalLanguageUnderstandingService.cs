@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.NaturalLanguageUnderstanding.V1.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -140,18 +141,43 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// - Sentiment.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="parameters">An object containing request parameters. The `features` object and one of the
-        /// `text`, `html`, or `url` attributes are required.</param>
-        /// <returns><see cref="AnalysisResults" />AnalysisResults</returns>
+        /// <param name="features">Specific features to analyze the document for.</param>
+        /// <param name="text">The plain text to analyze. One of the `text`, `html`, or `url` parameters is required.
+        /// (optional)</param>
+        /// <param name="html">The HTML file to analyze. One of the `text`, `html`, or `url` parameters is required.
+        /// (optional)</param>
+        /// <param name="url">The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
+        /// (optional)</param>
+        /// <param name="clean">Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning,
+        /// see the [Analyzing
+        /// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html)
+        /// documentation. (optional, default to true)</param>
+        /// <param name="xpath">An [XPath
+        /// query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to
+        /// perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before
+        /// it is analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
+        /// (optional)</param>
+        /// <param name="fallbackToRaw">Whether to use raw HTML content if text cleaning fails. (optional, default to
+        /// true)</param>
+        /// <param name="returnAnalyzedText">Whether or not to return the analyzed text. (optional, default to
+        /// false)</param>
+        /// <param name="language">ISO 639-1 code that specifies the language of your text. This overrides automatic
+        /// language detection. Language support differs depending on the features you include in your analysis. See
+        /// [Language
+        /// support](https://www.bluemix.net/docs/services/natural-language-understanding/language-support.html) for
+        /// more information. (optional)</param>
+        /// <param name="limitTextCharacters">Sets the maximum number of characters that are processed by the service.
+        /// (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Analyze(Callback<AnalysisResults> callback, Parameters parameters, Dictionary<string, object> customData = null)
+        /// <returns><see cref="AnalysisResults" />AnalysisResults</returns>
+        public bool Analyze(Callback<AnalysisResults> callback, Features features, Dictionary<string, object> customData = null, string text = null, string html = null, string url = null, bool? clean = null, string xpath = null, bool? fallbackToRaw = null, bool? returnAnalyzedText = null, string language = null, long? limitTextCharacters = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Analyze");
-            if (parameters == null)
-                throw new ArgumentNullException("parameters is required for Analyze");
+                throw new ArgumentNullException("`callback` is required for `Analyze`");
+            if (features == null)
+                throw new ArgumentNullException("`features` is required for `Analyze`");
 
             RequestObject<AnalysisResults> req = new RequestObject<AnalysisResults>
             {
@@ -169,14 +195,37 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural-language-understanding;service_version=V1;operation_id=Analyze";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "Analyze"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (parameters != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(parameters));
-            }
+
+            JObject bodyObject = new JObject();
+            if (features != null)
+                bodyObject["features"] = JToken.FromObject(features);
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            if (!string.IsNullOrEmpty(html))
+                bodyObject["html"] = html;
+            if (!string.IsNullOrEmpty(url))
+                bodyObject["url"] = url;
+            if (clean != null)
+                bodyObject["clean"] = JToken.FromObject(clean);
+            if (!string.IsNullOrEmpty(xpath))
+                bodyObject["xpath"] = xpath;
+            if (fallbackToRaw != null)
+                bodyObject["fallback_to_raw"] = JToken.FromObject(fallbackToRaw);
+            if (returnAnalyzedText != null)
+                bodyObject["return_analyzed_text"] = JToken.FromObject(returnAnalyzedText);
+            if (!string.IsNullOrEmpty(language))
+                bodyObject["language"] = language;
+            if (limitTextCharacters != null)
+                bodyObject["limit_text_characters"] = JToken.FromObject(limitTextCharacters);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnAnalyzeResponse;
 
@@ -221,16 +270,16 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to delete.</param>
-        /// <returns><see cref="DeleteModelResults" />DeleteModelResults</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteModelResults" />DeleteModelResults</returns>
         public bool DeleteModel(Callback<DeleteModelResults> callback, string modelId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteModel");
+                throw new ArgumentNullException("`callback` is required for `DeleteModel`");
             if (string.IsNullOrEmpty(modelId))
-                throw new ArgumentNullException("modelId is required for DeleteModel");
+                throw new ArgumentNullException("`modelId` is required for `DeleteModel`");
 
             RequestObject<DeleteModelResults> req = new RequestObject<DeleteModelResults>
             {
@@ -248,7 +297,11 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural-language-understanding;service_version=V1;operation_id=DeleteModel";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "DeleteModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteModelResponse;
@@ -295,14 +348,14 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// deployed to your Natural Language Understanding service.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ListModelsResults" />ListModelsResults</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ListModelsResults" />ListModelsResults</returns>
         public bool ListModels(Callback<ListModelsResults> callback, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListModels");
+                throw new ArgumentNullException("`callback` is required for `ListModels`");
 
             RequestObject<ListModelsResults> req = new RequestObject<ListModelsResults>
             {
@@ -320,7 +373,11 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=natural-language-understanding;service_version=V1;operation_id=ListModels";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "ListModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListModelsResponse;

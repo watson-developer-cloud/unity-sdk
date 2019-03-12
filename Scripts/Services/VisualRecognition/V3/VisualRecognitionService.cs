@@ -131,27 +131,26 @@ namespace IBM.Watson.VisualRecognition.V3
         /// Classify images with built-in or custom classifiers.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="imagesFile">An image file (.jpg, .png) or .zip file with images. Maximum image size is 10 MB.
-        /// Include no more than 20 images and limit the .zip file to 100 MB. Encode the image and .zip file names in
-        /// UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters non-ASCII
-        /// characters.
+        /// <param name="imagesFile">An image file (.gif, .jpg, .png, .tif) or .zip file with images. Maximum image size
+        /// is 10 MB. Include no more than 20 images and limit the .zip file to 100 MB. Encode the image and .zip file
+        /// names in UTF-8 if they contain non-ASCII characters. The service assumes UTF-8 encoding if it encounters
+        /// non-ASCII characters.
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
-        /// <param name="url">The URL of an image to analyze. Must be in .jpg, or .png format. The minimum recommended
-        /// pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB.
+        /// <param name="url">The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel
+        /// density is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224
+        /// pixels. The maximum image size is 10 MB.
         ///
         /// You can also include images with the **images_file** parameter. (optional)</param>
         /// <param name="threshold">The minimum score a class must have to be displayed in the response. Set the
-        /// threshold to `0.0` to ignore the classification score and return all values. (optional, default to
-        /// 0.5)</param>
-        /// <param name="owners">The categories of classifiers to apply. Use `IBM` to classify against the `default`
-        /// general classifier, and use `me` to classify against your custom classifiers. To analyze the image against
-        /// both classifier categories, set the value to both `IBM` and `me`.
-        ///
-        /// The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
-        ///
-        /// The **classifier_ids** parameter overrides **owners**, so make sure that **classifier_ids** is empty.
-        /// (optional)</param>
+        /// threshold to `0.0` to return all identified classes. (optional, default to 0.5)</param>
+        /// <param name="owners">The categories of classifiers to apply. The **classifier_ids** parameter overrides
+        /// **owners**, so make sure that **classifier_ids** is empty.
+        /// - Use `IBM` to classify against the `default` general classifier. You get the same result if both
+        /// **classifier_ids** and **owners** parameters are empty.
+        /// - Use `me` to classify against all your custom classifiers. However, for better performance use
+        /// **classifier_ids** to specify the specific custom classifiers to apply.
+        /// - Use both `IBM` and `me` to analyze the image against both classifier categories. (optional)</param>
         /// <param name="classifierIds">Which classifiers to apply. Overrides the **owners** parameter. You can specify
         /// both custom and built-in classifier IDs. The built-in `default` classifier is used if both
         /// **classifier_ids** and **owners** parameters are empty.
@@ -160,21 +159,17 @@ namespace IBM.Watson.VisualRecognition.V3
         /// - `default`: Returns classes from thousands of general tags.
         /// - `food`: Enhances specificity and accuracy for images of food items.
         /// - `explicit`: Evaluates whether the image might be pornographic. (optional)</param>
-        /// <param name="acceptLanguage">The language of the output class names. The full set of languages is supported
-        /// for the built-in classifier IDs: `default`, `food`, and `explicit`. The class names of custom classifiers
-        /// are not translated.
-        ///
-        /// The response might not be in the specified language when the requested language is not supported or when
-        /// there is no translation for the class name. (optional, default to en)</param>
+        /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
+        /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
-        /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Classify(Callback<ClassifiedImages> callback, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
+        public bool Classify(Callback<ClassifiedImages> callback, Dictionary<string, object> customData = null, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Classify");
+                throw new ArgumentNullException("`callback` is required for `Classify`");
 
             RequestObject<ClassifiedImages> req = new RequestObject<ClassifiedImages>
             {
@@ -192,7 +187,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=Classify";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "Classify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
@@ -270,7 +269,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// biometric facial recognition.
         ///
         /// Supported image formats include .gif, .jpg, .png, and .tif. The maximum image size is 10 MB. The minimum
-        /// recommended pixel density is 32X32 pixels per inch.
+        /// recommended pixel density is 32X32 pixels, but the service tends to perform better with images that are at
+        /// least 224 x 224 pixels.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="imagesFile">An image file (gif, .jpg, .png, .tif.) or .zip file with images. Limit the .zip
@@ -281,21 +281,22 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
         /// <param name="url">The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum
-        /// recommended pixel density is 32X32 pixels per inch, and the maximum image size is 10 MB. Redirects are
-        /// followed, so you can use a shortened URL.
+        /// recommended pixel density is 32X32 pixels, but the service tends to perform better with images that are at
+        /// least 224 x 224 pixels. The maximum image size is 10 MB. Redirects are followed, so you can use a shortened
+        /// URL.
         ///
         /// You can also include images with the **images_file** parameter. (optional)</param>
-        /// <param name="acceptLanguage">The language used for the value of `gender_label` in the response. (optional,
-        /// default to en)</param>
+        /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
+        /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
-        /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
+        public bool DetectFaces(Callback<DetectedFaces> callback, Dictionary<string, object> customData = null, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DetectFaces");
+                throw new ArgumentNullException("`callback` is required for `DetectFaces`");
 
             RequestObject<DetectedFaces> req = new RequestObject<DetectedFaces>
             {
@@ -313,7 +314,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=DetectFaces";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DetectFaces"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
@@ -392,20 +397,20 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
-        /// <returns><see cref="Classifier" />Classifier</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, System.IO.FileStream negativeExamples = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Classifier" />Classifier</returns>
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, Dictionary<string, object> customData = null, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateClassifier");
+                throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name is required for CreateClassifier");
+                throw new ArgumentNullException("`name` is required for `CreateClassifier`");
             if (positiveExamples == null)
-                throw new ArgumentNullException("positiveExamples is required for CreateClassifier");
+                throw new ArgumentNullException("`positiveExamples` is required for `CreateClassifier`");
             if (positiveExamples.Count == 0)
-                throw new ArgumentException("positiveExamples must contain at least one dictionary entry");
+                throw new ArgumentException("`positiveExamples` must contain at least one dictionary entry");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -423,7 +428,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=CreateClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "CreateClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (!string.IsNullOrEmpty(name))
@@ -485,16 +494,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteClassifier(Callback<object> callback, string classifierId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteClassifier");
+                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for DeleteClassifier");
+                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -512,7 +521,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DeleteClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteClassifierResponse;
@@ -558,16 +571,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <returns><see cref="Classifier" />Classifier</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Classifier" />Classifier</returns>
         public bool GetClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetClassifier");
+                throw new ArgumentNullException("`callback` is required for `GetClassifier`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for GetClassifier");
+                throw new ArgumentNullException("`classifierId` is required for `GetClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -585,7 +598,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=GetClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "GetClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetClassifierResponse;
@@ -630,14 +647,14 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="verbose">Specify `true` to return details about the classifiers. Omit this parameter to return
         /// a brief list of classifiers. (optional)</param>
-        /// <returns><see cref="Classifiers" />Classifiers</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListClassifiers(Callback<Classifiers> callback, bool? verbose = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Classifiers" />Classifiers</returns>
+        public bool ListClassifiers(Callback<Classifiers> callback, Dictionary<string, object> customData = null, bool? verbose = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListClassifiers");
+                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
 
             RequestObject<Classifiers> req = new RequestObject<Classifiers>
             {
@@ -655,7 +672,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=ListClassifiers";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "ListClassifiers"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (verbose != null)
             {
@@ -701,9 +722,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <summary>
         /// Update a classifier.
         ///
-        /// Update a custom classifier by adding new positive or negative classes (examples) or by adding new images to
-        /// existing classes. You must supply at least one set of positive or negative examples. For details, see
-        /// [Updating custom
+        /// Update a custom classifier by adding new positive or negative classes or by adding new images to existing
+        /// classes. You must supply at least one set of positive or negative examples. For details, see [Updating
+        /// custom
         /// classifiers](https://cloud.ibm.com/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
         ///
         /// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
@@ -730,16 +751,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
-        /// <returns><see cref="Classifier" />Classifier</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Classifier" />Classifier</returns>
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateClassifier");
+                throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for UpdateClassifier");
+                throw new ArgumentNullException("`classifierId` is required for `UpdateClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -757,7 +778,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=UpdateClassifier";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "UpdateClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (positiveExamples != null && positiveExamples.Count > 0)
@@ -818,16 +843,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <returns><see cref="byte[]" />byte[]</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="byte[]" />byte[]</returns>
         public bool GetCoreMlModel(Callback<byte[]> callback, string classifierId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetCoreMlModel");
+                throw new ArgumentNullException("`callback` is required for `GetCoreMlModel`");
             if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("classifierId is required for GetCoreMlModel");
+                throw new ArgumentNullException("`classifierId` is required for `GetCoreMlModel`");
 
             RequestObject<byte[]> req = new RequestObject<byte[]>
             {
@@ -845,7 +870,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=GetCoreMlModel";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "GetCoreMlModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetCoreMlModelResponse;
@@ -896,16 +925,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteUserData");
+                throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
             if (string.IsNullOrEmpty(customerId))
-                throw new ArgumentNullException("customerId is required for DeleteUserData");
+                throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -923,7 +952,11 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=watson_vision_combined;service_version=V3;operation_id=DeleteUserData";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DeleteUserData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(customerId))
             {

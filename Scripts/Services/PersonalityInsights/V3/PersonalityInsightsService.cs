@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.PersonalityInsights.V3.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -192,16 +193,16 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// description.
         ///
         /// Default: `text/plain`. (optional)</param>
-        /// <returns><see cref="Profile" />Profile</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Profile(Callback<Profile> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Profile" />Profile</returns>
+        public bool Profile(Callback<Profile> callback, Content content, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Profile");
+                throw new ArgumentNullException("`callback` is required for `Profile`");
             if (content == null)
-                throw new ArgumentNullException("content is required for Profile");
+                throw new ArgumentNullException("`content` is required for `Profile`");
 
             RequestObject<Profile> req = new RequestObject<Profile>
             {
@@ -219,7 +220,11 @@ namespace IBM.Watson.PersonalityInsights.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=personality_insights;service_version=V3;operation_id=Profile";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "Profile"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(contentLanguage))
             {
@@ -247,10 +252,9 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (content != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
-            }
+
+            JObject bodyObject = new JObject();
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnProfileResponse;
 
@@ -355,16 +359,16 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// description.
         ///
         /// Default: `text/plain`. (optional)</param>
-        /// <returns><see cref="System.IO.FileStream" />System.IO.FileStream</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ProfileAsCsv(Callback<System.IO.FileStream> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="System.IO.FileStream" />System.IO.FileStream</returns>
+        public bool ProfileAsCsv(Callback<System.IO.FileStream> callback, Content content, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ProfileAsCsv");
+                throw new ArgumentNullException("`callback` is required for `ProfileAsCsv`");
             if (content == null)
-                throw new ArgumentNullException("content is required for ProfileAsCsv");
+                throw new ArgumentNullException("`content` is required for `ProfileAsCsv`");
 
             RequestObject<System.IO.FileStream> req = new RequestObject<System.IO.FileStream>
             {
@@ -382,7 +386,11 @@ namespace IBM.Watson.PersonalityInsights.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=personality_insights;service_version=V3;operation_id=ProfileAsCsv";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "ProfileAsCsv"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(contentLanguage))
             {
@@ -410,10 +418,9 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "text/csv";
-            if (content != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
-            }
+
+            JObject bodyObject = new JObject();
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnProfileAsCsvResponse;
 

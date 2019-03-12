@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.LanguageTranslator.V3.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -131,18 +132,22 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// Translates the input text from the source language to the target language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="request">The translate request containing the text, and either a model ID or source and target
-        /// language pair.</param>
-        /// <returns><see cref="TranslationResult" />TranslationResult</returns>
+        /// <param name="text">Input text in UTF-8 encoding. Multiple entries will result in multiple translations in
+        /// the response.</param>
+        /// <param name="modelId">A globally unique string that identifies the underlying model that is used for
+        /// translation. (optional)</param>
+        /// <param name="source">Translation source language code. (optional)</param>
+        /// <param name="target">Translation target language code. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Translate(Callback<TranslationResult> callback, TranslateRequest request, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TranslationResult" />TranslationResult</returns>
+        public bool Translate(Callback<TranslationResult> callback, List<string> text, Dictionary<string, object> customData = null, string modelId = null, string source = null, string target = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Translate");
-            if (request == null)
-                throw new ArgumentNullException("request is required for Translate");
+                throw new ArgumentNullException("`callback` is required for `Translate`");
+            if (text == null)
+                throw new ArgumentNullException("`text` is required for `Translate`");
 
             RequestObject<TranslationResult> req = new RequestObject<TranslationResult>
             {
@@ -160,14 +165,25 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=Translate";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "Translate"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (request != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request));
-            }
+
+            JObject bodyObject = new JObject();
+            if (text != null && text.Count > 0)
+                bodyObject["text"] = JToken.FromObject(text);
+            if (!string.IsNullOrEmpty(modelId))
+                bodyObject["model_id"] = modelId;
+            if (!string.IsNullOrEmpty(source))
+                bodyObject["source"] = source;
+            if (!string.IsNullOrEmpty(target))
+                bodyObject["target"] = target;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnTranslateResponse;
 
@@ -212,16 +228,16 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">Input text in UTF-8 format.</param>
-        /// <returns><see cref="IdentifiedLanguages" />IdentifiedLanguages</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="IdentifiedLanguages" />IdentifiedLanguages</returns>
         public bool Identify(Callback<IdentifiedLanguages> callback, string text, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Identify");
+                throw new ArgumentNullException("`callback` is required for `Identify`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("text is required for Identify");
+                throw new ArgumentNullException("`text` is required for `Identify`");
 
             RequestObject<IdentifiedLanguages> req = new RequestObject<IdentifiedLanguages>
             {
@@ -239,14 +255,17 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=Identify";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "Identify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (text != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(text));
-            }
+
+            JObject bodyObject = new JObject();
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnIdentifyResponse;
 
@@ -291,14 +310,14 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// or `es` for Spanish) and name of each language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="IdentifiableLanguages" />IdentifiableLanguages</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="IdentifiableLanguages" />IdentifiableLanguages</returns>
         public bool ListIdentifiableLanguages(Callback<IdentifiableLanguages> callback, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListIdentifiableLanguages");
+                throw new ArgumentNullException("`callback` is required for `ListIdentifiableLanguages`");
 
             RequestObject<IdentifiableLanguages> req = new RequestObject<IdentifiableLanguages>
             {
@@ -316,7 +335,11 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=ListIdentifiableLanguages";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "ListIdentifiableLanguages"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListIdentifiableLanguagesResponse;
@@ -386,16 +409,16 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// <param name="name">An optional model name that you can use to identify the model. Valid characters are
         /// letters, numbers, dashes, underscores, spaces and apostrophes. The maximum length is 32 characters.
         /// (optional)</param>
-        /// <returns><see cref="TranslationModel" />TranslationModel</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.FileStream forcedGlossary = null, System.IO.FileStream parallelCorpus = null, string name = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TranslationModel" />TranslationModel</returns>
+        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, Dictionary<string, object> customData = null, System.IO.FileStream forcedGlossary = null, System.IO.FileStream parallelCorpus = null, string name = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateModel");
+                throw new ArgumentNullException("`callback` is required for `CreateModel`");
             if (string.IsNullOrEmpty(baseModelId))
-                throw new ArgumentNullException("baseModelId is required for CreateModel");
+                throw new ArgumentNullException("`baseModelId` is required for `CreateModel`");
 
             RequestObject<TranslationModel> req = new RequestObject<TranslationModel>
             {
@@ -413,7 +436,11 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=CreateModel";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "CreateModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["forcedGlossary"] = new RESTConnector.Form(forcedGlossary, forcedGlossary.Name, "application/octet-stream");
@@ -478,16 +505,16 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to delete.</param>
-        /// <returns><see cref="DeleteModelResult" />DeleteModelResult</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteModelResult" />DeleteModelResult</returns>
         public bool DeleteModel(Callback<DeleteModelResult> callback, string modelId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteModel");
+                throw new ArgumentNullException("`callback` is required for `DeleteModel`");
             if (string.IsNullOrEmpty(modelId))
-                throw new ArgumentNullException("modelId is required for DeleteModel");
+                throw new ArgumentNullException("`modelId` is required for `DeleteModel`");
 
             RequestObject<DeleteModelResult> req = new RequestObject<DeleteModelResult>
             {
@@ -505,7 +532,11 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=DeleteModel";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "DeleteModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteModelResponse;
@@ -553,16 +584,16 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to get.</param>
-        /// <returns><see cref="TranslationModel" />TranslationModel</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TranslationModel" />TranslationModel</returns>
         public bool GetModel(Callback<TranslationModel> callback, string modelId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetModel");
+                throw new ArgumentNullException("`callback` is required for `GetModel`");
             if (string.IsNullOrEmpty(modelId))
-                throw new ArgumentNullException("modelId is required for GetModel");
+                throw new ArgumentNullException("`modelId` is required for `GetModel`");
 
             RequestObject<TranslationModel> req = new RequestObject<TranslationModel>
             {
@@ -580,7 +611,11 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=GetModel";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "GetModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetModelResponse;
@@ -631,14 +666,14 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// (default and non-default) for each language pair. To return only default models, set this to `true`. To
         /// return only non-default models, set this to `false`. There is exactly one default model per language pair,
         /// the IBM provided base model. (optional)</param>
-        /// <returns><see cref="TranslationModels" />TranslationModels</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? defaultModels = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TranslationModels" />TranslationModels</returns>
+        public bool ListModels(Callback<TranslationModels> callback, Dictionary<string, object> customData = null, string source = null, string target = null, bool? defaultModels = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListModels");
+                throw new ArgumentNullException("`callback` is required for `ListModels`");
 
             RequestObject<TranslationModels> req = new RequestObject<TranslationModels>
             {
@@ -656,7 +691,11 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=language_translator;service_version=V3;operation_id=ListModels";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "ListModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(source))
             {

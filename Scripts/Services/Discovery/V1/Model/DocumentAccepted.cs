@@ -26,7 +26,8 @@ namespace IBM.Watson.Discovery.V1.Model
     public class DocumentAccepted
     {
         /// <summary>
-        /// Status of the document in the ingestion process.
+        /// Status of the document in the ingestion process. A status of `processing` is returned for documents that are
+        /// ingested with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
         /// </summary>
         public class StatusValue
         {
@@ -34,11 +35,16 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant PROCESSING for processing
             /// </summary>
             public const string PROCESSING = "processing";
+            /// <summary>
+            /// Constant PENDING for pending
+            /// </summary>
+            public const string PENDING = "pending";
             
         }
 
         /// <summary>
-        /// Status of the document in the ingestion process.
+        /// Status of the document in the ingestion process. A status of `processing` is returned for documents that are
+        /// ingested with a *version* date before `2019-01-01`. The `pending` status is returned for all others.
         /// Constants for possible values can be found using DocumentAccepted.StatusValue
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]

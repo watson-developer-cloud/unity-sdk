@@ -47,6 +47,10 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant PROCESSING for processing
             /// </summary>
             public const string PROCESSING = "processing";
+            /// <summary>
+            /// Constant PENDING for pending
+            /// </summary>
+            public const string PENDING = "pending";
             
         }
 

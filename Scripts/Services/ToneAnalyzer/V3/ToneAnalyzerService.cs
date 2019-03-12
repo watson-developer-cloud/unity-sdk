@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.ToneAnalyzer.V3.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -169,16 +170,16 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
         /// <param name="contentType">The type of the input. A character encoding can be specified by including a
         /// `charset` parameter. For example, 'text/plain;charset=utf-8'. (optional)</param>
-        /// <returns><see cref="ToneAnalysis" />ToneAnalysis</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ToneAnalysis" />ToneAnalysis</returns>
+        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, Dictionary<string, object> customData = null, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Tone");
+                throw new ArgumentNullException("`callback` is required for `Tone`");
             if (toneInput == null)
-                throw new ArgumentNullException("toneInput is required for Tone");
+                throw new ArgumentNullException("`toneInput` is required for `Tone`");
 
             RequestObject<ToneAnalysis> req = new RequestObject<ToneAnalysis>
             {
@@ -196,7 +197,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=tone_analyzer;service_version=V3;operation_id=Tone";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("tone_analyzer", "V3", "Tone"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(contentLanguage))
             {
@@ -217,10 +222,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
             req.Parameters["tones"] = tones != null && tones.Count > 0 ? string.Join(",", tones.ToArray()) : null;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (toneInput != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
-            }
+
+            JObject bodyObject = new JObject();
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnToneResponse;
 
@@ -275,7 +279,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="utterances">An object that contains the content to be analyzed.</param>
+        /// <param name="utterances">An array of `Utterance` objects that provides the input content that the service is
+        /// to analyze.</param>
         /// <param name="contentLanguage">The language of the input text for the request: English or French. Regional
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. The input
         /// content must match the specified language. Do not submit content that contains both languages. You can use
@@ -285,16 +290,16 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="acceptLanguage">The desired language of the response. For two-character arguments, regional
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
-        /// <returns><see cref="UtteranceAnalyses" />UtteranceAnalyses</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ToneChat(Callback<UtteranceAnalyses> callback, ToneChatInput utterances, string contentLanguage = null, string acceptLanguage = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="UtteranceAnalyses" />UtteranceAnalyses</returns>
+        public bool ToneChat(Callback<UtteranceAnalyses> callback, List<Utterance> utterances, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ToneChat");
+                throw new ArgumentNullException("`callback` is required for `ToneChat`");
             if (utterances == null)
-                throw new ArgumentNullException("utterances is required for ToneChat");
+                throw new ArgumentNullException("`utterances` is required for `ToneChat`");
 
             RequestObject<UtteranceAnalyses> req = new RequestObject<UtteranceAnalyses>
             {
@@ -312,7 +317,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=tone_analyzer;service_version=V3;operation_id=ToneChat";
+            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("tone_analyzer", "V3", "ToneChat"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(contentLanguage))
             {
@@ -324,10 +333,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (utterances != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(utterances));
-            }
+
+            JObject bodyObject = new JObject();
+            if (utterances != null && utterances.Count > 0)
+                bodyObject["utterances"] = JToken.FromObject(utterances);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnToneChatResponse;
 
