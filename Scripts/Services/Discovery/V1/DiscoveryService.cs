@@ -1156,16 +1156,12 @@ namespace IBM.Watson.Discovery.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (!string.IsNullOrEmpty(configuration))
             {
-                req.Forms["configuration"] = new RESTConnector.Form("configuration");
+                req.Forms["configuration"] = new RESTConnector.Form(configuration);
             }
             req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
-            if (file != null)
-            {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
-            }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
             if (!string.IsNullOrEmpty(step))
             {
@@ -1870,11 +1866,7 @@ namespace IBM.Watson.Discovery.V1
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["stopwordFile"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
-            if (stopwordFile != null)
-            {
-                req.Forms["stopwordFile"] = new RESTConnector.Form(stopwordFile.ToString());
-            }
+            req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
 
             req.OnResponse = OnCreateStopwordListResponse;
 
@@ -2559,13 +2551,9 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
-            if (file != null)
-            {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
-            }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
 
             req.OnResponse = OnAddDocumentResponse;
@@ -2831,13 +2819,9 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
-            if (file != null)
-            {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
-            }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
 
             req.OnResponse = OnUpdateDocumentResponse;

@@ -194,14 +194,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
-            if (imagesFile != null)
-            {
-                req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile.ToString());
-            }
+            req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
             if (!string.IsNullOrEmpty(url))
             {
-                req.Forms["url"] = new RESTConnector.Form("url");
+                req.Forms["url"] = new RESTConnector.Form(url);
             }
             if (threshold != null)
             {
@@ -213,7 +209,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             if (classifierIds != null && classifierIds.Count > 0)
             {
-                req.Forms["classifierIds"] = new RESTConnector.Form(string.Join(", ", classifierIds.ToArray()));
+                req.Forms["classifier_ids"] = new RESTConnector.Form(string.Join(", ", classifierIds.ToArray()));
             }
             if (!string.IsNullOrEmpty(acceptLanguage))
             {
@@ -321,14 +317,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
-            if (imagesFile != null)
-            {
-                req.Forms["imagesFile"] = new RESTConnector.Form(imagesFile.ToString());
-            }
+            req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
             if (!string.IsNullOrEmpty(url))
             {
-                req.Forms["url"] = new RESTConnector.Form("url");
+                req.Forms["url"] = new RESTConnector.Form(url);
             }
             if (!string.IsNullOrEmpty(acceptLanguage))
             {
@@ -437,7 +429,7 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (!string.IsNullOrEmpty(name))
             {
-                req.Forms["name"] = new RESTConnector.Form("name");
+                req.Forms["name"] = new RESTConnector.Form(name);
             }
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
@@ -447,11 +439,7 @@ namespace IBM.Watson.VisualRecognition.V3
                     req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
                 }
             }
-            req.Forms["negativeExamples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
-            if (negativeExamples != null)
-            {
-                req.Forms["negativeExamples"] = new RESTConnector.Form(negativeExamples.ToString());
-            }
+            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
 
             req.OnResponse = OnCreateClassifierResponse;
 
@@ -793,11 +781,7 @@ namespace IBM.Watson.VisualRecognition.V3
                     req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
                 }
             }
-            req.Forms["negativeExamples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
-            if (negativeExamples != null)
-            {
-                req.Forms["negativeExamples"] = new RESTConnector.Form(negativeExamples.ToString());
-            }
+            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
 
             req.OnResponse = OnUpdateClassifierResponse;
 

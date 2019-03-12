@@ -2230,11 +2230,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["corpusFile"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
-            if (corpusFile != null)
-            {
-                req.Forms["corpusFile"] = new RESTConnector.Form(corpusFile.ToString());
-            }
+            req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";

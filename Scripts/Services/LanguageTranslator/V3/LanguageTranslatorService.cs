@@ -443,16 +443,8 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["forcedGlossary"] = new RESTConnector.Form(forcedGlossary, forcedGlossary.Name, "application/octet-stream");
-            if (forcedGlossary != null)
-            {
-                req.Forms["forcedGlossary"] = new RESTConnector.Form(forcedGlossary.ToString());
-            }
-            req.Forms["parallelCorpus"] = new RESTConnector.Form(parallelCorpus, parallelCorpus.Name, "application/octet-stream");
-            if (parallelCorpus != null)
-            {
-                req.Forms["parallelCorpus"] = new RESTConnector.Form(parallelCorpus.ToString());
-            }
+            req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, forcedGlossary.Name, "application/octet-stream");
+            req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, parallelCorpus.Name, "application/octet-stream");
             if (!string.IsNullOrEmpty(baseModelId))
             {
                 req.Parameters["base_model_id"] = baseModelId;
