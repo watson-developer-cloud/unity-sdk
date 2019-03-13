@@ -50,14 +50,15 @@ namespace IBM.Watson.Tests
         private string updatedConfigurationName;
         private string updatedConfigurationDescription = "This is a configuration created in Unity SDK integration tests. Please delete. (updated)";
         private string createdConfigurationId;
-        private string createdCollectionName = "unity-sdk-collection";
+        private string createdCollectionName;
         private string createdCollectionDescription = "This is a collection created in Unity SDK integration tests. Please delete.";
-        private string updatedCollectionName = "unity-sdk-collection-updated";
+        private string updatedCollectionName;
         private string updatedCollectionDescription = "This is a collection created in Unity SDK integration tests. Please delete. (updated)";
         private string createdCollectionId;
-        private string createdJapaneseCollectionName = "unity-sdk-japanese-collection";
-        private string createdJapaneseCollectionDescription = "This is a japanesecollection created in Unity SDK integration tests. Please delete.";
+        private string createdJapaneseCollectionName;
+        private string createdJapaneseCollectionDescription = "This is a japanese collection created in Unity SDK integration tests. Please delete.";
         private string createdJapaneseCollectionId;
+        private string addedDocumentId;
 
         private bool isTokenizationDictionaryReady = false;
         private bool isStopwordsListReady = false;
@@ -71,6 +72,9 @@ namespace IBM.Watson.Tests
             environmentId = Environment.GetEnvironmentVariable("DISCOVERY_ENVIRONMENT_ID");
             createdConfigurationName = Guid.NewGuid().ToString();
             updatedConfigurationName = createdConfigurationName + "-updated";
+            createdCollectionName = Guid.NewGuid().ToString();
+            updatedCollectionName = createdCollectionName + "-updated";
+            createdJapaneseCollectionName = Guid.NewGuid().ToString();
 
             watsonBeatsJeopardyTxtFilePath = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV1/watson_beats_jeopardy.txt";
             watsonBeatsJeopardyHtmlFilePath = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV1/watson_beats_jeopardy.html";
@@ -591,20 +595,11 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CreateStopwordList
-        [UnityTest, Order(17)]
+        //  Skipping because of length
+        //[UnityTest, Order(17)]
+        [Timeout(int.MaxValue)]
         public IEnumerator TestCreateStopwordList()
         {
-            isTokenizationDictionaryReady = false;
-            isStopwordsListReady = false;
-
-            Runnable.Run(CheckTokenizationDictionaryStatus(environmentId, createdJapaneseCollectionId));
-            while (!isTokenizationDictionaryReady)
-                yield return null;
-
-            Runnable.Run(CheckStopwordsListStatus(environmentId, createdCollectionId));
-            while (!isStopwordsListReady)
-                yield return null;
-
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateStopwordList...");
             TokenDictStatusResponse createStopwordListResponse = null;
             using (FileStream fs = File.OpenRead(stopwordsFilePath))
@@ -628,24 +623,21 @@ namespace IBM.Watson.Tests
                 while (createStopwordListResponse == null)
                     yield return null;
             }
-        }
-        #endregion
-        
-        #region CreateTokenizationDictionary
-        [UnityTest, Order(18)]
-        public IEnumerator TestCreateTokenizationDictionary()
-        {
-            isTokenizationDictionaryReady = false;
+
             isStopwordsListReady = false;
 
-            Runnable.Run(CheckTokenizationDictionaryStatus(environmentId, createdJapaneseCollectionId));
-            while (!isTokenizationDictionaryReady)
-                yield return null;
-
-            Runnable.Run(CheckStopwordsListStatus(environmentId, createdCollectionId));
+            Runnable.Run(CheckStopwordsListStatus());
             while (!isStopwordsListReady)
                 yield return null;
+        }
+        #endregion
 
+        #region CreateTokenizationDictionary
+        //  Skipping because of length
+        //[UnityTest, Order(18)]
+        [Timeout(int.MaxValue)]
+        public IEnumerator TestCreateTokenizationDictionary()
+        {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateTokenizationDictionary...");
             TokenDictStatusResponse createTokenizationDictionaryResponse = null;
 
@@ -686,11 +678,18 @@ namespace IBM.Watson.Tests
 
             while (createTokenizationDictionaryResponse == null)
                 yield return null;
+
+            isTokenizationDictionaryReady = false;
+
+            Runnable.Run(CheckTokenizationDictionaryStatus(environmentId, createdJapaneseCollectionId));
+            while (!isTokenizationDictionaryReady)
+                yield return null;
         }
         #endregion
 
         #region GetStopwordListStatus
-        [UnityTest, Order(19)]
+        //  Skipping because of length
+        //[UnityTest, Order(19)]
         public IEnumerator TestGetStopwordListStatus()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetStopwordListStatus...");
@@ -716,7 +715,8 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetTokenizationDictionaryStatus
-        [UnityTest, Order(20)]
+        //  Skipping because of length
+        //[UnityTest, Order(20)]
         public IEnumerator TestGetTokenizationDictionaryStatus()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTokenizationDictionaryStatus...");
@@ -768,167 +768,150 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        //#region AddDocument
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestAddDocument()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to AddDocument...");
-        //    DocumentAccepted addDocumentResponse = null;
-        //    service.AddDocument(
-        //        callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", customResponseData["json"].ToString());
-        //            addDocumentResponse = response.Result;
-        //            Assert.IsNotNull(addDocumentResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        file: file,
-        //        metadata: metadata,
-        //        fileContentType: fileContentType,
-        //        customData: customData
-        //    );
+        #region AddDocument
+        [UnityTest, Order(22)]
+        public IEnumerator TestAddDocument()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to AddDocument...");
+            DocumentAccepted addDocumentResponse = null;
+            using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
+            {
+                service.AddDocument(
+                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    {
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", customResponseData["json"].ToString());
+                        addDocumentResponse = response.Result;
+                        addedDocumentId = addDocumentResponse.DocumentId;
+                        Assert.IsNotNull(addDocumentResponse);
+                        Assert.IsNotNull(addedDocumentId);
+                        Assert.IsNull(error);
+                    },
+                    environmentId: environmentId,
+                    collectionId: createdCollectionId,
+                    file: fs,
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                    customData: customData
+                );
 
-        //    while (addDocumentResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+                while (addDocumentResponse == null)
+                    yield return null;
+            }
+        }
+        #endregion
 
-        //#region GetDocumentStatus
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetDocumentStatus()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetDocumentStatus...");
-        //    DocumentStatus getDocumentStatusResponse = null;
-        //    service.GetDocumentStatus(
-        //        callback: (DetailedResponse<DocumentStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetDocumentStatus result: {0}", customResponseData["json"].ToString());
-        //            getDocumentStatusResponse = response.Result;
-        //            Assert.IsNotNull(getDocumentStatusResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        documentId: documentId,
-        //        customData: customData
-        //    );
+        #region GetDocumentStatus
+        [UnityTest, Order(23)]
+        public IEnumerator TestGetDocumentStatus()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetDocumentStatus...");
+            DocumentStatus getDocumentStatusResponse = null;
+            service.GetDocumentStatus(
+                callback: (DetailedResponse<DocumentStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetDocumentStatus result: {0}", customResponseData["json"].ToString());
+                    getDocumentStatusResponse = response.Result;
+                    Assert.IsNotNull(getDocumentStatusResponse);
+                    Assert.IsTrue(getDocumentStatusResponse.DocumentId == addedDocumentId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: createdCollectionId,
+                documentId: addedDocumentId,
+                customData: customData
+            );
 
-        //    while (getDocumentStatusResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+            while (getDocumentStatusResponse == null)
+                yield return null;
+        }
+        #endregion
 
-        //#region UpdateDocument
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestUpdateDocument()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateDocument...");
-        //    DocumentAccepted updateDocumentResponse = null;
-        //    service.UpdateDocument(
-        //        callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", customResponseData["json"].ToString());
-        //            updateDocumentResponse = response.Result;
-        //            Assert.IsNotNull(updateDocumentResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        documentId: documentId,
-        //        file: file,
-        //        metadata: metadata,
-        //        fileContentType: fileContentType,
-        //        customData: customData
-        //    );
+        #region UpdateDocument
+        [UnityTest, Order(24)]
+        public IEnumerator TestUpdateDocument()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateDocument...");
+            DocumentAccepted updateDocumentResponse = null;
+            using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
+            {
+                service.UpdateDocument(
+                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    {
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", customResponseData["json"].ToString());
+                        updateDocumentResponse = response.Result;
+                        Assert.IsNotNull(updateDocumentResponse);
+                        Assert.IsTrue(updateDocumentResponse.DocumentId == addedDocumentId);
+                        Assert.IsNull(error);
+                    },
+                    environmentId: environmentId,
+                    collectionId: createdCollectionId,
+                    documentId: addedDocumentId,
+                    file: fs,
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                    customData: customData
+                );
 
-        //    while (updateDocumentResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+                while (updateDocumentResponse == null)
+                    yield return null;
+            }
+        }
+        #endregion
 
-        //#region FederatedQuery
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestFederatedQuery()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQuery...");
-        //    QueryResponse federatedQueryResponse = null;
-        //    service.FederatedQuery(
-        //        callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQuery result: {0}", customResponseData["json"].ToString());
-        //            federatedQueryResponse = response.Result;
-        //            Assert.IsNotNull(federatedQueryResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        filter: filter,
-        //        query: query,
-        //        naturalLanguageQuery: naturalLanguageQuery,
-        //        passages: passages,
-        //        aggregation: aggregation,
-        //        count: count,
-        //        returnFields: returnFields,
-        //        offset: offset,
-        //        sort: sort,
-        //        highlight: highlight,
-        //        passagesFields: passagesFields,
-        //        passagesCount: passagesCount,
-        //        passagesCharacters: passagesCharacters,
-        //        deduplicate: deduplicate,
-        //        deduplicateField: deduplicateField,
-        //        collectionIds: collectionIds,
-        //        similar: similar,
-        //        similarDocumentIds: similarDocumentIds,
-        //        similarFields: similarFields,
-        //        bias: bias,
+        #region FederatedQuery
+        [UnityTest, Order(25)]
+        public IEnumerator TestFederatedQuery()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQuery...");
+            QueryResponse federatedQueryResponse = null;
+            service.FederatedQuery(
+                callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQuery result: {0}", customResponseData["json"].ToString());
+                    federatedQueryResponse = response.Result;
+                    Assert.IsNotNull(federatedQueryResponse);
+                    Assert.IsNotNull(federatedQueryResponse.MatchingResults);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                naturalLanguageQuery: "When did Watson win Jeopardy",
+                collectionIds: createdCollectionId,
+                passages: true,
+                count: 10,
+                highlight: true,
+                loggingOptOut: true,
+                customData: customData
+            );
 
-        //        loggingOptOut: loggingOptOut,
-        //        customData: customData
-        //    );
+            while (federatedQueryResponse == null)
+                yield return null;
+        }
+        #endregion
 
-        //    while (federatedQueryResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+        #region FederatedQueryNotices
+        [UnityTest, Order(26)]
+        public IEnumerator TestFederatedQueryNotices()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQueryNotices...");
+            QueryNoticesResponse federatedQueryNoticesResponse = null;
+            service.FederatedQueryNotices(
+                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQueryNotices result: {0}", customResponseData["json"].ToString());
+                    federatedQueryNoticesResponse = response.Result;
+                    Assert.IsNotNull(federatedQueryNoticesResponse);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionIds: new List<string>() { createdCollectionId },
+                naturalLanguageQuery: "When did Watson win Jeopardy",
+                count: 10,
+                highlight: true,
+                customData: customData
+            );
 
-        //#region FederatedQueryNotices
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestFederatedQueryNotices()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQueryNotices...");
-        //    QueryNoticesResponse federatedQueryNoticesResponse = null;
-        //    service.FederatedQueryNotices(
-        //        callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQueryNotices result: {0}", customResponseData["json"].ToString());
-        //            federatedQueryNoticesResponse = response.Result;
-        //            Assert.IsNotNull(federatedQueryNoticesResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionIds: collectionIds,
-        //        filter: filter,
-        //        query: query,
-        //        naturalLanguageQuery: naturalLanguageQuery,
-        //        aggregation: aggregation,
-        //        count: count,
-        //        returnFields: returnFields,
-        //        offset: offset,
-        //        sort: sort,
-        //        highlight: highlight,
-        //        deduplicateField: deduplicateField,
-        //        similar: similar,
-        //        similarDocumentIds: similarDocumentIds,
-        //        similarFields: similarFields,
-        //        customData: customData
-        //    );
-
-        //    while (federatedQueryNoticesResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+            while (federatedQueryNoticesResponse == null)
+                yield return null;
+        }
+        #endregion
 
         //#region Query
         //[UnityTest, Order(0)]
@@ -1757,75 +1740,77 @@ namespace IBM.Watson.Tests
         //}
         //#endregion
 
-        //#region DeleteDocument
-        //[UnityTest, Order(93)]
-        //public IEnumerator TestDeleteDocument()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteDocument...");
-        //    DeleteDocumentResponse deleteDocumentResponse = null;
-        //    service.DeleteDocument(
-        //        callback: (DetailedResponse<DeleteDocumentResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteDocument result: {0}", customResponseData["json"].ToString());
-        //            deleteDocumentResponse = response.Result;
-        //            Assert.IsNotNull(deleteDocumentResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        documentId: documentId,
-        //        customData: customData
-        //    );
+        #region DeleteDocument
+        [UnityTest, Order(92)]
+        public IEnumerator TestDeleteDocument()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteDocument...");
+            DeleteDocumentResponse deleteDocumentResponse = null;
+            service.DeleteDocument(
+                callback: (DetailedResponse<DeleteDocumentResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteDocument result: {0}", customResponseData["json"].ToString());
+                    deleteDocumentResponse = response.Result;
+                    Assert.IsNotNull(deleteDocumentResponse);
+                    Assert.IsNotNull(deleteDocumentResponse.DocumentId);
+                    Assert.IsTrue(deleteDocumentResponse.Status == "deleted");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: createdCollectionId,
+                documentId: addedDocumentId,
+                customData: customData
+            );
 
-        //    while (deleteDocumentResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+            while (deleteDocumentResponse == null)
+                yield return null;
+        }
+        #endregion
 
         #region DeleteTokenizationDictionary
-        [UnityTest, Order(93)]
+        //  Skipping because of length
+        //[UnityTest, Order(93)]
         public IEnumerator TestDeleteTokenizationDictionary()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTokenizationDictionary...");
-            object deleteTokenizationDictionaryResponse = null;
+            bool isComplete = false;
             service.DeleteTokenizationDictionary(
                 callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTokenizationDictionary result: {0}", customResponseData["json"].ToString());
-                    deleteTokenizationDictionaryResponse = response.Result;
-                    Assert.IsNotNull(deleteTokenizationDictionaryResponse);
                     Assert.IsNull(error);
+                    isComplete = true;
                 },
                 environmentId: environmentId,
                 collectionId: createdJapaneseCollectionId,
                 customData: customData
             );
 
-            while (deleteTokenizationDictionaryResponse == null)
+            while (!isComplete)
                 yield return null;
         }
         #endregion
 
         #region DeleteStopwordList
-        [UnityTest, Order(94)]
+        //  Skipping because of length
+        //[UnityTest, Order(94)]
         public IEnumerator TestDeleteStopwordList()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteStopwordList...");
-            object deleteStopwordListResponse = null;
+            bool isComplete = false;
             service.DeleteStopwordList(
                 callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteStopwordList result: {0}", customResponseData["json"].ToString());
-                    deleteStopwordListResponse = response.Result;
-                    Assert.IsNotNull(deleteStopwordListResponse);
                     Assert.IsNull(error);
+                    isComplete = true;
                 },
                 environmentId: environmentId,
                 collectionId: createdCollectionId,
                 customData: customData
             );
 
-            while (deleteStopwordListResponse == null)
+            while (!isComplete)
                 yield return null;
         }
         #endregion
@@ -1835,20 +1820,20 @@ namespace IBM.Watson.Tests
         public IEnumerator TestDeleteExpansions()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteExpansions...");
-            object deleteExpansionsResponse = null;
+            bool isComplete = false;
             service.DeleteExpansions(
                 callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteExpansions result: {0}", customResponseData["json"].ToString());
-                    deleteExpansionsResponse = response.Result;
                     Assert.IsNull(error);
+                    isComplete = true;
                 },
                 environmentId: environmentId,
                 collectionId: createdCollectionId,
                 customData: customData
             );
 
-            while (deleteExpansionsResponse == null)
+            while (!isComplete)
                 yield return null;
         }
         #endregion
@@ -1955,7 +1940,7 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region IsDictionaryReady
+        #region CheckTokenizationDictionaryStatus
         private IEnumerator CheckTokenizationDictionaryStatus(string environmentId, string collectionId)
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Checking tokenization dictionary status in 30 sec...");
@@ -1965,14 +1950,8 @@ namespace IBM.Watson.Tests
             service.GetTokenizationDictionaryStatus(
                 callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
-                    if(error != null)
-                    {
-                        isTokenizationDictionaryReady = true;
-                        return;
-                    }
-
-                    getTokenizationDictionaryStatusResponse = response.Result;
-                    if(getTokenizationDictionaryStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", customResponseData["json"].ToString());
+                    if (getTokenizationDictionaryStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
                     {
                         isTokenizationDictionaryReady = true;
                     }
@@ -1980,6 +1959,7 @@ namespace IBM.Watson.Tests
                     {
                         Runnable.Run(CheckTokenizationDictionaryStatus(environmentId, collectionId));
                     }
+                    getTokenizationDictionaryStatusResponse = response.Result;
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
@@ -1991,43 +1971,38 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region IsStopwordsListReady
-        private IEnumerator CheckStopwordsListStatus(string environmentId, string collectionId)
+        #region CheckStopwordsListStatus
+        private IEnumerator CheckStopwordsListStatus()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Checking stopword list status in 30 sec...");
             yield return new WaitForSeconds(30f);
 
-            TokenDictStatusResponse getStopwordListStatusResponse = null;
             service.GetStopwordListStatus(
-                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    if (error != null)
-                    {
-                        isStopwordsListReady = true;
-                        return;
-                    }
-
-                    getStopwordListStatusResponse = response.Result;
-                    if (getStopwordListStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
-                    {
-                        isStopwordsListReady = true;
-                    }
-                    else
-                    {
-                        Runnable.Run(CheckStopwordsListStatus(environmentId, collectionId));
-                    }
-                },
+                callback: OnCheckStopwordsListStatus,
                 environmentId: environmentId,
-                collectionId: collectionId,
+                collectionId: createdCollectionId,
                 customData: customData
             );
+        }
 
-            while (getStopwordListStatusResponse == null)
-                yield return null;
+        private void OnCheckStopwordsListStatus(DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData)
+        {
+            TokenDictStatusResponse getStopwordListStatusResponse = null;
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "OnCheckStopwordsListStatus result: {0}", customResponseData["json"].ToString());
+            getStopwordListStatusResponse = response.Result;
+
+            if (getStopwordListStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
+            {
+                isStopwordsListReady = true;
+            }
+            else
+            {
+                Runnable.Run(CheckStopwordsListStatus());
+            }
         }
         #endregion
 
-        #region IsCollectionReady
+        #region CheckCollectionStatus
         private IEnumerator CheckCollectionStatus(string environmentId, string collectionId)
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Checking collection status in 30 sec...");
@@ -2037,14 +2012,8 @@ namespace IBM.Watson.Tests
             service.GetCollection(
                 callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
-                    if (error != null)
-                    {
-                        isCollectionReady = true;
-                        return;
-                    }
-
-                    getCollectionResponse = response.Result;
-                    if(getCollectionResponse.Status == Collection.StatusValue.ACTIVE)
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCollection result: {0}", customResponseData["json"].ToString());
+                    if (getCollectionResponse.Status == Collection.StatusValue.ACTIVE)
                     {
                         isCollectionReady = true;
                     }
@@ -2052,6 +2021,7 @@ namespace IBM.Watson.Tests
                     {
                         Runnable.Run(CheckCollectionStatus(environmentId, collectionId));
                     }
+                    getCollectionResponse = response.Result;
                 },
                 environmentId: environmentId,
                 collectionId: createdCollectionId,

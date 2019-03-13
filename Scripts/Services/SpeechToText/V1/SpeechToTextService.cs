@@ -177,7 +177,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -253,7 +260,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -392,7 +406,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -595,7 +610,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechRecognitionResults>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -683,7 +705,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -764,7 +793,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJobs>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -942,7 +978,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -1161,7 +1198,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1243,7 +1287,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1361,7 +1412,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RegisterStatus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1446,7 +1504,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1562,7 +1627,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1645,7 +1717,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1727,7 +1806,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1813,7 +1899,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1897,7 +1990,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2026,7 +2126,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2118,7 +2225,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2261,7 +2375,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2350,7 +2471,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2436,7 +2564,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2519,7 +2654,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpora>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2661,7 +2803,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2794,7 +2943,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2885,7 +3041,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2972,7 +3135,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Word>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3077,7 +3247,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Words>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3222,7 +3399,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3311,7 +3495,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3397,7 +3588,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammar>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3480,7 +3678,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammars>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3584,7 +3789,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3667,7 +3879,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3749,7 +3968,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3835,7 +4061,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3919,7 +4152,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4040,7 +4280,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4156,7 +4403,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4358,7 +4612,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4446,7 +4707,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4545,7 +4813,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioListing>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4630,7 +4905,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioResources>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4719,7 +5001,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {

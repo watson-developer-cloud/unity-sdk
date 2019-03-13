@@ -210,7 +210,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -285,7 +292,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -360,7 +374,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -439,7 +460,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListEnvironmentsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -520,7 +548,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -613,7 +648,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -724,7 +766,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -807,7 +856,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -885,7 +941,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -967,7 +1030,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListConfigurationsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1080,7 +1150,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1197,7 +1274,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TestDocument>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1293,7 +1377,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1371,7 +1462,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1449,7 +1547,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1529,7 +1634,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1611,7 +1723,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1704,7 +1823,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1808,7 +1934,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1893,7 +2026,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1983,7 +2123,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2064,7 +2211,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2145,7 +2299,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2225,7 +2386,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2305,7 +2473,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2385,7 +2560,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2466,7 +2648,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2581,7 +2770,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2665,7 +2861,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2750,7 +2953,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2849,7 +3059,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3036,7 +3253,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3196,7 +3420,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3386,7 +3617,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3492,7 +3730,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3672,7 +3917,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3782,7 +4034,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryRelationsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3878,7 +4137,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3975,7 +4241,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4055,7 +4328,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4138,7 +4418,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4224,7 +4511,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4307,7 +4601,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4393,7 +4694,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4473,7 +4781,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4556,7 +4871,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4653,7 +4975,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4739,7 +5068,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4829,7 +5165,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CreateEventResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4922,7 +5265,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5013,7 +5363,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5106,7 +5463,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5198,7 +5562,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5279,7 +5650,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricTokenResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5384,7 +5762,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5481,7 +5866,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5561,7 +5953,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5644,7 +6043,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5723,7 +6129,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5822,7 +6235,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5907,7 +6327,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5987,7 +6414,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -6067,7 +6501,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -6144,7 +6585,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
