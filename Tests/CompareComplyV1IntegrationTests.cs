@@ -15,7 +15,6 @@
 *
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -23,14 +22,13 @@ using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.CompareComply.V1;
 using IBM.Watson.CompareComply.V1.Model;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
 namespace IBM.Watson.Tests
 {
-    public class CompareComplyServiceV1IntegrationTests
+    public class CompareComplyV1IntegrationTests
     {
         private CompareComplyService service;
         private string versionDate = "2019-02-13";
@@ -50,9 +48,9 @@ namespace IBM.Watson.Tests
             LogSystem.InstallDefaultReactors();
             customHeaders.Add("X-Watson-Test", "1");
 
-            contractAFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComply/contract_A.pdf";
-            contractBFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComply/contract_B.pdf";
-            tableFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComply/TestTable.pdf";
+            contractAFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_A.pdf";
+            contractBFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_B.pdf";
+            tableFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/TestTable.pdf";
 
             objectStorageCredentialsInputFilepath = "../sdk-credentials/cloud-object-storage-credentials-input.json";
             objectStorageCredentialsOutputFilepath = "../sdk-credentials/cloud-object-storage-credentials-output.json";
