@@ -219,7 +219,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 req.Parameters["sentences"] = (bool)sentences ? "true" : "false";
             }
-            req.Parameters["tones"] = tones != null && tones.Count > 0 ? string.Join(",", tones.ToArray()) : null;
+            if (tones != null && tones.Count > 0)
+            {
+                req.Parameters["tones"] = string.Join(",", tones.ToArray());
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 

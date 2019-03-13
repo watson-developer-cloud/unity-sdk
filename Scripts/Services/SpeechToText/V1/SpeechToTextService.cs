@@ -406,8 +406,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
-        /// default value, `1`. See [Maximum
+        /// By default, the service returns a single transcript. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -534,7 +533,10 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["inactivity_timeout"] = inactivityTimeout;
             }
-            req.Parameters["keywords"] = keywords != null && keywords.Count > 0 ? string.Join(",", keywords.ToArray()) : null;
+            if (keywords != null && keywords.Count > 0)
+            {
+                req.Parameters["keywords"] = string.Join(",", keywords.ToArray());
+            }
             if (keywordsThreshold != null)
             {
                 req.Parameters["keywords_threshold"] = keywordsThreshold;
@@ -978,8 +980,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
-        /// default value, `1`. See [Maximum
+        /// By default, the service returns a single transcript. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -1122,7 +1123,10 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["inactivity_timeout"] = inactivityTimeout;
             }
-            req.Parameters["keywords"] = keywords != null && keywords.Count > 0 ? string.Join(",", keywords.ToArray()) : null;
+            if (keywords != null && keywords.Count > 0)
+            {
+                req.Parameters["keywords"] = string.Join(",", keywords.ToArray());
+            }
             if (keywordsThreshold != null)
             {
                 req.Parameters["keywords_threshold"] = keywordsThreshold;

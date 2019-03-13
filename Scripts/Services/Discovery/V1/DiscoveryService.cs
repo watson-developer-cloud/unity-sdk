@@ -521,7 +521,10 @@ namespace IBM.Watson.Discovery.V1
             }
 
             req.Parameters["version"] = VersionDate;
-            req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
 
             req.OnResponse = OnListFieldsResponse;
 
@@ -3353,7 +3356,10 @@ namespace IBM.Watson.Discovery.V1
             }
 
             req.Parameters["version"] = VersionDate;
-            req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
             if (!string.IsNullOrEmpty(filter))
             {
                 req.Parameters["filter"] = filter;
@@ -3374,12 +3380,18 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (returnFields != null && returnFields.Count > 0)
+            {
+                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+            }
             if (offset != null)
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
             if (highlight != null)
             {
                 req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
@@ -3392,8 +3404,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["similar"] = (bool)similar ? "true" : "false";
             }
-            req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
+            {
+                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
+            }
+            if (similarFields != null && similarFields.Count > 0)
+            {
+                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
+            }
 
             req.OnResponse = OnFederatedQueryNoticesResponse;
 
@@ -3862,17 +3880,26 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (returnFields != null && returnFields.Count > 0)
+            {
+                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+            }
             if (offset != null)
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
             if (highlight != null)
             {
                 req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
             }
-            req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
+            if (passagesFields != null && passagesFields.Count > 0)
+            {
+                req.Parameters["passages.fields"] = string.Join(",", passagesFields.ToArray());
+            }
             if (passagesCount != null)
             {
                 req.Parameters["passages.count"] = passagesCount;
@@ -3889,8 +3916,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["similar"] = (bool)similar ? "true" : "false";
             }
-            req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
+            {
+                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
+            }
+            if (similarFields != null && similarFields.Count > 0)
+            {
+                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
+            }
 
             req.OnResponse = OnQueryNoticesResponse;
 
@@ -5735,7 +5768,10 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
 
             req.OnResponse = OnQueryLogResponse;
 

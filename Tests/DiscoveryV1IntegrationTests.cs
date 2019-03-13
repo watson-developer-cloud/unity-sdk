@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1;
@@ -54,11 +55,15 @@ namespace IBM.Watson.Tests
         private string createdCollectionDescription = "This is a collection created in Unity SDK integration tests. Please delete.";
         private string updatedCollectionName;
         private string updatedCollectionDescription = "This is a collection created in Unity SDK integration tests. Please delete. (updated)";
-        private string createdCollectionId;
+        private string collectionId;
         private string createdJapaneseCollectionName;
         private string createdJapaneseCollectionDescription = "This is a japanese collection created in Unity SDK integration tests. Please delete.";
         private string createdJapaneseCollectionId;
         private string addedDocumentId;
+        private string queryId;
+        private string sessionToken;
+        private string credentialId;
+        private string gatewayId;
 
         private bool isTokenizationDictionaryReady = false;
         private bool isStopwordsListReady = false;
@@ -360,9 +365,9 @@ namespace IBM.Watson.Tests
                 {
                     Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCollection result: {0}", customResponseData["json"].ToString());
                     createCollectionResponse = response.Result;
-                    createdCollectionId = createCollectionResponse.CollectionId;
+                    collectionId = createCollectionResponse.CollectionId;
                     Assert.IsNotNull(createCollectionResponse);
-                    Assert.IsNotNull(createdCollectionId);
+                    Assert.IsNotNull(collectionId);
                     Assert.IsTrue(createCollectionResponse.Name == createdCollectionName);
                     Assert.IsTrue(createCollectionResponse.Description == createdCollectionDescription);
                     Assert.IsTrue(createCollectionResponse.Language == "en");
@@ -434,7 +439,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -488,7 +493,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 name: updatedCollectionName,
                 description: updatedCollectionDescription,
                 configurationId: createdConfigurationId,
@@ -516,7 +521,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionIds: new List<string>() { createdCollectionId },
+                collectionIds: new List<string>() { collectionId },
                 customData: customData
             );
 
@@ -541,7 +546,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -583,7 +588,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 expansions: expansions,
 
                 customData: customData
@@ -615,7 +620,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     environmentId: environmentId,
-                    collectionId: createdCollectionId,
+                    collectionId: collectionId,
                     stopwordFile: fs,
                     customData: customData
                 );
@@ -705,7 +710,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -759,7 +764,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -787,7 +792,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     environmentId: environmentId,
-                    collectionId: createdCollectionId,
+                    collectionId: collectionId,
                     file: fs,
                     fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
                     customData: customData
@@ -815,7 +820,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 documentId: addedDocumentId,
                 customData: customData
             );
@@ -843,7 +848,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     environmentId: environmentId,
-                    collectionId: createdCollectionId,
+                    collectionId: collectionId,
                     documentId: addedDocumentId,
                     file: fs,
                     fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
@@ -873,7 +878,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 naturalLanguageQuery: "When did Watson win Jeopardy",
-                collectionIds: createdCollectionId,
+                collectionIds: collectionId,
                 passages: true,
                 count: 10,
                 highlight: true,
@@ -901,7 +906,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionIds: new List<string>() { createdCollectionId },
+                collectionIds: new List<string>() { collectionId },
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 count: 10,
                 highlight: true,
@@ -913,832 +918,859 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        //#region Query
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestQuery()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to Query...");
-        //    QueryResponse queryResponse = null;
-        //    service.Query(
-        //        callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", customResponseData["json"].ToString());
-        //            queryResponse = response.Result;
-        //            Assert.IsNotNull(queryResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        filter: filter,
-        //        query: query,
-        //        naturalLanguageQuery: naturalLanguageQuery,
-        //        passages: passages,
-        //        aggregation: aggregation,
-        //        count: count,
-        //        returnFields: returnFields,
-        //        offset: offset,
-        //        sort: sort,
-        //        highlight: highlight,
-        //        passagesFields: passagesFields,
-        //        passagesCount: passagesCount,
-        //        passagesCharacters: passagesCharacters,
-        //        deduplicate: deduplicate,
-        //        deduplicateField: deduplicateField,
-        //        collectionIds: collectionIds,
-        //        similar: similar,
-        //        similarDocumentIds: similarDocumentIds,
-        //        similarFields: similarFields,
-        //        bias: bias,
-
-        //        loggingOptOut: loggingOptOut,
-        //        customData: customData
-        //    );
-
-        //    while (queryResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region QueryEntities
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestQueryEntities()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryEntities...");
-        //    QueryEntitiesResponse queryEntitiesResponse = null;
-        //    service.QueryEntities(
-        //        callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", customResponseData["json"].ToString());
-        //            queryEntitiesResponse = response.Result;
-        //            Assert.IsNotNull(queryEntitiesResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        feature: feature,
-        //        entity: entity,
-        //        context: context,
-        //        count: count,
-        //        evidenceCount: evidenceCount,
-
-        //        customData: customData
-        //    );
-
-        //    while (queryEntitiesResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region QueryNotices
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestQueryNotices()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryNotices...");
-        //    QueryNoticesResponse queryNoticesResponse = null;
-        //    service.QueryNotices(
-        //        callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryNotices result: {0}", customResponseData["json"].ToString());
-        //            queryNoticesResponse = response.Result;
-        //            Assert.IsNotNull(queryNoticesResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        filter: filter,
-        //        query: query,
-        //        naturalLanguageQuery: naturalLanguageQuery,
-        //        passages: passages,
-        //        aggregation: aggregation,
-        //        count: count,
-        //        returnFields: returnFields,
-        //        offset: offset,
-        //        sort: sort,
-        //        highlight: highlight,
-        //        passagesFields: passagesFields,
-        //        passagesCount: passagesCount,
-        //        passagesCharacters: passagesCharacters,
-        //        deduplicateField: deduplicateField,
-        //        similar: similar,
-        //        similarDocumentIds: similarDocumentIds,
-        //        similarFields: similarFields,
-        //        customData: customData
-        //    );
-
-        //    while (queryNoticesResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region QueryRelations
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestQueryRelations()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryRelations...");
-        //    QueryRelationsResponse queryRelationsResponse = null;
-        //    service.QueryRelations(
-        //        callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", customResponseData["json"].ToString());
-        //            queryRelationsResponse = response.Result;
-        //            Assert.IsNotNull(queryRelationsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        entities: entities,
-        //        context: context,
-        //        sort: sort,
-        //        filter: filter,
-        //        count: count,
-        //        evidenceCount: evidenceCount,
-
-        //        customData: customData
-        //    );
-
-        //    while (queryRelationsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region AddTrainingData
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestAddTrainingData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to AddTrainingData...");
-        //    TrainingQuery addTrainingDataResponse = null;
-        //    service.AddTrainingData(
-        //        callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "AddTrainingData result: {0}", customResponseData["json"].ToString());
-        //            addTrainingDataResponse = response.Result;
-        //            Assert.IsNotNull(addTrainingDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        naturalLanguageQuery: naturalLanguageQuery,
-        //        filter: filter,
-        //        examples: examples,
-
-        //        customData: customData
-        //    );
-
-        //    while (addTrainingDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region CreateTrainingExample
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestCreateTrainingExample()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateTrainingExample...");
-        //    TrainingExample createTrainingExampleResponse = null;
-        //    service.CreateTrainingExample(
-        //        callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTrainingExample result: {0}", customResponseData["json"].ToString());
-        //            createTrainingExampleResponse = response.Result;
-        //            Assert.IsNotNull(createTrainingExampleResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        documentId: documentId,
-        //        crossReference: crossReference,
-        //        relevance: relevance,
-
-        //        customData: customData
-        //    );
-
-        //    while (createTrainingExampleResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetTrainingData
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetTrainingData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingData...");
-        //    TrainingQuery getTrainingDataResponse = null;
-        //    service.GetTrainingData(
-        //        callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingData result: {0}", customResponseData["json"].ToString());
-        //            getTrainingDataResponse = response.Result;
-        //            Assert.IsNotNull(getTrainingDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        customData: customData
-        //    );
-
-        //    while (getTrainingDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetTrainingExample
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetTrainingExample()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingExample...");
-        //    TrainingExample getTrainingExampleResponse = null;
-        //    service.GetTrainingExample(
-        //        callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingExample result: {0}", customResponseData["json"].ToString());
-        //            getTrainingExampleResponse = response.Result;
-        //            Assert.IsNotNull(getTrainingExampleResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        exampleId: exampleId,
-        //        customData: customData
-        //    );
-
-        //    while (getTrainingExampleResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region ListTrainingData
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestListTrainingData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingData...");
-        //    TrainingDataSet listTrainingDataResponse = null;
-        //    service.ListTrainingData(
-        //        callback: (DetailedResponse<TrainingDataSet> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingData result: {0}", customResponseData["json"].ToString());
-        //            listTrainingDataResponse = response.Result;
-        //            Assert.IsNotNull(listTrainingDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        customData: customData
-        //    );
-
-        //    while (listTrainingDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region ListTrainingExamples
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestListTrainingExamples()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingExamples...");
-        //    TrainingExampleList listTrainingExamplesResponse = null;
-        //    service.ListTrainingExamples(
-        //        callback: (DetailedResponse<TrainingExampleList> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingExamples result: {0}", customResponseData["json"].ToString());
-        //            listTrainingExamplesResponse = response.Result;
-        //            Assert.IsNotNull(listTrainingExamplesResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        customData: customData
-        //    );
-
-        //    while (listTrainingExamplesResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region UpdateTrainingExample
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestUpdateTrainingExample()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateTrainingExample...");
-        //    TrainingExample updateTrainingExampleResponse = null;
-        //    service.UpdateTrainingExample(
-        //        callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateTrainingExample result: {0}", customResponseData["json"].ToString());
-        //            updateTrainingExampleResponse = response.Result;
-        //            Assert.IsNotNull(updateTrainingExampleResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        exampleId: exampleId,
-        //        crossReference: crossReference,
-        //        relevance: relevance,
-
-        //        customData: customData
-        //    );
-
-        //    while (updateTrainingExampleResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region CreateEvent
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestCreateEvent()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateEvent...");
-        //    CreateEventResponse createEventResponse = null;
-        //    service.CreateEvent(
-        //        callback: (DetailedResponse<CreateEventResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEvent result: {0}", customResponseData["json"].ToString());
-        //            createEventResponse = response.Result;
-        //            Assert.IsNotNull(createEventResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        type: type,
-        //        data: data,
-
-        //        customData: customData
-        //    );
-
-        //    while (createEventResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetMetricsEventRate
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetMetricsEventRate()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsEventRate...");
-        //    MetricResponse getMetricsEventRateResponse = null;
-        //    service.GetMetricsEventRate(
-        //        callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsEventRate result: {0}", customResponseData["json"].ToString());
-        //            getMetricsEventRateResponse = response.Result;
-        //            Assert.IsNotNull(getMetricsEventRateResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        startTime: startTime,
-        //        endTime: endTime,
-        //        resultType: resultType,
-        //        customData: customData
-        //    );
-
-        //    while (getMetricsEventRateResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetMetricsQuery
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetMetricsQuery()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQuery...");
-        //    MetricResponse getMetricsQueryResponse = null;
-        //    service.GetMetricsQuery(
-        //        callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQuery result: {0}", customResponseData["json"].ToString());
-        //            getMetricsQueryResponse = response.Result;
-        //            Assert.IsNotNull(getMetricsQueryResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        startTime: startTime,
-        //        endTime: endTime,
-        //        resultType: resultType,
-        //        customData: customData
-        //    );
-
-        //    while (getMetricsQueryResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetMetricsQueryEvent
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetMetricsQueryEvent()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryEvent...");
-        //    MetricResponse getMetricsQueryEventResponse = null;
-        //    service.GetMetricsQueryEvent(
-        //        callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryEvent result: {0}", customResponseData["json"].ToString());
-        //            getMetricsQueryEventResponse = response.Result;
-        //            Assert.IsNotNull(getMetricsQueryEventResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        startTime: startTime,
-        //        endTime: endTime,
-        //        resultType: resultType,
-        //        customData: customData
-        //    );
-
-        //    while (getMetricsQueryEventResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetMetricsQueryNoResults
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetMetricsQueryNoResults()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryNoResults...");
-        //    MetricResponse getMetricsQueryNoResultsResponse = null;
-        //    service.GetMetricsQueryNoResults(
-        //        callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryNoResults result: {0}", customResponseData["json"].ToString());
-        //            getMetricsQueryNoResultsResponse = response.Result;
-        //            Assert.IsNotNull(getMetricsQueryNoResultsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        startTime: startTime,
-        //        endTime: endTime,
-        //        resultType: resultType,
-        //        customData: customData
-        //    );
-
-        //    while (getMetricsQueryNoResultsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetMetricsQueryTokenEvent
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetMetricsQueryTokenEvent()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryTokenEvent...");
-        //    MetricTokenResponse getMetricsQueryTokenEventResponse = null;
-        //    service.GetMetricsQueryTokenEvent(
-        //        callback: (DetailedResponse<MetricTokenResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryTokenEvent result: {0}", customResponseData["json"].ToString());
-        //            getMetricsQueryTokenEventResponse = response.Result;
-        //            Assert.IsNotNull(getMetricsQueryTokenEventResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        count: count,
-        //        customData: customData
-        //    );
-
-        //    while (getMetricsQueryTokenEventResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region QueryLog
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestQueryLog()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryLog...");
-        //    LogQueryResponse queryLogResponse = null;
-        //    service.QueryLog(
-        //        callback: (DetailedResponse<LogQueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryLog result: {0}", customResponseData["json"].ToString());
-        //            queryLogResponse = response.Result;
-        //            Assert.IsNotNull(queryLogResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        filter: filter,
-        //        query: query,
-        //        count: count,
-        //        offset: offset,
-        //        sort: sort,
-        //        customData: customData
-        //    );
-
-        //    while (queryLogResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region CreateCredentials
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestCreateCredentials()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateCredentials...");
-        //    ModelCredentials createCredentialsResponse = null;
-        //    service.CreateCredentials(
-        //        callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCredentials result: {0}", customResponseData["json"].ToString());
-        //            createCredentialsResponse = response.Result;
-        //            Assert.IsNotNull(createCredentialsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        sourceType: sourceType,
-        //        credentialDetails: credentialDetails,
-
-        //        customData: customData
-        //    );
-
-        //    while (createCredentialsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetCredentials
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetCredentials()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetCredentials...");
-        //    ModelCredentials getCredentialsResponse = null;
-        //    service.GetCredentials(
-        //        callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCredentials result: {0}", customResponseData["json"].ToString());
-        //            getCredentialsResponse = response.Result;
-        //            Assert.IsNotNull(getCredentialsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        credentialId: credentialId,
-        //        customData: customData
-        //    );
-
-        //    while (getCredentialsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region ListCredentials
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestListCredentials()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListCredentials...");
-        //    CredentialsList listCredentialsResponse = null;
-        //    service.ListCredentials(
-        //        callback: (DetailedResponse<CredentialsList> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCredentials result: {0}", customResponseData["json"].ToString());
-        //            listCredentialsResponse = response.Result;
-        //            Assert.IsNotNull(listCredentialsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        customData: customData
-        //    );
-
-        //    while (listCredentialsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region UpdateCredentials
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestUpdateCredentials()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateCredentials...");
-        //    ModelCredentials updateCredentialsResponse = null;
-        //    service.UpdateCredentials(
-        //        callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCredentials result: {0}", customResponseData["json"].ToString());
-        //            updateCredentialsResponse = response.Result;
-        //            Assert.IsNotNull(updateCredentialsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        credentialId: credentialId,
-        //        sourceType: sourceType,
-        //        credentialDetails: credentialDetails,
-
-        //        customData: customData
-        //    );
-
-        //    while (updateCredentialsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region CreateGateway
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestCreateGateway()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateGateway...");
-        //    Gateway createGatewayResponse = null;
-        //    service.CreateGateway(
-        //        callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateGateway result: {0}", customResponseData["json"].ToString());
-        //            createGatewayResponse = response.Result;
-        //            Assert.IsNotNull(createGatewayResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        name: name,
-
-        //        customData: customData
-        //    );
-
-        //    while (createGatewayResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region GetGateway
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestGetGateway()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetGateway...");
-        //    Gateway getGatewayResponse = null;
-        //    service.GetGateway(
-        //        callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "GetGateway result: {0}", customResponseData["json"].ToString());
-        //            getGatewayResponse = response.Result;
-        //            Assert.IsNotNull(getGatewayResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        gatewayId: gatewayId,
-        //        customData: customData
-        //    );
-
-        //    while (getGatewayResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region ListGateways
-        //[UnityTest, Order(0)]
-        //public IEnumerator TestListGateways()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListGateways...");
-        //    GatewayList listGatewaysResponse = null;
-        //    service.ListGateways(
-        //        callback: (DetailedResponse<GatewayList> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "ListGateways result: {0}", customResponseData["json"].ToString());
-        //            listGatewaysResponse = response.Result;
-        //            Assert.IsNotNull(listGatewaysResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        customData: customData
-        //    );
-
-        //    while (listGatewaysResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteGateway
-        //[UnityTest, Order(87)]
-        //public IEnumerator TestDeleteGateway()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteGateway...");
-        //    GatewayDelete deleteGatewayResponse = null;
-        //    service.DeleteGateway(
-        //        callback: (DetailedResponse<GatewayDelete> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteGateway result: {0}", customResponseData["json"].ToString());
-        //            deleteGatewayResponse = response.Result;
-        //            Assert.IsNotNull(deleteGatewayResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        gatewayId: gatewayId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteGatewayResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteCredentials
-        //[UnityTest, Order(88)]
-        //public IEnumerator TestDeleteCredentials()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteCredentials...");
-        //    DeleteCredentials deleteCredentialsResponse = null;
-        //    service.DeleteCredentials(
-        //        callback: (DetailedResponse<DeleteCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCredentials result: {0}", customResponseData["json"].ToString());
-        //            deleteCredentialsResponse = response.Result;
-        //            Assert.IsNotNull(deleteCredentialsResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        credentialId: credentialId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteCredentialsResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteUserData
-        //[UnityTest, Order(89)]
-        //public IEnumerator TestDeleteUserData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteUserData...");
-        //    object deleteUserDataResponse = null;
-        //    service.DeleteUserData(
-        //        callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
-        //            deleteUserDataResponse = response.Result;
-        //            Assert.IsNotNull(deleteUserDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        customerId: customerId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteUserDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteTrainingExample
-        //[UnityTest, Order(90)]
-        //public IEnumerator TestDeleteTrainingExample()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingExample...");
-        //    object deleteTrainingExampleResponse = null;
-        //    service.DeleteTrainingExample(
-        //        callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingExample result: {0}", customResponseData["json"].ToString());
-        //            deleteTrainingExampleResponse = response.Result;
-        //            Assert.IsNotNull(deleteTrainingExampleResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        exampleId: exampleId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteTrainingExampleResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteTrainingData
-        //[UnityTest, Order(91)]
-        //public IEnumerator TestDeleteTrainingData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingData...");
-        //    object deleteTrainingDataResponse = null;
-        //    service.DeleteTrainingData(
-        //        callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingData result: {0}", customResponseData["json"].ToString());
-        //            deleteTrainingDataResponse = response.Result;
-        //            Assert.IsNotNull(deleteTrainingDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        queryId: queryId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteTrainingDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
-
-        //#region DeleteAllTrainingData
-        //[UnityTest, Order(92)]
-        //public IEnumerator TestDeleteAllTrainingData()
-        //{
-        //    Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteAllTrainingData...");
-        //    object deleteAllTrainingDataResponse = null;
-        //    service.DeleteAllTrainingData(
-        //        callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
-        //        {
-        //            Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteAllTrainingData result: {0}", customResponseData["json"].ToString());
-        //            deleteAllTrainingDataResponse = response.Result;
-        //            Assert.IsNotNull(deleteAllTrainingDataResponse);
-        //            Assert.IsNull(error);
-        //        },
-        //        environmentId: environmentId,
-        //        collectionId: collectionId,
-        //        customData: customData
-        //    );
-
-        //    while (deleteAllTrainingDataResponse == null)
-        //        yield return null;
-        //}
-        //#endregion
+        #region Query
+        [UnityTest, Order(27)]
+        public IEnumerator TestQuery()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to Query...");
+            QueryResponse queryResponse = null;
+            service.Query(
+                callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", customResponseData["json"].ToString());
+                    queryResponse = response.Result;
+                    sessionToken = queryResponse.SessionToken;
+                    Assert.IsNotNull(queryResponse);
+                    Assert.IsNotNull(sessionToken);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                naturalLanguageQuery: "When did Watson win Jeopardy",
+                passages: true,
+                count: 10,
+                highlight: true,
+                loggingOptOut: true,
+                customData: customData
+            );
+
+            while (queryResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region QueryEntities
+        //[UnityTest, Order(28)]
+        public IEnumerator TestQueryEntities()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryEntities...");
+            QueryEntitiesResponse queryEntitiesResponse = null;
+            QueryEntitiesEntity entity = new QueryEntitiesEntity()
+            {
+                Text = "Jeopardy"
+            };
+
+            service.QueryEntities(
+                callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", customResponseData["json"].ToString());
+                    queryEntitiesResponse = response.Result;
+                    Assert.IsNotNull(queryEntitiesResponse);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                entity: entity,
+                feature: "disambiguate",
+                count: 10,
+                customData: customData
+            );
+
+            while (queryEntitiesResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region QueryNotices
+        [UnityTest, Order(29)]
+        public IEnumerator TestQueryNotices()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryNotices...");
+            QueryNoticesResponse queryNoticesResponse = null;
+            service.QueryNotices(
+                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryNotices result: {0}", customResponseData["json"].ToString());
+                    queryNoticesResponse = response.Result;
+                    Assert.IsNotNull(queryNoticesResponse);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                naturalLanguageQuery: "When did Watson win Jeopardy",
+                passages: true,
+                count: 10,
+                highlight: true,
+                customData: customData
+            );
+
+            while (queryNoticesResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region QueryRelations
+        //[UnityTest, Order(30)]
+        public IEnumerator TestQueryRelations()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryRelations...");
+            QueryRelationsResponse queryRelationsResponse = null;
+            List<QueryRelationsEntity> entities = new List<QueryRelationsEntity>()
+            {
+                new QueryRelationsEntity()
+                {
+                    Text = "Jeopardy"
+                }
+            };
+            service.QueryRelations(
+                callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", customResponseData["json"].ToString());
+                    queryRelationsResponse = response.Result;
+                    Assert.IsNotNull(queryRelationsResponse);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                entities: entities,
+                count: 10,
+                customData: customData
+            );
+
+            while (queryRelationsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region AddTrainingData
+        [UnityTest, Order(31)]
+        public IEnumerator TestAddTrainingData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to AddTrainingData...");
+            TrainingQuery addTrainingDataResponse = null;
+            List<TrainingExample> examples = new List<TrainingExample>()
+            {
+                new TrainingExample()
+                {
+                    DocumentId = addedDocumentId,
+                    Relevance = 2
+                }
+            };
+            service.AddTrainingData(
+                callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "AddTrainingData result: {0}", customResponseData["json"].ToString());
+                    addTrainingDataResponse = response.Result;
+                    queryId = addTrainingDataResponse.QueryId;
+                    Assert.IsNotNull(addTrainingDataResponse);
+                    Assert.IsNotNull(queryId);
+                    Assert.IsTrue(addTrainingDataResponse.NaturalLanguageQuery == "When did Watson win Jeopardy");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                naturalLanguageQuery: "When did Watson win Jeopardy",
+                examples: examples,
+                customData: customData
+            );
+
+            while (addTrainingDataResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateTrainingExample
+        //  Skipping because we only have one document
+        //[UnityTest, Order(32)]
+        public IEnumerator TestCreateTrainingExample()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateTrainingExample...");
+            TrainingExample createTrainingExampleResponse = null;
+            service.CreateTrainingExample(
+                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTrainingExample result: {0}", customResponseData["json"].ToString());
+                    createTrainingExampleResponse = response.Result;
+                    Assert.IsNotNull(createTrainingExampleResponse);
+                    Assert.IsTrue(createTrainingExampleResponse.DocumentId == addedDocumentId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                documentId: addedDocumentId,
+                relevance: 2,
+                customData: customData
+            );
+
+            while (createTrainingExampleResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetTrainingData
+        [UnityTest, Order(33)]
+        public IEnumerator TestGetTrainingData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingData...");
+            TrainingQuery getTrainingDataResponse = null;
+            service.GetTrainingData(
+                callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingData result: {0}", customResponseData["json"].ToString());
+                    getTrainingDataResponse = response.Result;
+                    Assert.IsNotNull(getTrainingDataResponse);
+                    Assert.IsTrue(getTrainingDataResponse.QueryId == queryId);
+                    Assert.IsTrue(getTrainingDataResponse.NaturalLanguageQuery == "When did Watson win Jeopardy");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                customData: customData
+            );
+
+            while (getTrainingDataResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetTrainingExample
+        [UnityTest, Order(34)]
+        public IEnumerator TestGetTrainingExample()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingExample...");
+            TrainingExample getTrainingExampleResponse = null;
+            service.GetTrainingExample(
+                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingExample result: {0}", customResponseData["json"].ToString());
+                    getTrainingExampleResponse = response.Result;
+                    Assert.IsNotNull(getTrainingExampleResponse);
+                    Assert.IsTrue(getTrainingExampleResponse.DocumentId == addedDocumentId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                exampleId: addedDocumentId,
+                customData: customData
+            );
+
+            while (getTrainingExampleResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListTrainingData
+        [UnityTest, Order(35)]
+        public IEnumerator TestListTrainingData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingData...");
+            TrainingDataSet listTrainingDataResponse = null;
+            service.ListTrainingData(
+                callback: (DetailedResponse<TrainingDataSet> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingData result: {0}", customResponseData["json"].ToString());
+                    listTrainingDataResponse = response.Result;
+                    Assert.IsNotNull(listTrainingDataResponse);
+                    Assert.IsNotNull(listTrainingDataResponse.Queries);
+                    Assert.IsTrue(listTrainingDataResponse.Queries.Count > 0);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                customData: customData
+            );
+
+            while (listTrainingDataResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListTrainingExamples
+        [UnityTest, Order(36)]
+        public IEnumerator TestListTrainingExamples()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingExamples...");
+            TrainingExampleList listTrainingExamplesResponse = null;
+            service.ListTrainingExamples(
+                callback: (DetailedResponse<TrainingExampleList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingExamples result: {0}", customResponseData["json"].ToString());
+                    listTrainingExamplesResponse = response.Result;
+                    Assert.IsNotNull(listTrainingExamplesResponse);
+                    Assert.IsNotNull(listTrainingExamplesResponse.Examples);
+                    Assert.IsTrue(listTrainingExamplesResponse.Examples.Count > 0);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                customData: customData
+            );
+
+            while (listTrainingExamplesResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region UpdateTrainingExample
+        [UnityTest, Order(37)]
+        public IEnumerator TestUpdateTrainingExample()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateTrainingExample...");
+            TrainingExample updateTrainingExampleResponse = null;
+            service.UpdateTrainingExample(
+                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateTrainingExample result: {0}", customResponseData["json"].ToString());
+                    updateTrainingExampleResponse = response.Result;
+                    Assert.IsNotNull(updateTrainingExampleResponse);
+                    Assert.IsTrue(updateTrainingExampleResponse.DocumentId == addedDocumentId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                exampleId: addedDocumentId,
+                relevance: 3,
+                customData: customData
+            );
+
+            while (updateTrainingExampleResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateEvent
+        [UnityTest, Order(38)]
+        public IEnumerator TestCreateEvent()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateEvent...");
+            CreateEventResponse createEventResponse = null;
+            EventData data = new EventData()
+            {
+                EnvironmentId = environmentId,
+                SessionToken = sessionToken,
+                CollectionId = collectionId,
+                DocumentId = addedDocumentId
+            };
+            service.CreateEvent(
+                callback: (DetailedResponse<CreateEventResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEvent result: {0}", customResponseData["json"].ToString());
+                    createEventResponse = response.Result;
+                    Assert.IsNotNull(createEventResponse);
+                    Assert.IsTrue(createEventResponse.Type == "click");
+                    Assert.IsNull(error);
+                },
+                type: "click",
+                data: data,
+                customData: customData
+            );
+
+            while (createEventResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetMetricsEventRate
+        [UnityTest, Order(39)]
+        public IEnumerator TestGetMetricsEventRate()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsEventRate...");
+            MetricResponse getMetricsEventRateResponse = null;
+            service.GetMetricsEventRate(
+                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsEventRate result: {0}", customResponseData["json"].ToString());
+                    getMetricsEventRateResponse = response.Result;
+                    Assert.IsNotNull(getMetricsEventRateResponse);
+                    Assert.IsNotNull(getMetricsEventRateResponse.Aggregations);
+                    Assert.IsNull(error);
+                },
+                resultType: "document",
+                customData: customData
+            );
+
+            while (getMetricsEventRateResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetMetricsQuery
+        [UnityTest, Order(40)]
+        public IEnumerator TestGetMetricsQuery()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQuery...");
+            MetricResponse getMetricsQueryResponse = null;
+            service.GetMetricsQuery(
+                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQuery result: {0}", customResponseData["json"].ToString());
+                    getMetricsQueryResponse = response.Result;
+                    Assert.IsNotNull(getMetricsQueryResponse);
+                    Assert.IsNotNull(getMetricsQueryResponse.Aggregations);
+                    Assert.IsNull(error);
+                },
+                resultType: "document",
+                customData: customData
+            );
+
+            while (getMetricsQueryResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetMetricsQueryEvent
+        [UnityTest, Order(41)]
+        public IEnumerator TestGetMetricsQueryEvent()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryEvent...");
+            MetricResponse getMetricsQueryEventResponse = null;
+            service.GetMetricsQueryEvent(
+                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryEvent result: {0}", customResponseData["json"].ToString());
+                    getMetricsQueryEventResponse = response.Result;
+                    Assert.IsNotNull(getMetricsQueryEventResponse);
+                    Assert.IsNotNull(getMetricsQueryEventResponse.Aggregations);
+                    Assert.IsNull(error);
+                },
+                resultType: "document",
+                customData: customData
+            );
+
+            while (getMetricsQueryEventResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetMetricsQueryNoResults
+        [UnityTest, Order(42)]
+        public IEnumerator TestGetMetricsQueryNoResults()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryNoResults...");
+            MetricResponse getMetricsQueryNoResultsResponse = null;
+            service.GetMetricsQueryNoResults(
+                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryNoResults result: {0}", customResponseData["json"].ToString());
+                    getMetricsQueryNoResultsResponse = response.Result;
+                    Assert.IsNotNull(getMetricsQueryNoResultsResponse);
+                    Assert.IsNotNull(getMetricsQueryNoResultsResponse.Aggregations);
+                    Assert.IsNull(error);
+                },
+                resultType: "document",
+                customData: customData
+            );
+
+            while (getMetricsQueryNoResultsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetMetricsQueryTokenEvent
+        [UnityTest, Order(43)]
+        public IEnumerator TestGetMetricsQueryTokenEvent()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryTokenEvent...");
+            MetricTokenResponse getMetricsQueryTokenEventResponse = null;
+            service.GetMetricsQueryTokenEvent(
+                callback: (DetailedResponse<MetricTokenResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryTokenEvent result: {0}", customResponseData["json"].ToString());
+                    getMetricsQueryTokenEventResponse = response.Result;
+                    Assert.IsNotNull(getMetricsQueryTokenEventResponse);
+                    Assert.IsNotNull(getMetricsQueryTokenEventResponse.Aggregations);
+                    Assert.IsNull(error);
+                },
+                count: 10,
+                customData: customData
+            );
+
+            while (getMetricsQueryTokenEventResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region QueryLog
+        [UnityTest, Order(44)]
+        public IEnumerator TestQueryLog()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryLog...");
+            LogQueryResponse queryLogResponse = null;
+            service.QueryLog(
+                callback: (DetailedResponse<LogQueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryLog result: {0}", customResponseData["json"].ToString());
+                    queryLogResponse = response.Result;
+                    Assert.IsNotNull(queryLogResponse);
+                    Assert.IsNotNull(queryLogResponse.Results);
+                    Assert.IsNull(error);
+                },
+                query: "When did Watson beat Jeopardy",
+                count: 10,
+                customData: customData
+            );
+
+            while (queryLogResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateCredentials
+        [UnityTest, Order(45)]
+        public IEnumerator TestCreateCredentials()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateCredentials...");
+            ModelCredentials createCredentialsResponse = null;
+            CredentialDetails credentialDetails = new CredentialDetails()
+            {
+                CredentialType = CredentialDetails.CredentialTypeValue.OAUTH2,
+                EnterpriseId = "myEnterpriseId",
+                ClientId = "myClientId",
+                ClientSecret = "myClentSecret",
+                PublicKeyId = "myPublicIdKey",
+                Passphrase = "myPassphrase",
+                PrivateKey = "myPrivateKey"
+            };
+            service.CreateCredentials(
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCredentials result: {0}", customResponseData["json"].ToString());
+                    createCredentialsResponse = response.Result;
+                    credentialId = createCredentialsResponse.CredentialId;
+                    Assert.IsNotNull(createCredentialsResponse);
+                    Assert.IsNotNull(credentialId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                sourceType: "box",
+                credentialDetails: credentialDetails,
+
+                customData: customData
+            );
+
+            while (createCredentialsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetCredentials
+        [UnityTest, Order(46)]
+        public IEnumerator TestGetCredentials()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetCredentials...");
+            ModelCredentials getCredentialsResponse = null;
+            service.GetCredentials(
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCredentials result: {0}", customResponseData["json"].ToString());
+                    getCredentialsResponse = response.Result;
+                    Assert.IsNotNull(getCredentialsResponse);
+                    Assert.IsTrue(getCredentialsResponse.CredentialId == credentialId);
+                    Assert.IsNotNull(getCredentialsResponse.CredentialDetails);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                credentialId: credentialId,
+                customData: customData
+            );
+
+            while (getCredentialsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListCredentials
+        [UnityTest, Order(47)]
+        public IEnumerator TestListCredentials()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListCredentials...");
+            CredentialsList listCredentialsResponse = null;
+            service.ListCredentials(
+                callback: (DetailedResponse<CredentialsList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCredentials result: {0}", customResponseData["json"].ToString());
+                    listCredentialsResponse = response.Result;
+                    Assert.IsNotNull(listCredentialsResponse);
+                    Assert.IsNotNull(listCredentialsResponse._Credentials);
+                    Assert.IsTrue(listCredentialsResponse._Credentials.Count > 0);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                customData: customData
+            );
+
+            while (listCredentialsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region UpdateCredentials
+        [UnityTest, Order(48)]
+        public IEnumerator TestUpdateCredentials()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateCredentials...");
+            ModelCredentials updateCredentialsResponse = null;
+            CredentialDetails credentialDetails = new CredentialDetails()
+            {
+                CredentialType = CredentialDetails.CredentialTypeValue.OAUTH2,
+                EnterpriseId = "myEnterpriseIdUpdated",
+                ClientId = "myClientIdUpdated",
+                ClientSecret = "myClentSecretUpdated",
+                PublicKeyId = "myPublicIdKeyUpdated",
+                Passphrase = "myPassphraseUpdated",
+                PrivateKey = Convert.ToBase64String(Encoding.ASCII.GetBytes("myPrivateKeyUpdated"))
+            };
+            service.UpdateCredentials(
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCredentials result: {0}", customResponseData["json"].ToString());
+                    updateCredentialsResponse = response.Result;
+                    Assert.IsNotNull(updateCredentialsResponse);
+                    Assert.IsNotNull(updateCredentialsResponse.CredentialDetails);
+                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.EnterpriseId == "myEnterpriseIdUpdated");
+                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.ClientId == "myClientIdUpdated");
+                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.ClientSecret == "myClentSecretUpdated");
+                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.PublicKeyId == "myPublicIdKeyUpdated");
+                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.Passphrase == "myPassphraseUpdated");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                credentialId: credentialId,
+                sourceType: "box", 
+                credentialDetails: credentialDetails,
+                customData: customData
+            );
+
+            while (updateCredentialsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateGateway
+        [UnityTest, Order(49)]
+        public IEnumerator TestCreateGateway()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateGateway...");
+            Gateway createGatewayResponse = null;
+            service.CreateGateway(
+                callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateGateway result: {0}", customResponseData["json"].ToString());
+                    createGatewayResponse = response.Result;
+                    gatewayId = createGatewayResponse.GatewayId;
+                    Assert.IsNotNull(createGatewayResponse);
+                    Assert.IsNotNull(gatewayId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                customData: customData
+            );
+
+            while (createGatewayResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetGateway
+        [UnityTest, Order(50)]
+        public IEnumerator TestGetGateway()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetGateway...");
+            Gateway getGatewayResponse = null;
+            service.GetGateway(
+                callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetGateway result: {0}", customResponseData["json"].ToString());
+                    getGatewayResponse = response.Result;
+                    Assert.IsNotNull(getGatewayResponse);
+                    Assert.IsTrue(getGatewayResponse.GatewayId == gatewayId);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                gatewayId: gatewayId,
+                customData: customData
+            );
+
+            while (getGatewayResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListGateways
+        [UnityTest, Order(51)]
+        public IEnumerator TestListGateways()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListGateways...");
+            GatewayList listGatewaysResponse = null;
+            service.ListGateways(
+                callback: (DetailedResponse<GatewayList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListGateways result: {0}", customResponseData["json"].ToString());
+                    listGatewaysResponse = response.Result;
+                    Assert.IsNotNull(listGatewaysResponse);
+                    Assert.IsNotNull(listGatewaysResponse.Gateways);
+                    Assert.IsTrue(listGatewaysResponse.Gateways.Count > 0);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                customData: customData
+            );
+
+            while (listGatewaysResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteGateway
+        [UnityTest, Order(87)]
+        public IEnumerator TestDeleteGateway()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteGateway...");
+            GatewayDelete deleteGatewayResponse = null;
+            service.DeleteGateway(
+                callback: (DetailedResponse<GatewayDelete> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteGateway result: {0}", customResponseData["json"].ToString());
+                    deleteGatewayResponse = response.Result;
+                    Assert.IsNotNull(deleteGatewayResponse);
+                    Assert.IsTrue(deleteGatewayResponse.GatewayId == gatewayId);
+                    Assert.IsTrue(deleteGatewayResponse.Status == "deleted");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                gatewayId: gatewayId,
+                customData: customData
+            );
+
+            while (deleteGatewayResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteCredentials
+        [UnityTest, Order(88)]
+        public IEnumerator TestDeleteCredentials()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteCredentials...");
+            DeleteCredentials deleteCredentialsResponse = null;
+            service.DeleteCredentials(
+                callback: (DetailedResponse<DeleteCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCredentials result: {0}", customResponseData["json"].ToString());
+                    deleteCredentialsResponse = response.Result;
+                    Assert.IsNotNull(deleteCredentialsResponse);
+                    Assert.IsTrue(deleteCredentialsResponse.CredentialId == credentialId);
+                    Assert.IsTrue(deleteCredentialsResponse.Status == "deleted");
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                credentialId: credentialId,
+                customData: customData
+            );
+
+            while (deleteCredentialsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteUserData
+        [UnityTest, Order(89)]
+        public IEnumerator TestDeleteUserData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteUserData...");
+            bool isComplete = false;
+            service.DeleteUserData(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                customerId: "customerId",
+                customData: customData
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteTrainingExample
+        [UnityTest, Order(90)]
+        public IEnumerator TestDeleteTrainingExample()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingExample...");
+            bool isComplete = false;
+            service.DeleteTrainingExample(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingExample result: {0}", customResponseData["json"].ToString());
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                exampleId: addedDocumentId,
+                customData: customData
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteTrainingData
+        [UnityTest, Order(91)]
+        public IEnumerator TestDeleteTrainingData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingData...");
+            bool isComplete = false;
+            service.DeleteTrainingData(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingData result: {0}", customResponseData["json"].ToString());
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                queryId: queryId,
+                customData: customData
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteAllTrainingData
+        [UnityTest, Order(92)]
+        public IEnumerator TestDeleteAllTrainingData()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteAllTrainingData...");
+            bool isComplete = false;
+            service.DeleteAllTrainingData(
+                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteAllTrainingData result: {0}", customResponseData["json"].ToString());
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                customData: customData
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        #endregion
 
         #region DeleteDocument
         [UnityTest, Order(92)]
@@ -1757,7 +1789,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 documentId: addedDocumentId,
                 customData: customData
             );
@@ -1806,7 +1838,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -1829,7 +1861,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -1878,12 +1910,12 @@ namespace IBM.Watson.Tests
                     deleteCollectionResponse = response.Result;
                     Assert.IsNotNull(deleteCollectionResponse);
                     Assert.IsNotNull(deleteCollectionResponse.CollectionId);
-                    Assert.IsTrue(deleteCollectionResponse.CollectionId == createdCollectionId);
+                    Assert.IsTrue(deleteCollectionResponse.CollectionId == collectionId);
                     Assert.IsTrue(deleteCollectionResponse.Status == "deleted");
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
 
@@ -1980,7 +2012,7 @@ namespace IBM.Watson.Tests
             service.GetStopwordListStatus(
                 callback: OnCheckStopwordsListStatus,
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: collectionId,
                 customData: customData
             );
         }
@@ -2024,7 +2056,7 @@ namespace IBM.Watson.Tests
                     getCollectionResponse = response.Result;
                 },
                 environmentId: environmentId,
-                collectionId: createdCollectionId,
+                collectionId: this.collectionId,
                 customData: customData
             );
 
