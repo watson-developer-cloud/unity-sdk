@@ -15,14 +15,12 @@
 *
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using IBM.Cloud.SDK;
 using IBM.Watson.LanguageTranslator.V3;
 using IBM.Watson.LanguageTranslator.V3.Model;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;

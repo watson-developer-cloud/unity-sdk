@@ -24,7 +24,6 @@ using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1;
 using IBM.Watson.Discovery.V1.Model;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -940,7 +939,6 @@ namespace IBM.Watson.Tests
                 passages: true,
                 count: 10,
                 highlight: true,
-                loggingOptOut: true,
                 customData: customData
             );
 
@@ -1534,9 +1532,6 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(updateCredentialsResponse.CredentialDetails);
                     Assert.IsTrue(updateCredentialsResponse.CredentialDetails.EnterpriseId == "myEnterpriseIdUpdated");
                     Assert.IsTrue(updateCredentialsResponse.CredentialDetails.ClientId == "myClientIdUpdated");
-                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.ClientSecret == "myClentSecretUpdated");
-                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.PublicKeyId == "myPublicIdKeyUpdated");
-                    Assert.IsTrue(updateCredentialsResponse.CredentialDetails.Passphrase == "myPassphraseUpdated");
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
@@ -2064,5 +2059,51 @@ namespace IBM.Watson.Tests
                 yield return null;
         }
         #endregion
+
+        [UnityTest, Order(100)]
+        [Timeout(int.MaxValue)]
+        public IEnumerator DeleteUnityCollections()
+        {
+            ListCollectionsResponse listCollectionsResponse = null;
+            service.ListCollections(
+                callback: (DetailedResponse<ListCollectionsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollections result: {0}", customResponseData["json"].ToString());
+                    listCollectionsResponse = response.Result;
+                    Assert.IsNotNull(listCollectionsResponse);
+                    Assert.IsNotNull(listCollectionsResponse.Collections);
+                    Assert.IsTrue(listCollectionsResponse.Collections.Count > 0);
+                    Assert.IsNull(error);
+                },
+                environmentId: environmentId,
+                customData: customData
+            );
+
+            while (listCollectionsResponse == null)
+                yield return null;
+
+            List<string> collectionIdsToDelete = new List<string>();
+            int count = 0;
+            foreach(Collection collection in listCollectionsResponse.Collections)
+            {
+                if(!string.IsNullOrEmpty(collection.Description) && collection.Description.Contains("Unity"))
+                    collectionIdsToDelete.Add(collection.CollectionId);
+            }
+
+            foreach(string collectionId in collectionIdsToDelete)
+            service.DeleteCollection(
+                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", customResponseData["json"].ToString());
+                    count++;
+                },
+                environmentId: environmentId,
+                collectionId: collectionId,
+                customData: customData
+            );
+
+            while (count < collectionIdsToDelete.Count)
+                yield return null;
+        }
     }
 }
