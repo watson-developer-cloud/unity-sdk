@@ -223,11 +223,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 req.Parameters["tones"] = string.Join(",", tones.ToArray());
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
 
             req.OnResponse = OnToneResponse;
 

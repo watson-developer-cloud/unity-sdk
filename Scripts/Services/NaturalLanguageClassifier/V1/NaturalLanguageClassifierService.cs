@@ -348,8 +348,14 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["training_metadata"] = new RESTConnector.Form(metadata, metadata.Name, "application/json");
-            req.Forms["training_data"] = new RESTConnector.Form(trainingData, trainingData.Name, "text/csv");
+            if (metadata != null)
+            {
+                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, metadata.Name, "application/json");
+            }
+            if (trainingData != null)
+            {
+                req.Forms["training_data"] = new RESTConnector.Form(trainingData, trainingData.Name, "text/csv");
+            }
 
             req.OnResponse = OnCreateClassifierResponse;
 

@@ -194,7 +194,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+            if (imagesFile != null)
+            {
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+            }
             if (!string.IsNullOrEmpty(url))
             {
                 req.Forms["url"] = new RESTConnector.Form(url);
@@ -324,7 +327,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+            if (imagesFile != null)
+            {
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+            }
             if (!string.IsNullOrEmpty(url))
             {
                 req.Forms["url"] = new RESTConnector.Form(url);
@@ -453,7 +459,10 @@ namespace IBM.Watson.VisualRecognition.V3
                     req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
                 }
             }
-            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+            if (negativeExamples != null)
+            {
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+            }
 
             req.OnResponse = OnCreateClassifierResponse;
 
@@ -823,7 +832,10 @@ namespace IBM.Watson.VisualRecognition.V3
                     req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
                 }
             }
-            req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+            if (negativeExamples != null)
+            {
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+            }
 
             req.OnResponse = OnUpdateClassifierResponse;
 

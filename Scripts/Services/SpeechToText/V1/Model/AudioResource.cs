@@ -66,7 +66,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// The total seconds of audio in the audio resource. The value is always a whole number.
         /// </summary>
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
-        public double? Duration { get; set; }
+        public long? Duration { get; set; }
         /// <summary>
         /// **For an archive-type resource,** the user-specified name of the resource.
         ///

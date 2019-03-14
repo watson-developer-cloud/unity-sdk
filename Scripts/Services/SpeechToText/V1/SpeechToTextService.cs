@@ -581,11 +581,9 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["redaction"] = (bool)redaction ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = audio;
 
             req.OnResponse = OnRecognizeResponse;
 
@@ -1171,11 +1169,9 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["redaction"] = (bool)redaction ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = audio;
 
             req.OnResponse = OnCreateJobResponse;
 
@@ -2348,7 +2344,10 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
+            if (corpusFile != null)
+            {
+                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
+            }
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
@@ -3372,11 +3371,9 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = Encoding.UTF8.GetBytes(grammarFile);
 
             req.OnResponse = OnAddGrammarResponse;
 
@@ -4585,11 +4582,9 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = audioResource;
 
             req.OnResponse = OnAddAudioResponse;
 

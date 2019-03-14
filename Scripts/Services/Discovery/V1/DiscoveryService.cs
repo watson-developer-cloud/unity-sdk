@@ -1238,7 +1238,10 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Forms["configuration"] = new RESTConnector.Form(configuration);
             }
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            }
             if (!string.IsNullOrEmpty(metadata))
             {
                 req.Forms["metadata"] = new RESTConnector.Form(metadata);
@@ -2002,7 +2005,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
+            if (stopwordFile != null)
+            {
+                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
+            }
 
             req.OnResponse = OnCreateStopwordListResponse;
 
@@ -2742,7 +2748,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            }
             if (!string.IsNullOrEmpty(metadata))
             {
                 req.Forms["metadata"] = new RESTConnector.Form(metadata);
@@ -3031,7 +3040,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+            }
             if (!string.IsNullOrEmpty(metadata))
             {
                 req.Forms["metadata"] = new RESTConnector.Form(metadata);

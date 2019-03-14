@@ -250,11 +250,9 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Parameters["consumption_preferences"] = (bool)consumptionPreferences ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileResponse;
 
@@ -423,11 +421,9 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Parameters["consumption_preferences"] = (bool)consumptionPreferences ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "text/csv";
 
-            JObject bodyObject = new JObject();
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileAsCsvResponse;
 
