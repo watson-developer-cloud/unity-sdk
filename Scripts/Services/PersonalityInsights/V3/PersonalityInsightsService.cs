@@ -367,15 +367,15 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="System.IO.FileStream" />System.IO.FileStream</returns>
-        public bool ProfileAsCsv(Callback<System.IO.FileStream> callback, Content content, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
+        /// <returns><see cref="System.IO.MemoryStream" />System.IO.MemoryStream</returns>
+        public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, Content content, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ProfileAsCsv`");
             if (content == null)
                 throw new ArgumentNullException("`content` is required for `ProfileAsCsv`");
 
-            RequestObject<System.IO.FileStream> req = new RequestObject<System.IO.FileStream>
+            RequestObject<System.IO.MemoryStream> req = new RequestObject<System.IO.MemoryStream>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -438,35 +438,18 @@ namespace IBM.Watson.PersonalityInsights.V3
 
         private void OnProfileAsCsvResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<System.IO.FileStream> response = new DetailedResponse<System.IO.FileStream>();
-            Dictionary<string, object> customData = ((RequestObject<System.IO.FileStream>)req).CustomData;
+            DetailedResponse<System.IO.MemoryStream> response = new DetailedResponse<System.IO.MemoryStream>();
+            Dictionary<string, object> customData = ((RequestObject<System.IO.MemoryStream>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
             }
             response.StatusCode = resp.HttpResponseCode;
 
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<System.IO.FileStream>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error("PersonalityInsightsService.OnProfileAsCsvResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
+            response.Result = new System.IO.MemoryStream(resp.Data);
 
-            if (((RequestObject<System.IO.FileStream>)req).Callback != null)
-                ((RequestObject<System.IO.FileStream>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<System.IO.MemoryStream>)req).Callback != null)
+                ((RequestObject<System.IO.MemoryStream>)req).Callback(response, resp.Error, customData);
         }
     }
 }

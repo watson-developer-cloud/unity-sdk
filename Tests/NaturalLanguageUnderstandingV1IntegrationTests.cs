@@ -99,26 +99,27 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region DeleteModel
+        //  Skipping since we cannot create a model using the api.
         //[UnityTest, Order(1)]
-        public IEnumerator TestDeleteModel()
-        {
-            Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Attempting to DeleteModel...");
-            DeleteModelResults deleteModelResponse = null;
-            service.DeleteModel(
-                callback: (DetailedResponse<DeleteModelResults> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteModel result: {0}", customResponseData["json"].ToString());
-                    deleteModelResponse = response.Result;
-                    Assert.IsNotNull(deleteModelResponse);
-                    Assert.IsNull(error);
-                },
-                modelId: modelId,
-                customData: customData
-            );
+        //public IEnumerator TestDeleteModel()
+        //{
+        //    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Attempting to DeleteModel...");
+        //    DeleteModelResults deleteModelResponse = null;
+        //    service.DeleteModel(
+        //        callback: (DetailedResponse<DeleteModelResults> response, IBMError error, Dictionary<string, object> customResponseData) =>
+        //        {
+        //            Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteModel result: {0}", customResponseData["json"].ToString());
+        //            deleteModelResponse = response.Result;
+        //            Assert.IsNotNull(deleteModelResponse);
+        //            Assert.IsNull(error);
+        //        },
+        //        modelId: modelId,
+        //        customData: customData
+        //    );
 
-            while (deleteModelResponse == null)
-                yield return null;
-        }
+        //    while (deleteModelResponse == null)
+        //        yield return null;
+        //}
         #endregion
 
         #region ListModels
