@@ -146,7 +146,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "Classify"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "Classify"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -242,7 +242,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ClassifyCollection"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ClassifyCollection"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -342,7 +342,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "CreateClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "CreateClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -432,7 +432,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "DeleteClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "DeleteClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -515,7 +515,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "GetClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "GetClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -595,7 +595,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ListClassifiers"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural_language_classifier", "V1", "ListClassifiers"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

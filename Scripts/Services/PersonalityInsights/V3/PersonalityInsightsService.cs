@@ -220,7 +220,7 @@ namespace IBM.Watson.PersonalityInsights.V3
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "Profile"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "Profile"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -391,7 +391,7 @@ namespace IBM.Watson.PersonalityInsights.V3
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "ProfileAsCsv"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("personality_insights", "V3", "ProfileAsCsv"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

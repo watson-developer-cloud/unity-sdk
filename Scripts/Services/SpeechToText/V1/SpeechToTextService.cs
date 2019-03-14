@@ -146,7 +146,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -229,7 +229,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -500,7 +500,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "Recognize"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "Recognize"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -674,7 +674,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CheckJob"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CheckJob"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -762,7 +762,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CheckJobs"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CheckJobs"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1072,7 +1072,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateJob"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateJob"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1256,7 +1256,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteJob"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteJob"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1373,7 +1373,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "RegisterCallback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "RegisterCallback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1469,7 +1469,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UnregisterCallback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UnregisterCallback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1583,7 +1583,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1686,7 +1686,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1775,7 +1775,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1864,7 +1864,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListLanguageModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListLanguageModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1959,7 +1959,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ResetLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ResetLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2087,7 +2087,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "TrainLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "TrainLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2194,7 +2194,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UpgradeLanguageModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UpgradeLanguageModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2338,7 +2338,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddCorpus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddCorpus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2443,7 +2443,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteCorpus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteCorpus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2536,7 +2536,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetCorpus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetCorpus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2626,7 +2626,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListCorpora"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListCorpora"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2764,7 +2764,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddWord"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddWord"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2908,7 +2908,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddWords"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddWords"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3013,7 +3013,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteWord"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteWord"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3107,7 +3107,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetWord"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetWord"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3211,7 +3211,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListWords"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListWords"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3358,7 +3358,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddGrammar"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddGrammar"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3465,7 +3465,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteGrammar"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteGrammar"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3558,7 +3558,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetGrammar"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetGrammar"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3648,7 +3648,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListGrammars"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListGrammars"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3748,7 +3748,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "CreateAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3849,7 +3849,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3938,7 +3938,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4027,7 +4027,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListAcousticModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListAcousticModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4122,7 +4122,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ResetAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ResetAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4246,7 +4246,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "TrainAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "TrainAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4365,7 +4365,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UpgradeAcousticModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "UpgradeAcousticModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4565,7 +4565,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddAudio"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "AddAudio"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4675,7 +4675,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteAudio"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteAudio"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4781,7 +4781,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetAudio"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "GetAudio"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4873,7 +4873,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListAudio"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "ListAudio"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4965,7 +4965,7 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteUserData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("speech_to_text", "V1", "DeleteUserData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

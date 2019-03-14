@@ -195,7 +195,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "Analyze"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "Analyze"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -304,7 +304,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "DeleteModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "DeleteModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -387,7 +387,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "ListModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("natural-language-understanding", "V1", "ListModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

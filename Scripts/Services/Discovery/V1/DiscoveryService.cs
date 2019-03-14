@@ -167,7 +167,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateEnvironment"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -260,7 +260,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteEnvironment"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -342,7 +342,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetEnvironment"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -424,7 +424,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListEnvironments"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListEnvironments"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -515,7 +515,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListFields"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListFields"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -608,7 +608,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateEnvironment"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -720,7 +720,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateConfiguration"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateConfiguration"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -827,7 +827,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteConfiguration"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteConfiguration"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -912,7 +912,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetConfiguration"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetConfiguration"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -997,7 +997,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListConfigurations"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListConfigurations"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1104,7 +1104,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateConfiguration"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateConfiguration"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1227,7 +1227,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "TestConfigurationInEnvironment"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "TestConfigurationInEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1338,7 +1338,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateCollection"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateCollection"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1436,7 +1436,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteCollection"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteCollection"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1521,7 +1521,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetCollection"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetCollection"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1608,7 +1608,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCollectionFields"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCollectionFields"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1693,7 +1693,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCollections"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCollections"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1786,7 +1786,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateCollection"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateCollection"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1901,7 +1901,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateExpansions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateExpansions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1998,7 +1998,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateStopwordList"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateStopwordList"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2093,7 +2093,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateTokenizationDictionary"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateTokenizationDictionary"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2188,7 +2188,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteExpansions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteExpansions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2276,7 +2276,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteStopwordList"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteStopwordList"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2363,7 +2363,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTokenizationDictionary"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTokenizationDictionary"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2450,7 +2450,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetStopwordListStatus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetStopwordListStatus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2537,7 +2537,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2625,7 +2625,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListExpansions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListExpansions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2741,7 +2741,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "AddDocument"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "AddDocument"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2841,7 +2841,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteDocument"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteDocument"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2933,7 +2933,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetDocumentStatus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetDocumentStatus"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3033,7 +3033,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateDocument"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateDocument"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3187,7 +3187,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "FederatedQuery"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "FederatedQuery"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3362,7 +3362,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "FederatedQueryNotices"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "FederatedQueryNotices"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3566,7 +3566,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "Query"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "Query"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3713,7 +3713,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryEntities"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryEntities"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3862,7 +3862,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryNotices"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryNotices"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4030,7 +4030,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryRelations"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryRelations"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4139,7 +4139,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "AddTrainingData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "AddTrainingData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4243,7 +4243,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateTrainingExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateTrainingExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4341,7 +4341,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteAllTrainingData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteAllTrainingData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4431,7 +4431,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTrainingData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTrainingData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4524,7 +4524,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTrainingExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteTrainingExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4614,7 +4614,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTrainingData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTrainingData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4707,7 +4707,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTrainingExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetTrainingExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4794,7 +4794,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListTrainingData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListTrainingData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4884,7 +4884,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListTrainingExamples"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListTrainingExamples"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4979,7 +4979,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateTrainingExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateTrainingExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5077,7 +5077,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteUserData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteUserData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5169,7 +5169,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateEvent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateEvent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5266,7 +5266,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsEventRate"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsEventRate"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5364,7 +5364,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQuery"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQuery"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5464,7 +5464,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryEvent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryEvent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5563,7 +5563,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryNoResults"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryNoResults"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5659,7 +5659,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryTokenEvent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetMetricsQueryTokenEvent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5758,7 +5758,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryLog"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "QueryLog"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5873,7 +5873,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5969,7 +5969,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6059,7 +6059,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6145,7 +6145,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6242,7 +6242,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "UpdateCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6336,7 +6336,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateGateway"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "CreateGateway"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6430,7 +6430,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteGateway"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "DeleteGateway"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6517,7 +6517,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetGateway"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "GetGateway"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -6601,7 +6601,7 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListGateways"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("discovery", "V1", "ListGateways"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

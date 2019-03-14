@@ -165,7 +165,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ConvertToHtml"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ConvertToHtml"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -263,7 +263,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ClassifyElements"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ClassifyElements"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -361,7 +361,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ExtractTables"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ExtractTables"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -465,7 +465,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "CompareDocuments"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "CompareDocuments"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -575,7 +575,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "AddFeedback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "AddFeedback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -672,7 +672,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "DeleteFeedback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "DeleteFeedback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -762,7 +762,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "GetFeedback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "GetFeedback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -885,7 +885,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ListFeedback"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ListFeedback"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1067,7 +1067,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "CreateBatch"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "CreateBatch"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1184,7 +1184,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "GetBatch"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "GetBatch"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1265,7 +1265,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ListBatches"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "ListBatches"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1357,7 +1357,7 @@ namespace IBM.Watson.CompareComply.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "UpdateBatch"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("compare-comply", "V1", "UpdateBatch"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
