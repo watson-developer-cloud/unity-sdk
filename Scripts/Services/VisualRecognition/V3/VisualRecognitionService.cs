@@ -214,10 +214,6 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 req.Forms["classifier_ids"] = new RESTConnector.Form(string.Join(", ", classifierIds.ToArray()));
             }
-            if (!string.IsNullOrEmpty(acceptLanguage))
-            {
-                req.Headers["Accept-Language"] = acceptLanguage;
-            }
 
             req.OnResponse = OnClassifyResponse;
 
@@ -334,10 +330,6 @@ namespace IBM.Watson.VisualRecognition.V3
             if (!string.IsNullOrEmpty(url))
             {
                 req.Forms["url"] = new RESTConnector.Form(url);
-            }
-            if (!string.IsNullOrEmpty(acceptLanguage))
-            {
-                req.Headers["Accept-Language"] = acceptLanguage;
             }
 
             req.OnResponse = OnDetectFacesResponse;

@@ -270,7 +270,6 @@ namespace IBM.Watson.LanguageTranslator.V3
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "text/plain";
             req.Headers["Accept"] = "application/json";
-
             req.Send = Encoding.UTF8.GetBytes(text);
 
             req.OnResponse = OnIdentifyResponse;

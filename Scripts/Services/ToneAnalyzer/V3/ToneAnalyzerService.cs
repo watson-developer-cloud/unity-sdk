@@ -203,18 +203,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(contentLanguage))
-            {
-                req.Headers["Content-Language"] = contentLanguage;
-            }
-            if (!string.IsNullOrEmpty(acceptLanguage))
-            {
-                req.Headers["Accept-Language"] = acceptLanguage;
-            }
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (sentences != null)
             {
                 req.Parameters["sentences"] = (bool)sentences ? "true" : "false";
@@ -225,6 +213,20 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentLanguage))
+            {
+                req.Headers["Content-Language"] = contentLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(acceptLanguage))
+            {
+                req.Headers["Accept-Language"] = acceptLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
 
             req.OnResponse = OnToneResponse;
@@ -331,16 +333,18 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
 
             req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
             if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
             }
+
             if (!string.IsNullOrEmpty(acceptLanguage))
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
 
             JObject bodyObject = new JObject();
             if (utterances != null && utterances.Count > 0)

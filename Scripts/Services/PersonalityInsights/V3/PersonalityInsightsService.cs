@@ -226,18 +226,6 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(contentLanguage))
-            {
-                req.Headers["Content-Language"] = contentLanguage;
-            }
-            if (!string.IsNullOrEmpty(acceptLanguage))
-            {
-                req.Headers["Accept-Language"] = acceptLanguage;
-            }
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (rawScores != null)
             {
                 req.Parameters["raw_scores"] = (bool)rawScores ? "true" : "false";
@@ -252,6 +240,20 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentLanguage))
+            {
+                req.Headers["Content-Language"] = contentLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(acceptLanguage))
+            {
+                req.Headers["Accept-Language"] = acceptLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileResponse;
@@ -397,18 +399,6 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(contentLanguage))
-            {
-                req.Headers["Content-Language"] = contentLanguage;
-            }
-            if (!string.IsNullOrEmpty(acceptLanguage))
-            {
-                req.Headers["Accept-Language"] = acceptLanguage;
-            }
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (rawScores != null)
             {
                 req.Parameters["raw_scores"] = (bool)rawScores ? "true" : "false";
@@ -423,6 +413,20 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Accept"] = "text/csv";
 
+            if (!string.IsNullOrEmpty(contentLanguage))
+            {
+                req.Headers["Content-Language"] = contentLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(acceptLanguage))
+            {
+                req.Headers["Accept-Language"] = acceptLanguage;
+            }
+
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileAsCsvResponse;

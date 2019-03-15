@@ -3193,12 +3193,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
             if (loggingOptOut != null)
             {
                 req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
 
             JObject bodyObject = new JObject();
             if (!string.IsNullOrEmpty(filter))
@@ -3572,12 +3573,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
             if (loggingOptOut != null)
             {
                 req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
 
             JObject bodyObject = new JObject();
             if (!string.IsNullOrEmpty(filter))

@@ -505,10 +505,6 @@ namespace IBM.Watson.SpeechToText.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -583,6 +579,10 @@ namespace IBM.Watson.SpeechToText.V1
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = audio;
 
             req.OnResponse = OnRecognizeResponse;
@@ -1077,10 +1077,6 @@ namespace IBM.Watson.SpeechToText.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -1171,6 +1167,10 @@ namespace IBM.Watson.SpeechToText.V1
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = audio;
 
             req.OnResponse = OnCreateJobResponse;
@@ -3363,16 +3363,16 @@ namespace IBM.Watson.SpeechToText.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = Encoding.UTF8.GetBytes(grammarFile);
 
             req.OnResponse = OnAddGrammarResponse;
@@ -4570,20 +4570,21 @@ namespace IBM.Watson.SpeechToText.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            if (!string.IsNullOrEmpty(containedContentType))
-            {
-                req.Headers["Contained-Content-Type"] = containedContentType;
-            }
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(containedContentType))
+            {
+                req.Headers["Contained-Content-Type"] = containedContentType;
+            }
+
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
             req.Send = audioResource;
 
             req.OnResponse = OnAddAudioResponse;
