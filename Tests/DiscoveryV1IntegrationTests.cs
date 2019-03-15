@@ -66,7 +66,6 @@ namespace IBM.Watson.Tests
 
         private bool isTokenizationDictionaryReady = false;
         private bool isStopwordsListReady = false;
-        private bool isCollectionReady = false;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -2026,37 +2025,6 @@ namespace IBM.Watson.Tests
             {
                 Runnable.Run(CheckStopwordsListStatus());
             }
-        }
-        #endregion
-
-        #region CheckCollectionStatus
-        private IEnumerator CheckCollectionStatus(string environmentId, string collectionId)
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Checking collection status in 30 sec...");
-            yield return new WaitForSeconds(30f);
-
-            Collection getCollectionResponse = null;
-            service.GetCollection(
-                callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCollection result: {0}", customResponseData["json"].ToString());
-                    if (getCollectionResponse.Status == Collection.StatusValue.ACTIVE)
-                    {
-                        isCollectionReady = true;
-                    }
-                    else
-                    {
-                        Runnable.Run(CheckCollectionStatus(environmentId, collectionId));
-                    }
-                    getCollectionResponse = response.Result;
-                },
-                environmentId: environmentId,
-                collectionId: this.collectionId,
-                customData: customData
-            );
-
-            while (getCollectionResponse == null)
-                yield return null;
         }
         #endregion
 

@@ -412,10 +412,6 @@ namespace IBM.Watson.TextToSpeech.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            if (!string.IsNullOrEmpty(accept))
-            {
-                req.Headers["Accept"] = accept;
-            }
             if (!string.IsNullOrEmpty(voice))
             {
                 req.Parameters["voice"] = voice;
@@ -426,6 +422,11 @@ namespace IBM.Watson.TextToSpeech.V1
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "audio/basic";
+
+            if (!string.IsNullOrEmpty(accept))
+            {
+                req.Headers["Accept"] = accept;
+            }
 
             JObject bodyObject = new JObject();
             if (!string.IsNullOrEmpty(text))
