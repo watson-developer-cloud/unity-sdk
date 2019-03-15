@@ -165,7 +165,7 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "CreateSession"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "CreateSession"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -256,7 +256,7 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "DeleteSession"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "DeleteSession"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -353,7 +353,7 @@ namespace IBM.Watson.Assistant.V2
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V2", "Message"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "Message"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

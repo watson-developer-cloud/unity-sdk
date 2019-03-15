@@ -187,7 +187,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "Classify"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "Classify"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -316,7 +316,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DetectFaces"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DetectFaces"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -432,7 +432,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "CreateClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "CreateClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -531,7 +531,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DeleteClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -615,7 +615,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "GetClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "GetClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -696,7 +696,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "ListClassifiers"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -809,7 +809,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "UpdateClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "UpdateClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -907,7 +907,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "GetCoreMlModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "GetCoreMlModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -979,7 +979,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("watson_vision_combined", "V3", "DeleteUserData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteUserData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

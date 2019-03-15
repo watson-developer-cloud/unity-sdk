@@ -174,7 +174,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "Message"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "Message"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -295,7 +295,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -406,7 +406,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -501,7 +501,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -605,7 +605,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListWorkspaces"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListWorkspaces"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -736,7 +736,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -860,7 +860,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -960,7 +960,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1055,7 +1055,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1162,7 +1162,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListIntents"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListIntents"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1283,7 +1283,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1391,7 +1391,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1492,7 +1492,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1586,7 +1586,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1688,7 +1688,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListExamples"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListExamples"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1806,7 +1806,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1909,7 +1909,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2006,7 +2006,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2098,7 +2098,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2198,7 +2198,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListCounterexamples"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListCounterexamples"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2313,7 +2313,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2419,7 +2419,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2523,7 +2523,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2618,7 +2618,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2725,7 +2725,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListEntities"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListEntities"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2848,7 +2848,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2958,7 +2958,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListMentions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListMentions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3073,7 +3073,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3180,7 +3180,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3277,7 +3277,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3386,7 +3386,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListValues"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListValues"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3520,7 +3520,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3633,7 +3633,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3735,7 +3735,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3832,7 +3832,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3937,7 +3937,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListSynonyms"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListSynonyms"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4056,7 +4056,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4185,7 +4185,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4315,7 +4315,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4406,7 +4406,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4505,7 +4505,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListDialogNodes"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListDialogNodes"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4649,7 +4649,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4786,7 +4786,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListAllLogs"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListAllLogs"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4899,7 +4899,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListLogs"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListLogs"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -5004,7 +5004,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteUserData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteUserData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

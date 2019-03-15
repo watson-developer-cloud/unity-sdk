@@ -165,7 +165,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "Translate"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "Translate"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -262,7 +262,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "Identify"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "Identify"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -347,7 +347,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "ListIdentifiableLanguages"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -455,7 +455,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "CreateModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "CreateModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -556,7 +556,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "DeleteModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "DeleteModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -642,7 +642,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "GetModel"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "GetModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -729,7 +729,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("language_translator", "V3", "ListModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }

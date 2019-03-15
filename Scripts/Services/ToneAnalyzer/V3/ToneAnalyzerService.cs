@@ -197,7 +197,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("tone_analyzer", "V3", "Tone"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("tone_analyzer", "V3", "Tone"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -327,7 +327,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 }
             }
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetDefaultheaders("tone_analyzer", "V3", "ToneChat"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("tone_analyzer", "V3", "ToneChat"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
