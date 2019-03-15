@@ -63,8 +63,6 @@ namespace IBM.Watson.Tests
         private bool isAcousticModelReady = false;
         private bool isAudioReady = false;
 
-        private bool isAcousticResourceLoaded = false;
-
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
@@ -1480,7 +1478,6 @@ namespace IBM.Watson.Tests
 
                 Log.Debug("SpeechToTextServiceV1IntegrationTests", "acoustic resource downloaded");
                 acousticResourceData = unityWebRequest.downloadHandler.data;
-                isAcousticResourceLoaded = true;
             }
         }
         #endregion
