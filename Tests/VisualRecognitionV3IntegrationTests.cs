@@ -15,6 +15,7 @@
 *
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -319,7 +320,7 @@ namespace IBM.Watson.Tests
                 yield return null;
         }
         #endregion
-        
+
         #region DeleteClassifier
         [UnityTest, Order(98)]
         public IEnumerator TestDeleteClassifier()
@@ -374,23 +375,30 @@ namespace IBM.Watson.Tests
 
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetClassifier...");
             Classifier getClassifierResponse = null;
-            service.GetClassifier(
-                callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getClassifierResponse = response.Result;
-                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CheckClassifierStatus: {0}", getClassifierResponse.Status);
-                    if (getClassifierResponse.Status == Classifier.StatusValue.READY || getClassifierResponse.Status == Classifier.StatusValue.FAILED)
+            try
+            {
+                service.GetClassifier(
+                    callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
                     {
-                        isClassifierReady = true;
-                    }
-                    else
-                    {
-                        Runnable.Run(CheckClassifierStatus());
-                    }
-                },
-                classifierId: classifierId,
-                customData: customData
-            );
+                        getClassifierResponse = response.Result;
+                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CheckClassifierStatus: {0}", getClassifierResponse.Status);
+                        if (getClassifierResponse.Status == Classifier.StatusValue.READY || getClassifierResponse.Status == Classifier.StatusValue.FAILED)
+                        {
+                            isClassifierReady = true;
+                        }
+                        else
+                        {
+                            Runnable.Run(CheckClassifierStatus());
+                        }
+                    },
+                    classifierId: classifierId,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckClassifierStatus());
+            }
 
             while (getClassifierResponse == null)
                 yield return null;
