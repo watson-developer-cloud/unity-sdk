@@ -1318,23 +1318,30 @@ namespace IBM.Watson.Tests
 
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to GetLanguageModel...");
             LanguageModel getLanguageModelResponse = null;
-            service.GetLanguageModel(
-                callback: (DetailedResponse<LanguageModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getLanguageModelResponse = response.Result;
-                    Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckLanguageModelStatus: {0}", getLanguageModelResponse.Status);
-                    if (getLanguageModelResponse.Status == LanguageModel.StatusValue.TRAINING)
+            try
+            {
+                service.GetLanguageModel(
+                    callback: (DetailedResponse<LanguageModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
                     {
-                        Runnable.Run(CheckLanguageModelStatus());
-                    }
-                    else
-                    {
-                        isLanguageModelReady = true;
-                    }
-                },
-                customizationId: customizationId,
-                customData: customData
-            );
+                        getLanguageModelResponse = response.Result;
+                        Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckLanguageModelStatus: {0}", getLanguageModelResponse.Status);
+                        if (getLanguageModelResponse.Status == LanguageModel.StatusValue.TRAINING)
+                        {
+                            Runnable.Run(CheckLanguageModelStatus());
+                        }
+                        else
+                        {
+                            isLanguageModelReady = true;
+                        }
+                    },
+                    customizationId: customizationId,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckLanguageModelStatus());
+            }
 
             while (getLanguageModelResponse == null)
                 yield return null;
@@ -1349,24 +1356,31 @@ namespace IBM.Watson.Tests
 
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to GetCorpus...");
             Corpus getCorpusResponse = null;
-            service.GetCorpus(
-                callback: (DetailedResponse<Corpus> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getCorpusResponse = response.Result;
-                    Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckCorpusStatus: {0}", getCorpusResponse.Status);
-                    if (getCorpusResponse.Status != Corpus.StatusValue.ANALYZED)
+            try
+            {
+                service.GetCorpus(
+                    callback: (DetailedResponse<Corpus> response, IBMError error, Dictionary<string, object> customResponseData) =>
                     {
-                        Runnable.Run(CheckCorpusStatus());
-                    }
-                    else
-                    {
-                        isCorpusReady = true;
-                    }
-                },
-                customizationId: customizationId,
-                corpusName: corpusName,
-                customData: customData
-            );
+                        getCorpusResponse = response.Result;
+                        Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckCorpusStatus: {0}", getCorpusResponse.Status);
+                        if (getCorpusResponse.Status != Corpus.StatusValue.ANALYZED)
+                        {
+                            Runnable.Run(CheckCorpusStatus());
+                        }
+                        else
+                        {
+                            isCorpusReady = true;
+                        }
+                    },
+                    customizationId: customizationId,
+                    corpusName: corpusName,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckCorpusStatus());
+            }
 
             while (getCorpusResponse == null)
                 yield return null;
@@ -1381,23 +1395,30 @@ namespace IBM.Watson.Tests
 
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to GetGrammar...");
             Grammar getGrammarResponse = null;
-            service.GetGrammar(
-                callback: (DetailedResponse<Grammar> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getGrammarResponse = response.Result;
-                    if (getGrammarResponse.Status != Grammar.StatusValue.ANALYZED)
+            try
+            {
+                service.GetGrammar(
+                    callback: (DetailedResponse<Grammar> response, IBMError error, Dictionary<string, object> customResponseData) =>
                     {
-                        Runnable.Run(CheckGrammarsStatus());
-                    }
-                    else
-                    {
-                        isGrammarsReady = true;
-                    }
-                },
-                customizationId: customizationId,
-                grammarName: grammarName,
-                customData: customData
-            );
+                        getGrammarResponse = response.Result;
+                        if (getGrammarResponse.Status != Grammar.StatusValue.ANALYZED)
+                        {
+                            Runnable.Run(CheckGrammarsStatus());
+                        }
+                        else
+                        {
+                            isGrammarsReady = true;
+                        }
+                    },
+                    customizationId: customizationId,
+                    grammarName: grammarName,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckGrammarsStatus());
+            }
 
             while (getGrammarResponse == null)
                 yield return null;
@@ -1412,23 +1433,30 @@ namespace IBM.Watson.Tests
 
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to GetAcousticModel...");
             AcousticModel getAcousticModelResponse = null;
-            service.GetAcousticModel(
-                callback: (DetailedResponse<AcousticModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getAcousticModelResponse = response.Result;
-                    Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckAcousticModelStatus: {0}", getAcousticModelResponse.Status);
-                    if (getAcousticModelResponse.Status != AcousticModel.StatusValue.READY)
+            try
+            {
+                service.GetAcousticModel(
+                    callback: (DetailedResponse<AcousticModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
                     {
-                        Runnable.Run(CheckAcousticModelStatus());
-                    }
-                    else
-                    {
-                        isAcousticModelReady = true;
-                    }
-                },
-                customizationId: acousticModelCustomizationId,
-                customData: customData
-            );
+                        getAcousticModelResponse = response.Result;
+                        Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckAcousticModelStatus: {0}", getAcousticModelResponse.Status);
+                        if (getAcousticModelResponse.Status != AcousticModel.StatusValue.READY)
+                        {
+                            Runnable.Run(CheckAcousticModelStatus());
+                        }
+                        else
+                        {
+                            isAcousticModelReady = true;
+                        }
+                    },
+                    customizationId: acousticModelCustomizationId,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckAcousticModelStatus());
+            }
 
             while (getAcousticModelResponse == null)
                 yield return null;
@@ -1443,25 +1471,32 @@ namespace IBM.Watson.Tests
 
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to GetAudio...");
             AudioListing getAudioResponse = null;
-            service.GetAudio(
-                callback: (DetailedResponse<AudioListing> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    getAudioResponse = response.Result;
-                    Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckAudioStatus: {0}", getAudioResponse.Status);
+            try
+            {
+                service.GetAudio(
+                    callback: (DetailedResponse<AudioListing> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    {
+                        getAudioResponse = response.Result;
+                        Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckAudioStatus: {0}", getAudioResponse.Status);
 
-                    if (getAudioResponse.Status != AudioListing.StatusValue.OK)
-                    {
-                        Runnable.Run(CheckAudioStatus());
-                    }
-                    else
-                    {
-                        isAudioReady = true;
-                    }
-                },
-                customizationId: acousticModelCustomizationId,
-                audioName: acousticResourceName,
-                customData: customData
-            );
+                        if (getAudioResponse.Status != AudioListing.StatusValue.OK)
+                        {
+                            Runnable.Run(CheckAudioStatus());
+                        }
+                        else
+                        {
+                            isAudioReady = true;
+                        }
+                    },
+                    customizationId: acousticModelCustomizationId,
+                    audioName: acousticResourceName,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckAudioStatus());
+            }
 
             while (getAudioResponse == null)
                 yield return null;

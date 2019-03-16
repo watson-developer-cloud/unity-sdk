@@ -1535,7 +1535,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 credentialId: credentialId,
-                sourceType: "box", 
+                sourceType: "box",
                 credentialDetails: credentialDetails,
                 customData: customData
             );
@@ -1973,7 +1973,9 @@ namespace IBM.Watson.Tests
             yield return new WaitForSeconds(30f);
 
             TokenDictStatusResponse getTokenizationDictionaryStatusResponse = null;
-            service.GetTokenizationDictionaryStatus(
+            try
+            {
+                service.GetTokenizationDictionaryStatus(
                 callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", customResponseData["json"].ToString());
@@ -1991,6 +1993,11 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 customData: customData
             );
+            }
+            catch
+            {
+                Runnable.Run(CheckTokenizationDictionaryStatus(environmentId, collectionId));
+            }
 
             while (getTokenizationDictionaryStatusResponse == null)
                 yield return null;
@@ -2003,12 +2010,19 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Checking stopword list status in 30 sec...");
             yield return new WaitForSeconds(30f);
 
-            service.GetStopwordListStatus(
-                callback: OnCheckStopwordsListStatus,
-                environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
-            );
+            try
+            {
+                service.GetStopwordListStatus(
+                    callback: OnCheckStopwordsListStatus,
+                    environmentId: environmentId,
+                    collectionId: collectionId,
+                    customData: customData
+                );
+            }
+            catch
+            {
+                Runnable.Run(CheckStopwordsListStatus());
+            }
         }
 
         private void OnCheckStopwordsListStatus(DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData)
@@ -2052,23 +2066,23 @@ namespace IBM.Watson.Tests
 
             List<string> collectionIdsToDelete = new List<string>();
             int count = 0;
-            foreach(Collection collection in listCollectionsResponse.Collections)
+            foreach (Collection collection in listCollectionsResponse.Collections)
             {
-                if(!string.IsNullOrEmpty(collection.Description) && collection.Description.Contains("Unity"))
+                if (!string.IsNullOrEmpty(collection.Description) && collection.Description.Contains("Unity"))
                     collectionIdsToDelete.Add(collection.CollectionId);
             }
 
-            foreach(string collectionId in collectionIdsToDelete)
-            service.DeleteCollection(
-                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", customResponseData["json"].ToString());
-                    count++;
-                },
-                environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
-            );
+            foreach (string collectionId in collectionIdsToDelete)
+                service.DeleteCollection(
+                    callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    {
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", customResponseData["json"].ToString());
+                        count++;
+                    },
+                    environmentId: environmentId,
+                    collectionId: collectionId,
+                    customData: customData
+                );
 
             while (count < collectionIdsToDelete.Count)
                 yield return null;
