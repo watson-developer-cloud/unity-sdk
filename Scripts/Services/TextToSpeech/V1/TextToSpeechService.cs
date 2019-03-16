@@ -383,15 +383,15 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="System.IO.MemoryStream" />System.IO.MemoryStream</returns>
-        public bool Synthesize(Callback<System.IO.MemoryStream> callback, string text, Dictionary<string, object> customData = null, string voice = null, string customizationId = null, string accept = null)
+        /// <returns><see cref="byte[]" />byte[]</returns>
+        public bool Synthesize(Callback<byte[]> callback, string text, Dictionary<string, object> customData = null, string voice = null, string customizationId = null, string accept = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Synthesize`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `Synthesize`");
 
-            RequestObject<System.IO.MemoryStream> req = new RequestObject<System.IO.MemoryStream>
+            RequestObject<byte[]> req = new RequestObject<byte[]>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -446,18 +446,18 @@ namespace IBM.Watson.TextToSpeech.V1
 
         private void OnSynthesizeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<System.IO.MemoryStream> response = new DetailedResponse<System.IO.MemoryStream>();
-            Dictionary<string, object> customData = ((RequestObject<System.IO.MemoryStream>)req).CustomData;
+            DetailedResponse<byte[]> response = new DetailedResponse<byte[]>();
+            Dictionary<string, object> customData = ((RequestObject<byte[]>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
             }
             response.StatusCode = resp.HttpResponseCode;
 
-            response.Result = new System.IO.MemoryStream(resp.Data);
+            response.Result = resp.Data;
 
-            if (((RequestObject<System.IO.MemoryStream>)req).Callback != null)
-                ((RequestObject<System.IO.MemoryStream>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<byte[]>)req).Callback != null)
+                ((RequestObject<byte[]>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// Get pronunciation.

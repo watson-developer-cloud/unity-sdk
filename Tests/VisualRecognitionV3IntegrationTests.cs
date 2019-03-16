@@ -296,9 +296,9 @@ namespace IBM.Watson.Tests
         public IEnumerator TestGetCoreMlModel()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetCoreMlModel...");
-            System.IO.MemoryStream getCoreMlModelResponse = null;
+            byte[] getCoreMlModelResponse = null;
             service.GetCoreMlModel(
-                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<byte[]> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     getCoreMlModelResponse = response.Result;
                     Assert.IsNotNull(getCoreMlModelResponse);
@@ -307,9 +307,8 @@ namespace IBM.Watson.Tests
                     //  Save file
                     using (FileStream fs = File.Create(Application.dataPath + "/myModel.mlmodel"))
                     {
-                        getCoreMlModelResponse.WriteTo(fs);
+                        fs.Write(getCoreMlModelResponse, 0, getCoreMlModelResponse.Length);
                         fs.Close();
-                        getCoreMlModelResponse.Close();
                     }
                 },
                 classifierId: classifierId,

@@ -129,14 +129,14 @@ namespace IBM.Watson.Tests
                     profileAsCsvResponse = response.Result;
                     Assert.IsNotNull(profileAsCsvResponse);
                     Assert.IsNull(error);
-                    
-                    ////  Save file
-                    //using (FileStream fs = File.Create(Application.dataPath + "/personality-profile.csv"))
-                    //{
-                    //    profileAsCsvResponse.WriteTo(fs);
-                    //    fs.Close();
-                    //    profileAsCsvResponse.Close();
-                    //}
+
+                    //  Save file
+                    using (FileStream fs = File.Create(Application.dataPath + "/personality-profile.csv"))
+                    {
+                        profileAsCsvResponse.WriteTo(fs);
+                        fs.Close();
+                        profileAsCsvResponse.Close();
+                    }
                 },
                 content: content,
                 contentLanguage: "en",

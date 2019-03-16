@@ -124,15 +124,15 @@ namespace IBM.Watson.Tests
         public IEnumerator TestSynthesize()
         {
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to Synthesize...");
-            System.IO.MemoryStream synthesizeResponse = null;
+            byte[] synthesizeResponse = null;
             AudioClip clip = null;
             service.Synthesize(
-                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<byte[]> response, IBMError error, Dictionary<string, object> customResponseData) =>
                 {
                     synthesizeResponse = response.Result;
                     Assert.IsNotNull(synthesizeResponse);
                     Assert.IsNull(error);
-                    clip = WaveFile.ParseWAV("myClip", synthesizeResponse.ToArray());
+                    clip = WaveFile.ParseWAV("myClip", synthesizeResponse);
                     PlayClip(clip);
 
                 },
