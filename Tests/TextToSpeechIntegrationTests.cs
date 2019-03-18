@@ -78,9 +78,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetVoice...");
             Voice getVoiceResponse = null;
             service.GetVoice(
-                callback: (DetailedResponse<Voice> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Voice> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetVoice result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetVoice result: {0}", response.Response);
                     getVoiceResponse = response.Result;
                     Assert.IsNotNull(getVoiceResponse);
                     Assert.IsTrue(getVoiceResponse.Name == allisionVoice);
@@ -102,9 +102,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListVoices...");
             Voices listVoicesResponse = null;
             service.ListVoices(
-                callback: (DetailedResponse<Voices> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Voices> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListVoices result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListVoices result: {0}", response.Response);
                     listVoicesResponse = response.Result;
                     Assert.IsNotNull(listVoicesResponse);
                     Assert.IsNotNull(listVoicesResponse._Voices);
@@ -127,7 +127,7 @@ namespace IBM.Watson.Tests
             byte[] synthesizeResponse = null;
             AudioClip clip = null;
             service.Synthesize(
-                callback: (DetailedResponse<byte[]> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<byte[]> response, IBMError error) =>
                 {
                     synthesizeResponse = response.Result;
                     Assert.IsNotNull(synthesizeResponse);
@@ -156,9 +156,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetPronunciation...");
             Pronunciation getPronunciationResponse = null;
             service.GetPronunciation(
-                callback: (DetailedResponse<Pronunciation> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Pronunciation> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetPronunciation result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetPronunciation result: {0}", response.Response);
                     getPronunciationResponse = response.Result;
                     Assert.IsNotNull(getPronunciationResponse);
                     Assert.IsNotNull(getPronunciationResponse._Pronunciation);
@@ -182,9 +182,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to CreateVoiceModel...");
             VoiceModel createVoiceModelResponse = null;
             service.CreateVoiceModel(
-                callback: (DetailedResponse<VoiceModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<VoiceModel> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateVoiceModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateVoiceModel result: {0}", response.Response);
                     createVoiceModelResponse = response.Result;
                     customizationId = createVoiceModelResponse.CustomizationId;
                     Assert.IsNotNull(createVoiceModelResponse);
@@ -210,9 +210,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetVoiceModel...");
             VoiceModel getVoiceModelResponse = null;
             service.GetVoiceModel(
-                callback: (DetailedResponse<VoiceModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<VoiceModel> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetVoiceModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetVoiceModel result: {0}", response.Response);
                     getVoiceModelResponse = response.Result;
                     Assert.IsNotNull(getVoiceModelResponse);
                     Assert.IsTrue(getVoiceModelResponse.CustomizationId == customizationId);
@@ -237,9 +237,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListVoiceModels...");
             VoiceModels listVoiceModelsResponse = null;
             service.ListVoiceModels(
-                callback: (DetailedResponse<VoiceModels> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<VoiceModels> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListVoiceModels result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListVoiceModels result: {0}", response.Response);
                     listVoiceModelsResponse = response.Result;
                     Assert.IsNotNull(listVoiceModelsResponse);
                     Assert.IsNotNull(listVoiceModelsResponse.Customizations);
@@ -262,9 +262,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to UpdateVoiceModel...");
             object updateVoiceModelResponse = null;
             service.UpdateVoiceModel(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "UpdateVoiceModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "UpdateVoiceModel result: {0}", response.Response);
                     updateVoiceModelResponse = response.Result;
                     Assert.IsNotNull(updateVoiceModelResponse);
                     Assert.IsNull(error);
@@ -287,9 +287,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to AddWord...");
             bool isComplete = false;
             service.AddWord(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddWord result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddWord result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 200);
                     Assert.IsNull(error);
                     isComplete = true;
@@ -331,9 +331,9 @@ namespace IBM.Watson.Tests
             };
 
             service.AddWords(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddWords result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddWords result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 200);
                     Assert.IsNull(error);
                     isComplete = true;
@@ -355,9 +355,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetWord...");
             Translation getWordResponse = null;
             service.GetWord(
-                callback: (DetailedResponse<Translation> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Translation> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetWord result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetWord result: {0}", response.Response);
                     getWordResponse = response.Result;
                     Assert.IsNotNull(getWordResponse);
                     Assert.IsTrue(getWordResponse._Translation == customWordTranslation);
@@ -380,9 +380,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListWords...");
             Words listWordsResponse = null;
             service.ListWords(
-                callback: (DetailedResponse<Words> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Words> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListWords result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListWords result: {0}", response.Response);
                     listWordsResponse = response.Result;
                     Assert.IsNotNull(listWordsResponse);
                     Assert.IsNotNull(listWordsResponse._Words);
@@ -405,9 +405,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to DeleteWord...");
             bool isComplete = false;
             service.DeleteWord(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteWord result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteWord result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 204);
                     Assert.IsNull(error);
                     isComplete = true;
@@ -429,9 +429,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to DeleteVoiceModel...");
             bool isComplete = false;
             service.DeleteVoiceModel(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteVoiceModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteVoiceModel result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 204);
                     Assert.IsNull(error);
                     isComplete = true;
@@ -452,9 +452,9 @@ namespace IBM.Watson.Tests
             Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to DeleteUserData...");
             object deleteUserDataResponse = null;
             service.DeleteUserData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteUserData result: {0}", response.Response);
                     deleteUserDataResponse = response.Result;
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);

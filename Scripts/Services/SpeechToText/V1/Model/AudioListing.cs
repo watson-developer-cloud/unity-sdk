@@ -66,8 +66,8 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// **For an audio-type resource,**  the total seconds of audio in the resource. The value is always a whole
-        /// number. Omitted for an archive-type resource.
+        /// **For an audio-type resource,**  the total seconds of audio in the resource. Omitted for an archive-type
+        /// resource.
         /// </summary>
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
         public long? Duration { get; set; }

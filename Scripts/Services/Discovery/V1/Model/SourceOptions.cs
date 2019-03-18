@@ -49,5 +49,18 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("urls", NullValueHandling = NullValueHandling.Ignore)]
         public List<SourceOptionsWebCrawl> Urls { get; set; }
+        /// <summary>
+        /// Array of cloud object store buckets to begin crawling. Only valid and required when the **type** field of
+        /// the **source** object is set to `cloud_object_store`, and the **crawl_all_buckets** field is `false` or not
+        /// specified.
+        /// </summary>
+        [JsonProperty("buckets", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SourceOptionsBuckets> Buckets { get; set; }
+        /// <summary>
+        /// When `true`, all buckets in the specified cloud object store are crawled. If set to `true`, the **buckets**
+        /// array must not be specified.
+        /// </summary>
+        [JsonProperty("crawl_all_buckets", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? CrawlAllBuckets { get; set; }
     }
 }

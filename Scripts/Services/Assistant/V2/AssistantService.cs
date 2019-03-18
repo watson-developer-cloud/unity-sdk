@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Assistant.V2
 {
-    public class AssistantService : BaseService
+    public partial class AssistantService : BaseService
     {
         private const string serviceId = "conversation";
         private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
@@ -186,7 +186,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SessionResponse> response = new DetailedResponse<SessionResponse>();
-            Dictionary<string, object> customData = ((RequestObject<SessionResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -197,14 +196,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SessionResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -213,7 +205,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<SessionResponse>)req).Callback != null)
-                ((RequestObject<SessionResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SessionResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete session.
@@ -277,7 +269,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -288,14 +279,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -304,7 +288,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Send user input to assistant.
@@ -383,7 +367,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -394,14 +377,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MessageResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -410,7 +386,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
-                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
     }
 }

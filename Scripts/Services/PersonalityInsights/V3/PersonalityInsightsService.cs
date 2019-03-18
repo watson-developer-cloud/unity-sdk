@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.PersonalityInsights.V3
 {
-    public class PersonalityInsightsService : BaseService
+    public partial class PersonalityInsightsService : BaseService
     {
         private const string serviceId = "personality_insights";
         private const string defaultUrl = "https://gateway.watsonplatform.net/personality-insights/api";
@@ -270,7 +270,6 @@ namespace IBM.Watson.PersonalityInsights.V3
         private void OnProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Profile> response = new DetailedResponse<Profile>();
-            Dictionary<string, object> customData = ((RequestObject<Profile>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -281,14 +280,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Profile>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -297,7 +289,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
 
             if (((RequestObject<Profile>)req).Callback != null)
-                ((RequestObject<Profile>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Profile>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get profile as csv.
@@ -443,7 +435,6 @@ namespace IBM.Watson.PersonalityInsights.V3
         private void OnProfileAsCsvResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<System.IO.MemoryStream> response = new DetailedResponse<System.IO.MemoryStream>();
-            Dictionary<string, object> customData = ((RequestObject<System.IO.MemoryStream>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -453,7 +444,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             response.Result = new System.IO.MemoryStream(resp.Data);
 
             if (((RequestObject<System.IO.MemoryStream>)req).Callback != null)
-                ((RequestObject<System.IO.MemoryStream>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<System.IO.MemoryStream>)req).Callback(response, resp.Error);
         }
     }
 }

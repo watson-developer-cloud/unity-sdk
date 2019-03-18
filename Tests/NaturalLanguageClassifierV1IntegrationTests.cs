@@ -74,9 +74,9 @@ namespace IBM.Watson.Tests
             Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Attempting to ListClassifiers...");
             ClassifierList listClassifiersResponse = null;
             service.ListClassifiers(
-                callback: (DetailedResponse<ClassifierList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ClassifierList> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "ListClassifiers result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "ListClassifiers result: {0}", response.Response);
                     listClassifiersResponse = response.Result;
                     classifierId = listClassifiersResponse.Classifiers[0].ClassifierId;
                     Assert.IsNotNull(listClassifiersResponse);
@@ -99,9 +99,9 @@ namespace IBM.Watson.Tests
             Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Attempting to Classify...");
             Classification classifyResponse = null;
             service.Classify(
-                callback: (DetailedResponse<Classification> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Classification> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Classify result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Classify result: {0}", response.Response);
                     classifyResponse = response.Result;
                     Assert.IsNotNull(classifyResponse);
                     Assert.IsNotNull(classifyResponse.Classes);
@@ -141,9 +141,9 @@ namespace IBM.Watson.Tests
             };
 
             service.ClassifyCollection(
-                callback: (DetailedResponse<ClassificationCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ClassificationCollection> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "ClassifyCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "ClassifyCollection result: {0}", response.Response);
                     classifyCollectionResponse = response.Result;
                     Assert.IsNotNull(classifyCollectionResponse);
                     Assert.IsNotNull(classifyCollectionResponse.Collection);
@@ -172,9 +172,9 @@ namespace IBM.Watson.Tests
                 using (FileStream fs1 = File.OpenRead(classifierDataFilePath))
                 {
                     service.CreateClassifier(
-                    callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<Classifier> response, IBMError error) =>
                     {
-                        Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "CreateClassifier result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "CreateClassifier result: {0}", response.Response);
                         createClassifierResponse = response.Result;
                         createdClassifierId = createClassifierResponse.ClassifierId;
                         Assert.IsNotNull(createClassifierResponse);
@@ -204,9 +204,9 @@ namespace IBM.Watson.Tests
             Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Attempting to GetClassifier...");
             Classifier getClassifierResponse = null;
             service.GetClassifier(
-                callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Classifier> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "GetClassifier result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "GetClassifier result: {0}", response.Response);
                     getClassifierResponse = response.Result;
                     Assert.IsNotNull(getClassifierResponse);
                     Assert.IsTrue(getClassifierResponse.Name == "unity-classifier-delete");
@@ -229,9 +229,9 @@ namespace IBM.Watson.Tests
             Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "Attempting to DeleteClassifier...");
             object deleteClassifierResponse = null;
             service.DeleteClassifier(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "DeleteClassifier result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "DeleteClassifier result: {0}", response.Response);
                     deleteClassifierResponse = response.Result;
                     Assert.IsNotNull(deleteClassifierResponse);
                     Assert.IsNull(error);

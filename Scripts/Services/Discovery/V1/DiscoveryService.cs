@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Discovery.V1
 {
-    public class DiscoveryService : BaseService
+    public partial class DiscoveryService : BaseService
     {
         private const string serviceId = "discovery";
         private const string defaultUrl = "https://gateway.watsonplatform.net/discovery/api";
@@ -199,7 +199,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -210,14 +209,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -226,7 +218,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete environment.
@@ -281,7 +273,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteEnvironmentResponse> response = new DetailedResponse<DeleteEnvironmentResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteEnvironmentResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -292,14 +283,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -308,7 +292,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteEnvironmentResponse>)req).Callback != null)
-                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get environment info.
@@ -363,7 +347,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -374,14 +357,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -390,7 +366,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List environments.
@@ -449,7 +425,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListEnvironmentsResponse> response = new DetailedResponse<ListEnvironmentsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListEnvironmentsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -460,14 +435,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListEnvironmentsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -476,7 +444,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListEnvironmentsResponse>)req).Callback != null)
-                ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List fields across collections.
@@ -540,7 +508,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionFieldsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -551,14 +518,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -567,7 +527,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update an environment.
@@ -640,7 +600,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -651,14 +610,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -667,7 +619,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add configuration.
@@ -758,7 +710,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -769,14 +720,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -785,7 +729,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a configuration.
@@ -848,7 +792,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteConfigurationResponse> response = new DetailedResponse<DeleteConfigurationResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteConfigurationResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -859,14 +802,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -875,7 +811,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteConfigurationResponse>)req).Callback != null)
-                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get configuration details.
@@ -933,7 +869,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -944,14 +879,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -960,7 +888,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List configurations.
@@ -1022,7 +950,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListConfigurationsResponse> response = new DetailedResponse<ListConfigurationsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListConfigurationsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1033,14 +960,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListConfigurationsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1049,7 +969,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListConfigurationsResponse>)req).Callback != null)
-                ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a configuration.
@@ -1142,7 +1062,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1153,14 +1072,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1169,7 +1081,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Test configuration.
@@ -1269,7 +1181,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnTestConfigurationInEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TestDocument> response = new DetailedResponse<TestDocument>();
-            Dictionary<string, object> customData = ((RequestObject<TestDocument>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1280,14 +1191,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TestDocument>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1296,7 +1200,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TestDocument>)req).Callback != null)
-                ((RequestObject<TestDocument>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TestDocument>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a collection.
@@ -1372,7 +1276,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1383,14 +1286,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1399,7 +1295,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a collection.
@@ -1457,7 +1353,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteCollectionResponse> response = new DetailedResponse<DeleteCollectionResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteCollectionResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1468,14 +1363,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1484,7 +1372,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteCollectionResponse>)req).Callback != null)
-                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get collection details.
@@ -1542,7 +1430,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1553,14 +1440,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1569,7 +1449,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List collection fields.
@@ -1629,7 +1509,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCollectionFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionFieldsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1640,14 +1519,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1656,7 +1528,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List collections.
@@ -1718,7 +1590,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionsResponse> response = new DetailedResponse<ListCollectionsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1729,14 +1600,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1745,7 +1609,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a collection.
@@ -1818,7 +1682,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1829,14 +1692,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1845,7 +1701,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create or update expansion list.
@@ -1929,7 +1785,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
-            Dictionary<string, object> customData = ((RequestObject<Expansions>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1940,14 +1795,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1956,7 +1804,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Expansions>)req).Callback != null)
-                ((RequestObject<Expansions>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create stopword list.
@@ -2024,7 +1872,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2035,14 +1882,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2051,7 +1891,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create tokenization dictionary.
@@ -2121,7 +1961,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2132,14 +1971,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2148,7 +1980,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete the expansion list.
@@ -2209,7 +2041,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2220,14 +2051,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2236,7 +2060,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a custom stopword list.
@@ -2297,7 +2121,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2308,14 +2131,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2324,7 +2140,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete tokenization dictionary.
@@ -2384,7 +2200,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2395,14 +2210,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2411,7 +2219,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get stopword list status.
@@ -2471,7 +2279,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2482,14 +2289,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2498,7 +2298,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get tokenization dictionary status.
@@ -2558,7 +2358,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2569,14 +2368,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2585,7 +2377,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get the expansion list.
@@ -2646,7 +2438,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
-            Dictionary<string, object> customData = ((RequestObject<Expansions>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2657,14 +2448,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2673,7 +2457,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Expansions>)req).Callback != null)
-                ((RequestObject<Expansions>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a document.
@@ -2771,7 +2555,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentAccepted> response = new DetailedResponse<DocumentAccepted>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentAccepted>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2782,14 +2565,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2798,7 +2574,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
-                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a document.
@@ -2862,7 +2638,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteDocumentResponse> response = new DetailedResponse<DeleteDocumentResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteDocumentResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2873,14 +2648,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2889,7 +2657,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteDocumentResponse>)req).Callback != null)
-                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get document details.
@@ -2954,7 +2722,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetDocumentStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentStatus> response = new DetailedResponse<DocumentStatus>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2965,14 +2732,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2981,7 +2741,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentStatus>)req).Callback != null)
-                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a document.
@@ -3063,7 +2823,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentAccepted> response = new DetailedResponse<DocumentAccepted>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentAccepted>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3074,14 +2833,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3090,14 +2842,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
-                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Long environment queries.
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+        /// see the [Discovery service
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3258,7 +3011,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3269,14 +3021,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3285,15 +3030,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryResponse>)req).Callback != null)
-                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Query multiple collection system notices.
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-        /// language.
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
+        /// for more details on the query language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3440,7 +3185,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryNoticesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3451,14 +3195,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3467,14 +3204,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
-                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Long collection queries.
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+        /// see the [Discovery service
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3638,7 +3376,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3649,14 +3386,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3665,13 +3395,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryResponse>)req).Callback != null)
-                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Knowledge Graph entity query.
         ///
-        /// See the [Knowledge Graph
-        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
+        /// for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3751,7 +3481,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryEntitiesResponse> response = new DetailedResponse<QueryEntitiesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryEntitiesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3762,14 +3491,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3778,15 +3500,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryEntitiesResponse>)req).Callback != null)
-                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Query system notices.
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-        /// language.
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
+        /// for more details on the query language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3953,7 +3675,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryNoticesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3964,14 +3685,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3980,13 +3694,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
-                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Knowledge Graph relationship query.
         ///
-        /// See the [Knowledge Graph
-        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
+        /// for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -4070,7 +3784,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryRelationsResponse> response = new DetailedResponse<QueryRelationsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryRelationsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4081,14 +3794,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryRelationsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4097,7 +3803,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryRelationsResponse>)req).Callback != null)
-                ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add query to training data.
@@ -4173,7 +3879,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnAddTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingQuery>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4184,14 +3889,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4200,7 +3898,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
-                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add example to training data query.
@@ -4277,7 +3975,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4288,14 +3985,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4304,7 +3994,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete all training data.
@@ -4364,7 +4054,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteAllTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4375,14 +4064,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4391,7 +4073,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a training data query.
@@ -4454,7 +4136,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4465,14 +4146,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4481,7 +4155,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete example for training data query.
@@ -4547,7 +4221,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4558,14 +4231,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4574,7 +4240,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get details about a query.
@@ -4637,7 +4303,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingQuery>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4648,14 +4313,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4664,7 +4322,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
-                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get details for training data example.
@@ -4730,7 +4388,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4741,14 +4398,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4757,7 +4407,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List training data.
@@ -4817,7 +4467,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingDataSet> response = new DetailedResponse<TrainingDataSet>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingDataSet>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4828,14 +4477,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4844,7 +4486,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingDataSet>)req).Callback != null)
-                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List examples for a training data query.
@@ -4907,7 +4549,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListTrainingExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExampleList> response = new DetailedResponse<TrainingExampleList>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExampleList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4918,14 +4559,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4934,7 +4568,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExampleList>)req).Callback != null)
-                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Change label or cross reference for example.
@@ -5011,7 +4645,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5022,14 +4655,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5038,7 +4664,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -5048,7 +4674,7 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// security](https://cloud.ibm.com/docs/services/discovery?topic=discovery-information-security#information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -5104,7 +4730,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5115,14 +4740,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5131,7 +4749,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create event.
@@ -5201,7 +4819,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CreateEventResponse> response = new DetailedResponse<CreateEventResponse>();
-            Dictionary<string, object> customData = ((RequestObject<CreateEventResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5212,14 +4829,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CreateEventResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5228,7 +4838,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<CreateEventResponse>)req).Callback != null)
-                ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Percentage of queries with an associated event.
@@ -5301,7 +4911,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5312,14 +4921,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5328,7 +4930,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries over time.
@@ -5399,7 +5001,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5410,14 +5011,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5426,7 +5020,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries with an event over time.
@@ -5499,7 +5093,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5510,14 +5103,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5526,7 +5112,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries with no search results over time.
@@ -5598,7 +5184,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryNoResultsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5609,14 +5194,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5625,7 +5203,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Most frequent query tokens with an event.
@@ -5686,7 +5264,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryTokenEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricTokenResponse> response = new DetailedResponse<MetricTokenResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricTokenResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5697,14 +5274,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricTokenResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5713,7 +5283,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricTokenResponse>)req).Callback != null)
-                ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Search the query and event log.
@@ -5801,7 +5371,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogQueryResponse> response = new DetailedResponse<LogQueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<LogQueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5812,14 +5381,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5828,7 +5390,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<LogQueryResponse>)req).Callback != null)
-                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create credentials.
@@ -5844,7 +5406,9 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
+        /// (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
@@ -5905,7 +5469,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5916,14 +5479,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5932,7 +5488,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete credentials.
@@ -5992,7 +5548,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteCredentials> response = new DetailedResponse<DeleteCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6003,14 +5558,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6019,7 +5567,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteCredentials>)req).Callback != null)
-                ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// View Credentials.
@@ -6082,7 +5630,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6093,14 +5640,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6109,7 +5649,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List credentials.
@@ -6168,7 +5708,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CredentialsList> response = new DetailedResponse<CredentialsList>();
-            Dictionary<string, object> customData = ((RequestObject<CredentialsList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6179,14 +5718,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6195,7 +5727,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<CredentialsList>)req).Callback != null)
-                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update credentials.
@@ -6211,7 +5743,9 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
+        /// (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
@@ -6274,7 +5808,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6285,14 +5818,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6301,7 +5827,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create Gateway.
@@ -6366,7 +5892,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Gateway> response = new DetailedResponse<Gateway>();
-            Dictionary<string, object> customData = ((RequestObject<Gateway>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6377,14 +5902,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6393,7 +5911,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Gateway>)req).Callback != null)
-                ((RequestObject<Gateway>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete Gateway.
@@ -6453,7 +5971,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GatewayDelete> response = new DetailedResponse<GatewayDelete>();
-            Dictionary<string, object> customData = ((RequestObject<GatewayDelete>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6464,14 +5981,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6480,7 +5990,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<GatewayDelete>)req).Callback != null)
-                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List Gateway Details.
@@ -6540,7 +6050,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Gateway> response = new DetailedResponse<Gateway>();
-            Dictionary<string, object> customData = ((RequestObject<Gateway>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6551,14 +6060,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6567,7 +6069,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Gateway>)req).Callback != null)
-                ((RequestObject<Gateway>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List Gateways.
@@ -6624,7 +6126,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GatewayList> response = new DetailedResponse<GatewayList>();
-            Dictionary<string, object> customData = ((RequestObject<GatewayList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6635,14 +6136,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6651,7 +6145,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<GatewayList>)req).Callback != null)
-                ((RequestObject<GatewayList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<GatewayList>)req).Callback(response, resp.Error);
         }
     }
 }

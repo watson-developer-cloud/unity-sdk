@@ -81,9 +81,9 @@ namespace IBM.Watson.Tests
             };
 
             service.Analyze(
-                callback: (DetailedResponse<AnalysisResults> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<AnalysisResults> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Analyze result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Analyze result: {0}", response.Response);
                     analyzeResponse = response.Result;
                     Assert.IsNotNull(analyzeResponse);
                     Assert.IsNull(error);
@@ -106,9 +106,9 @@ namespace IBM.Watson.Tests
         //    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Attempting to DeleteModel...");
         //    DeleteModelResults deleteModelResponse = null;
         //    service.DeleteModel(
-        //        callback: (DetailedResponse<DeleteModelResults> response, IBMError error, Dictionary<string, object> customResponseData) =>
+        //        callback: (DetailedResponse<DeleteModelResults> response, IBMError error) =>
         //        {
-        //            Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteModel result: {0}", customResponseData["json"].ToString());
+        //            Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteModel result: {0}", response.Response);
         //            deleteModelResponse = response.Result;
         //            Assert.IsNotNull(deleteModelResponse);
         //            Assert.IsNull(error);
@@ -129,9 +129,9 @@ namespace IBM.Watson.Tests
             Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Attempting to ListModels...");
             ListModelsResults listModelsResponse = null;
             service.ListModels(
-                callback: (DetailedResponse<ListModelsResults> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListModelsResults> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "ListModels result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "ListModels result: {0}", response.Response);
                     listModelsResponse = response.Result;
                     Assert.IsNotNull(listModelsResponse);
                     Assert.IsNotNull(listModelsResponse.Models);

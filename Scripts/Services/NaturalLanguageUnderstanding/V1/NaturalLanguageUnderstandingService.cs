@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 {
-    public class NaturalLanguageUnderstandingService : BaseService
+    public partial class NaturalLanguageUnderstandingService : BaseService
     {
         private const string serviceId = "natural-language-understanding";
         private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-understanding/api";
@@ -241,7 +241,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AnalysisResults> response = new DetailedResponse<AnalysisResults>();
-            Dictionary<string, object> customData = ((RequestObject<AnalysisResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -252,14 +251,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AnalysisResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -268,7 +260,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<AnalysisResults>)req).Callback != null)
-                ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete model.
@@ -325,7 +317,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteModelResults> response = new DetailedResponse<DeleteModelResults>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteModelResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -336,14 +327,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteModelResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -352,7 +336,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<DeleteModelResults>)req).Callback != null)
-                ((RequestObject<DeleteModelResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteModelResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List models.
@@ -408,7 +392,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListModelsResults> response = new DetailedResponse<ListModelsResults>();
-            Dictionary<string, object> customData = ((RequestObject<ListModelsResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -419,14 +402,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListModelsResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -435,7 +411,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<ListModelsResults>)req).Callback != null)
-                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Assistant.V1
 {
-    public class AssistantService : BaseService
+    public partial class AssistantService : BaseService
     {
         private const string serviceId = "conversation";
         private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
@@ -216,7 +216,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -227,14 +226,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MessageResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -243,7 +235,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
-                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create workspace.
@@ -341,7 +333,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -352,14 +343,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -368,7 +352,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete workspace.
@@ -427,7 +411,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -438,14 +421,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -454,7 +430,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get information about a workspace.
@@ -534,7 +510,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -545,14 +520,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -561,7 +529,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List workspaces.
@@ -646,7 +614,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListWorkspacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<WorkspaceCollection> response = new DetailedResponse<WorkspaceCollection>();
-            Dictionary<string, object> customData = ((RequestObject<WorkspaceCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -657,14 +624,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<WorkspaceCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -673,7 +633,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<WorkspaceCollection>)req).Callback != null)
-                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update workspace.
@@ -786,7 +746,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -797,14 +756,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -813,7 +765,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create intent.
@@ -892,7 +844,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -903,14 +854,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -919,7 +863,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete intent.
@@ -981,7 +925,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -992,14 +935,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1008,7 +944,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get intent.
@@ -1084,7 +1020,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1095,14 +1030,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1111,7 +1039,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List intents.
@@ -1207,7 +1135,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListIntentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<IntentCollection> response = new DetailedResponse<IntentCollection>();
-            Dictionary<string, object> customData = ((RequestObject<IntentCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1218,14 +1145,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<IntentCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1234,7 +1154,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<IntentCollection>)req).Callback != null)
-                ((RequestObject<IntentCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<IntentCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update intent.
@@ -1315,7 +1235,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1326,14 +1245,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1342,7 +1254,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create user input example.
@@ -1421,7 +1333,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1432,14 +1343,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1448,7 +1352,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete user input example.
@@ -1513,7 +1417,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1524,14 +1427,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1540,7 +1436,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get user input example.
@@ -1611,7 +1507,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1622,14 +1517,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1638,7 +1526,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List user input examples.
@@ -1729,7 +1617,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ExampleCollection> response = new DetailedResponse<ExampleCollection>();
-            Dictionary<string, object> customData = ((RequestObject<ExampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1740,14 +1627,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ExampleCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1756,7 +1636,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<ExampleCollection>)req).Callback != null)
-                ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update user input example.
@@ -1836,7 +1716,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1847,14 +1726,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1863,7 +1735,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create counterexample.
@@ -1937,7 +1809,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1948,14 +1819,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1964,7 +1828,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete counterexample.
@@ -2027,7 +1891,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2038,14 +1901,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2054,7 +1910,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get counterexample.
@@ -2123,7 +1979,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2134,14 +1989,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2150,7 +1998,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List counterexamples.
@@ -2239,7 +2087,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListCounterexamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CounterexampleCollection> response = new DetailedResponse<CounterexampleCollection>();
-            Dictionary<string, object> customData = ((RequestObject<CounterexampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2250,14 +2097,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CounterexampleCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2266,7 +2106,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<CounterexampleCollection>)req).Callback != null)
-                ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update counterexample.
@@ -2341,7 +2181,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2352,14 +2191,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2368,7 +2200,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity.
@@ -2455,7 +2287,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2466,14 +2297,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2482,7 +2306,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity.
@@ -2544,7 +2368,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2555,14 +2378,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2571,7 +2387,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity.
@@ -2647,7 +2463,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2658,14 +2473,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2674,7 +2482,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entities.
@@ -2770,7 +2578,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<EntityCollection> response = new DetailedResponse<EntityCollection>();
-            Dictionary<string, object> customData = ((RequestObject<EntityCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2781,14 +2588,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2797,7 +2597,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<EntityCollection>)req).Callback != null)
-                ((RequestObject<EntityCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<EntityCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity.
@@ -2884,7 +2684,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2895,14 +2694,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2911,7 +2703,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity mentions.
@@ -2987,7 +2779,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListMentionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<EntityMentionCollection> response = new DetailedResponse<EntityMentionCollection>();
-            Dictionary<string, object> customData = ((RequestObject<EntityMentionCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2998,14 +2789,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityMentionCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3014,7 +2798,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<EntityMentionCollection>)req).Callback != null)
-                ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity value.
@@ -3109,7 +2893,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3120,14 +2903,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3136,7 +2912,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity value.
@@ -3201,7 +2977,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3212,14 +2987,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3228,7 +2996,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity value.
@@ -3306,7 +3074,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3317,14 +3084,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3333,7 +3093,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity values.
@@ -3431,7 +3191,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListValuesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ValueCollection> response = new DetailedResponse<ValueCollection>();
-            Dictionary<string, object> customData = ((RequestObject<ValueCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3442,14 +3201,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ValueCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3458,7 +3210,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<ValueCollection>)req).Callback != null)
-                ((RequestObject<ValueCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ValueCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity value.
@@ -3556,7 +3308,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3567,14 +3318,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3583,7 +3327,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity value synonym.
@@ -3661,7 +3405,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3672,14 +3415,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3688,7 +3424,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity value synonym.
@@ -3756,7 +3492,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3767,14 +3502,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3783,7 +3511,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity value synonym.
@@ -3857,7 +3585,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3868,14 +3595,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3884,7 +3604,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity value synonyms.
@@ -3978,7 +3698,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListSynonymsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SynonymCollection> response = new DetailedResponse<SynonymCollection>();
-            Dictionary<string, object> customData = ((RequestObject<SynonymCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3989,14 +3708,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SynonymCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4005,7 +3717,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<SynonymCollection>)req).Callback != null)
-                ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity value synonym.
@@ -4084,7 +3796,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4095,14 +3806,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4111,7 +3815,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create dialog node.
@@ -4247,7 +3951,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4258,14 +3961,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4274,7 +3970,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete dialog node.
@@ -4336,7 +4032,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4347,14 +4042,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4363,7 +4051,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get dialog node.
@@ -4431,7 +4119,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4442,14 +4129,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4458,7 +4138,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List dialog nodes.
@@ -4546,7 +4226,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListDialogNodesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNodeCollection> response = new DetailedResponse<DialogNodeCollection>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNodeCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4557,14 +4236,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNodeCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4573,7 +4245,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNodeCollection>)req).Callback != null)
-                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update dialog node.
@@ -4711,7 +4383,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4722,14 +4393,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4738,7 +4402,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List log events in all workspaces.
@@ -4823,7 +4487,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListAllLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
-            Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4834,14 +4497,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4850,7 +4506,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<LogCollection>)req).Callback != null)
-                ((RequestObject<LogCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List log events in a workspace.
@@ -4936,7 +4592,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
-            Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4947,14 +4602,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4963,7 +4611,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<LogCollection>)req).Callback != null)
-                ((RequestObject<LogCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -5029,7 +4677,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5040,14 +4687,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5056,7 +4696,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }

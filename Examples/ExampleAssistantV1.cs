@@ -365,243 +365,243 @@ namespace IBM.Watson.Examples
             yield break;
         }
 
-        private void OnListMentions(DetailedResponse<EntityMentionCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListMentions(DetailedResponse<EntityMentionCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListMentions()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListMentions()", "Response: {0}", response.Response);
             listMentionsTested = true;
         }
 
-        private void OnDeleteWorkspace(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteWorkspace(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteWorkspace()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteWorkspace()", "Response: {0}", response.Response);
             deleteWorkspaceTested = true;
         }
 
-        private void OnDeleteIntent(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteIntent(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteIntent()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteIntent()", "Response: {0}", response.Response);
             deleteIntentTested = true;
         }
 
-        private void OnDeleteExample(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteExample(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteExample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteExample()", "Response: {0}", response.Response);
             deleteExampleTested = true;
         }
 
-        private void OnDeleteEntity(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteEntity(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteEntity()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteEntity()", "Response: {0}", response.Response);
             deleteEntityTested = true;
         }
 
-        private void OnDeleteValue(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteValue(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteValue()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteValue()", "Response: {0}", response.Response);
             deleteValueTested = true;
         }
 
-        private void OnDeleteSynonym(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteSynonym(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteSynonym()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteSynonym()", "Response: {0}", response.Response);
             deleteSynonymTested = true;
         }
 
-        private void OnDeleteDialogNode(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteDialogNode(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteDialogNode()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteDialogNode()", "Response: {0}", response.Response);
             deleteDialogNodeTested = true;
         }
 
-        private void OnDeleteCounterexample(DetailedResponse<object> response, IBMError error, Dictionary<string, object> customData)
+        private void OnDeleteCounterexample(DetailedResponse<object> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnDeleteCounterexample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnDeleteCounterexample()", "Response: {0}", response.Response);
             deleteCounterexampleTested = true;
         }
 
-        private void OnUpdateCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateCounterexample(DetailedResponse<Counterexample> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateCounterexample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateCounterexample()", "Response: {0}", response.Response);
             updateCounterexampleTested = true;
         }
 
-        private void OnGetCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetCounterexample(DetailedResponse<Counterexample> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetCounterexample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetCounterexample()", "Response: {0}", response.Response);
             getCounterexampleTested = true;
         }
 
-        private void OnCreateCounterexample(DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateCounterexample(DetailedResponse<Counterexample> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateCounterexample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateCounterexample()", "Response: {0}", response.Response);
             createCounterexampleTested = true;
         }
 
-        private void OnListCounterexamples(DetailedResponse<CounterexampleCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListCounterexamples(DetailedResponse<CounterexampleCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListCounterexamples()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListCounterexamples()", "Response: {0}", response.Response);
             listCounterexamplesTested = true;
         }
 
-        private void OnListAllLogs(DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListAllLogs(DetailedResponse<LogCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListAllLogs()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListAllLogs()", "Response: {0}", response.Response);
             listAllLogsTested = true;
         }
 
-        private void OnListLogs(DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListLogs(DetailedResponse<LogCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListLogs()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListLogs()", "Response: {0}", response.Response);
             listLogsInWorkspaceTested = true;
         }
 
-        private void OnUpdateDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateDialogNode(DetailedResponse<DialogNode> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateDialogNode()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateDialogNode()", "Response: {0}", response.Response);
             updateDialogNodeTested = true;
         }
 
-        private void OnGetDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetDialogNode(DetailedResponse<DialogNode> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetDialogNode()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetDialogNode()", "Response: {0}", response.Response);
             getDialogNodeTested = true;
         }
 
-        private void OnCreateDialogNode(DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateDialogNode(DetailedResponse<DialogNode> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateDialogNode()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateDialogNode()", "Response: {0}", response.Response);
             createDialogNodeTested = true;
         }
 
-        private void OnListDialogNodes(DetailedResponse<DialogNodeCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListDialogNodes(DetailedResponse<DialogNodeCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListDialogNodes()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListDialogNodes()", "Response: {0}", response.Response);
             listDialogNodesTested = true;
         }
 
-        private void OnUpdateSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateSynonym(DetailedResponse<Synonym> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateSynonym()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateSynonym()", "Response: {0}", response.Response);
             updateSynonymTested = true;
         }
 
-        private void OnGetSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetSynonym(DetailedResponse<Synonym> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetSynonym()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetSynonym()", "Response: {0}", response.Response);
             getSynonymTested = true;
         }
 
-        private void OnCreateSynonym(DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateSynonym(DetailedResponse<Synonym> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateSynonym()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateSynonym()", "Response: {0}", response.Response);
             createSynonymTested = true;
         }
 
-        private void OnListSynonyms(DetailedResponse<SynonymCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListSynonyms(DetailedResponse<SynonymCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListSynonyms()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListSynonyms()", "Response: {0}", response.Response);
             listSynonymsTested = true;
         }
 
-        private void OnUpdateValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateValue(DetailedResponse<Value> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateValue()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateValue()", "Response: {0}", response.Response);
             updateValueTested = true;
         }
 
-        private void OnGetValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetValue(DetailedResponse<Value> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetValue()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetValue()", "Response: {0}", response.Response);
             getValueTested = true;
         }
 
-        private void OnCreateValue(DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateValue(DetailedResponse<Value> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateValue()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateValue()", "Response: {0}", response.Response);
             createValueTested = true;
         }
 
-        private void OnListValues(DetailedResponse<ValueCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListValues(DetailedResponse<ValueCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListValues()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListValues()", "Response: {0}", response.Response);
             listValuesTested = true;
         }
 
-        private void OnUpdateEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateEntity(DetailedResponse<Entity> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateEntity()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateEntity()", "Response: {0}", response.Response);
             updateEntityTested = true;
         }
 
-        private void OnGetEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetEntity(DetailedResponse<Entity> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetEntity()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetEntity()", "Response: {0}", response.Response);
             getEntityTested = true;
         }
 
-        private void OnCreateEntity(DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateEntity(DetailedResponse<Entity> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateEntity()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateEntity()", "Response: {0}", response.Response);
             createEntityTested = true;
         }
 
-        private void OnListEntities(DetailedResponse<EntityCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListEntities(DetailedResponse<EntityCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListEntities()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListEntities()", "Response: {0}", response.Response);
             listEntitiesTested = true;
         }
 
-        private void OnUpdateExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateExample(DetailedResponse<Example> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateExample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateExample()", "Response: {0}", response.Response);
             updateExampleTested = true;
         }
 
-        private void OnGetExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetExample(DetailedResponse<Example> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetExample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetExample()", "Response: {0}", response.Response);
             getExampleTested = true;
         }
 
-        private void OnCreateExample(DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateExample(DetailedResponse<Example> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateExample()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateExample()", "Response: {0}", response.Response);
             createExampleTested = true;
         }
 
-        private void OnListExamples(DetailedResponse<ExampleCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListExamples(DetailedResponse<ExampleCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListExamples()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListExamples()", "Response: {0}", response.Response);
             listExamplesTested = true;
         }
 
-        private void OnUpdateIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateIntent(DetailedResponse<Intent> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateIntent()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateIntent()", "Response: {0}", response.Response);
             updateIntentTested = true;
         }
 
-        private void OnGetIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetIntent(DetailedResponse<Intent> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetIntent()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetIntent()", "Response: {0}", response.Response);
             getIntentTested = true;
         }
 
-        private void OnCreateIntent(DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateIntent(DetailedResponse<Intent> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateIntent()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateIntent()", "Response: {0}", response.Response);
             createIntentTested = true;
         }
 
-        private void OnListIntents(DetailedResponse<IntentCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListIntents(DetailedResponse<IntentCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListIntents()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListIntents()", "Response: {0}", response.Response);
             listIntentsTested = true;
         }
 
-        private void OnMessage(DetailedResponse<Dictionary<string, object>> response, IBMError error, Dictionary<string, object> customData)
+        private void OnMessage(DetailedResponse<Dictionary<string, object>> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnMessage()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnMessage()", "Response: {0}", response.Response);
 
             context = response.Result["context"] as Dictionary<string, object>;
             ////  Convert resp to fsdata
@@ -639,28 +639,28 @@ namespace IBM.Watson.Examples
             messageTested = true;
         }
 
-        private void OnUpdateWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
+        private void OnUpdateWorkspace(DetailedResponse<Workspace> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnUpdateWorkspace()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnUpdateWorkspace()", "Response: {0}", response.Response);
             updateWorkspaceTested = true;
         }
 
-        private void OnGetWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
+        private void OnGetWorkspace(DetailedResponse<Workspace> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnGetWorkspace()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnGetWorkspace()", "Response: {0}", response.Response);
             getWorkspaceTested = true;
         }
 
-        private void OnCreateWorkspace(DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customData)
+        private void OnCreateWorkspace(DetailedResponse<Workspace> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnCreateWorkspace()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnCreateWorkspace()", "Response: {0}", response.Response);
             createdWorkspaceId = response.Result.WorkspaceId;
             createWorkspaceTested = true;
         }
 
-        private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error, Dictionary<string, object> customData)
+        private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
         {
-            Log.Debug("ExampleAssistantV1.OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExampleAssistantV1.OnListWorkspaces()", "Response: {0}", response.Response);
 
             foreach (Workspace workspace in response.Result.Workspaces)
             {

@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.ToneAnalyzer.V3
 {
-    public class ToneAnalyzerService : BaseService
+    public partial class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
         private const string defaultUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
@@ -243,7 +243,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private void OnToneResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ToneAnalysis> response = new DetailedResponse<ToneAnalysis>();
-            Dictionary<string, object> customData = ((RequestObject<ToneAnalysis>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -254,14 +253,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ToneAnalysis>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -270,7 +262,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
 
             if (((RequestObject<ToneAnalysis>)req).Callback != null)
-                ((RequestObject<ToneAnalysis>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ToneAnalysis>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Analyze customer engagement tone.
@@ -365,7 +357,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private void OnToneChatResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<UtteranceAnalyses> response = new DetailedResponse<UtteranceAnalyses>();
-            Dictionary<string, object> customData = ((RequestObject<UtteranceAnalyses>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -376,14 +367,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<UtteranceAnalyses>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -392,7 +376,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
 
             if (((RequestObject<UtteranceAnalyses>)req).Callback != null)
-                ((RequestObject<UtteranceAnalyses>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<UtteranceAnalyses>)req).Callback(response, resp.Error);
         }
     }
 }

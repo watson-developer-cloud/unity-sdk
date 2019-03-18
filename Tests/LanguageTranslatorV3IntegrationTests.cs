@@ -75,9 +75,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to Translate...");
             TranslationResult translateResponse = null;
             service.Translate(
-                callback: (DetailedResponse<TranslationResult> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationResult> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", response.Response);
                     translateResponse = response.Result;
                     Assert.IsNotNull(translateResponse);
                     Assert.IsNotNull(translateResponse.Translations);
@@ -102,9 +102,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to Identify...");
             IdentifiedLanguages identifyResponse = null;
             service.Identify(
-                callback: (DetailedResponse<IdentifiedLanguages> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<IdentifiedLanguages> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Identify result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Identify result: {0}", response.Response);
                     identifyResponse = response.Result;
                     Assert.IsNotNull(identifyResponse);
                     Assert.IsNotNull(identifyResponse.Languages);
@@ -127,9 +127,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to ListIdentifiableLanguages...");
             IdentifiableLanguages listIdentifiableLanguagesResponse = null;
             service.ListIdentifiableLanguages(
-                callback: (DetailedResponse<IdentifiableLanguages> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<IdentifiableLanguages> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListIdentifiableLanguages result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListIdentifiableLanguages result: {0}", response.Response);
                     listIdentifiableLanguagesResponse = response.Result;
                     Assert.IsNotNull(listIdentifiableLanguagesResponse);
                     Assert.IsNotNull(listIdentifiableLanguagesResponse.Languages);
@@ -153,9 +153,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(forcedGlossaryFilepath))
             {
                 service.CreateModel(
-                    callback: (DetailedResponse<TranslationModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
                     {
-                        Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", response.Response);
                         createModelResponse = response.Result;
                         customModelId = createModelResponse.ModelId;
                         Assert.IsNotNull(createModelResponse);
@@ -184,9 +184,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to GetModel...");
             TranslationModel getModelResponse = null;
             service.GetModel(
-                callback: (DetailedResponse<TranslationModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "GetModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "GetModel result: {0}", response.Response);
                     getModelResponse = response.Result;
                     Assert.IsNotNull(getModelResponse);
                     Assert.IsTrue(getModelResponse.ModelId == customModelId);
@@ -211,9 +211,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to ListModels...");
             TranslationModels listModelsResponse = null;
             service.ListModels(
-                callback: (DetailedResponse<TranslationModels> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationModels> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListModels result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListModels result: {0}", response.Response);
                     listModelsResponse = response.Result;
                     Assert.IsNotNull(listModelsResponse);
                     Assert.IsNotNull(listModelsResponse.Models);
@@ -238,9 +238,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to DeleteModel...");
             DeleteModelResult deleteModelResponse = null;
             service.DeleteModel(
-                callback: (DetailedResponse<DeleteModelResult> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteModelResult> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "DeleteModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "DeleteModel result: {0}", response.Response);
                     deleteModelResponse = response.Result;
                     Assert.IsNotNull(deleteModelResponse);
                     Assert.IsNotNull(deleteModelResponse.Status);

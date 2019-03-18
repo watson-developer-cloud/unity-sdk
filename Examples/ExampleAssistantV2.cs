@@ -214,37 +214,37 @@ namespace IBM.Watson.Examples
             Log.Debug("ExampleAssistantV2.Examples()", "Assistant examples complete.");
         }
 
-        private void OnDeleteSession(DetailedResponse<object> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnDeleteSession(DetailedResponse<object> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnDeleteSession()", "Session deleted.");
             deleteSessionTested = true;
         }
 
-        private void OnMessage0(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnMessage0(DetailedResponse<MessageResponse> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnMessage0()", "response: {0}", response.Result.Output.Generic[0].Text);
             messageTested0 = true;
         }
 
-        private void OnMessage1(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnMessage1(DetailedResponse<MessageResponse> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnMessage1()", "response: {0}", response.Result.Output.Generic[0].Text);
 
             messageTested1 = true;
         }
 
-        private void OnMessage2(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnMessage2(DetailedResponse<MessageResponse> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Generic[0].Text);
             messageTested2 = true;
         }
 
-        private void OnMessage3(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnMessage3(DetailedResponse<MessageResponse> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnMessage3()", "response: {0}", response.Result.Output.Generic[0].Text);
             messageTested3 = true;
         }
-        private void OnMessage4(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnMessage4(DetailedResponse<MessageResponse> response, IBMError error)
         {
             //object tempSkill = null;
             //(response.Result.Context.Skills as Dictionary<string, object>).TryGetValue("main skill", out tempSkill);
@@ -267,7 +267,7 @@ namespace IBM.Watson.Examples
             messageTested4 = true;
         }
 
-        private void OnCreateSession(DetailedResponse<SessionResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
+        private void OnCreateSession(DetailedResponse<SessionResponse> response, IBMError error)
         {
             Log.Debug("ExampleAssistantV2.OnCreateSession()", "Session: {0}", response.Result.SessionId);
             sessionId = response.Result.SessionId;

@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -66,6 +67,6 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Snapshot of the conversion.
         /// </summary>
         [JsonProperty("snapshot", NullValueHandling = NullValueHandling.Ignore)]
-        public object Snapshot { get; set; }
+        public Dictionary<string, object> Snapshot { get; set; }
     }
 }

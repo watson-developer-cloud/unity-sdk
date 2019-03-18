@@ -55,7 +55,7 @@ namespace IBM.Watson.Discovery.V1.Model
         ///  When using `elements` the **options** object must contain Element Classification options. Additionally,
         /// when using the `elements` enrichment the configuration specified and files ingested must meet all the
         /// criteria specified in [the
-        /// documentation](https://console.bluemix.net/docs/services/discovery/element-classification.html)
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification)
         ///
         ///
         ///

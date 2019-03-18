@@ -69,7 +69,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Metadata of the document.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// The collection ID of the collection containing the document for this result.
         /// </summary>

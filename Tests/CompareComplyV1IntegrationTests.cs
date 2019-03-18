@@ -84,9 +84,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(contractAFilepath))
             {
                 service.ConvertToHtml(
-                    callback: (DetailedResponse<HTMLReturn> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<HTMLReturn> response, IBMError error) =>
                     {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ConvertToHtml result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ConvertToHtml result: {0}", response.Response);
                         convertToHtmlResponse = response.Result;
                         Assert.IsNotNull(convertToHtmlResponse);
                         Assert.IsNotNull(convertToHtmlResponse.Html);
@@ -113,9 +113,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(contractAFilepath))
             {
                 service.ClassifyElements(
-                    callback: (DetailedResponse<ClassifyReturn> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<ClassifyReturn> response, IBMError error) =>
                     {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", response.Response);
                         classifyElementsResponse = response.Result;
                         Assert.IsNotNull(classifyElementsResponse);
                         Assert.IsNotNull(classifyElementsResponse.Elements);
@@ -142,9 +142,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(tableFilepath))
             {
                 service.ExtractTables(
-                    callback: (DetailedResponse<TableReturn> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<TableReturn> response, IBMError error) =>
                     {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ExtractTables result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ExtractTables result: {0}", response.Response);
                         extractTablesResponse = response.Result;
                         Assert.IsNotNull(extractTablesResponse);
                         Assert.IsNotNull(extractTablesResponse.Tables);
@@ -173,9 +173,9 @@ namespace IBM.Watson.Tests
                 using (FileStream fs1 = File.OpenRead(contractBFilepath))
                 {
                     service.CompareDocuments(
-                        callback: (DetailedResponse<CompareReturn> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                        callback: (DetailedResponse<CompareReturn> response, IBMError error) =>
                         {
-                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CompareDocuments result: {0}", customResponseData["json"].ToString());
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CompareDocuments result: {0}", response.Response);
                             compareDocumentsResponse = response.Result;
                             Assert.IsNotNull(compareDocumentsResponse);
                             Assert.IsNotNull(compareDocumentsResponse.Documents);
@@ -304,9 +304,9 @@ namespace IBM.Watson.Tests
             #endregion
 
             service.AddFeedback(
-                callback: (DetailedResponse<FeedbackReturn> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<FeedbackReturn> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "AddFeedback result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "AddFeedback result: {0}", response.Response);
                     addFeedbackResponse = response.Result;
                     createdFeedbackId = addFeedbackResponse.FeedbackId;
                     Assert.IsNotNull(addFeedbackResponse);
@@ -331,9 +331,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to GetFeedback...");
             GetFeedback getFeedbackResponse = null;
             service.GetFeedback(
-                callback: (DetailedResponse<GetFeedback> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<GetFeedback> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "GetFeedback result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "GetFeedback result: {0}", response.Response);
                     getFeedbackResponse = response.Result;
                     Assert.IsNotNull(getFeedbackResponse);
                     Assert.IsTrue(getFeedbackResponse.FeedbackId == createdFeedbackId);
@@ -356,9 +356,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ListFeedback...");
             FeedbackList listFeedbackResponse = null;
             service.ListFeedback(
-                callback: (DetailedResponse<FeedbackList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<FeedbackList> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "ListFeedback result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "ListFeedback result: {0}", response.Response);
                     listFeedbackResponse = response.Result;
                     Assert.IsNotNull(listFeedbackResponse);
                     Assert.IsNotNull(listFeedbackResponse.Feedback);
@@ -386,9 +386,9 @@ namespace IBM.Watson.Tests
                 using (FileStream fsOutput = File.OpenRead(objectStorageCredentialsOutputFilepath))
                 {
                     service.CreateBatch(
-                        callback: (DetailedResponse<BatchStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                        callback: (DetailedResponse<BatchStatus> response, IBMError error) =>
                         {
-                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CreateBatch result: {0}", customResponseData["json"].ToString());
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CreateBatch result: {0}", response.Response);
                             createBatchResponse = response.Result;
                             createdBatchId = createBatchResponse.BatchId;
                             Assert.IsNotNull(createBatchResponse);
@@ -419,9 +419,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to GetBatch...");
             BatchStatus getBatchResponse = null;
             service.GetBatch(
-                callback: (DetailedResponse<BatchStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<BatchStatus> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "GetBatch result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "GetBatch result: {0}", response.Response);
                     getBatchResponse = response.Result;
                     Assert.IsNotNull(getBatchResponse);
                     Assert.IsTrue(getBatchResponse.BatchId == createdBatchId);
@@ -443,9 +443,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ListBatches...");
             Batches listBatchesResponse = null;
             service.ListBatches(
-                callback: (DetailedResponse<Batches> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Batches> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "ListBatches result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "ListBatches result: {0}", response.Response);
                     listBatchesResponse = response.Result;
                     Assert.IsNotNull(listBatchesResponse);
                     Assert.IsNotNull(listBatchesResponse._Batches);
@@ -467,9 +467,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to UpdateBatch...");
             BatchStatus updateBatchResponse = null;
             service.UpdateBatch(
-                callback: (DetailedResponse<BatchStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<BatchStatus> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "UpdateBatch result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "UpdateBatch result: {0}", response.Response);
                     updateBatchResponse = response.Result;
                     Assert.IsNotNull(updateBatchResponse);
                     Assert.IsNull(error);
@@ -492,9 +492,9 @@ namespace IBM.Watson.Tests
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to DeleteFeedback...");
             FeedbackDeleted deleteFeedbackResponse = null;
             service.DeleteFeedback(
-                callback: (DetailedResponse<FeedbackDeleted> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<FeedbackDeleted> response, IBMError error) =>
                 {
-                    Log.Debug("CompareComplyServiceV1IntegrationTests", "DeleteFeedback result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("CompareComplyServiceV1IntegrationTests", "DeleteFeedback result: {0}", response.Response);
                     deleteFeedbackResponse = response.Result;
                     Assert.IsNotNull(deleteFeedbackResponse);
                     Assert.IsTrue(deleteFeedbackResponse.Status == 200);

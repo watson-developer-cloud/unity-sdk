@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.LanguageTranslator.V3
 {
-    public class LanguageTranslatorService : BaseService
+    public partial class LanguageTranslatorService : BaseService
     {
         private const string serviceId = "language_translator";
         private const string defaultUrl = "https://gateway.watsonplatform.net/language-translator/api";
@@ -199,7 +199,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnTranslateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TranslationResult> response = new DetailedResponse<TranslationResult>();
-            Dictionary<string, object> customData = ((RequestObject<TranslationResult>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -210,14 +209,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TranslationResult>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -226,7 +218,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<TranslationResult>)req).Callback != null)
-                ((RequestObject<TranslationResult>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TranslationResult>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Identify language.
@@ -286,7 +278,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnIdentifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<IdentifiedLanguages> response = new DetailedResponse<IdentifiedLanguages>();
-            Dictionary<string, object> customData = ((RequestObject<IdentifiedLanguages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -297,14 +288,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<IdentifiedLanguages>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -313,7 +297,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<IdentifiedLanguages>)req).Callback != null)
-                ((RequestObject<IdentifiedLanguages>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<IdentifiedLanguages>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List identifiable languages.
@@ -368,7 +352,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnListIdentifiableLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<IdentifiableLanguages> response = new DetailedResponse<IdentifiableLanguages>();
-            Dictionary<string, object> customData = ((RequestObject<IdentifiableLanguages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -379,14 +362,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<IdentifiableLanguages>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -395,7 +371,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<IdentifiableLanguages>)req).Callback != null)
-                ((RequestObject<IdentifiableLanguages>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<IdentifiableLanguages>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create model.
@@ -493,7 +469,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnCreateModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TranslationModel> response = new DetailedResponse<TranslationModel>();
-            Dictionary<string, object> customData = ((RequestObject<TranslationModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -504,14 +479,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TranslationModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -520,7 +488,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<TranslationModel>)req).Callback != null)
-                ((RequestObject<TranslationModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TranslationModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete model.
@@ -577,7 +545,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteModelResult> response = new DetailedResponse<DeleteModelResult>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteModelResult>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -588,14 +555,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteModelResult>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -604,7 +564,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<DeleteModelResult>)req).Callback != null)
-                ((RequestObject<DeleteModelResult>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteModelResult>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get model details.
@@ -663,7 +623,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TranslationModel> response = new DetailedResponse<TranslationModel>();
-            Dictionary<string, object> customData = ((RequestObject<TranslationModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -674,14 +633,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TranslationModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -690,7 +642,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<TranslationModel>)req).Callback != null)
-                ((RequestObject<TranslationModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TranslationModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List models.
@@ -762,7 +714,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TranslationModels> response = new DetailedResponse<TranslationModels>();
-            Dictionary<string, object> customData = ((RequestObject<TranslationModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -773,14 +724,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TranslationModels>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -789,7 +733,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             }
 
             if (((RequestObject<TranslationModels>)req).Callback != null)
-                ((RequestObject<TranslationModels>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TranslationModels>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -15,13 +15,27 @@
 *
 */
 
+using System.Collections;
 using System.Collections.Generic;
+using IBM.Cloud.SDK;
+using IBM.Watson.Assistant.V1;
+using IBM.Watson.Assistant.V1.Model;
 using NUnit.Framework;
+using UnityEngine.TestTools;
 
 namespace IBM.Watson.Tests
 {
     public class CoreTests
     {
+        private AssistantService service;
+        private string versionDate = "2019-02-13";
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            LogSystem.InstallDefaultReactors();
+        }
+
         [Test]
         public void TestGetDefaultHeaders()
         {
@@ -29,6 +43,28 @@ namespace IBM.Watson.Tests
             Assert.IsNotNull(defaultHeaders);
             Assert.IsTrue(defaultHeaders["X-IBMCloud-SDK-Analytics"] == "service_name=TestSevice;service_version=V1;operation_id=TestOperation");
             Assert.IsNotNull(defaultHeaders["User-Agent"]);
+        }
+
+        [UnityTest]
+        public IEnumerator TestSetHeaders()
+        {
+            if (service == null)
+            {
+                service = new AssistantService(versionDate);
+            }
+
+            while (!service.Credentials.HasIamTokenData())
+                yield return null;
+
+            WorkspaceCollection listWorkspacesResponse = null;
+            service.WithHeader("myHeaderName", "myHeaderValue");
+            service.ListWorkspaces(
+                callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
+                {
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListWorkspaces result: {0}", response.Response);
+                    listWorkspacesResponse = response.Result;
+                }
+            );
         }
     }
 }

@@ -71,9 +71,9 @@ namespace IBM.Watson.Tests
                 Text = inputText
             };
             service.Tone(
-                callback: (DetailedResponse<ToneAnalysis> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ToneAnalysis> response, IBMError error) =>
                 {
-                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "Tone result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "Tone result: {0}", response.Response);
                     toneResponse = response.Result;
                     Assert.IsNotNull(toneResponse);
                     Assert.IsNotNull(toneResponse.SentencesTone);
@@ -107,9 +107,9 @@ namespace IBM.Watson.Tests
                 }
             };
             service.ToneChat(
-                callback: (DetailedResponse<UtteranceAnalyses> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<UtteranceAnalyses> response, IBMError error) =>
                 {
-                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "ToneChat result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "ToneChat result: {0}", response.Response);
                     toneChatResponse = response.Result;
                     Assert.IsNotNull(toneChatResponse);
                     Assert.IsNotNull(toneChatResponse.UtterancesTone);

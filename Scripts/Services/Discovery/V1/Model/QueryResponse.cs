@@ -42,7 +42,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }
         /// <summary>
-        /// Gets or Sets Passages
+        /// Array of passage results for the query.
         /// </summary>
         [JsonProperty("passages", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryPassages> Passages { get; set; }

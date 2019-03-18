@@ -81,9 +81,9 @@ namespace IBM.Watson.Tests
             };
 
             service.Profile(
-                callback: (DetailedResponse<Profile> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Profile> response, IBMError error) =>
                 {
-                    Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Profile result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Profile result: {0}", response.Response);
                     profileResponse = response.Result;
                     Assert.IsNotNull(profileResponse);
                     Assert.IsNotNull(profileResponse.Personality);
@@ -124,7 +124,7 @@ namespace IBM.Watson.Tests
             };
 
             service.ProfileAsCsv(
-                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error) =>
                 {
                     profileAsCsvResponse = response.Result;
                     Assert.IsNotNull(profileAsCsvResponse);

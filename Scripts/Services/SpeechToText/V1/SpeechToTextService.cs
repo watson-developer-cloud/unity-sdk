@@ -166,7 +166,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SpeechModel> response = new DetailedResponse<SpeechModel>();
-            Dictionary<string, object> customData = ((RequestObject<SpeechModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -177,14 +176,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -193,7 +185,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<SpeechModel>)req).Callback != null)
-                ((RequestObject<SpeechModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SpeechModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List models.
@@ -249,7 +241,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SpeechModels> response = new DetailedResponse<SpeechModels>();
-            Dictionary<string, object> customData = ((RequestObject<SpeechModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -260,14 +251,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModels>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -276,7 +260,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<SpeechModels>)req).Callback != null)
-                ((RequestObject<SpeechModels>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SpeechModels>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Recognize audio.
@@ -313,6 +297,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// Where indicated, the format that you specify must include the sampling rate and can optionally include the
         /// number of channels and the endianness of the audio.
+        /// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (**Required.** Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -406,7 +391,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -599,7 +585,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnRecognizeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SpeechRecognitionResults> response = new DetailedResponse<SpeechRecognitionResults>();
-            Dictionary<string, object> customData = ((RequestObject<SpeechRecognitionResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -610,14 +595,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechRecognitionResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -626,7 +604,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<SpeechRecognitionResults>)req).Callback != null)
-                ((RequestObject<SpeechRecognitionResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SpeechRecognitionResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Check a job.
@@ -694,7 +672,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnCheckJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<RecognitionJob> response = new DetailedResponse<RecognitionJob>();
-            Dictionary<string, object> customData = ((RequestObject<RecognitionJob>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -705,14 +682,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -721,7 +691,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<RecognitionJob>)req).Callback != null)
-                ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Check jobs.
@@ -782,7 +752,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnCheckJobsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<RecognitionJobs> response = new DetailedResponse<RecognitionJobs>();
-            Dictionary<string, object> customData = ((RequestObject<RecognitionJobs>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -793,14 +762,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJobs>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -809,7 +771,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<RecognitionJobs>)req).Callback != null)
-                ((RequestObject<RecognitionJobs>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<RecognitionJobs>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a job.
@@ -869,6 +831,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// Where indicated, the format that you specify must include the sampling rate and can optionally include the
         /// number of channels and the endianness of the audio.
+        /// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (**Required.** Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -978,7 +941,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
         /// default to 1)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -1187,7 +1151,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnCreateJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<RecognitionJob> response = new DetailedResponse<RecognitionJob>();
-            Dictionary<string, object> customData = ((RequestObject<RecognitionJob>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1198,14 +1161,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1214,7 +1170,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<RecognitionJob>)req).Callback != null)
-                ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a job.
@@ -1276,7 +1232,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteJobResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1287,14 +1242,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1303,7 +1251,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Register a callback.
@@ -1401,7 +1349,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnRegisterCallbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<RegisterStatus> response = new DetailedResponse<RegisterStatus>();
-            Dictionary<string, object> customData = ((RequestObject<RegisterStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1412,14 +1359,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RegisterStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1428,7 +1368,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<RegisterStatus>)req).Callback != null)
-                ((RequestObject<RegisterStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<RegisterStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Unregister a callback.
@@ -1493,7 +1433,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnUnregisterCallbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1504,14 +1443,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1520,7 +1452,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a custom language model.
@@ -1616,7 +1548,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnCreateLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LanguageModel> response = new DetailedResponse<LanguageModel>();
-            Dictionary<string, object> customData = ((RequestObject<LanguageModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1627,14 +1558,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1643,7 +1567,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<LanguageModel>)req).Callback != null)
-                ((RequestObject<LanguageModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LanguageModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a custom language model.
@@ -1706,7 +1630,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1717,14 +1640,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1733,7 +1649,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get a custom language model.
@@ -1795,7 +1711,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LanguageModel> response = new DetailedResponse<LanguageModel>();
-            Dictionary<string, object> customData = ((RequestObject<LanguageModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1806,14 +1721,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1822,7 +1730,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<LanguageModel>)req).Callback != null)
-                ((RequestObject<LanguageModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LanguageModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List custom language models.
@@ -1888,7 +1796,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListLanguageModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LanguageModels> response = new DetailedResponse<LanguageModels>();
-            Dictionary<string, object> customData = ((RequestObject<LanguageModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1899,14 +1806,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModels>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1915,7 +1815,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<LanguageModels>)req).Callback != null)
-                ((RequestObject<LanguageModels>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LanguageModels>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Reset a custom language model.
@@ -1979,7 +1879,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnResetLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1990,14 +1889,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2006,7 +1898,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Train a custom language model.
@@ -2115,7 +2007,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnTrainLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2126,14 +2017,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2142,7 +2026,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Upgrade a custom language model.
@@ -2214,7 +2098,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnUpgradeLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2225,14 +2108,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2241,7 +2117,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a corpus.
@@ -2367,7 +2243,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnAddCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2378,14 +2253,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2394,7 +2262,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a corpus.
@@ -2463,7 +2331,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2474,14 +2341,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2490,7 +2350,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get a corpus.
@@ -2556,7 +2416,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetCorpusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Corpus> response = new DetailedResponse<Corpus>();
-            Dictionary<string, object> customData = ((RequestObject<Corpus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2567,14 +2426,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2583,7 +2435,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Corpus>)req).Callback != null)
-                ((RequestObject<Corpus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Corpus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List corpora.
@@ -2646,7 +2498,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListCorporaResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Corpora> response = new DetailedResponse<Corpora>();
-            Dictionary<string, object> customData = ((RequestObject<Corpora>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2657,14 +2508,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpora>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2673,7 +2517,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Corpora>)req).Callback != null)
-                ((RequestObject<Corpora>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Corpora>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a custom word.
@@ -2795,7 +2639,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnAddWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2806,14 +2649,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2822,7 +2658,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add custom words.
@@ -2935,7 +2771,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnAddWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2946,14 +2781,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2962,7 +2790,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a custom word.
@@ -3033,7 +2861,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3044,14 +2871,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3060,7 +2880,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get a custom word.
@@ -3127,7 +2947,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Word> response = new DetailedResponse<Word>();
-            Dictionary<string, object> customData = ((RequestObject<Word>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3138,14 +2957,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Word>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3154,7 +2966,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Word>)req).Callback != null)
-                ((RequestObject<Word>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Word>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List custom words.
@@ -3239,7 +3051,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Words> response = new DetailedResponse<Words>();
-            Dictionary<string, object> customData = ((RequestObject<Words>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3250,14 +3061,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Words>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3266,7 +3070,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Words>)req).Callback != null)
-                ((RequestObject<Words>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Words>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a grammar.
@@ -3389,7 +3193,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnAddGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3400,14 +3203,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3416,7 +3212,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a grammar.
@@ -3485,7 +3281,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3496,14 +3291,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3512,7 +3300,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get a grammar.
@@ -3578,7 +3366,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetGrammarResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Grammar> response = new DetailedResponse<Grammar>();
-            Dictionary<string, object> customData = ((RequestObject<Grammar>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3589,14 +3376,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammar>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3605,7 +3385,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Grammar>)req).Callback != null)
-                ((RequestObject<Grammar>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Grammar>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List grammars.
@@ -3668,7 +3448,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListGrammarsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Grammars> response = new DetailedResponse<Grammars>();
-            Dictionary<string, object> customData = ((RequestObject<Grammars>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3679,14 +3458,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammars>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3695,7 +3467,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<Grammars>)req).Callback != null)
-                ((RequestObject<Grammars>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Grammars>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a custom acoustic model.
@@ -3779,7 +3551,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnCreateAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AcousticModel> response = new DetailedResponse<AcousticModel>();
-            Dictionary<string, object> customData = ((RequestObject<AcousticModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3790,14 +3561,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3806,7 +3570,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<AcousticModel>)req).Callback != null)
-                ((RequestObject<AcousticModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AcousticModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a custom acoustic model.
@@ -3869,7 +3633,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3880,14 +3643,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3896,7 +3652,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get a custom acoustic model.
@@ -3958,7 +3714,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AcousticModel> response = new DetailedResponse<AcousticModel>();
-            Dictionary<string, object> customData = ((RequestObject<AcousticModel>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3969,14 +3724,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3985,7 +3733,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<AcousticModel>)req).Callback != null)
-                ((RequestObject<AcousticModel>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AcousticModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List custom acoustic models.
@@ -4051,7 +3799,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListAcousticModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AcousticModels> response = new DetailedResponse<AcousticModels>();
-            Dictionary<string, object> customData = ((RequestObject<AcousticModels>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4062,14 +3809,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModels>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4078,7 +3818,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<AcousticModels>)req).Callback != null)
-                ((RequestObject<AcousticModels>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AcousticModels>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Reset a custom acoustic model.
@@ -4142,7 +3882,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnResetAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4153,14 +3892,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4169,7 +3901,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Train a custom acoustic model.
@@ -4270,7 +4002,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnTrainAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4281,14 +4012,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4297,7 +4021,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Upgrade a custom acoustic model.
@@ -4393,7 +4117,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnUpgradeAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4404,14 +4127,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4420,7 +4136,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add an audio resource.
@@ -4462,6 +4178,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///  You can add an individual audio file in any format that the service supports for speech recognition. For an
         /// audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio
         /// file, including specifying the sampling rate, channels, and endianness where indicated.
+        /// * `audio/alaw` (Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -4601,7 +4318,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnAddAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4612,14 +4328,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4628,7 +4337,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete an audio resource.
@@ -4696,7 +4405,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4707,14 +4415,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4723,7 +4424,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get an audio resource.
@@ -4802,7 +4503,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnGetAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AudioListing> response = new DetailedResponse<AudioListing>();
-            Dictionary<string, object> customData = ((RequestObject<AudioListing>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4813,14 +4513,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioListing>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4829,7 +4522,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<AudioListing>)req).Callback != null)
-                ((RequestObject<AudioListing>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AudioListing>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List audio resources.
@@ -4894,7 +4587,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnListAudioResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AudioResources> response = new DetailedResponse<AudioResources>();
-            Dictionary<string, object> customData = ((RequestObject<AudioResources>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4905,14 +4597,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioResources>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4921,7 +4606,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<AudioResources>)req).Callback != null)
-                ((RequestObject<AudioResources>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AudioResources>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -4990,7 +4675,6 @@ namespace IBM.Watson.SpeechToText.V1
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5001,14 +4685,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5017,7 +4694,7 @@ namespace IBM.Watson.SpeechToText.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }
