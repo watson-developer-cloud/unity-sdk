@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// An array of entities resulting from the query.
+    /// An object that contains an array of entities resulting from the query.
     /// </summary>
     public class QueryEntitiesResponse
     {
         /// <summary>
-        /// Gets or Sets Entities
+        /// Array of entities that results from the query.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryEntitiesResponseItem> Entities { get; set; }

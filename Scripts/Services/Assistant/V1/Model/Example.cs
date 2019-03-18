@@ -27,24 +27,27 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Example
     {
         /// <summary>
-        /// The text of the user input example.
+        /// The text of a user input example. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 1024 characters.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string ExampleText { get; set; }
-        /// <summary>
-        /// The timestamp for creation of the example.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the last update to the example.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
+        public string Text { get; set; }
         /// <summary>
         /// An array of contextual entity mentions.
         /// </summary>
         [JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Mentions> Mentions { get; set; }
+        public List<Mention> Mentions { get; set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
     }
 }

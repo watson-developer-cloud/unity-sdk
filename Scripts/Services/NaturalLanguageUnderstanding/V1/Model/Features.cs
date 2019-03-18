@@ -16,6 +16,7 @@
 */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
@@ -63,7 +64,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// and publication date. Supports URL and HTML input types only.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public MetadataOptions Metadata { get; set; }
+        public JObject Metadata { get; set; }
         /// <summary>
         /// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo`
         /// relation might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
@@ -98,5 +99,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
         public CategoriesOptions Categories { get; set; }
+        /// <summary>
+        /// Returns tokens and sentences from the input text.
+        /// </summary>
+        [JsonProperty("syntax", NullValueHandling = NullValueHandling.Ignore)]
+        public SyntaxOptions Syntax { get; set; }
     }
 }

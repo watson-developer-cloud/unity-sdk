@@ -26,12 +26,12 @@ namespace IBM.Watson.Discovery.V1.Model
     public class QueryRelationsFilter
     {
         /// <summary>
-        /// A list of relation types to include or exclude from the query.
+        /// Gets or Sets RelationTypes
         /// </summary>
         [JsonProperty("relation_types", NullValueHandling = NullValueHandling.Ignore)]
         public QueryFilterType RelationTypes { get; set; }
         /// <summary>
-        /// A list of entity types to include or exclude from the query.
+        /// Gets or Sets EntityTypes
         /// </summary>
         [JsonProperty("entity_types", NullValueHandling = NullValueHandling.Ignore)]
         public QueryFilterType EntityTypes { get; set; }

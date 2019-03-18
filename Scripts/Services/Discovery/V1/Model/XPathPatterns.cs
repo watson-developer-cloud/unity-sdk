@@ -26,7 +26,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class XPathPatterns
     {
         /// <summary>
-        /// Gets or Sets Xpaths
+        /// An array to XPaths.
         /// </summary>
         [JsonProperty("xpaths", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Xpaths { get; set; }

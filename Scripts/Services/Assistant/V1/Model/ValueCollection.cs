@@ -29,7 +29,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of entity values.
         /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ValueExport> Values { get; set; }
+        public List<Value> Values { get; set; }
         /// <summary>
         /// The pagination data for the returned objects.
         /// </summary>

@@ -107,18 +107,16 @@ namespace IBM.Watson.Examples
 
             Log.Debug("ExampleAssistantV2.RunTest()", "Are you open on Christmas?");
 
-            MessageRequest messageRequest1 = new MessageRequest()
+            var input1 = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "Are you open on Christmas?",
+                Options = new MessageInputOptions()
                 {
-                    Text = "Are you open on Christmas?",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
             };
-            service.Message(OnMessage1, assistantId, sessionId, messageRequest1);
+
+            service.Message(OnMessage1, assistantId, sessionId, input: input1);
 
             while (!messageTested1)
             {
@@ -126,18 +124,17 @@ namespace IBM.Watson.Examples
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "What are your hours?");
-            MessageRequest messageRequest2 = new MessageRequest()
+
+            var input2 = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "What are your hours?",
+                Options = new MessageInputOptions()
                 {
-                    Text = "What are your hours?",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
             };
-            service.Message(OnMessage2, assistantId, sessionId, messageRequest2);
+
+            service.Message(OnMessage2, assistantId, sessionId, input: input2);
 
             while (!messageTested2)
             {
@@ -145,18 +142,17 @@ namespace IBM.Watson.Examples
             }
 
             Log.Debug("ExampleAssistantV2.RunTest()", "I'd like to make an appointment for 12pm.");
-            MessageRequest messageRequest3 = new MessageRequest()
+
+            var input3 = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "I'd like to make an appointment for 12pm.",
+                Options = new MessageInputOptions()
                 {
-                    Text = "I'd like to make an appointment for 12pm.",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
+
             };
-            service.Message(OnMessage3, assistantId, sessionId, messageRequest3);
+            service.Message(OnMessage3, assistantId, sessionId, input: input3);
 
             while (!messageTested3)
             {
@@ -186,24 +182,21 @@ namespace IBM.Watson.Examples
             //skills.MainSkill = skillDictionary;
 
 
-
-            MessageRequest messageRequest4 = new MessageRequest()
+            var input4 = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "On Friday please.",
+                Options = new MessageInputOptions()
                 {
-                    Text = "On Friday please.",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
-                },
-                Context = new MessageContext()
-                {
-                    //Skills = skills
+                    ReturnContext = true
                 }
             };
 
-            service.Message(OnMessage4, assistantId, sessionId, messageRequest4);
+            var context = new MessageContext()
+            {
+                //Skills = skills
+            };
+
+            service.Message(OnMessage4, assistantId, sessionId, input: input4, context: context);
 
             while (!messageTested4)
             {
@@ -239,7 +232,7 @@ namespace IBM.Watson.Examples
 
             messageTested1 = true;
         }
-        
+
         private void OnMessage2(DetailedResponse<MessageResponse> response, IBMError error, System.Collections.Generic.Dictionary<string, object> customData)
         {
             Log.Debug("ExampleAssistantV2.OnMessage2()", "response: {0}", response.Result.Output.Generic[0].Text);

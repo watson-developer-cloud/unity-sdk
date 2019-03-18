@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
@@ -26,17 +27,17 @@ namespace IBM.Watson.Discovery.V1.Model
     public class QueryResponse
     {
         /// <summary>
-        /// Gets or Sets MatchingResults
+        /// The number of matching results for the query.
         /// </summary>
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// Gets or Sets Results
+        /// Array of document results for the query.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
-        public List<QueryResult> Results { get; set; }
+        public List<JObject> Results { get; set; }
         /// <summary>
-        /// Gets or Sets Aggregations
+        /// Array of aggregation results for the query.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }
@@ -46,7 +47,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("passages", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryPassages> Passages { get; set; }
         /// <summary>
-        /// Gets or Sets DuplicatesRemoved
+        /// The number of duplicate results removed.
         /// </summary>
         [JsonProperty("duplicates_removed", NullValueHandling = NullValueHandling.Ignore)]
         public long? DuplicatesRemoved { get; set; }

@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -135,18 +136,20 @@ namespace IBM.Watson.Discovery.V1
         /// another environment results in an error.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="body">An object that defines an environment name and optional description. The fields in this
-        /// object are not approved for personal information and cannot be deleted based on customer ID.</param>
-        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
+        /// <param name="name">Name that identifies the environment.</param>
+        /// <param name="description">Description of the environment. (optional)</param>
+        /// <param name="size">Size of the environment. In the Lite plan the default and only accepted value is `LT`, in
+        /// all other plans the default is `S`. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateEnvironment(Callback<ModelEnvironment> callback, CreateEnvironmentRequest body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
+        public bool CreateEnvironment(Callback<ModelEnvironment> callback, string name, Dictionary<string, object> customData = null, string description = null, string size = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateEnvironment");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateEnvironment");
+                throw new ArgumentNullException("`callback` is required for `CreateEnvironment`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateEnvironment`");
 
             RequestObject<ModelEnvironment> req = new RequestObject<ModelEnvironment>
             {
@@ -164,14 +167,23 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateEnvironment";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(size))
+                bodyObject["size"] = size;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateEnvironmentResponse;
 
@@ -198,7 +210,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -214,16 +233,16 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="DeleteEnvironmentResponse" />DeleteEnvironmentResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteEnvironmentResponse" />DeleteEnvironmentResponse</returns>
         public bool DeleteEnvironment(Callback<DeleteEnvironmentResponse> callback, string environmentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteEnvironment");
+                throw new ArgumentNullException("`callback` is required for `DeleteEnvironment`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteEnvironment");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteEnvironment`");
 
             RequestObject<DeleteEnvironmentResponse> req = new RequestObject<DeleteEnvironmentResponse>
             {
@@ -241,7 +260,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteEnvironment";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteEnvironmentResponse;
@@ -269,7 +292,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -285,16 +315,16 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
         public bool GetEnvironment(Callback<ModelEnvironment> callback, string environmentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetEnvironment");
+                throw new ArgumentNullException("`callback` is required for `GetEnvironment`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetEnvironment");
+                throw new ArgumentNullException("`environmentId` is required for `GetEnvironment`");
 
             RequestObject<ModelEnvironment> req = new RequestObject<ModelEnvironment>
             {
@@ -312,7 +342,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetEnvironment";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetEnvironmentResponse;
@@ -340,7 +374,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -358,14 +399,14 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">Show only the environment with the given name. (optional)</param>
-        /// <returns><see cref="ListEnvironmentsResponse" />ListEnvironmentsResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListEnvironments(Callback<ListEnvironmentsResponse> callback, string name = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ListEnvironmentsResponse" />ListEnvironmentsResponse</returns>
+        public bool ListEnvironments(Callback<ListEnvironmentsResponse> callback, Dictionary<string, object> customData = null, string name = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListEnvironments");
+                throw new ArgumentNullException("`callback` is required for `ListEnvironments`");
 
             RequestObject<ListEnvironmentsResponse> req = new RequestObject<ListEnvironmentsResponse>
             {
@@ -383,7 +424,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListEnvironments";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListEnvironments"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(name))
             {
@@ -415,7 +460,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListEnvironmentsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -434,18 +486,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
-        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
         public bool ListFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, List<string> collectionIds, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListFields");
+                throw new ArgumentNullException("`callback` is required for `ListFields`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListFields");
+                throw new ArgumentNullException("`environmentId` is required for `ListFields`");
             if (collectionIds == null)
-                throw new ArgumentNullException("collectionIds is required for ListFields");
+                throw new ArgumentNullException("`collectionIds` is required for `ListFields`");
 
             RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
             {
@@ -463,9 +515,16 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListFields";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListFields"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
-            req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
 
             req.OnResponse = OnListFieldsResponse;
 
@@ -492,7 +551,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -511,19 +577,20 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="body">An object that defines the environment's name and, optionally, description.</param>
-        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
+        /// <param name="name">Name that identifies the environment. (optional)</param>
+        /// <param name="description">Description of the environment. (optional)</param>
+        /// <param name="size">Size that the environment should be increased to. Environment size cannot be modified
+        /// when using a Lite plan. Environment size can only increased and not decreased. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateEnvironment(Callback<ModelEnvironment> callback, string environmentId, UpdateEnvironmentRequest body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
+        public bool UpdateEnvironment(Callback<ModelEnvironment> callback, string environmentId, Dictionary<string, object> customData = null, string name = null, string description = null, string size = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateEnvironment");
+                throw new ArgumentNullException("`callback` is required for `UpdateEnvironment`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateEnvironment");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateEnvironment");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateEnvironment`");
 
             RequestObject<ModelEnvironment> req = new RequestObject<ModelEnvironment>
             {
@@ -541,14 +608,23 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateEnvironment";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(size))
+                bodyObject["size"] = size;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateEnvironmentResponse;
 
@@ -575,7 +651,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -601,32 +684,25 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="configuration">Input an object that enables you to customize how your content is ingested and
-        /// what enrichments are added to your data.
-        ///
-        /// **name** is required and must be unique within the current **environment**. All other properties are
-        /// optional.
-        ///
-        /// If the input configuration contains the **configuration_id**, **created**, or **updated** properties, then
-        /// they will be ignored and overridden by the system (an error is not returned so that the overridden fields do
-        /// not need to be removed when copying a configuration).
-        ///
-        /// The configuration can contain unrecognized JSON fields. Any such fields will be ignored and will not
-        /// generate an error. This makes it easier to use newer configuration files with older versions of the API and
-        /// the service. It also makes it possible for the tooling to add additional metadata and information to the
-        /// configuration.</param>
-        /// <returns><see cref="Configuration" />Configuration</returns>
+        /// <param name="name">The name of the configuration.</param>
+        /// <param name="description">The description of the configuration, if available. (optional)</param>
+        /// <param name="conversions">Document conversion settings. (optional)</param>
+        /// <param name="enrichments">An array of document enrichment settings for the configuration. (optional)</param>
+        /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
+        /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
+        /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, Configuration configuration, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Configuration" />Configuration</returns>
+        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, string name, Dictionary<string, object> customData = null, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateConfiguration");
+                throw new ArgumentNullException("`callback` is required for `CreateConfiguration`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateConfiguration");
-            if (configuration == null)
-                throw new ArgumentNullException("configuration is required for CreateConfiguration");
+                throw new ArgumentNullException("`environmentId` is required for `CreateConfiguration`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateConfiguration`");
 
             RequestObject<Configuration> req = new RequestObject<Configuration>
             {
@@ -644,14 +720,29 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateConfiguration";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (configuration != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(configuration));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (conversions != null)
+                bodyObject["conversions"] = JToken.FromObject(conversions);
+            if (enrichments != null && enrichments.Count > 0)
+                bodyObject["enrichments"] = JToken.FromObject(enrichments);
+            if (normalizations != null && normalizations.Count > 0)
+                bodyObject["normalizations"] = JToken.FromObject(normalizations);
+            if (source != null)
+                bodyObject["source"] = JToken.FromObject(source);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateConfigurationResponse;
 
@@ -678,7 +769,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -700,18 +798,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="configurationId">The ID of the configuration.</param>
-        /// <returns><see cref="DeleteConfigurationResponse" />DeleteConfigurationResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteConfigurationResponse" />DeleteConfigurationResponse</returns>
         public bool DeleteConfiguration(Callback<DeleteConfigurationResponse> callback, string environmentId, string configurationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteConfiguration");
+                throw new ArgumentNullException("`callback` is required for `DeleteConfiguration`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteConfiguration");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
-                throw new ArgumentNullException("configurationId is required for DeleteConfiguration");
+                throw new ArgumentNullException("`configurationId` is required for `DeleteConfiguration`");
 
             RequestObject<DeleteConfigurationResponse> req = new RequestObject<DeleteConfigurationResponse>
             {
@@ -729,7 +827,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteConfiguration";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteConfigurationResponse;
@@ -757,7 +859,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -774,18 +883,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="configurationId">The ID of the configuration.</param>
-        /// <returns><see cref="Configuration" />Configuration</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Configuration" />Configuration</returns>
         public bool GetConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetConfiguration");
+                throw new ArgumentNullException("`callback` is required for `GetConfiguration`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetConfiguration");
+                throw new ArgumentNullException("`environmentId` is required for `GetConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
-                throw new ArgumentNullException("configurationId is required for GetConfiguration");
+                throw new ArgumentNullException("`configurationId` is required for `GetConfiguration`");
 
             RequestObject<Configuration> req = new RequestObject<Configuration>
             {
@@ -803,7 +912,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetConfiguration";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetConfigurationResponse;
@@ -831,7 +944,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -850,16 +970,16 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">Find configurations with the given name. (optional)</param>
-        /// <returns><see cref="ListConfigurationsResponse" />ListConfigurationsResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListConfigurations(Callback<ListConfigurationsResponse> callback, string environmentId, string name = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ListConfigurationsResponse" />ListConfigurationsResponse</returns>
+        public bool ListConfigurations(Callback<ListConfigurationsResponse> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListConfigurations");
+                throw new ArgumentNullException("`callback` is required for `ListConfigurations`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListConfigurations");
+                throw new ArgumentNullException("`environmentId` is required for `ListConfigurations`");
 
             RequestObject<ListConfigurationsResponse> req = new RequestObject<ListConfigurationsResponse>
             {
@@ -877,7 +997,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListConfigurations";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListConfigurations"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(name))
             {
@@ -909,7 +1033,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListConfigurationsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -935,34 +1066,27 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="configurationId">The ID of the configuration.</param>
-        /// <param name="configuration">Input an object that enables you to update and customize how your data is
-        /// ingested and what enrichments are added to your data.
-        /// The **name** parameter is required and must be unique within the current **environment**. All other
-        /// properties are optional, but if they are omitted  the default values replace the current value of each
-        /// omitted property.
-        ///
-        /// If the input configuration contains the **configuration_id**, **created**, or **updated** properties, they
-        /// are ignored and overridden by the system, and an error is not returned so that the overridden fields do not
-        /// need to be removed when updating a configuration.
-        ///
-        /// The configuration can contain unrecognized JSON fields. Any such fields are ignored and do not generate an
-        /// error. This makes it easier to use newer configuration files with older versions of the API and the service.
-        /// It also makes it possible for the tooling to add additional metadata and information to the
-        /// configuration.</param>
-        /// <returns><see cref="Configuration" />Configuration</returns>
+        /// <param name="name">The name of the configuration.</param>
+        /// <param name="description">The description of the configuration, if available. (optional)</param>
+        /// <param name="conversions">Document conversion settings. (optional)</param>
+        /// <param name="enrichments">An array of document enrichment settings for the configuration. (optional)</param>
+        /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
+        /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
+        /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, Configuration configuration, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Configuration" />Configuration</returns>
+        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, string name, Dictionary<string, object> customData = null, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateConfiguration");
+                throw new ArgumentNullException("`callback` is required for `UpdateConfiguration`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateConfiguration");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
-                throw new ArgumentNullException("configurationId is required for UpdateConfiguration");
-            if (configuration == null)
-                throw new ArgumentNullException("configuration is required for UpdateConfiguration");
+                throw new ArgumentNullException("`configurationId` is required for `UpdateConfiguration`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `UpdateConfiguration`");
 
             RequestObject<Configuration> req = new RequestObject<Configuration>
             {
@@ -980,14 +1104,29 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateConfiguration";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (configuration != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(configuration));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (conversions != null)
+                bodyObject["conversions"] = JToken.FromObject(conversions);
+            if (enrichments != null && enrichments.Count > 0)
+                bodyObject["enrichments"] = JToken.FromObject(enrichments);
+            if (normalizations != null && normalizations.Count > 0)
+                bodyObject["normalizations"] = JToken.FromObject(normalizations);
+            if (source != null)
+                bodyObject["source"] = JToken.FromObject(source);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateConfigurationResponse;
 
@@ -1014,7 +1153,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1054,16 +1200,16 @@ namespace IBM.Watson.Discovery.V1
         /// **configuration** form part is also provided (both are present at the same time), then the request will be
         /// rejected. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <returns><see cref="TestDocument" />TestDocument</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.FileStream file = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TestDocument" />TestDocument</returns>
+        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, Dictionary<string, object> customData = null, string configuration = null, System.IO.FileStream file = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for TestConfigurationInEnvironment");
+                throw new ArgumentNullException("`callback` is required for `TestConfigurationInEnvironment`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for TestConfigurationInEnvironment");
+                throw new ArgumentNullException("`environmentId` is required for `TestConfigurationInEnvironment`");
 
             RequestObject<TestDocument> req = new RequestObject<TestDocument>
             {
@@ -1081,21 +1227,24 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=TestConfigurationInEnvironment";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "TestConfigurationInEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (!string.IsNullOrEmpty(configuration))
             {
-                req.Forms["configuration"] = new RESTConnector.Form("configuration");
+                req.Forms["configuration"] = new RESTConnector.Form(configuration);
             }
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
             if (!string.IsNullOrEmpty(step))
             {
@@ -1131,7 +1280,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TestDocument>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1147,19 +1303,24 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="body">Input an object that allows you to add a collection.</param>
-        /// <returns><see cref="Collection" />Collection</returns>
+        /// <param name="name">The name of the collection to be created.</param>
+        /// <param name="description">A description of the collection. (optional)</param>
+        /// <param name="configurationId">The ID of the configuration in which the collection is to be created.
+        /// (optional)</param>
+        /// <param name="language">The language of the documents stored in the collection, in the form of an ISO 639-1
+        /// language code. (optional, default to en)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateCollection(Callback<Collection> callback, string environmentId, CreateCollectionRequest body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Collection" />Collection</returns>
+        public bool CreateCollection(Callback<Collection> callback, string environmentId, string name, Dictionary<string, object> customData = null, string description = null, string configurationId = null, string language = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateCollection");
+                throw new ArgumentNullException("`callback` is required for `CreateCollection`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateCollection");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateCollection");
+                throw new ArgumentNullException("`environmentId` is required for `CreateCollection`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateCollection`");
 
             RequestObject<Collection> req = new RequestObject<Collection>
             {
@@ -1177,14 +1338,25 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateCollection";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(configurationId))
+                bodyObject["configuration_id"] = configurationId;
+            if (!string.IsNullOrEmpty(language))
+                bodyObject["language"] = language;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCollectionResponse;
 
@@ -1211,7 +1383,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1228,18 +1407,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="DeleteCollectionResponse" />DeleteCollectionResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteCollectionResponse" />DeleteCollectionResponse</returns>
         public bool DeleteCollection(Callback<DeleteCollectionResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteCollection");
+                throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteCollection");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteCollection`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteCollection");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteCollection`");
 
             RequestObject<DeleteCollectionResponse> req = new RequestObject<DeleteCollectionResponse>
             {
@@ -1257,7 +1436,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteCollection";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteCollectionResponse;
@@ -1285,7 +1468,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1302,18 +1492,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="Collection" />Collection</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Collection" />Collection</returns>
         public bool GetCollection(Callback<Collection> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetCollection");
+                throw new ArgumentNullException("`callback` is required for `GetCollection`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetCollection");
+                throw new ArgumentNullException("`environmentId` is required for `GetCollection`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for GetCollection");
+                throw new ArgumentNullException("`collectionId` is required for `GetCollection`");
 
             RequestObject<Collection> req = new RequestObject<Collection>
             {
@@ -1331,7 +1521,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetCollection";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetCollectionResponse;
@@ -1359,7 +1553,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1378,18 +1579,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
         public bool ListCollectionFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListCollectionFields");
+                throw new ArgumentNullException("`callback` is required for `ListCollectionFields`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListCollectionFields");
+                throw new ArgumentNullException("`environmentId` is required for `ListCollectionFields`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for ListCollectionFields");
+                throw new ArgumentNullException("`collectionId` is required for `ListCollectionFields`");
 
             RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
             {
@@ -1407,7 +1608,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListCollectionFields";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollectionFields"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListCollectionFieldsResponse;
@@ -1435,7 +1640,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1454,16 +1666,16 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">Find collections with the given name. (optional)</param>
-        /// <returns><see cref="ListCollectionsResponse" />ListCollectionsResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListCollections(Callback<ListCollectionsResponse> callback, string environmentId, string name = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ListCollectionsResponse" />ListCollectionsResponse</returns>
+        public bool ListCollections(Callback<ListCollectionsResponse> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListCollections");
+                throw new ArgumentNullException("`callback` is required for `ListCollections`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListCollections");
+                throw new ArgumentNullException("`environmentId` is required for `ListCollections`");
 
             RequestObject<ListCollectionsResponse> req = new RequestObject<ListCollectionsResponse>
             {
@@ -1481,7 +1693,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListCollections";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollections"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(name))
             {
@@ -1513,7 +1729,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1530,19 +1753,22 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="body">Input an object that allows you to update a collection. (optional)</param>
-        /// <returns><see cref="Collection" />Collection</returns>
+        /// <param name="name">The name of the collection.</param>
+        /// <param name="description">A description of the collection. (optional)</param>
+        /// <param name="configurationId">The ID of the configuration in which the collection is to be updated.
+        /// (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, UpdateCollectionRequest body = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Collection" />Collection</returns>
+        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name, Dictionary<string, object> customData = null, string description = null, string configurationId = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateCollection");
+                throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateCollection");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateCollection`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for UpdateCollection");
+                throw new ArgumentNullException("`collectionId` is required for `UpdateCollection`");
 
             RequestObject<Collection> req = new RequestObject<Collection>
             {
@@ -1560,14 +1786,23 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateCollection";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(configurationId))
+                bodyObject["configuration_id"] = configurationId;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateCollectionResponse;
 
@@ -1594,7 +1829,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1615,21 +1857,33 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="body">An object that defines the expansion list.</param>
-        /// <returns><see cref="Expansions" />Expansions</returns>
+        /// <param name="expansions">An array of query expansion definitions.
+        ///
+        ///  Each object in the **expansions** array represents a term or set of terms that will be expanded into other
+        /// terms. Each expansion object can be configured as bidirectional or unidirectional. Bidirectional means that
+        /// all terms are expanded to all other terms in the object. Unidirectional means that a set list of terms can
+        /// be expanded into a second list of terms.
+        ///
+        ///  To create a bi-directional expansion specify an **expanded_terms** array. When found in a query, all items
+        /// in the **expanded_terms** array are then expanded to the other items in the same array.
+        ///
+        ///  To create a uni-directional expansion, specify both an array of **input_terms** and an array of
+        /// **expanded_terms**. When items in the **input_terms** array are present in a query, they are expanded using
+        /// the items listed in the **expanded_terms** array.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateExpansions(Callback<Expansions> callback, string environmentId, string collectionId, Expansions body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Expansions" />Expansions</returns>
+        public bool CreateExpansions(Callback<Expansions> callback, string environmentId, string collectionId, List<Expansion> expansions, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateExpansions");
+                throw new ArgumentNullException("`callback` is required for `CreateExpansions`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateExpansions");
+                throw new ArgumentNullException("`environmentId` is required for `CreateExpansions`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for CreateExpansions");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateExpansions");
+                throw new ArgumentNullException("`collectionId` is required for `CreateExpansions`");
+            if (expansions == null)
+                throw new ArgumentNullException("`expansions` is required for `CreateExpansions`");
 
             RequestObject<Expansions> req = new RequestObject<Expansions>
             {
@@ -1647,14 +1901,19 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateExpansions";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateExpansions"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (expansions != null && expansions.Count > 0)
+                bodyObject["expansions"] = JToken.FromObject(expansions);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateExpansionsResponse;
 
@@ -1681,7 +1940,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1701,20 +1967,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
-        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
         public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.FileStream stopwordFile, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateStopwordList");
+                throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateStopwordList");
+                throw new ArgumentNullException("`environmentId` is required for `CreateStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for CreateStopwordList");
+                throw new ArgumentNullException("`collectionId` is required for `CreateStopwordList`");
             if (stopwordFile == null)
-                throw new ArgumentNullException("stopwordFile is required for CreateStopwordList");
+                throw new ArgumentNullException("`stopwordFile` is required for `CreateStopwordList`");
 
             RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
             {
@@ -1732,13 +1998,16 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateStopwordList";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateStopwordList"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["stopwordFile"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
             if (stopwordFile != null)
             {
-                req.Forms["stopwordFile"] = new RESTConnector.Form(stopwordFile.ToString());
+                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
             }
 
             req.OnResponse = OnCreateStopwordListResponse;
@@ -1766,7 +2035,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1785,20 +2061,21 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="tokenizationDictionary">An object that represents the tokenization dictionary to be uploaded.
-        /// (optional)</param>
-        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        /// <param name="tokenizationRules">An array of tokenization rules. Each rule contains, the original `text`
+        /// string, component `tokens`, any alternate character set `readings`, and which `part_of_speech` the text is
+        /// from. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateTokenizationDictionary(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, TokenDict tokenizationDictionary = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        public bool CreateTokenizationDictionary(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, List<TokenDictRule> tokenizationRules = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateTokenizationDictionary");
+                throw new ArgumentNullException("`callback` is required for `CreateTokenizationDictionary`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateTokenizationDictionary");
+                throw new ArgumentNullException("`environmentId` is required for `CreateTokenizationDictionary`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for CreateTokenizationDictionary");
+                throw new ArgumentNullException("`collectionId` is required for `CreateTokenizationDictionary`");
 
             RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
             {
@@ -1816,14 +2093,19 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateTokenizationDictionary";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateTokenizationDictionary"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (tokenizationDictionary != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(tokenizationDictionary));
-            }
+
+            JObject bodyObject = new JObject();
+            if (tokenizationRules != null && tokenizationRules.Count > 0)
+                bodyObject["tokenization_rules"] = JToken.FromObject(tokenizationRules);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateTokenizationDictionaryResponse;
 
@@ -1850,7 +2132,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1870,18 +2159,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteExpansions(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteExpansions");
+                throw new ArgumentNullException("`callback` is required for `DeleteExpansions`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteExpansions");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteExpansions`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteExpansions");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteExpansions`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1899,7 +2188,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteExpansions";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteExpansions"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteExpansionsResponse;
@@ -1927,7 +2220,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1947,18 +2247,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteStopwordList(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteStopwordList");
+                throw new ArgumentNullException("`callback` is required for `DeleteStopwordList`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteStopwordList");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteStopwordList");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteStopwordList`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1976,7 +2276,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteStopwordList";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteStopwordList"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteStopwordListResponse;
@@ -2004,7 +2308,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2023,18 +2334,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteTokenizationDictionary(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteTokenizationDictionary");
+                throw new ArgumentNullException("`callback` is required for `DeleteTokenizationDictionary`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteTokenizationDictionary");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteTokenizationDictionary`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteTokenizationDictionary");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteTokenizationDictionary`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2052,7 +2363,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteTokenizationDictionary";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTokenizationDictionary"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteTokenizationDictionaryResponse;
@@ -2080,7 +2395,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2092,25 +2414,25 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<object>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
-        /// Get tokenization dictionary status.
+        /// Get stopword list status.
         ///
-        /// Returns the current status of the tokenization dictionary for the specified collection.
+        /// Returns the current status of the stopword list for the specified collection.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        public bool GetStopwordListStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetTokenizationDictionaryStatus");
+                throw new ArgumentNullException("`callback` is required for `GetStopwordListStatus`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetTokenizationDictionaryStatus");
+                throw new ArgumentNullException("`environmentId` is required for `GetStopwordListStatus`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for GetTokenizationDictionaryStatus");
+                throw new ArgumentNullException("`collectionId` is required for `GetStopwordListStatus`");
 
             RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
             {
@@ -2128,7 +2450,98 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetTokenizationDictionaryStatus";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetStopwordListStatus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetStopwordListStatusResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
+            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetStopwordListStatusResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+        }
+        /// <summary>
+        /// Get tokenization dictionary status.
+        ///
+        /// Returns the current status of the tokenization dictionary for the specified collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
+        /// json output from the REST call will be passed in this object as the value of the 'json'
+        /// key.</string></param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTokenizationDictionaryStatus`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetTokenizationDictionaryStatus`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetTokenizationDictionaryStatus`");
+
+            RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification,
+                CustomData = customData == null ? new Dictionary<string, object>() : customData
+            };
+
+            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            {
+                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
+                {
+                    req.Headers.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
@@ -2156,7 +2569,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2176,18 +2596,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="Expansions" />Expansions</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Expansions" />Expansions</returns>
         public bool ListExpansions(Callback<Expansions> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListExpansions");
+                throw new ArgumentNullException("`callback` is required for `ListExpansions`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListExpansions");
+                throw new ArgumentNullException("`environmentId` is required for `ListExpansions`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for ListExpansions");
+                throw new ArgumentNullException("`collectionId` is required for `ListExpansions`");
 
             RequestObject<Expansions> req = new RequestObject<Expansions>
             {
@@ -2205,7 +2625,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListExpansions";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListExpansions"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListExpansionsResponse;
@@ -2233,7 +2657,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2281,18 +2712,18 @@ namespace IBM.Watson.Discovery.V1
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
+        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddDocument");
+                throw new ArgumentNullException("`callback` is required for `AddDocument`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for AddDocument");
+                throw new ArgumentNullException("`environmentId` is required for `AddDocument`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for AddDocument");
+                throw new ArgumentNullException("`collectionId` is required for `AddDocument`");
 
             RequestObject<DocumentAccepted> req = new RequestObject<DocumentAccepted>
             {
@@ -2310,17 +2741,20 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=AddDocument";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "AddDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
 
             req.OnResponse = OnAddDocumentResponse;
@@ -2348,7 +2782,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2369,20 +2810,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
-        /// <returns><see cref="DeleteDocumentResponse" />DeleteDocumentResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteDocumentResponse" />DeleteDocumentResponse</returns>
         public bool DeleteDocument(Callback<DeleteDocumentResponse> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteDocument");
+                throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteDocument");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteDocument`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteDocument");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteDocument`");
             if (string.IsNullOrEmpty(documentId))
-                throw new ArgumentNullException("documentId is required for DeleteDocument");
+                throw new ArgumentNullException("`documentId` is required for `DeleteDocument`");
 
             RequestObject<DeleteDocumentResponse> req = new RequestObject<DeleteDocumentResponse>
             {
@@ -2400,7 +2841,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteDocument";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteDocumentResponse;
@@ -2428,7 +2873,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2450,20 +2902,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
-        /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
         public bool GetDocumentStatus(Callback<DocumentStatus> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetDocumentStatus");
+                throw new ArgumentNullException("`callback` is required for `GetDocumentStatus`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetDocumentStatus");
+                throw new ArgumentNullException("`environmentId` is required for `GetDocumentStatus`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for GetDocumentStatus");
+                throw new ArgumentNullException("`collectionId` is required for `GetDocumentStatus`");
             if (string.IsNullOrEmpty(documentId))
-                throw new ArgumentNullException("documentId is required for GetDocumentStatus");
+                throw new ArgumentNullException("`documentId` is required for `GetDocumentStatus`");
 
             RequestObject<DocumentStatus> req = new RequestObject<DocumentStatus>
             {
@@ -2481,7 +2933,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetDocumentStatus";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetDocumentStatus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetDocumentStatusResponse;
@@ -2509,7 +2965,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2539,20 +3002,20 @@ namespace IBM.Watson.Discovery.V1
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
+        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateDocument");
+                throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateDocument");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateDocument`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for UpdateDocument");
+                throw new ArgumentNullException("`collectionId` is required for `UpdateDocument`");
             if (string.IsNullOrEmpty(documentId))
-                throw new ArgumentNullException("documentId is required for UpdateDocument");
+                throw new ArgumentNullException("`documentId` is required for `UpdateDocument`");
 
             RequestObject<DocumentAccepted> req = new RequestObject<DocumentAccepted>
             {
@@ -2570,17 +3033,20 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateDocument";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file.ToString());
+                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
-                req.Forms["metadata"] = new RESTConnector.Form("metadata");
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
             }
 
             req.OnResponse = OnUpdateDocumentResponse;
@@ -2608,7 +3074,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2628,19 +3101,75 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="queryLong">An object that represents the query to be submitted. (optional)</param>
+        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
+        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
+        /// (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
+        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
+        /// aggregations, see the Query reference. (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. This parameter cannot be used in the same query as the **bias**
+        /// parameter. (optional)</param>
+        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
+        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
+        /// false)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional, default to
+        /// 10)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
+        /// (optional, default to 400)</param>
+        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
+        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
+        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
+        /// to false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against. Required when
+        /// querying multiple collections, invalid when performing a single collection query. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
+        ///
+        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
+        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
+        /// subsequently applied and reduce the scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
+        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
+        /// <param name="bias">Field which the returned results will be biased against. The specified field must be
+        /// either a **date** or **number** format. When a **date** type field is specified returned results are biased
+        /// towards field values closer to the current date. When a **number** type field is specified, returned results
+        /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
+        /// parameter. (optional)</param>
         /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
         /// default to false)</param>
-        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, QueryLarge queryLong = null, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for FederatedQuery");
+                throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for FederatedQuery");
+                throw new ArgumentNullException("`environmentId` is required for `FederatedQuery`");
 
             RequestObject<QueryResponse> req = new RequestObject<QueryResponse>
             {
@@ -2658,18 +3187,62 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=FederatedQuery";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQuery"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
             if (loggingOptOut != null)
             {
                 req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-            if (queryLong != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(queryLong));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(filter))
+                bodyObject["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                bodyObject["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                bodyObject["natural_language_query"] = naturalLanguageQuery;
+            if (passages != null)
+                bodyObject["passages"] = JToken.FromObject(passages);
+            if (!string.IsNullOrEmpty(aggregation))
+                bodyObject["aggregation"] = aggregation;
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (!string.IsNullOrEmpty(returnFields))
+                bodyObject["return"] = returnFields;
+            if (offset != null)
+                bodyObject["offset"] = JToken.FromObject(offset);
+            if (!string.IsNullOrEmpty(sort))
+                bodyObject["sort"] = sort;
+            if (highlight != null)
+                bodyObject["highlight"] = JToken.FromObject(highlight);
+            if (!string.IsNullOrEmpty(passagesFields))
+                bodyObject["passages.fields"] = passagesFields;
+            if (passagesCount != null)
+                bodyObject["passages.count"] = JToken.FromObject(passagesCount);
+            if (passagesCharacters != null)
+                bodyObject["passages.characters"] = JToken.FromObject(passagesCharacters);
+            if (deduplicate != null)
+                bodyObject["deduplicate"] = JToken.FromObject(deduplicate);
+            if (!string.IsNullOrEmpty(deduplicateField))
+                bodyObject["deduplicate.field"] = deduplicateField;
+            if (!string.IsNullOrEmpty(collectionIds))
+                bodyObject["collection_ids"] = collectionIds;
+            if (similar != null)
+                bodyObject["similar"] = JToken.FromObject(similar);
+            if (!string.IsNullOrEmpty(similarDocumentIds))
+                bodyObject["similar.document_ids"] = similarDocumentIds;
+            if (!string.IsNullOrEmpty(similarFields))
+                bodyObject["similar.fields"] = similarFields;
+            if (!string.IsNullOrEmpty(bias))
+                bodyObject["bias"] = bias;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnFederatedQueryResponse;
 
@@ -2696,7 +3269,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2754,18 +3334,18 @@ namespace IBM.Watson.Discovery.V1
         /// subsequently applied and reduce the scope. (optional)</param>
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
+        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for FederatedQueryNotices");
+                throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for FederatedQueryNotices");
+                throw new ArgumentNullException("`environmentId` is required for `FederatedQueryNotices`");
             if (collectionIds == null)
-                throw new ArgumentNullException("collectionIds is required for FederatedQueryNotices");
+                throw new ArgumentNullException("`collectionIds` is required for `FederatedQueryNotices`");
 
             RequestObject<QueryNoticesResponse> req = new RequestObject<QueryNoticesResponse>
             {
@@ -2783,9 +3363,16 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=FederatedQueryNotices";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQueryNotices"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
-            req.Parameters["collection_ids"] = collectionIds != null && collectionIds.Count > 0 ? string.Join(",", collectionIds.ToArray()) : null;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
             if (!string.IsNullOrEmpty(filter))
             {
                 req.Parameters["filter"] = filter;
@@ -2806,12 +3393,18 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (returnFields != null && returnFields.Count > 0)
+            {
+                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+            }
             if (offset != null)
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
             if (highlight != null)
             {
                 req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
@@ -2824,8 +3417,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["similar"] = (bool)similar ? "true" : "false";
             }
-            req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
+            {
+                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
+            }
+            if (similarFields != null && similarFields.Count > 0)
+            {
+                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
+            }
 
             req.OnResponse = OnFederatedQueryNoticesResponse;
 
@@ -2852,7 +3451,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2873,21 +3479,77 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="queryLong">An object that represents the query to be submitted. (optional)</param>
+        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
+        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
+        /// (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
+        /// (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
+        /// the same time. (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
+        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
+        /// aggregations, see the Query reference. (optional)</param>
+        /// <param name="count">Number of results to return. (optional, default to 10)</param>
+        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. This parameter cannot be used in the same query as the **bias**
+        /// parameter. (optional)</param>
+        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
+        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
+        /// false)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional, default to
+        /// 10)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
+        /// (optional, default to 400)</param>
+        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
+        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
+        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
+        /// to false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against. Required when
+        /// querying multiple collections, invalid when performing a single collection query. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
+        ///
+        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
+        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
+        /// subsequently applied and reduce the scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
+        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
+        /// <param name="bias">Field which the returned results will be biased against. The specified field must be
+        /// either a **date** or **number** format. When a **date** type field is specified returned results are biased
+        /// towards field values closer to the current date. When a **number** type field is specified, returned results
+        /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
+        /// parameter. (optional)</param>
         /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
         /// default to false)</param>
-        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, QueryLarge queryLong = null, bool? loggingOptOut = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
+        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Query");
+                throw new ArgumentNullException("`callback` is required for `Query`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for Query");
+                throw new ArgumentNullException("`environmentId` is required for `Query`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for Query");
+                throw new ArgumentNullException("`collectionId` is required for `Query`");
 
             RequestObject<QueryResponse> req = new RequestObject<QueryResponse>
             {
@@ -2905,18 +3567,62 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=Query";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "Query"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
             if (loggingOptOut != null)
             {
                 req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-            if (queryLong != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(queryLong));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(filter))
+                bodyObject["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                bodyObject["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                bodyObject["natural_language_query"] = naturalLanguageQuery;
+            if (passages != null)
+                bodyObject["passages"] = JToken.FromObject(passages);
+            if (!string.IsNullOrEmpty(aggregation))
+                bodyObject["aggregation"] = aggregation;
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (!string.IsNullOrEmpty(returnFields))
+                bodyObject["return"] = returnFields;
+            if (offset != null)
+                bodyObject["offset"] = JToken.FromObject(offset);
+            if (!string.IsNullOrEmpty(sort))
+                bodyObject["sort"] = sort;
+            if (highlight != null)
+                bodyObject["highlight"] = JToken.FromObject(highlight);
+            if (!string.IsNullOrEmpty(passagesFields))
+                bodyObject["passages.fields"] = passagesFields;
+            if (passagesCount != null)
+                bodyObject["passages.count"] = JToken.FromObject(passagesCount);
+            if (passagesCharacters != null)
+                bodyObject["passages.characters"] = JToken.FromObject(passagesCharacters);
+            if (deduplicate != null)
+                bodyObject["deduplicate"] = JToken.FromObject(deduplicate);
+            if (!string.IsNullOrEmpty(deduplicateField))
+                bodyObject["deduplicate.field"] = deduplicateField;
+            if (!string.IsNullOrEmpty(collectionIds))
+                bodyObject["collection_ids"] = collectionIds;
+            if (similar != null)
+                bodyObject["similar"] = JToken.FromObject(similar);
+            if (!string.IsNullOrEmpty(similarDocumentIds))
+                bodyObject["similar.document_ids"] = similarDocumentIds;
+            if (!string.IsNullOrEmpty(similarFields))
+                bodyObject["similar.fields"] = similarFields;
+            if (!string.IsNullOrEmpty(bias))
+                bodyObject["bias"] = bias;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnQueryResponse;
 
@@ -2943,7 +3649,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2963,22 +3676,28 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="entityQuery">An object specifying the entities to query, which functions to perform, and any
-        /// additional constraints.</param>
-        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
+        /// <param name="feature">The entity query feature to perform. Supported features are `disambiguate` and
+        /// `similar_entities`. (optional)</param>
+        /// <param name="entity">A text string that appears within the entity text field. (optional)</param>
+        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
+        /// association. For example, if you wanted to query the city of London in England your query would look for
+        /// `London` with the context of `England`. (optional)</param>
+        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
+        /// (optional)</param>
+        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
+        /// maximum number of evidence items per query is 10,000. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, QueryEntities entityQuery, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
+        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for QueryEntities");
+                throw new ArgumentNullException("`callback` is required for `QueryEntities`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for QueryEntities");
+                throw new ArgumentNullException("`environmentId` is required for `QueryEntities`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for QueryEntities");
-            if (entityQuery == null)
-                throw new ArgumentNullException("entityQuery is required for QueryEntities");
+                throw new ArgumentNullException("`collectionId` is required for `QueryEntities`");
 
             RequestObject<QueryEntitiesResponse> req = new RequestObject<QueryEntitiesResponse>
             {
@@ -2996,14 +3715,27 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=QueryEntities";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryEntities"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (entityQuery != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(entityQuery));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(feature))
+                bodyObject["feature"] = feature;
+            if (entity != null)
+                bodyObject["entity"] = JToken.FromObject(entity);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (evidenceCount != null)
+                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnQueryEntitiesResponse;
 
@@ -3030,7 +3762,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3096,18 +3835,18 @@ namespace IBM.Watson.Discovery.V1
         /// subsequently applied and reduce the scope. (optional)</param>
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
+        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for QueryNotices");
+                throw new ArgumentNullException("`callback` is required for `QueryNotices`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for QueryNotices");
+                throw new ArgumentNullException("`environmentId` is required for `QueryNotices`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for QueryNotices");
+                throw new ArgumentNullException("`collectionId` is required for `QueryNotices`");
 
             RequestObject<QueryNoticesResponse> req = new RequestObject<QueryNoticesResponse>
             {
@@ -3125,7 +3864,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=QueryNotices";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryNotices"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(filter))
             {
@@ -3151,17 +3894,26 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            req.Parameters["return"] = returnFields != null && returnFields.Count > 0 ? string.Join(",", returnFields.ToArray()) : null;
+            if (returnFields != null && returnFields.Count > 0)
+            {
+                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+            }
             if (offset != null)
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
             if (highlight != null)
             {
                 req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
             }
-            req.Parameters["passages.fields"] = passagesFields != null && passagesFields.Count > 0 ? string.Join(",", passagesFields.ToArray()) : null;
+            if (passagesFields != null && passagesFields.Count > 0)
+            {
+                req.Parameters["passages.fields"] = string.Join(",", passagesFields.ToArray());
+            }
             if (passagesCount != null)
             {
                 req.Parameters["passages.count"] = passagesCount;
@@ -3178,8 +3930,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["similar"] = (bool)similar ? "true" : "false";
             }
-            req.Parameters["similar.document_ids"] = similarDocumentIds != null && similarDocumentIds.Count > 0 ? string.Join(",", similarDocumentIds.ToArray()) : null;
-            req.Parameters["similar.fields"] = similarFields != null && similarFields.Count > 0 ? string.Join(",", similarFields.ToArray()) : null;
+            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
+            {
+                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
+            }
+            if (similarFields != null && similarFields.Count > 0)
+            {
+                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
+            }
 
             req.OnResponse = OnQueryNoticesResponse;
 
@@ -3206,7 +3964,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3226,22 +3991,30 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="relationshipQuery">An object that describes the relationships to be queried and any query
-        /// constraints (such as filters).</param>
-        /// <returns><see cref="QueryRelationsResponse" />QueryRelationsResponse</returns>
+        /// <param name="entities">An array of entities to find relationships for. (optional)</param>
+        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
+        /// association. For example, if you wanted to query the city of London in England your query would look for
+        /// `London` with the context of `England`. (optional)</param>
+        /// <param name="sort">The sorting method for the relationships, can be `score` or `frequency`. `frequency` is
+        /// the number of unique times each entity is identified. The default is `score`. This parameter cannot be used
+        /// in the same query as the **bias** parameter. (optional)</param>
+        /// <param name="filter"> (optional)</param>
+        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
+        /// (optional)</param>
+        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
+        /// maximum number of evidence items per query is 10,000. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool QueryRelations(Callback<QueryRelationsResponse> callback, string environmentId, string collectionId, QueryRelations relationshipQuery, Dictionary<string, object> customData = null)
+        /// <returns><see cref="QueryRelationsResponse" />QueryRelationsResponse</returns>
+        public bool QueryRelations(Callback<QueryRelationsResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, List<QueryRelationsEntity> entities = null, QueryEntitiesContext context = null, string sort = null, QueryRelationsFilter filter = null, long? count = null, long? evidenceCount = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for QueryRelations");
+                throw new ArgumentNullException("`callback` is required for `QueryRelations`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for QueryRelations");
+                throw new ArgumentNullException("`environmentId` is required for `QueryRelations`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for QueryRelations");
-            if (relationshipQuery == null)
-                throw new ArgumentNullException("relationshipQuery is required for QueryRelations");
+                throw new ArgumentNullException("`collectionId` is required for `QueryRelations`");
 
             RequestObject<QueryRelationsResponse> req = new RequestObject<QueryRelationsResponse>
             {
@@ -3259,14 +4032,29 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=QueryRelations";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryRelations"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (relationshipQuery != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(relationshipQuery));
-            }
+
+            JObject bodyObject = new JObject();
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            if (!string.IsNullOrEmpty(sort))
+                bodyObject["sort"] = sort;
+            if (filter != null)
+                bodyObject["filter"] = JToken.FromObject(filter);
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (evidenceCount != null)
+                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnQueryRelationsResponse;
 
@@ -3293,7 +4081,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryRelationsResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3313,22 +4108,22 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="body">The body of the training data query that is to be added to the collection's training
-        /// data.</param>
-        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
+        /// <param name="naturalLanguageQuery">The natural text query for the new training query. (optional)</param>
+        /// <param name="filter">The filter used on the collection before the **natural_language_query** is applied.
+        /// (optional)</param>
+        /// <param name="examples">Array of training examples. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, NewTrainingQuery body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
+        public bool AddTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string naturalLanguageQuery = null, string filter = null, List<TrainingExample> examples = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddTrainingData");
+                throw new ArgumentNullException("`callback` is required for `AddTrainingData`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for AddTrainingData");
+                throw new ArgumentNullException("`environmentId` is required for `AddTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for AddTrainingData");
-            if (body == null)
-                throw new ArgumentNullException("body is required for AddTrainingData");
+                throw new ArgumentNullException("`collectionId` is required for `AddTrainingData`");
 
             RequestObject<TrainingQuery> req = new RequestObject<TrainingQuery>
             {
@@ -3346,14 +4141,23 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=AddTrainingData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "AddTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                bodyObject["natural_language_query"] = naturalLanguageQuery;
+            if (!string.IsNullOrEmpty(filter))
+                bodyObject["filter"] = filter;
+            if (examples != null && examples.Count > 0)
+                bodyObject["examples"] = JToken.FromObject(examples);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnAddTrainingDataResponse;
 
@@ -3380,7 +4184,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3400,23 +4211,23 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="body">The body of the example that is to be added to the specified query.</param>
-        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
+        /// <param name="documentId">The document ID associated with this training example. (optional)</param>
+        /// <param name="crossReference">The cross reference associated with this training example. (optional)</param>
+        /// <param name="relevance">The relevance of the training example. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, TrainingExample body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
+        public bool CreateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null, string documentId = null, string crossReference = null, long? relevance = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateTrainingExample");
+                throw new ArgumentNullException("`callback` is required for `CreateTrainingExample`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateTrainingExample");
+                throw new ArgumentNullException("`environmentId` is required for `CreateTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for CreateTrainingExample");
+                throw new ArgumentNullException("`collectionId` is required for `CreateTrainingExample`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for CreateTrainingExample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for CreateTrainingExample");
+                throw new ArgumentNullException("`queryId` is required for `CreateTrainingExample`");
 
             RequestObject<TrainingExample> req = new RequestObject<TrainingExample>
             {
@@ -3434,14 +4245,23 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateTrainingExample";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateTrainingExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(documentId))
+                bodyObject["document_id"] = documentId;
+            if (!string.IsNullOrEmpty(crossReference))
+                bodyObject["cross_reference"] = crossReference;
+            if (relevance != null)
+                bodyObject["relevance"] = JToken.FromObject(relevance);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateTrainingExampleResponse;
 
@@ -3468,7 +4288,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3487,18 +4314,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteAllTrainingData(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteAllTrainingData");
+                throw new ArgumentNullException("`callback` is required for `DeleteAllTrainingData`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteAllTrainingData");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteAllTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteAllTrainingData");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteAllTrainingData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3516,7 +4343,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteAllTrainingData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteAllTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteAllTrainingDataResponse;
@@ -3544,7 +4375,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3564,20 +4402,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteTrainingData(Callback<object> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteTrainingData");
+                throw new ArgumentNullException("`callback` is required for `DeleteTrainingData`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteTrainingData");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteTrainingData");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteTrainingData`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for DeleteTrainingData");
+                throw new ArgumentNullException("`queryId` is required for `DeleteTrainingData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3595,7 +4433,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteTrainingData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteTrainingDataResponse;
@@ -3623,7 +4465,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3644,22 +4493,22 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteTrainingExample(Callback<object> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteTrainingExample");
+                throw new ArgumentNullException("`callback` is required for `DeleteTrainingExample`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteTrainingExample");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for DeleteTrainingExample");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteTrainingExample`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for DeleteTrainingExample");
+                throw new ArgumentNullException("`queryId` is required for `DeleteTrainingExample`");
             if (string.IsNullOrEmpty(exampleId))
-                throw new ArgumentNullException("exampleId is required for DeleteTrainingExample");
+                throw new ArgumentNullException("`exampleId` is required for `DeleteTrainingExample`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3677,7 +4526,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteTrainingExample";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteTrainingExampleResponse;
@@ -3705,7 +4558,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3725,20 +4585,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
         public bool GetTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetTrainingData");
+                throw new ArgumentNullException("`callback` is required for `GetTrainingData`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetTrainingData");
+                throw new ArgumentNullException("`environmentId` is required for `GetTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for GetTrainingData");
+                throw new ArgumentNullException("`collectionId` is required for `GetTrainingData`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for GetTrainingData");
+                throw new ArgumentNullException("`queryId` is required for `GetTrainingData`");
 
             RequestObject<TrainingQuery> req = new RequestObject<TrainingQuery>
             {
@@ -3756,7 +4616,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetTrainingData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetTrainingDataResponse;
@@ -3784,7 +4648,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3805,22 +4676,22 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
         public bool GetTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetTrainingExample");
+                throw new ArgumentNullException("`callback` is required for `GetTrainingExample`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetTrainingExample");
+                throw new ArgumentNullException("`environmentId` is required for `GetTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for GetTrainingExample");
+                throw new ArgumentNullException("`collectionId` is required for `GetTrainingExample`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for GetTrainingExample");
+                throw new ArgumentNullException("`queryId` is required for `GetTrainingExample`");
             if (string.IsNullOrEmpty(exampleId))
-                throw new ArgumentNullException("exampleId is required for GetTrainingExample");
+                throw new ArgumentNullException("`exampleId` is required for `GetTrainingExample`");
 
             RequestObject<TrainingExample> req = new RequestObject<TrainingExample>
             {
@@ -3838,7 +4709,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetTrainingExample";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetTrainingExampleResponse;
@@ -3866,7 +4741,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3885,18 +4767,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="TrainingDataSet" />TrainingDataSet</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TrainingDataSet" />TrainingDataSet</returns>
         public bool ListTrainingData(Callback<TrainingDataSet> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListTrainingData");
+                throw new ArgumentNullException("`callback` is required for `ListTrainingData`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListTrainingData");
+                throw new ArgumentNullException("`environmentId` is required for `ListTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for ListTrainingData");
+                throw new ArgumentNullException("`collectionId` is required for `ListTrainingData`");
 
             RequestObject<TrainingDataSet> req = new RequestObject<TrainingDataSet>
             {
@@ -3914,7 +4796,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListTrainingData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListTrainingDataResponse;
@@ -3942,7 +4828,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3962,20 +4855,20 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="TrainingExampleList" />TrainingExampleList</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="TrainingExampleList" />TrainingExampleList</returns>
         public bool ListTrainingExamples(Callback<TrainingExampleList> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListTrainingExamples");
+                throw new ArgumentNullException("`callback` is required for `ListTrainingExamples`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListTrainingExamples");
+                throw new ArgumentNullException("`environmentId` is required for `ListTrainingExamples`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for ListTrainingExamples");
+                throw new ArgumentNullException("`collectionId` is required for `ListTrainingExamples`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for ListTrainingExamples");
+                throw new ArgumentNullException("`queryId` is required for `ListTrainingExamples`");
 
             RequestObject<TrainingExampleList> req = new RequestObject<TrainingExampleList>
             {
@@ -3993,7 +4886,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListTrainingExamples";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingExamples"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListTrainingExamplesResponse;
@@ -4021,7 +4918,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4042,25 +4946,24 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <param name="body">The body of the example that is to be added to the specified query.</param>
-        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
+        /// <param name="crossReference">The example to add. (optional)</param>
+        /// <param name="relevance">The relevance value for this example. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, TrainingExamplePatch body, Dictionary<string, object> customData = null)
+        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
+        public bool UpdateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null, string crossReference = null, long? relevance = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateTrainingExample");
+                throw new ArgumentNullException("`callback` is required for `UpdateTrainingExample`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateTrainingExample");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("collectionId is required for UpdateTrainingExample");
+                throw new ArgumentNullException("`collectionId` is required for `UpdateTrainingExample`");
             if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("queryId is required for UpdateTrainingExample");
+                throw new ArgumentNullException("`queryId` is required for `UpdateTrainingExample`");
             if (string.IsNullOrEmpty(exampleId))
-                throw new ArgumentNullException("exampleId is required for UpdateTrainingExample");
-            if (body == null)
-                throw new ArgumentNullException("body is required for UpdateTrainingExample");
+                throw new ArgumentNullException("`exampleId` is required for `UpdateTrainingExample`");
 
             RequestObject<TrainingExample> req = new RequestObject<TrainingExample>
             {
@@ -4078,14 +4981,21 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateTrainingExample";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateTrainingExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (body != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(crossReference))
+                bodyObject["cross_reference"] = crossReference;
+            if (relevance != null)
+                bodyObject["relevance"] = JToken.FromObject(relevance);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateTrainingExampleResponse;
 
@@ -4112,7 +5022,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4135,16 +5052,16 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteUserData");
+                throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
             if (string.IsNullOrEmpty(customerId))
-                throw new ArgumentNullException("customerId is required for DeleteUserData");
+                throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -4162,7 +5079,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteUserData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteUserData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(customerId))
             {
@@ -4194,7 +5115,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4212,17 +5140,20 @@ namespace IBM.Watson.Discovery.V1
         /// you can record which documents in the results set were "clicked" by a user and when that click occured.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="queryEvent">An object that defines a query event to be added to the log.</param>
-        /// <returns><see cref="CreateEventResponse" />CreateEventResponse</returns>
+        /// <param name="type">The event type to be created.</param>
+        /// <param name="data">Query event data object.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateEvent(Callback<CreateEventResponse> callback, CreateEventObject queryEvent, Dictionary<string, object> customData = null)
+        /// <returns><see cref="CreateEventResponse" />CreateEventResponse</returns>
+        public bool CreateEvent(Callback<CreateEventResponse> callback, string type, EventData data, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateEvent");
-            if (queryEvent == null)
-                throw new ArgumentNullException("queryEvent is required for CreateEvent");
+                throw new ArgumentNullException("`callback` is required for `CreateEvent`");
+            if (string.IsNullOrEmpty(type))
+                throw new ArgumentNullException("`type` is required for `CreateEvent`");
+            if (data == null)
+                throw new ArgumentNullException("`data` is required for `CreateEvent`");
 
             RequestObject<CreateEventResponse> req = new RequestObject<CreateEventResponse>
             {
@@ -4240,14 +5171,21 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateEvent";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateEvent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (queryEvent != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(queryEvent));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(type))
+                bodyObject["type"] = type;
+            if (data != null)
+                bodyObject["data"] = JToken.FromObject(data);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateEventResponse;
 
@@ -4274,7 +5212,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CreateEventResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4298,14 +5243,14 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetMetricsEventRate(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        public bool GetMetricsEventRate(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetMetricsEventRate");
+                throw new ArgumentNullException("`callback` is required for `GetMetricsEventRate`");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4323,7 +5268,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetMetricsEventRate";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsEventRate"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
@@ -4363,7 +5312,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4385,14 +5341,14 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetMetricsQuery(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        public bool GetMetricsQuery(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetMetricsQuery");
+                throw new ArgumentNullException("`callback` is required for `GetMetricsQuery`");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4410,7 +5366,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetMetricsQuery";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQuery"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
@@ -4450,7 +5410,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4474,14 +5441,14 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetMetricsQueryEvent(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        public bool GetMetricsQueryEvent(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetMetricsQueryEvent");
+                throw new ArgumentNullException("`callback` is required for `GetMetricsQueryEvent`");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4499,7 +5466,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryEvent";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryEvent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
@@ -4539,7 +5510,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4562,14 +5540,14 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetMetricsQueryNoResults(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        public bool GetMetricsQueryNoResults(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetMetricsQueryNoResults");
+                throw new ArgumentNullException("`callback` is required for `GetMetricsQueryNoResults`");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4587,7 +5565,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryNoResults";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryNoResults"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
@@ -4627,7 +5609,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4647,14 +5636,14 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="count">Number of results to return. (optional, default to 10)</param>
-        /// <returns><see cref="MetricTokenResponse" />MetricTokenResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetMetricsQueryTokenEvent(Callback<MetricTokenResponse> callback, long? count = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="MetricTokenResponse" />MetricTokenResponse</returns>
+        public bool GetMetricsQueryTokenEvent(Callback<MetricTokenResponse> callback, Dictionary<string, object> customData = null, long? count = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetMetricsQueryTokenEvent");
+                throw new ArgumentNullException("`callback` is required for `GetMetricsQueryTokenEvent`");
 
             RequestObject<MetricTokenResponse> req = new RequestObject<MetricTokenResponse>
             {
@@ -4672,7 +5661,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetMetricsQueryTokenEvent";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryTokenEvent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (count != null)
             {
@@ -4704,7 +5697,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricTokenResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4735,14 +5735,14 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
         /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
         /// sort direction if no prefix is specified. (optional)</param>
-        /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool QueryLog(Callback<LogQueryResponse> callback, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
+        public bool QueryLog(Callback<LogQueryResponse> callback, Dictionary<string, object> customData = null, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for QueryLog");
+                throw new ArgumentNullException("`callback` is required for `QueryLog`");
 
             RequestObject<LogQueryResponse> req = new RequestObject<LogQueryResponse>
             {
@@ -4760,7 +5760,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=QueryLog";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryLog"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             if (!string.IsNullOrEmpty(filter))
             {
@@ -4778,7 +5782,10 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["offset"] = offset;
             }
-            req.Parameters["sort"] = sort != null && sort.Count > 0 ? string.Join(",", sort.ToArray()) : null;
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
 
             req.OnResponse = OnQueryLogResponse;
 
@@ -4805,7 +5812,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4826,19 +5840,24 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="credentialsParameter">An object that defines an individual set of source credentials.</param>
-        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        /// <param name="sourceType">The source that this credentials object connects to.
+        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// <param name="credentialDetails">Object containing details of the stored credentials.
+        ///
+        /// Obtain credentials for your source from the administrator of the source. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, ModelCredentials credentialsParameter, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, Dictionary<string, object> customData = null, string sourceType = null, CredentialDetails credentialDetails = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateCredentials");
+                throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateCredentials");
-            if (credentialsParameter == null)
-                throw new ArgumentNullException("credentialsParameter is required for CreateCredentials");
+                throw new ArgumentNullException("`environmentId` is required for `CreateCredentials`");
 
             RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
             {
@@ -4856,14 +5875,21 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateCredentials";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (credentialsParameter != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(credentialsParameter));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(sourceType))
+                bodyObject["source_type"] = sourceType;
+            if (credentialDetails != null)
+                bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCredentialsResponse;
 
@@ -4890,7 +5916,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4909,18 +5942,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <returns><see cref="DeleteCredentials" />DeleteCredentials</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="DeleteCredentials" />DeleteCredentials</returns>
         public bool DeleteCredentials(Callback<DeleteCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteCredentials");
+                throw new ArgumentNullException("`callback` is required for `DeleteCredentials`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteCredentials");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteCredentials`");
             if (string.IsNullOrEmpty(credentialId))
-                throw new ArgumentNullException("credentialId is required for DeleteCredentials");
+                throw new ArgumentNullException("`credentialId` is required for `DeleteCredentials`");
 
             RequestObject<DeleteCredentials> req = new RequestObject<DeleteCredentials>
             {
@@ -4938,7 +5971,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteCredentials";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteCredentialsResponse;
@@ -4966,7 +6003,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4988,18 +6032,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
         public bool GetCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetCredentials");
+                throw new ArgumentNullException("`callback` is required for `GetCredentials`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetCredentials");
+                throw new ArgumentNullException("`environmentId` is required for `GetCredentials`");
             if (string.IsNullOrEmpty(credentialId))
-                throw new ArgumentNullException("credentialId is required for GetCredentials");
+                throw new ArgumentNullException("`credentialId` is required for `GetCredentials`");
 
             RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
             {
@@ -5017,7 +6061,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetCredentials";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnGetCredentialsResponse;
@@ -5045,7 +6093,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5065,16 +6120,16 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="CredentialsList" />CredentialsList</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="CredentialsList" />CredentialsList</returns>
         public bool ListCredentials(Callback<CredentialsList> callback, string environmentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListCredentials");
+                throw new ArgumentNullException("`callback` is required for `ListCredentials`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for ListCredentials");
+                throw new ArgumentNullException("`environmentId` is required for `ListCredentials`");
 
             RequestObject<CredentialsList> req = new RequestObject<CredentialsList>
             {
@@ -5092,7 +6147,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=ListCredentials";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnListCredentialsResponse;
@@ -5120,7 +6179,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5141,21 +6207,26 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <param name="credentialsParameter">An object that defines an individual set of source credentials.</param>
-        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        /// <param name="sourceType">The source that this credentials object connects to.
+        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// <param name="credentialDetails">Object containing details of the stored credentials.
+        ///
+        /// Obtain credentials for your source from the administrator of the source. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, ModelCredentials credentialsParameter, Dictionary<string, object> customData = null)
+        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null, string sourceType = null, CredentialDetails credentialDetails = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpdateCredentials");
+                throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for UpdateCredentials");
+                throw new ArgumentNullException("`environmentId` is required for `UpdateCredentials`");
             if (string.IsNullOrEmpty(credentialId))
-                throw new ArgumentNullException("credentialId is required for UpdateCredentials");
-            if (credentialsParameter == null)
-                throw new ArgumentNullException("credentialsParameter is required for UpdateCredentials");
+                throw new ArgumentNullException("`credentialId` is required for `UpdateCredentials`");
 
             RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
             {
@@ -5173,14 +6244,21 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=UpdateCredentials";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (credentialsParameter != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(credentialsParameter));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(sourceType))
+                bodyObject["source_type"] = sourceType;
+            if (credentialDetails != null)
+                bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateCredentialsResponse;
 
@@ -5207,7 +6285,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5225,17 +6310,17 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="gatewayName">The name of the gateway to created. (optional)</param>
-        /// <returns><see cref="Gateway" />Gateway</returns>
+        /// <param name="name">User-defined name. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateGateway(Callback<Gateway> callback, string environmentId, GatewayName gatewayName = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Gateway" />Gateway</returns>
+        public bool CreateGateway(Callback<Gateway> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateGateway");
+                throw new ArgumentNullException("`callback` is required for `CreateGateway`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for CreateGateway");
+                throw new ArgumentNullException("`environmentId` is required for `CreateGateway`");
 
             RequestObject<Gateway> req = new RequestObject<Gateway>
             {
@@ -5253,14 +6338,19 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=CreateGateway";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateGateway"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (gatewayName != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(gatewayName));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateGatewayResponse;
 
@@ -5287,7 +6377,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5306,18 +6403,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="gatewayId">The requested gateway ID.</param>
-        /// <returns><see cref="GatewayDelete" />GatewayDelete</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="GatewayDelete" />GatewayDelete</returns>
         public bool DeleteGateway(Callback<GatewayDelete> callback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteGateway");
+                throw new ArgumentNullException("`callback` is required for `DeleteGateway`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for DeleteGateway");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteGateway`");
             if (string.IsNullOrEmpty(gatewayId))
-                throw new ArgumentNullException("gatewayId is required for DeleteGateway");
+                throw new ArgumentNullException("`gatewayId` is required for `DeleteGateway`");
 
             RequestObject<GatewayDelete> req = new RequestObject<GatewayDelete>
             {
@@ -5335,7 +6432,11 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=DeleteGateway";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteGateway"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
             req.OnResponse = OnDeleteGatewayResponse;
@@ -5363,7 +6464,14 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -5382,18 +6490,18 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="gatewayId">The requested gateway ID.</param>
-        /// <returns><see cref="Gateway" />Gateway</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetGatewayDetails(Callback<Gateway> callback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Gateway" />Gateway</returns>
+        public bool GetGateway(Callback<Gateway> callback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetGatewayDetails");
+                throw new ArgumentNullException("`callback` is required for `GetGateway`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetGatewayDetails");
+                throw new ArgumentNullException("`environmentId` is required for `GetGateway`");
             if (string.IsNullOrEmpty(gatewayId))
-                throw new ArgumentNullException("gatewayId is required for GetGatewayDetails");
+                throw new ArgumentNullException("`gatewayId` is required for `GetGateway`");
 
             RequestObject<Gateway> req = new RequestObject<Gateway>
             {
@@ -5411,10 +6519,14 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetGatewayDetails";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetGateway"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnGetGatewayDetailsResponse;
+            req.OnResponse = OnGetGatewayResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)
@@ -5425,7 +6537,7 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnGetGatewayDetailsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Gateway> response = new DetailedResponse<Gateway>();
             Dictionary<string, object> customData = ((RequestObject<Gateway>)req).CustomData;
@@ -5439,11 +6551,18 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnGetGatewayDetailsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnGetGatewayResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -5457,16 +6576,16 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="GatewayList" />GatewayList</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool GetGatewayList(Callback<GatewayList> callback, string environmentId, Dictionary<string, object> customData = null)
+        /// <returns><see cref="GatewayList" />GatewayList</returns>
+        public bool ListGateways(Callback<GatewayList> callback, string environmentId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetGatewayList");
+                throw new ArgumentNullException("`callback` is required for `ListGateways`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("environmentId is required for GetGatewayList");
+                throw new ArgumentNullException("`environmentId` is required for `ListGateways`");
 
             RequestObject<GatewayList> req = new RequestObject<GatewayList>
             {
@@ -5484,10 +6603,14 @@ namespace IBM.Watson.Discovery.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=discovery;service_version=V1;operation_id=GetGatewayList";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListGateways"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnGetGatewayListResponse;
+            req.OnResponse = OnListGatewaysResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
@@ -5498,7 +6621,7 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnGetGatewayListResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GatewayList> response = new DetailedResponse<GatewayList>();
             Dictionary<string, object> customData = ((RequestObject<GatewayList>)req).CustomData;
@@ -5512,11 +6635,18 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnGetGatewayListResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnListGatewaysResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 

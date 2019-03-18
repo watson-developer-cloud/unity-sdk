@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -45,9 +46,10 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("segment", NullValueHandling = NullValueHandling.Ignore)]
         public SegmentSettings Segment { get; set; }
         /// <summary>
-        /// An array of JSON normalization operations.
+        /// Defines operations that can be used to transform the final output JSON into a normalized form. Operations
+        /// are executed in the order that they appear in the array.
         /// </summary>
         [JsonProperty("json_normalizations", NullValueHandling = NullValueHandling.Ignore)]
-        public object JsonNormalizations { get; set; }
+        public List<NormalizationOperation> JsonNormalizations { get; set; }
     }
 }

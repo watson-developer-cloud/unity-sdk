@@ -114,7 +114,7 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public string Source { get; set; }
         /// <summary>
-        /// The title to show before the response.
+        /// The title or introductory text to show before the response.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }

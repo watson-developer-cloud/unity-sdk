@@ -73,6 +73,6 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Obtain credentials for your source from the administrator of the source.
         /// </summary>
         [JsonProperty("credential_details", NullValueHandling = NullValueHandling.Ignore)]
-        public CredentialsCredentialDetails CredentialDetails { get; set; }
+        public CredentialDetails CredentialDetails { get; set; }
     }
 }

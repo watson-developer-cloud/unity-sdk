@@ -26,7 +26,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class QueryRelationsResponse
     {
         /// <summary>
-        /// Gets or Sets Relations
+        /// Array of relationships for the relations query.
         /// </summary>
         [JsonProperty("relations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryRelationsRelationship> Relations { get; set; }

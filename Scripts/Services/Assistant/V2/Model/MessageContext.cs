@@ -16,23 +16,27 @@
 */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// State information for the conversation.
+    /// MessageContext.
     /// </summary>
     public class MessageContext
     {
         /// <summary>
-        /// Contains information that can be shared by all skills within the Assistant.
+        /// Information that is shared by all skills used by the Assistant.
         /// </summary>
         [JsonProperty("global", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextGlobal Global { get; set; }
         /// <summary>
-        /// Contains information specific to particular skills within the Assistant.
+        /// Information specific to particular skills used by the Assistant.
+        ///
+        /// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables
+        /// that apply to the dialog skill used by the assistant.
         /// </summary>
         [JsonProperty("skills", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextSkills Skills { get; set; }
+        public JObject Skills { get; set; }
     }
 }

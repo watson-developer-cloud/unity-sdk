@@ -38,7 +38,7 @@ namespace IBM.Watson
         /// <param name="serviceVersion">The service version to be used in X-IBMCloud-SDK-Analytics header.</param>
         /// <param name="operation">The operation name to be used in X-IBMCloud-SDK-Analytics header.</param>
         /// <returns></returns>
-        public static Dictionary<string, string> GetDefaultheaders(string serviceName, string serviceVersion, string operationId)
+        public static Dictionary<string, string> GetSdkHeaders(string serviceName, string serviceVersion, string operationId)
         {
             Dictionary<string, string> defaultHeaders = new Dictionary<string, string>();
             defaultHeaders.Add("X-IBMCloud-SDK-Analytics", 

@@ -50,7 +50,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// Any metadata for the entity.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// The recognized capture groups for the entity, as defined by the entity pattern.
         /// </summary>
