@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.SpeechToText.V1
 {
-    public class SpeechToTextService : BaseService
+    public partial class SpeechToTextService : BaseService
     {
         private const string serviceId = "speech_to_text";
         private const string defaultUrl = "https://stream.watsonplatform.net/speech-to-text/api";
