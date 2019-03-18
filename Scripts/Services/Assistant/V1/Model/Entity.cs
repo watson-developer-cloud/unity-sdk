@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 
@@ -26,22 +27,18 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Entity
     {
         /// <summary>
-        /// The name of the entity.
+        /// The name of the entity. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+        /// - It must be no longer than 64 characters.
+        ///
+        /// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system
+        /// entity that you want to enable. (Any entity content specified with the request is ignored.).
         /// </summary>
         [JsonProperty("entity", NullValueHandling = NullValueHandling.Ignore)]
-        public string EntityName { get; set; }
+        public string _Entity { get; set; }
         /// <summary>
-        /// The timestamp for creation of the entity.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the last update to the entity.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
-        /// <summary>
-        /// The description of the entity.
+        /// The description of the entity. This string cannot contain carriage return, newline, or tab characters, and
+        /// it must be no longer than 128 characters.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -49,11 +46,26 @@ namespace IBM.Watson.Assistant.V1.Model
         /// Any metadata related to the entity.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
-        /// Whether fuzzy matching is used for the entity.
+        /// Whether to use fuzzy matching for the entity.
         /// </summary>
         [JsonProperty("fuzzy_match", NullValueHandling = NullValueHandling.Ignore)]
         public bool? FuzzyMatch { get; set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
+        /// An array of objects describing the entity values.
+        /// </summary>
+        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Value> Values { get; set; }
     }
 }

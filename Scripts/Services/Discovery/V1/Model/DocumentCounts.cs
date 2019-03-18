@@ -39,5 +39,10 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("failed", NullValueHandling = NullValueHandling.Ignore)]
         public virtual long? Failed { get; private set; }
+        /// <summary>
+        /// The number of documents that have been uploaded to the collection, but have not yet started processing.
+        /// </summary>
+        [JsonProperty("pending", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual long? Pending { get; private set; }
     }
 }

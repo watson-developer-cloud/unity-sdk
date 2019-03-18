@@ -67,8 +67,7 @@ namespace IBM.Watson.VisualRecognition.V3.Model
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
-        /// Unique ID of the account who owns the classifier. Returned when verbose=`true`. Might not be returned by
-        /// some requests.
+        /// Unique ID of the account who owns the classifier. Might not be returned by some requests.
         /// </summary>
         [JsonProperty("owner", NullValueHandling = NullValueHandling.Ignore)]
         public string Owner { get; set; }
@@ -93,16 +92,14 @@ namespace IBM.Watson.VisualRecognition.V3.Model
         [JsonProperty("classes", NullValueHandling = NullValueHandling.Ignore)]
         public List<ModelClass> Classes { get; set; }
         /// <summary>
-        /// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Returned when
-        /// verbose=`true`. Might not be returned by some requests. Identical to `updated` and retained for backward
-        /// compatibility.
+        /// Date and time in Coordinated Universal Time (UTC) that the classifier was updated. Might not be returned by
+        /// some requests. Identical to `updated` and retained for backward compatibility.
         /// </summary>
         [JsonProperty("retrained", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Retrained { get; set; }
         /// <summary>
         /// Date and time in Coordinated Universal Time (UTC) that the classifier was most recently updated. The field
-        /// matches either `retrained` or `created`.  Returned when verbose=`true`. Might not be returned by some
-        /// requests.
+        /// matches either `retrained` or `created`. Might not be returned by some requests.
         /// </summary>
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Updated { get; set; }

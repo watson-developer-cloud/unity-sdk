@@ -22,6 +22,7 @@ using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.SpeechToText.V1.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
 
@@ -118,16 +119,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">The identifier of the model in the form of its name from the output of the **Get a
         /// model** method.</param>
-        /// <returns><see cref="SpeechModel" />SpeechModel</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="SpeechModel" />SpeechModel</returns>
         public bool GetModel(Callback<SpeechModel> callback, string modelId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetModel");
+                throw new ArgumentNullException("`callback` is required for `GetModel`");
             if (string.IsNullOrEmpty(modelId))
-                throw new ArgumentNullException("modelId is required for GetModel");
+                throw new ArgumentNullException("`modelId` is required for `GetModel`");
 
             RequestObject<SpeechModel> req = new RequestObject<SpeechModel>
             {
@@ -145,7 +146,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetModelResponse;
 
@@ -172,7 +177,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -192,14 +204,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// **See also:** [Languages and models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="SpeechModels" />SpeechModels</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="SpeechModels" />SpeechModels</returns>
         public bool ListModels(Callback<SpeechModels> callback, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListModels");
+                throw new ArgumentNullException("`callback` is required for `ListModels`");
 
             RequestObject<SpeechModels> req = new RequestObject<SpeechModels>
             {
@@ -217,7 +229,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListModels";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnListModelsResponse;
 
@@ -244,7 +260,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -270,11 +293,10 @@ namespace IBM.Watson.SpeechToText.V1
         /// ### Streaming mode
         ///
         ///  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header
-        /// to `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if
-        /// the service receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The
-        /// server also closes the connection (status code 400) if no speech is detected for `inactivity_timeout`
-        /// seconds of audio (not processing time); use the `inactivity_timeout` parameter to change the default of 30
-        /// seconds.
+        /// to `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408)
+        /// if it does not receive at least 15 seconds of audio (including silence) in any 30-second period. The service
+        /// also closes the connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of
+        /// streaming audio; use the `inactivity_timeout` parameter to change the default of 30 seconds.
         ///
         /// **See also:**
         /// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -338,14 +360,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// used with the recognition request. The base model of the specified custom language model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom language model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         ///
         /// **Note:** Use this parameter instead of the deprecated `customization_id` parameter. (optional)</param>
         /// <param name="acousticCustomizationId">The customization ID (GUID) of a custom acoustic model that is to be
         /// used with the recognition request. The base model of the specified custom acoustic model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom acoustic model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom). (optional)</param>
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input). (optional)</param>
         /// <param name="baseModelVersion">The version of the specified base model that is to be used with recognition
         /// request. Multiple versions of a base model can exist when a model is updated for internal improvements. The
         /// parameter is intended primarily for use with custom models that have been upgraded for a new base model. The
@@ -364,13 +386,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain
         /// phrases.
         ///
-        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         /// (optional)</param>
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
-        /// submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
-        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See
-        /// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts). (optional, default to
-        /// 30)</param>
+        /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
+        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity). (optional,
+        /// default to 30)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -433,7 +455,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the
         /// custom language model for which the grammar is defined. The service recognizes only strings that are
         /// recognized by the specified grammar; it does not recognize other custom words from the model's words
-        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html). (optional)</param>
+        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
+        /// (optional)</param>
         /// <param name="redaction">If `true`, the service redacts, or masks, numeric data from final transcripts. The
         /// feature redacts any number that has three or more consecutive digits by replacing each digit with an `X`
         /// character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the
@@ -450,16 +473,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// (optional, default to false)</param>
         /// <param name="contentType">The format (MIME type) of the audio. For more information about specifying an
         /// audio format, see **Audio formats (content types)** in the method description. (optional)</param>
-        /// <returns><see cref="SpeechRecognitionResults" />SpeechRecognitionResults</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool Recognize(Callback<SpeechRecognitionResults> callback, byte[] audio, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="SpeechRecognitionResults" />SpeechRecognitionResults</returns>
+        public bool Recognize(Callback<SpeechRecognitionResults> callback, byte[] audio, Dictionary<string, object> customData = null, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for Recognize");
+                throw new ArgumentNullException("`callback` is required for `Recognize`");
             if (audio == null)
-                throw new ArgumentNullException("audio is required for Recognize");
+                throw new ArgumentNullException("`audio` is required for `Recognize`");
 
             RequestObject<SpeechRecognitionResults> req = new RequestObject<SpeechRecognitionResults>
             {
@@ -477,11 +500,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=Recognize";
-            if (!string.IsNullOrEmpty(contentType))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "Recognize"))
             {
-                req.Headers["Content-Type"] = contentType;
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -506,7 +529,10 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["inactivity_timeout"] = inactivityTimeout;
             }
-            req.Parameters["keywords"] = keywords != null && keywords.Count > 0 ? string.Join(",", keywords.ToArray()) : null;
+            if (keywords != null && keywords.Count > 0)
+            {
+                req.Parameters["keywords"] = string.Join(",", keywords.ToArray());
+            }
             if (keywordsThreshold != null)
             {
                 req.Parameters["keywords_threshold"] = keywordsThreshold;
@@ -551,12 +577,13 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["redaction"] = (bool)redaction ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (audio != null)
+
+            if (!string.IsNullOrEmpty(contentType))
             {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(audio));
+                req.Headers["Content-Type"] = contentType;
             }
+            req.Send = audio;
 
             req.OnResponse = OnRecognizeResponse;
 
@@ -583,7 +610,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SpeechRecognitionResults>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -613,16 +647,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="id">The identifier of the asynchronous job that is to be used for the request. You must make
         /// the request with credentials for the instance of the service that owns the job.</param>
-        /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
         public bool CheckJob(Callback<RecognitionJob> callback, string id, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CheckJob");
+                throw new ArgumentNullException("`callback` is required for `CheckJob`");
             if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException("id is required for CheckJob");
+                throw new ArgumentNullException("`id` is required for `CheckJob`");
 
             RequestObject<RecognitionJob> req = new RequestObject<RecognitionJob>
             {
@@ -640,7 +674,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=CheckJob";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CheckJob"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnCheckJobResponse;
 
@@ -667,7 +705,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -692,14 +737,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// jobs](https://cloud.ibm.com/docs/services/speech-to-text/async.html#jobs).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="RecognitionJobs" />RecognitionJobs</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="RecognitionJobs" />RecognitionJobs</returns>
         public bool CheckJobs(Callback<RecognitionJobs> callback, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CheckJobs");
+                throw new ArgumentNullException("`callback` is required for `CheckJobs`");
 
             RequestObject<RecognitionJobs> req = new RequestObject<RecognitionJobs>
             {
@@ -717,7 +762,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=CheckJobs";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CheckJobs"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnCheckJobsResponse;
 
@@ -744,7 +793,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJobs>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -783,21 +839,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// * `user_token`
         /// * `results_ttl`
         ///
-        /// You can pass a maximum of 100 MB and a minimum of 100 bytes of audio with a request. The service
-        /// automatically detects the endianness of the incoming audio and, for audio that includes multiple channels,
-        /// downmixes the audio to one-channel mono during transcoding. The method returns only final results; to enable
-        /// interim results, use the WebSocket API.
+        /// You can pass a maximum of 1 GB and a minimum of 100 bytes of audio with a request. The service automatically
+        /// detects the endianness of the incoming audio and, for audio that includes multiple channels, downmixes the
+        /// audio to one-channel mono during transcoding. The method returns only final results; to enable interim
+        /// results, use the WebSocket API.
         ///
         /// **See also:** [Creating a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#create).
         ///
         /// ### Streaming mode
         ///
         ///  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header
-        /// to `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if
-        /// the service receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The
-        /// server also closes the connection (status code 400) if no speech is detected for `inactivity_timeout`
-        /// seconds of audio (not processing time); use the `inactivity_timeout` parameter to change the default of 30
-        /// seconds.
+        /// to `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408)
+        /// if it does not receive at least 15 seconds of audio (including silence) in any 30-second period. The service
+        /// also closes the connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of
+        /// streaming audio; use the `inactivity_timeout` parameter to change the default of 30 seconds.
         ///
         /// **See also:**
         /// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -877,14 +932,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// used with the recognition request. The base model of the specified custom language model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom language model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         ///
         /// **Note:** Use this parameter instead of the deprecated `customization_id` parameter. (optional)</param>
         /// <param name="acousticCustomizationId">The customization ID (GUID) of a custom acoustic model that is to be
         /// used with the recognition request. The base model of the specified custom acoustic model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom acoustic model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom). (optional)</param>
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input). (optional)</param>
         /// <param name="baseModelVersion">The version of the specified base model that is to be used with recognition
         /// request. Multiple versions of a base model can exist when a model is updated for internal improvements. The
         /// parameter is intended primarily for use with custom models that have been upgraded for a new base model. The
@@ -903,13 +958,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain
         /// phrases.
         ///
-        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         /// (optional)</param>
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
-        /// submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
-        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See
-        /// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts). (optional, default to
-        /// 30)</param>
+        /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
+        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity). (optional,
+        /// default to 30)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -972,7 +1027,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the
         /// custom language model for which the grammar is defined. The service recognizes only strings that are
         /// recognized by the specified grammar; it does not recognize other custom words from the model's words
-        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html). (optional)</param>
+        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
+        /// (optional)</param>
         /// <param name="redaction">If `true`, the service redacts, or masks, numeric data from final transcripts. The
         /// feature redacts any number that has three or more consecutive digits by replacing each digit with an `X`
         /// character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the
@@ -989,16 +1045,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// (optional, default to false)</param>
         /// <param name="contentType">The format (MIME type) of the audio. For more information about specifying an
         /// audio format, see **Audio formats (content types)** in the method description. (optional)</param>
-        /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateJob(Callback<RecognitionJob> callback, byte[] audio, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
+        public bool CreateJob(Callback<RecognitionJob> callback, byte[] audio, Dictionary<string, object> customData = null, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateJob");
+                throw new ArgumentNullException("`callback` is required for `CreateJob`");
             if (audio == null)
-                throw new ArgumentNullException("audio is required for CreateJob");
+                throw new ArgumentNullException("`audio` is required for `CreateJob`");
 
             RequestObject<RecognitionJob> req = new RequestObject<RecognitionJob>
             {
@@ -1016,11 +1072,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=CreateJob";
-            if (!string.IsNullOrEmpty(contentType))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateJob"))
             {
-                req.Headers["Content-Type"] = contentType;
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -1061,7 +1117,10 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["inactivity_timeout"] = inactivityTimeout;
             }
-            req.Parameters["keywords"] = keywords != null && keywords.Count > 0 ? string.Join(",", keywords.ToArray()) : null;
+            if (keywords != null && keywords.Count > 0)
+            {
+                req.Parameters["keywords"] = string.Join(",", keywords.ToArray());
+            }
             if (keywordsThreshold != null)
             {
                 req.Parameters["keywords_threshold"] = keywordsThreshold;
@@ -1106,12 +1165,13 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Parameters["redaction"] = (bool)redaction ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (audio != null)
+
+            if (!string.IsNullOrEmpty(contentType))
             {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(audio));
+                req.Headers["Content-Type"] = contentType;
             }
+            req.Send = audio;
 
             req.OnResponse = OnCreateJobResponse;
 
@@ -1138,7 +1198,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RecognitionJob>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1157,21 +1224,21 @@ namespace IBM.Watson.SpeechToText.V1
         /// time to live for the results expires. You must use credentials for the instance of the service that owns a
         /// job to delete it.
         ///
-        /// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete).
+        /// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete-async).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="id">The identifier of the asynchronous job that is to be used for the request. You must make
         /// the request with credentials for the instance of the service that owns the job.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteJob(Callback<object> callback, string id, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteJob");
+                throw new ArgumentNullException("`callback` is required for `DeleteJob`");
             if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException("id is required for DeleteJob");
+                throw new ArgumentNullException("`id` is required for `DeleteJob`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1189,7 +1256,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteJob";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteJob"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteJobResponse;
 
@@ -1216,7 +1287,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1268,16 +1346,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// that it sends via the `X-Callback-Signature` header. The service includes the header during URL verification
         /// and with every notification sent to the callback URL. It calculates the signature over the payload of the
         /// notification. If you omit the parameter, the service does not send the header. (optional)</param>
-        /// <returns><see cref="RegisterStatus" />RegisterStatus</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool RegisterCallback(Callback<RegisterStatus> callback, string callbackUrl, string userSecret = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="RegisterStatus" />RegisterStatus</returns>
+        public bool RegisterCallback(Callback<RegisterStatus> callback, string callbackUrl, Dictionary<string, object> customData = null, string userSecret = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for RegisterCallback");
+                throw new ArgumentNullException("`callback` is required for `RegisterCallback`");
             if (string.IsNullOrEmpty(callbackUrl))
-                throw new ArgumentNullException("callbackUrl is required for RegisterCallback");
+                throw new ArgumentNullException("`callbackUrl` is required for `RegisterCallback`");
 
             RequestObject<RegisterStatus> req = new RequestObject<RegisterStatus>
             {
@@ -1295,7 +1373,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=RegisterCallback";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "RegisterCallback"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(callbackUrl))
             {
                 req.Parameters["callback_url"] = callbackUrl;
@@ -1330,7 +1412,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<RegisterStatus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1353,16 +1442,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="callbackUrl">The callback URL that is to be unregistered.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool UnregisterCallback(Callback<object> callback, string callbackUrl, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UnregisterCallback");
+                throw new ArgumentNullException("`callback` is required for `UnregisterCallback`");
             if (string.IsNullOrEmpty(callbackUrl))
-                throw new ArgumentNullException("callbackUrl is required for UnregisterCallback");
+                throw new ArgumentNullException("`callbackUrl` is required for `UnregisterCallback`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1380,7 +1469,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=UnregisterCallback";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UnregisterCallback"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(callbackUrl))
             {
                 req.Parameters["callback_url"] = callbackUrl;
@@ -1411,7 +1504,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1430,21 +1530,42 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials are used to create it.
         ///
         /// **See also:** [Create a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="createLanguageModel">A `CreateLanguageModel` object that provides basic information about the
-        /// new custom language model.</param>
-        /// <returns><see cref="LanguageModel" />LanguageModel</returns>
+        /// <param name="name">A user-defined name for the new custom language model. Use a name that is unique among
+        /// all custom language models that you own. Use a localized name that matches the language of the custom model.
+        /// Use a name that describes the domain of the custom model, such as `Medical custom model` or `Legal custom
+        /// model`.</param>
+        /// <param name="baseModelName">The name of the base language model that is to be customized by the new custom
+        /// language model. The new custom model can be used only with the base model that it customizes.
+        ///
+        /// To determine whether a base model supports language model customization, use the **Get a model** method and
+        /// check that the attribute `custom_language_model` is set to `true`. You can also refer to [Language support
+        /// for customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).</param>
+        /// <param name="dialect">The dialect of the specified language that is to be used with the custom language
+        /// model. The parameter is meaningful only for Spanish models, for which the service creates a custom language
+        /// model that is suited for speech in one of the following dialects:
+        /// * `es-ES` for Castilian Spanish (the default)
+        /// * `es-LA` for Latin American Spanish
+        /// * `es-US` for North American (Mexican) Spanish
+        ///
+        /// A specified dialect must be valid for the base model. By default, the dialect matches the language of the
+        /// base model; for example, `en-US` for either of the US English language models. (optional)</param>
+        /// <param name="description">A description of the new custom language model. Use a localized description that
+        /// matches the language of the custom model. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateLanguageModel(Callback<LanguageModel> callback, CreateLanguageModel createLanguageModel, Dictionary<string, object> customData = null)
+        /// <returns><see cref="LanguageModel" />LanguageModel</returns>
+        public bool CreateLanguageModel(Callback<LanguageModel> callback, string name, string baseModelName, Dictionary<string, object> customData = null, string dialect = null, string description = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateLanguageModel");
-            if (createLanguageModel == null)
-                throw new ArgumentNullException("createLanguageModel is required for CreateLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `CreateLanguageModel`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateLanguageModel`");
+            if (string.IsNullOrEmpty(baseModelName))
+                throw new ArgumentNullException("`baseModelName` is required for `CreateLanguageModel`");
 
             RequestObject<LanguageModel> req = new RequestObject<LanguageModel>
             {
@@ -1462,13 +1583,24 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=CreateLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (createLanguageModel != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(createLanguageModel));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(baseModelName))
+                bodyObject["base_model_name"] = baseModelName;
+            if (!string.IsNullOrEmpty(dialect))
+                bodyObject["dialect"] = dialect;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateLanguageModelResponse;
 
@@ -1495,7 +1627,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1514,22 +1653,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// instance of the service that owns a model to delete it.
         ///
         /// **See also:** [Deleting a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `DeleteLanguageModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteLanguageModel");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteLanguageModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1547,7 +1686,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteLanguageModelResponse;
 
@@ -1574,7 +1717,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1592,22 +1742,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// service that owns a model to list information about it.
         ///
         /// **See also:** [Listing custom language
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="LanguageModel" />LanguageModel</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="LanguageModel" />LanguageModel</returns>
         public bool GetLanguageModel(Callback<LanguageModel> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `GetLanguageModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetLanguageModel");
+                throw new ArgumentNullException("`customizationId` is required for `GetLanguageModel`");
 
             RequestObject<LanguageModel> req = new RequestObject<LanguageModel>
             {
@@ -1625,7 +1775,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetLanguageModelResponse;
 
@@ -1652,7 +1806,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1672,20 +1833,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// owns a model to list information about it.
         ///
         /// **See also:** [Listing custom language
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
         /// models that are owned by the requesting credentials. (optional)</param>
-        /// <returns><see cref="LanguageModels" />LanguageModels</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListLanguageModels(Callback<LanguageModels> callback, string language = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="LanguageModels" />LanguageModels</returns>
+        public bool ListLanguageModels(Callback<LanguageModels> callback, Dictionary<string, object> customData = null, string language = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListLanguageModels");
+                throw new ArgumentNullException("`callback` is required for `ListLanguageModels`");
 
             RequestObject<LanguageModels> req = new RequestObject<LanguageModels>
             {
@@ -1703,7 +1864,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListLanguageModels";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListLanguageModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(language))
             {
                 req.Parameters["language"] = language;
@@ -1734,7 +1899,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LanguageModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1754,22 +1926,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// re-created. You must use credentials for the instance of the service that owns a model to reset it.
         ///
         /// **See also:** [Resetting a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool ResetLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ResetLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `ResetLanguageModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ResetLanguageModel");
+                throw new ArgumentNullException("`customizationId` is required for `ResetLanguageModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1787,7 +1959,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ResetLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ResetLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnResetLanguageModelResponse;
 
@@ -1814,7 +1990,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1852,7 +2035,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// must fix.
         ///
         /// **See also:** [Train the custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
@@ -1877,16 +2060,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// The value that you assign is used for all recognition requests that use the model. You can override it for
         /// any recognition request by specifying a customization weight for that request. (optional, default to
         /// 0.3)</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool TrainLanguageModel(Callback<object> callback, string customizationId, string wordTypeToAdd = null, double? customizationWeight = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool TrainLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string wordTypeToAdd = null, double? customizationWeight = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for TrainLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `TrainLanguageModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for TrainLanguageModel");
+                throw new ArgumentNullException("`customizationId` is required for `TrainLanguageModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1904,7 +2087,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=TrainLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "TrainLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(wordTypeToAdd))
             {
                 req.Parameters["word_type_to_add"] = wordTypeToAdd;
@@ -1939,7 +2126,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1973,16 +2167,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool UpgradeLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpgradeLanguageModel");
+                throw new ArgumentNullException("`callback` is required for `UpgradeLanguageModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for UpgradeLanguageModel");
+                throw new ArgumentNullException("`customizationId` is required for `UpgradeLanguageModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2000,7 +2194,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=UpgradeLanguageModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UpgradeLanguageModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnUpgradeLanguageModelResponse;
 
@@ -2027,7 +2225,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2102,20 +2307,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="allowOverwrite">If `true`, the specified corpus overwrites an existing corpus with the same
         /// name. If `false`, the request fails if a corpus with the same name already exists. The parameter has no
         /// effect if a corpus with the same name does not already exist. (optional, default to false)</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.FileStream corpusFile, bool? allowOverwrite = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.FileStream corpusFile, Dictionary<string, object> customData = null, bool? allowOverwrite = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddCorpus");
+                throw new ArgumentNullException("`callback` is required for `AddCorpus`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for AddCorpus");
+                throw new ArgumentNullException("`customizationId` is required for `AddCorpus`");
             if (string.IsNullOrEmpty(corpusName))
-                throw new ArgumentNullException("corpusName is required for AddCorpus");
+                throw new ArgumentNullException("`corpusName` is required for `AddCorpus`");
             if (corpusFile == null)
-                throw new ArgumentNullException("corpusFile is required for AddCorpus");
+                throw new ArgumentNullException("`corpusFile` is required for `AddCorpus`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2133,12 +2338,15 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=AddCorpus";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddCorpus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            req.Forms["corpusFile"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
             if (corpusFile != null)
             {
-                req.Forms["corpusFile"] = new RESTConnector.Form(corpusFile.ToString());
+                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
             }
             if (allowOverwrite != null)
             {
@@ -2170,7 +2378,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2199,18 +2414,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="corpusName">The name of the corpus for the custom language model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteCorpus(Callback<object> callback, string customizationId, string corpusName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteCorpus");
+                throw new ArgumentNullException("`callback` is required for `DeleteCorpus`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteCorpus");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteCorpus`");
             if (string.IsNullOrEmpty(corpusName))
-                throw new ArgumentNullException("corpusName is required for DeleteCorpus");
+                throw new ArgumentNullException("`corpusName` is required for `DeleteCorpus`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2228,7 +2443,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteCorpus";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteCorpus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteCorpusResponse;
 
@@ -2255,7 +2474,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2281,18 +2507,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="corpusName">The name of the corpus for the custom language model.</param>
-        /// <returns><see cref="Corpus" />Corpus</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Corpus" />Corpus</returns>
         public bool GetCorpus(Callback<Corpus> callback, string customizationId, string corpusName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetCorpus");
+                throw new ArgumentNullException("`callback` is required for `GetCorpus`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetCorpus");
+                throw new ArgumentNullException("`customizationId` is required for `GetCorpus`");
             if (string.IsNullOrEmpty(corpusName))
-                throw new ArgumentNullException("corpusName is required for GetCorpus");
+                throw new ArgumentNullException("`corpusName` is required for `GetCorpus`");
 
             RequestObject<Corpus> req = new RequestObject<Corpus>
             {
@@ -2310,7 +2536,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetCorpus";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetCorpus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetCorpusResponse;
 
@@ -2337,7 +2567,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpus>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2362,16 +2599,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="Corpora" />Corpora</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Corpora" />Corpora</returns>
         public bool ListCorpora(Callback<Corpora> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListCorpora");
+                throw new ArgumentNullException("`callback` is required for `ListCorpora`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ListCorpora");
+                throw new ArgumentNullException("`customizationId` is required for `ListCorpora`");
 
             RequestObject<Corpora> req = new RequestObject<Corpora>
             {
@@ -2389,7 +2626,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListCorpora";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListCorpora"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnListCorporaResponse;
 
@@ -2416,7 +2657,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Corpora>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2469,22 +2717,36 @@ namespace IBM.Watson.SpeechToText.V1
         /// not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the tokens of compound
         /// words. URL-encode the word if it includes non-ASCII characters. For more information, see [Character
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).</param>
-        /// <param name="customWord">A `CustomWord` object that provides information about the specified custom word.
-        /// Specify an empty object to add a word with no sounds-like or display-as information.</param>
-        /// <returns><see cref="object" />object</returns>
+        /// <param name="word">For the **Add custom words** method, you must specify the custom word that is to be added
+        /// to or updated in the custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore)
+        /// to connect the tokens of compound words.
+        ///
+        /// Omit this parameter for the **Add a custom word** method. (optional)</param>
+        /// <param name="soundsLike">An array of sounds-like pronunciations for the custom word. Specify how words that
+        /// are difficult to pronounce, foreign words, acronyms, and so on can be pronounced by users.
+        /// * For a word that is not in the service's base vocabulary, omit the parameter to have the service
+        /// automatically generate a sounds-like pronunciation for the word.
+        /// * For a word that is in the service's base vocabulary, use the parameter to specify additional
+        /// pronunciations for the word. You cannot override the default pronunciation of a word; pronunciations you add
+        /// augment the pronunciation from the base vocabulary.
+        ///
+        /// A word can have at most five sounds-like pronunciations. A pronunciation can include at most 40 characters
+        /// not including spaces. (optional)</param>
+        /// <param name="displayAs">An alternative spelling for the custom word when it appears in a transcript. Use the
+        /// parameter when you want the word to have a spelling that is different from its usual representation or from
+        /// its spelling in corpora training data. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddWord(Callback<object> callback, string customizationId, string wordName, CustomWord customWord, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool AddWord(Callback<object> callback, string customizationId, string wordName, Dictionary<string, object> customData = null, string word = null, List<string> soundsLike = null, string displayAs = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddWord");
+                throw new ArgumentNullException("`callback` is required for `AddWord`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for AddWord");
+                throw new ArgumentNullException("`customizationId` is required for `AddWord`");
             if (string.IsNullOrEmpty(wordName))
-                throw new ArgumentNullException("wordName is required for AddWord");
-            if (customWord == null)
-                throw new ArgumentNullException("customWord is required for AddWord");
+                throw new ArgumentNullException("`wordName` is required for `AddWord`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2502,13 +2764,22 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=AddWord";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddWord"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (customWord != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(customWord));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(word))
+                bodyObject["word"] = word;
+            if (soundsLike != null && soundsLike.Count > 0)
+                bodyObject["sounds_like"] = JToken.FromObject(soundsLike);
+            if (!string.IsNullOrEmpty(displayAs))
+                bodyObject["display_as"] = displayAs;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnAddWordResponse;
 
@@ -2535,7 +2806,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2599,20 +2877,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customWords">A `CustomWords` object that provides information about one or more custom words
-        /// that are to be added to or updated in the custom language model.</param>
-        /// <returns><see cref="object" />object</returns>
+        /// <param name="words">An array of `CustomWord` objects that provides information about each custom word that
+        /// is to be added to or updated in the custom language model.</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddWords(Callback<object> callback, string customizationId, CustomWords customWords, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool AddWords(Callback<object> callback, string customizationId, List<CustomWord> words, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddWords");
+                throw new ArgumentNullException("`callback` is required for `AddWords`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for AddWords");
-            if (customWords == null)
-                throw new ArgumentNullException("customWords is required for AddWords");
+                throw new ArgumentNullException("`customizationId` is required for `AddWords`");
+            if (words == null)
+                throw new ArgumentNullException("`words` is required for `AddWords`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2630,13 +2908,18 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=AddWords";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddWords"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (customWords != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(customWords));
-            }
+
+            JObject bodyObject = new JObject();
+            if (words != null && words.Count > 0)
+                bodyObject["words"] = JToken.FromObject(words);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnAddWordsResponse;
 
@@ -2663,7 +2946,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2694,18 +2984,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="wordName">The custom word that is to be deleted from the custom language model. URL-encode the
         /// word if it includes non-ASCII characters. For more information, see [Character
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteWord(Callback<object> callback, string customizationId, string wordName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteWord");
+                throw new ArgumentNullException("`callback` is required for `DeleteWord`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteWord");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteWord`");
             if (string.IsNullOrEmpty(wordName))
-                throw new ArgumentNullException("wordName is required for DeleteWord");
+                throw new ArgumentNullException("`wordName` is required for `DeleteWord`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2723,7 +3013,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteWord";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteWord"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteWordResponse;
 
@@ -2750,7 +3044,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2777,18 +3078,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="wordName">The custom word that is to be read from the custom language model. URL-encode the
         /// word if it includes non-ASCII characters. For more information, see [Character
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).</param>
-        /// <returns><see cref="Word" />Word</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Word" />Word</returns>
         public bool GetWord(Callback<Word> callback, string customizationId, string wordName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetWord");
+                throw new ArgumentNullException("`callback` is required for `GetWord`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetWord");
+                throw new ArgumentNullException("`customizationId` is required for `GetWord`");
             if (string.IsNullOrEmpty(wordName))
-                throw new ArgumentNullException("wordName is required for GetWord");
+                throw new ArgumentNullException("`wordName` is required for `GetWord`");
 
             RequestObject<Word> req = new RequestObject<Word>
             {
@@ -2806,7 +3107,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetWord";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetWord"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetWordResponse;
 
@@ -2833,7 +3138,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Word>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2872,16 +3184,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// alphabetical ordering, the lexicographical precedence is numeric values, uppercase letters, and lowercase
         /// letters. For count ordering, values with the same count are ordered alphabetically. With the `curl` command,
         /// URL encode the `+` symbol as `%2B`. (optional, default to alphabetical)</param>
-        /// <returns><see cref="Words" />Words</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListWords(Callback<Words> callback, string customizationId, string wordType = null, string sort = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="Words" />Words</returns>
+        public bool ListWords(Callback<Words> callback, string customizationId, Dictionary<string, object> customData = null, string wordType = null, string sort = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListWords");
+                throw new ArgumentNullException("`callback` is required for `ListWords`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ListWords");
+                throw new ArgumentNullException("`customizationId` is required for `ListWords`");
 
             RequestObject<Words> req = new RequestObject<Words>
             {
@@ -2899,7 +3211,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListWords";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListWords"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(wordType))
             {
                 req.Parameters["word_type"] = wordType;
@@ -2934,7 +3250,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Words>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3002,22 +3325,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="allowOverwrite">If `true`, the specified grammar overwrites an existing grammar with the same
         /// name. If `false`, the request fails if a grammar with the same name already exists. The parameter has no
         /// effect if a grammar with the same name does not already exist. (optional, default to false)</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, string grammarFile, string contentType, bool? allowOverwrite = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, string grammarFile, string contentType, Dictionary<string, object> customData = null, bool? allowOverwrite = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddGrammar");
+                throw new ArgumentNullException("`callback` is required for `AddGrammar`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for AddGrammar");
+                throw new ArgumentNullException("`customizationId` is required for `AddGrammar`");
             if (string.IsNullOrEmpty(grammarName))
-                throw new ArgumentNullException("grammarName is required for AddGrammar");
+                throw new ArgumentNullException("`grammarName` is required for `AddGrammar`");
             if (string.IsNullOrEmpty(grammarFile))
-                throw new ArgumentNullException("grammarFile is required for AddGrammar");
+                throw new ArgumentNullException("`grammarFile` is required for `AddGrammar`");
             if (string.IsNullOrEmpty(contentType))
-                throw new ArgumentNullException("contentType is required for AddGrammar");
+                throw new ArgumentNullException("`contentType` is required for `AddGrammar`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3035,21 +3358,22 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=AddGrammar";
-            if (!string.IsNullOrEmpty(contentType))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddGrammar"))
             {
-                req.Headers["Content-Type"] = contentType;
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (grammarFile != null)
+
+            if (!string.IsNullOrEmpty(contentType))
             {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(grammarFile));
+                req.Headers["Content-Type"] = contentType;
             }
+            req.Send = Encoding.UTF8.GetBytes(grammarFile);
 
             req.OnResponse = OnAddGrammarResponse;
 
@@ -3076,7 +3400,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3105,18 +3436,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="grammarName">The name of the grammar for the custom language model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteGrammar(Callback<object> callback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteGrammar");
+                throw new ArgumentNullException("`callback` is required for `DeleteGrammar`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteGrammar");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteGrammar`");
             if (string.IsNullOrEmpty(grammarName))
-                throw new ArgumentNullException("grammarName is required for DeleteGrammar");
+                throw new ArgumentNullException("`grammarName` is required for `DeleteGrammar`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3134,7 +3465,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteGrammar";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteGrammar"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteGrammarResponse;
 
@@ -3161,7 +3496,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3187,18 +3529,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="grammarName">The name of the grammar for the custom language model.</param>
-        /// <returns><see cref="Grammar" />Grammar</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Grammar" />Grammar</returns>
         public bool GetGrammar(Callback<Grammar> callback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetGrammar");
+                throw new ArgumentNullException("`callback` is required for `GetGrammar`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetGrammar");
+                throw new ArgumentNullException("`customizationId` is required for `GetGrammar`");
             if (string.IsNullOrEmpty(grammarName))
-                throw new ArgumentNullException("grammarName is required for GetGrammar");
+                throw new ArgumentNullException("`grammarName` is required for `GetGrammar`");
 
             RequestObject<Grammar> req = new RequestObject<Grammar>
             {
@@ -3216,7 +3558,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetGrammar";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetGrammar"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetGrammarResponse;
 
@@ -3243,7 +3589,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammar>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3268,16 +3621,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="Grammars" />Grammars</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="Grammars" />Grammars</returns>
         public bool ListGrammars(Callback<Grammars> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListGrammars");
+                throw new ArgumentNullException("`callback` is required for `ListGrammars`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ListGrammars");
+                throw new ArgumentNullException("`customizationId` is required for `ListGrammars`");
 
             RequestObject<Grammars> req = new RequestObject<Grammars>
             {
@@ -3295,7 +3648,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListGrammars";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListGrammars"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnListGrammarsResponse;
 
@@ -3322,7 +3679,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Grammars>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3341,21 +3705,32 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials are used to create it.
         ///
         /// **See also:** [Create a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="createAcousticModel">A `CreateAcousticModel` object that provides basic information about the
-        /// new custom acoustic model.</param>
-        /// <returns><see cref="AcousticModel" />AcousticModel</returns>
+        /// <param name="name">A user-defined name for the new custom acoustic model. Use a name that is unique among
+        /// all custom acoustic models that you own. Use a localized name that matches the language of the custom model.
+        /// Use a name that describes the acoustic environment of the custom model, such as `Mobile custom model` or
+        /// `Noisy car custom model`.</param>
+        /// <param name="baseModelName">The name of the base language model that is to be customized by the new custom
+        /// acoustic model. The new custom model can be used only with the base model that it customizes.
+        ///
+        /// To determine whether a base model supports acoustic model customization, refer to [Language support for
+        /// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).</param>
+        /// <param name="description">A description of the new custom acoustic model. Use a localized description that
+        /// matches the language of the custom model. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool CreateAcousticModel(Callback<AcousticModel> callback, CreateAcousticModel createAcousticModel, Dictionary<string, object> customData = null)
+        /// <returns><see cref="AcousticModel" />AcousticModel</returns>
+        public bool CreateAcousticModel(Callback<AcousticModel> callback, string name, string baseModelName, Dictionary<string, object> customData = null, string description = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for CreateAcousticModel");
-            if (createAcousticModel == null)
-                throw new ArgumentNullException("createAcousticModel is required for CreateAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `CreateAcousticModel`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateAcousticModel`");
+            if (string.IsNullOrEmpty(baseModelName))
+                throw new ArgumentNullException("`baseModelName` is required for `CreateAcousticModel`");
 
             RequestObject<AcousticModel> req = new RequestObject<AcousticModel>
             {
@@ -3373,13 +3748,22 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=CreateAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (createAcousticModel != null)
-            {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(createAcousticModel));
-            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(baseModelName))
+                bodyObject["base_model_name"] = baseModelName;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateAcousticModelResponse;
 
@@ -3406,7 +3790,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3425,22 +3816,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// instance of the service that owns a model to delete it.
         ///
         /// **See also:** [Deleting a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `DeleteAcousticModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteAcousticModel");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteAcousticModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3458,7 +3849,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteAcousticModelResponse;
 
@@ -3485,7 +3880,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3503,22 +3905,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// service that owns a model to list information about it.
         ///
         /// **See also:** [Listing custom acoustic
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="AcousticModel" />AcousticModel</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="AcousticModel" />AcousticModel</returns>
         public bool GetAcousticModel(Callback<AcousticModel> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `GetAcousticModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetAcousticModel");
+                throw new ArgumentNullException("`customizationId` is required for `GetAcousticModel`");
 
             RequestObject<AcousticModel> req = new RequestObject<AcousticModel>
             {
@@ -3536,7 +3938,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetAcousticModelResponse;
 
@@ -3563,7 +3969,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModel>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3583,20 +3996,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// owns a model to list information about it.
         ///
         /// **See also:** [Listing custom acoustic
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
         /// models that are owned by the requesting credentials. (optional)</param>
-        /// <returns><see cref="AcousticModels" />AcousticModels</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool ListAcousticModels(Callback<AcousticModels> callback, string language = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="AcousticModels" />AcousticModels</returns>
+        public bool ListAcousticModels(Callback<AcousticModels> callback, Dictionary<string, object> customData = null, string language = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListAcousticModels");
+                throw new ArgumentNullException("`callback` is required for `ListAcousticModels`");
 
             RequestObject<AcousticModels> req = new RequestObject<AcousticModels>
             {
@@ -3614,7 +4027,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListAcousticModels";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListAcousticModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(language))
             {
                 req.Parameters["language"] = language;
@@ -3645,7 +4062,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AcousticModels>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3665,22 +4089,22 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials for the instance of the service that owns a model to reset it.
         ///
         /// **See also:** [Resetting a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool ResetAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ResetAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `ResetAcousticModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ResetAcousticModel");
+                throw new ArgumentNullException("`customizationId` is required for `ResetAcousticModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3698,7 +4122,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ResetAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ResetAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnResetAcousticModelResponse;
 
@@ -3725,7 +4153,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3758,19 +4193,21 @@ namespace IBM.Watson.SpeechToText.V1
         /// audio resources, until the existing request completes.
         ///
         /// You can use the optional `custom_language_model_id` parameter to specify the GUID of a separately created
-        /// custom language model that is to be used during training. Specify a custom language model if you have
+        /// custom language model that is to be used during training. Train with a custom language model if you have
         /// verbatim transcriptions of the audio files that you have added to the custom model or you have either
-        /// corpora (text files) or a list of words that are relevant to the contents of the audio files. For more
-        /// information, see the **Create a custom language model** method.
+        /// corpora (text files) or a list of words that are relevant to the contents of the audio files. Both of the
+        /// custom models must be based on the same version of the same base model for training to succeed.
         ///
         /// Training can fail to start for the following reasons:
         /// * The service is currently handling another request for the custom model, such as another training request
         /// or a request to add audio resources to the model.
         /// * The custom model contains less than 10 minutes or more than 100 hours of audio data.
         /// * One or more of the custom model's audio resources is invalid.
+        /// * You passed an incompatible custom language model with the `custom_language_model_id` query parameter. Both
+        /// custom models must be based on the same version of the same base model.
         ///
         /// **See also:** [Train the custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
@@ -3779,17 +4216,19 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customLanguageModelId">The customization ID (GUID) of a custom language model that is to be
         /// used during training of the custom acoustic model. Specify a custom language model that has been trained
         /// with verbatim transcriptions of the audio resources or that contains words that are relevant to the contents
-        /// of the audio resources. (optional)</param>
-        /// <returns><see cref="object" />object</returns>
+        /// of the audio resources. The custom language model must be based on the same version of the same base model
+        /// as the custom acoustic model. The credentials specified with the request must own both custom models.
+        /// (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool TrainAcousticModel(Callback<object> callback, string customizationId, string customLanguageModelId = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool TrainAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string customLanguageModelId = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for TrainAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `TrainAcousticModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for TrainAcousticModel");
+                throw new ArgumentNullException("`customizationId` is required for `TrainAcousticModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3807,7 +4246,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=TrainAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "TrainAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(customLanguageModelId))
             {
                 req.Parameters["custom_language_model_id"] = customLanguageModelId;
@@ -3838,7 +4281,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3880,17 +4330,24 @@ namespace IBM.Watson.SpeechToText.V1
         /// custom model.</param>
         /// <param name="customLanguageModelId">If the custom acoustic model was trained with a custom language model,
         /// the customization ID (GUID) of that custom language model. The custom language model must be upgraded before
-        /// the custom acoustic model can be upgraded. (optional)</param>
-        /// <returns><see cref="object" />object</returns>
+        /// the custom acoustic model can be upgraded. The credentials specified with the request must own both custom
+        /// models. (optional)</param>
+        /// <param name="force">If `true`, forces the upgrade of a custom acoustic model for which no input data has
+        /// been modified since it was last trained. Use this parameter only to force the upgrade of a custom acoustic
+        /// model that is trained with a custom language model, and only if you receive a 400 response code and the
+        /// message `No input data modified since last training`. See [Upgrading a custom acoustic
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic). (optional,
+        /// default to false)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool UpgradeAcousticModel(Callback<object> callback, string customizationId, string customLanguageModelId = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool UpgradeAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string customLanguageModelId = null, bool? force = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for UpgradeAcousticModel");
+                throw new ArgumentNullException("`callback` is required for `UpgradeAcousticModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for UpgradeAcousticModel");
+                throw new ArgumentNullException("`customizationId` is required for `UpgradeAcousticModel`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3908,10 +4365,18 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=UpgradeAcousticModel";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UpgradeAcousticModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(customLanguageModelId))
             {
                 req.Parameters["custom_language_model_id"] = customLanguageModelId;
+            }
+            if (force != null)
+            {
+                req.Parameters["force"] = (bool)force ? "true" : "false";
             }
 
             req.OnResponse = OnUpgradeAcousticModelResponse;
@@ -3939,7 +4404,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4062,20 +4534,20 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// For an archive-type resource, the media type of the archive file. For more information, see **Content types
         /// for archive-type resources** in the method description. (optional)</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, byte[] audioResource, string containedContentType = null, bool? allowOverwrite = null, string contentType = null, Dictionary<string, object> customData = null)
+        /// <returns><see cref="object" />object</returns>
+        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, byte[] audioResource, Dictionary<string, object> customData = null, string containedContentType = null, bool? allowOverwrite = null, string contentType = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for AddAudio");
+                throw new ArgumentNullException("`callback` is required for `AddAudio`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for AddAudio");
+                throw new ArgumentNullException("`customizationId` is required for `AddAudio`");
             if (string.IsNullOrEmpty(audioName))
-                throw new ArgumentNullException("audioName is required for AddAudio");
+                throw new ArgumentNullException("`audioName` is required for `AddAudio`");
             if (audioResource == null)
-                throw new ArgumentNullException("audioResource is required for AddAudio");
+                throw new ArgumentNullException("`audioResource` is required for `AddAudio`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -4093,25 +4565,27 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=AddAudio";
-            if (!string.IsNullOrEmpty(containedContentType))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddAudio"))
             {
-                req.Headers["Contained-Content-Type"] = containedContentType;
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
+
             if (allowOverwrite != null)
             {
                 req.Parameters["allow_overwrite"] = (bool)allowOverwrite ? "true" : "false";
             }
-            req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
-            if (audioResource != null)
+
+            if (!string.IsNullOrEmpty(containedContentType))
             {
-                req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(audioResource));
+                req.Headers["Contained-Content-Type"] = containedContentType;
             }
+
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
+            req.Send = audioResource;
 
             req.OnResponse = OnAddAudioResponse;
 
@@ -4138,7 +4612,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4166,18 +4647,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="audioName">The name of the audio resource for the custom acoustic model.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteAudio(Callback<object> callback, string customizationId, string audioName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteAudio");
+                throw new ArgumentNullException("`callback` is required for `DeleteAudio`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for DeleteAudio");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteAudio`");
             if (string.IsNullOrEmpty(audioName))
-                throw new ArgumentNullException("audioName is required for DeleteAudio");
+                throw new ArgumentNullException("`audioName` is required for `DeleteAudio`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -4195,7 +4676,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteAudio";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteAudio"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnDeleteAudioResponse;
 
@@ -4222,7 +4707,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4261,18 +4753,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="audioName">The name of the audio resource for the custom acoustic model.</param>
-        /// <returns><see cref="AudioListing" />AudioListing</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="AudioListing" />AudioListing</returns>
         public bool GetAudio(Callback<AudioListing> callback, string customizationId, string audioName, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for GetAudio");
+                throw new ArgumentNullException("`callback` is required for `GetAudio`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for GetAudio");
+                throw new ArgumentNullException("`customizationId` is required for `GetAudio`");
             if (string.IsNullOrEmpty(audioName))
-                throw new ArgumentNullException("audioName is required for GetAudio");
+                throw new ArgumentNullException("`audioName` is required for `GetAudio`");
 
             RequestObject<AudioListing> req = new RequestObject<AudioListing>
             {
@@ -4290,7 +4782,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=GetAudio";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetAudio"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnGetAudioResponse;
 
@@ -4317,7 +4813,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioListing>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4344,16 +4847,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <returns><see cref="AudioResources" />AudioResources</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="AudioResources" />AudioResources</returns>
         public bool ListAudio(Callback<AudioResources> callback, string customizationId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for ListAudio");
+                throw new ArgumentNullException("`callback` is required for `ListAudio`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("customizationId is required for ListAudio");
+                throw new ArgumentNullException("`customizationId` is required for `ListAudio`");
 
             RequestObject<AudioResources> req = new RequestObject<AudioResources>
             {
@@ -4371,7 +4874,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=ListAudio";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListAudio"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
 
             req.OnResponse = OnListAudioResponse;
 
@@ -4398,7 +4905,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AudioResources>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4425,16 +4939,16 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <returns><see cref="object" />object</returns>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
+        /// <returns><see cref="object" />object</returns>
         public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("A callback is required for DeleteUserData");
+                throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
             if (string.IsNullOrEmpty(customerId))
-                throw new ArgumentNullException("customerId is required for DeleteUserData");
+                throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -4452,7 +4966,11 @@ namespace IBM.Watson.SpeechToText.V1
                 }
             }
 
-            req.Headers["X-IBMCloud-SDK-Analytics"] = "service_name=speech_to_text;service_version=V1;operation_id=DeleteUserData";
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteUserData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;
@@ -4483,7 +5001,14 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {

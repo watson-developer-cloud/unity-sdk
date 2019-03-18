@@ -136,16 +136,13 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="input">An input object that includes the input text. (optional)</param>
-        /// <param name="alternateIntents">Whether to return more than one intent. Set to `true` to return all matching
-        /// intents. (optional, default to false)</param>
+        /// <param name="intents">An array of intents recognized in the user input, sorted in descending order of
+        /// confidence. (optional)</param>
+        /// <param name="entities">An array of entities identified in the user input. (optional)</param>
+        /// <param name="alternateIntents">Whether to return more than one intent. A value of `true` indicates that all
+        /// matching intents are returned. (optional, default to false)</param>
         /// <param name="context">State information for the conversation. To maintain state, include the context from
         /// the previous response. (optional)</param>
-        /// <param name="entities">Entities to use when evaluating the message. Include entities from the previous
-        /// response to continue using those entities rather than detecting entities in the new input.
-        /// (optional)</param>
-        /// <param name="intents">Intents to use when evaluating the user input. Include intents from the previous
-        /// response to continue using those intents rather than trying to recognize intents in the new input.
-        /// (optional)</param>
         /// <param name="output">An output object that includes the response to the user, the dialog nodes that were
         /// triggered, and messages from the log. (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
@@ -153,15 +150,15 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="JObject" />JObject</returns>
-        public bool Message(Callback<JObject> callback, string workspaceId, Dictionary<string, object> customData = null, JObject input = null, bool? alternateIntents = null, JObject context = null, List<JObject> entities = null, List<JObject> intents = null, JObject output = null, bool? nodesVisitedDetails = null)
+        /// <returns><see cref="MessageResponse" />MessageResponse</returns>
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, Dictionary<string, object> customData = null, JObject input = null, List<JObject> intents = null, List<JObject> entities = null, bool? alternateIntents = null, JObject context = null, JObject output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `Message`");
 
-            RequestObject<JObject> req = new RequestObject<JObject>
+            RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
@@ -177,7 +174,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "Message"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "Message"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -193,14 +190,14 @@ namespace IBM.Watson.Assistant.V1
             JObject bodyObject = new JObject();
             if (input != null)
                 bodyObject["input"] = JToken.FromObject(input);
+            if (intents != null && intents.Count > 0)
+                bodyObject["intents"] = JToken.FromObject(intents);
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
             if (alternateIntents != null)
                 bodyObject["alternate_intents"] = JToken.FromObject(alternateIntents);
             if (context != null)
                 bodyObject["context"] = JToken.FromObject(context);
-            if (entities != null && entities.Count > 0)
-                bodyObject["entities"] = JToken.FromObject(entities);
-            if (intents != null && intents.Count > 0)
-                bodyObject["intents"] = JToken.FromObject(intents);
             if (output != null)
                 bodyObject["output"] = JToken.FromObject(output);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
@@ -218,8 +215,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<JObject> response = new DetailedResponse<JObject>();
-            Dictionary<string, object> customData = ((RequestObject<JObject>)req).CustomData;
+            DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
+            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -229,8 +226,15 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<JObject>(json);
-                customData.Add("json", json);
+                response.Result = JsonConvert.DeserializeObject<MessageResponse>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -238,8 +242,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<JObject>)req).Callback != null)
-                ((RequestObject<JObject>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<MessageResponse>)req).Callback != null)
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// Create workspace.
@@ -255,21 +259,22 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
+        /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
+        /// data is not to be used. (optional, default to false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
-        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
-        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
-        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
-        /// false)</param>
-        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -290,7 +295,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -306,6 +311,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
@@ -314,12 +325,6 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (learningOptOut != null)
-                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
-            if (systemSettings != null)
-                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
@@ -347,7 +352,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -394,7 +406,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -426,7 +438,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -458,15 +477,15 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="WorkspaceExport" />WorkspaceExport</returns>
-        public bool GetWorkspace(Callback<WorkspaceExport> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null, string sort = null)
+        /// <returns><see cref="Workspace" />Workspace</returns>
+        public bool GetWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null, string sort = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `GetWorkspace`");
 
-            RequestObject<WorkspaceExport> req = new RequestObject<WorkspaceExport>
+            RequestObject<Workspace> req = new RequestObject<Workspace>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -482,7 +501,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -514,8 +533,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<WorkspaceExport> response = new DetailedResponse<WorkspaceExport>();
-            Dictionary<string, object> customData = ((RequestObject<WorkspaceExport>)req).CustomData;
+            DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
+            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -525,8 +544,15 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<WorkspaceExport>(json);
-                customData.Add("json", json);
+                response.Result = JsonConvert.DeserializeObject<Workspace>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -534,8 +560,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<WorkspaceExport>)req).Callback != null)
-                ((RequestObject<WorkspaceExport>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<Workspace>)req).Callback != null)
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// List workspaces.
@@ -579,7 +605,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListWorkspaces"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListWorkspaces"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -631,7 +657,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<WorkspaceCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -657,16 +690,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
+        /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
+        /// data is not to be used. (optional, default to false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
-        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
-        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
-        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
-        /// false)</param>
-        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the workspace. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data includes **entities** and
@@ -679,7 +713,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, bool? append = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -702,7 +736,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateWorkspace"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -722,6 +756,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
@@ -730,12 +770,6 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (learningOptOut != null)
-                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
-            if (systemSettings != null)
-                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
@@ -763,7 +797,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -794,7 +835,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string description = null, List<CreateExample> examples = null)
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string description = null, List<Example> examples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateIntent`");
@@ -819,7 +860,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -862,7 +903,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -912,7 +960,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -944,7 +992,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -974,8 +1029,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="IntentExport" />IntentExport</returns>
-        public bool GetIntent(Callback<IntentExport> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetIntent`");
@@ -984,7 +1039,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `GetIntent`");
 
-            RequestObject<IntentExport> req = new RequestObject<IntentExport>
+            RequestObject<Intent> req = new RequestObject<Intent>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -1000,7 +1055,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1028,8 +1083,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<IntentExport> response = new DetailedResponse<IntentExport>();
-            Dictionary<string, object> customData = ((RequestObject<IntentExport>)req).CustomData;
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
+            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1039,8 +1094,15 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<IntentExport>(json);
-                customData.Add("json", json);
+                response.Result = JsonConvert.DeserializeObject<Intent>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1048,8 +1110,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<IntentExport>)req).Callback != null)
-                ((RequestObject<IntentExport>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<Intent>)req).Callback != null)
+                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// List intents.
@@ -1100,7 +1162,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListIntents"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListIntents"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1156,7 +1218,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<IntentCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1182,13 +1251,14 @@ namespace IBM.Watson.Assistant.V1
         /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
         /// - It cannot begin with the reserved prefix `sys-`.
         /// - It must be no longer than 128 characters. (optional)</param>
-        /// <param name="newDescription">The description of the intent. (optional)</param>
+        /// <param name="newDescription">The description of the intent. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string newIntent = null, string newDescription = null, List<CreateExample> newExamples = null)
+        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateIntent`");
@@ -1213,7 +1283,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1256,7 +1326,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1287,7 +1364,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, List<Mentions> mentions = null)
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, List<Mention> mentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExample`");
@@ -1314,7 +1391,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1355,7 +1432,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1408,7 +1492,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1440,7 +1524,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1495,7 +1586,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1531,7 +1622,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1590,7 +1688,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListExamples"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListExamples"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1642,7 +1740,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ExampleCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1674,7 +1779,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, string newText = null, List<Mentions> newMentions = null)
+        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, string newText = null, List<Mention> newMentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateExample`");
@@ -1701,7 +1806,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1742,7 +1847,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1797,7 +1909,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1836,7 +1948,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1887,7 +2006,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -1919,7 +2038,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -1972,7 +2098,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2008,7 +2134,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2065,7 +2198,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListCounterexamples"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListCounterexamples"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2117,7 +2250,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CounterexampleCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2139,7 +2279,11 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <param name="newText">The text of a user input counterexample. (optional)</param>
+        /// <param name="newText">The text of a user input marked as irrelevant input. This string must conform to the
+        /// following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters
+        /// - It cannot consist of only whitespace characters
+        /// - It must be no longer than 1024 characters. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
@@ -2169,7 +2313,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2208,7 +2352,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2236,14 +2387,14 @@ namespace IBM.Watson.Assistant.V1
         /// entity that you want to enable. (Any entity content specified with the request is ignored.).</param>
         /// <param name="description">The description of the entity. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
-        /// <param name="metadata">Any metadata related to the value. (optional)</param>
-        /// <param name="values">An array of objects describing the entity values. (optional)</param>
+        /// <param name="metadata">Any metadata related to the entity. (optional)</param>
         /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
+        /// <param name="values">An array of objects describing the entity values. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string description = null, object metadata = null, List<CreateValue> values = null, bool? fuzzyMatch = null)
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEntity`");
@@ -2268,7 +2419,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2284,10 +2435,10 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (values != null && values.Count > 0)
-                bodyObject["values"] = JToken.FromObject(values);
             if (fuzzyMatch != null)
                 bodyObject["fuzzy_match"] = JToken.FromObject(fuzzyMatch);
+            if (values != null && values.Count > 0)
+                bodyObject["values"] = JToken.FromObject(values);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateEntityResponse;
@@ -2315,7 +2466,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2365,7 +2523,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2397,7 +2555,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2427,8 +2592,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="EntityExport" />EntityExport</returns>
-        public bool GetEntity(Callback<EntityExport> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetEntity`");
@@ -2437,7 +2602,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `GetEntity`");
 
-            RequestObject<EntityExport> req = new RequestObject<EntityExport>
+            RequestObject<Entity> req = new RequestObject<Entity>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -2453,7 +2618,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2481,8 +2646,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<EntityExport> response = new DetailedResponse<EntityExport>();
-            Dictionary<string, object> customData = ((RequestObject<EntityExport>)req).CustomData;
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
+            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2492,8 +2657,15 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<EntityExport>(json);
-                customData.Add("json", json);
+                response.Result = JsonConvert.DeserializeObject<Entity>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2501,8 +2673,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<EntityExport>)req).Callback != null)
-                ((RequestObject<EntityExport>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<Entity>)req).Callback != null)
+                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// List entities.
@@ -2553,7 +2725,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListEntities"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListEntities"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2609,7 +2781,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2639,12 +2818,12 @@ namespace IBM.Watson.Assistant.V1
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
         /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
-        /// <param name="newValues">An array of entity values. (optional)</param>
+        /// <param name="newValues">An array of objects describing the entity values. (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string newEntity = null, string newDescription = null, object newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
+        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEntity`");
@@ -2669,7 +2848,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateEntity"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2716,7 +2895,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2772,7 +2958,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListMentions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListMentions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2812,7 +2998,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityMentionCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2824,7 +3017,7 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
-        /// Add entity value.
+        /// Create entity value.
         ///
         /// Create a new value for an entity.
         ///
@@ -2838,23 +3031,22 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters.</param>
         /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="synonyms">An array containing any synonyms for the entity value. You can provide either
-        /// synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following
-        /// restrictions:
+        /// <param name="valueType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="synonyms">An array of synonyms for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="patterns">An array of patterns for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// <param name="patterns">An array of patterns for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
         /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
-        /// <param name="type">Specifies the type of value. (optional, default to synonyms)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, object metadata = null, List<string> synonyms = null, List<string> patterns = null, string type = null)
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateValue`");
@@ -2881,7 +3073,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -2895,12 +3087,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["value"] = value;
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (!string.IsNullOrEmpty(valueType))
+                bodyObject["type"] = valueType;
             if (synonyms != null && synonyms.Count > 0)
                 bodyObject["synonyms"] = JToken.FromObject(synonyms);
             if (patterns != null && patterns.Count > 0)
                 bodyObject["patterns"] = JToken.FromObject(patterns);
-            if (!string.IsNullOrEmpty(type))
-                bodyObject["type"] = type;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateValueResponse;
@@ -2928,7 +3120,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -2981,7 +3180,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3013,7 +3212,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3043,8 +3249,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
-        /// <returns><see cref="ValueExport" />ValueExport</returns>
-        public bool GetValue(Callback<ValueExport> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Value" />Value</returns>
+        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetValue`");
@@ -3055,7 +3261,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `GetValue`");
 
-            RequestObject<ValueExport> req = new RequestObject<ValueExport>
+            RequestObject<Value> req = new RequestObject<Value>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -3071,7 +3277,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3099,8 +3305,8 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ValueExport> response = new DetailedResponse<ValueExport>();
-            Dictionary<string, object> customData = ((RequestObject<ValueExport>)req).CustomData;
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
+            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3110,8 +3316,15 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ValueExport>(json);
-                customData.Add("json", json);
+                response.Result = JsonConvert.DeserializeObject<Value>(json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3119,8 +3332,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<ValueExport>)req).Callback != null)
-                ((RequestObject<ValueExport>)req).Callback(response, resp.Error, customData);
+            if (((RequestObject<Value>)req).Callback != null)
+                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
         /// List entity values.
@@ -3173,7 +3386,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListValues"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListValues"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3229,7 +3442,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ValueCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3258,22 +3478,22 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="newType">Specifies the type of value. (optional, default to synonyms)</param>
-        /// <param name="newSynonyms">An array of synonyms for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions:
+        /// <param name="newValueType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="newSynonyms">An array of synonyms for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="newPatterns">An array of patterns for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// <param name="newPatterns">An array of patterns for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
         /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
         /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, object newMetadata = null, string newType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateValue`");
@@ -3300,7 +3520,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateValue"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3314,8 +3534,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["value"] = newValue;
             if (newMetadata != null)
                 bodyObject["metadata"] = JToken.FromObject(newMetadata);
-            if (!string.IsNullOrEmpty(newType))
-                bodyObject["type"] = newType;
+            if (!string.IsNullOrEmpty(newValueType))
+                bodyObject["type"] = newValueType;
             if (newSynonyms != null && newSynonyms.Count > 0)
                 bodyObject["synonyms"] = JToken.FromObject(newSynonyms);
             if (newPatterns != null && newPatterns.Count > 0)
@@ -3347,7 +3567,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3359,7 +3586,7 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
         }
         /// <summary>
-        /// Add entity value synonym.
+        /// Create entity value synonym.
         ///
         /// Add a new synonym to an entity value.
         ///
@@ -3406,7 +3633,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3445,7 +3672,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3501,7 +3735,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3533,7 +3767,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3591,7 +3832,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3627,7 +3868,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3689,7 +3937,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListSynonyms"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListSynonyms"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3741,7 +3989,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SynonymCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3801,7 +4056,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateSynonym"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3840,7 +4095,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -3868,23 +4130,26 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="conditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// (optional)</param>
-        /// <param name="parent">The ID of the parent dialog node. (optional)</param>
-        /// <param name="previousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="parent">The ID of the parent dialog node. This property is omitted if the dialog node has no
+        /// parent. (optional)</param>
+        /// <param name="previousSibling">The ID of the previous sibling dialog node. This property is omitted if the
+        /// dialog node has no previous sibling. (optional)</param>
         /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
-        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// output, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="context">The context for the dialog node. (optional)</param>
         /// <param name="metadata">The metadata for the dialog node. (optional)</param>
         /// <param name="nextStep">The next step to execute following this dialog node. (optional)</param>
-        /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
-        /// (optional)</param>
         /// <param name="title">The alias used to identify the dialog node. This string must conform to the following
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="type">How the dialog node is processed. (optional)</param>
+        /// <param name="nodeType">How the dialog node is processed. (optional)</param>
         /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="variable">The location in the dialog context where output is stored. (optional)</param>
+        /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
+        /// (optional)</param>
         /// <param name="digressIn">Whether this top-level dialog node can be digressed into. (optional)</param>
         /// <param name="digressOut">Whether this dialog node can be returned to after a digression. (optional)</param>
         /// <param name="digressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
@@ -3895,7 +4160,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, object context = null, object metadata = null, DialogNodeNextStep nextStep = null, List<DialogNodeAction> actions = null, string title = null, string type = null, string eventName = null, string variable = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3920,7 +4185,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "CreateDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -3948,16 +4213,16 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (nextStep != null)
                 bodyObject["next_step"] = JToken.FromObject(nextStep);
-            if (actions != null && actions.Count > 0)
-                bodyObject["actions"] = JToken.FromObject(actions);
             if (!string.IsNullOrEmpty(title))
                 bodyObject["title"] = title;
-            if (!string.IsNullOrEmpty(type))
-                bodyObject["type"] = type;
+            if (!string.IsNullOrEmpty(nodeType))
+                bodyObject["type"] = nodeType;
             if (!string.IsNullOrEmpty(eventName))
                 bodyObject["event_name"] = eventName;
             if (!string.IsNullOrEmpty(variable))
                 bodyObject["variable"] = variable;
+            if (actions != null && actions.Count > 0)
+                bodyObject["actions"] = JToken.FromObject(actions);
             if (!string.IsNullOrEmpty(digressIn))
                 bodyObject["digress_in"] = digressIn;
             if (!string.IsNullOrEmpty(digressOut))
@@ -3993,7 +4258,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4043,7 +4315,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4075,7 +4347,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4127,7 +4406,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "GetDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4163,7 +4442,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4219,7 +4505,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListDialogNodes"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListDialogNodes"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4271,7 +4557,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNodeCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4300,10 +4593,13 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// (optional)</param>
-        /// <param name="newParent">The ID of the parent dialog node. (optional)</param>
-        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="newParent">The ID of the parent dialog node. This property is omitted if the dialog node has no
+        /// parent. (optional)</param>
+        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. This property is omitted if the
+        /// dialog node has no previous sibling. (optional)</param>
         /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
-        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// output, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="newContext">The context for the dialog node. (optional)</param>
         /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
@@ -4312,7 +4608,7 @@ namespace IBM.Watson.Assistant.V1
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="newType">How the dialog node is processed. (optional)</param>
+        /// <param name="newNodeType">How the dialog node is processed. (optional)</param>
         /// <param name="newEventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="newVariable">The location in the dialog context where output is stored. (optional)</param>
         /// <param name="newActions">An array of objects describing any actions to be invoked by the dialog node.
@@ -4328,7 +4624,7 @@ namespace IBM.Watson.Assistant.V1
         /// json output from the REST call will be passed in this object as the value of the 'json'
         /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, object newContext = null, object newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4353,7 +4649,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "UpdateDialogNode"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateDialogNode"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4383,8 +4679,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["next_step"] = JToken.FromObject(newNextStep);
             if (!string.IsNullOrEmpty(newTitle))
                 bodyObject["title"] = newTitle;
-            if (!string.IsNullOrEmpty(newType))
-                bodyObject["type"] = newType;
+            if (!string.IsNullOrEmpty(newNodeType))
+                bodyObject["type"] = newNodeType;
             if (!string.IsNullOrEmpty(newEventName))
                 bodyObject["event_name"] = newEventName;
             if (!string.IsNullOrEmpty(newVariable))
@@ -4426,7 +4722,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4449,7 +4752,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id`
         /// or `request.context.metadata.deployment`. For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).</param>
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
         /// request_timestamp)</param>
@@ -4483,7 +4786,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListAllLogs"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListAllLogs"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4531,7 +4834,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4557,7 +4867,7 @@ namespace IBM.Watson.Assistant.V1
         /// request_timestamp)</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
         /// (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
         /// 100)</param>
@@ -4589,7 +4899,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "ListLogs"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListLogs"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4637,7 +4947,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {
@@ -4687,7 +5004,7 @@ namespace IBM.Watson.Assistant.V1
                 }
             }
 
-            foreach(KeyValuePair<string, string> kvp in Common.GetDefaultheaders("conversation", "V1", "DeleteUserData"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteUserData"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
@@ -4723,7 +5040,14 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                customData.Add("json", json);
+                if (!customData.ContainsKey("json"))
+                {
+                    customData.Add("json", json);
+                }
+                else
+                {
+                    customData["json"] = json;
+                }
             }
             catch (Exception e)
             {

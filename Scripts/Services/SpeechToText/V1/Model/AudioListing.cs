@@ -70,7 +70,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// number. Omitted for an archive-type resource.
         /// </summary>
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
-        public double? Duration { get; set; }
+        public long? Duration { get; set; }
         /// <summary>
         /// **For an audio-type resource,** the user-specified name of the resource. Omitted for an archive-type
         /// resource.

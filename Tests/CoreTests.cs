@@ -25,7 +25,7 @@ namespace IBM.Watson.Tests
         [Test]
         public void TestGetDefaultHeaders()
         {
-            Dictionary<string, string> defaultHeaders = Common.GetDefaultheaders("TestSevice", "V1", "TestOperation");
+            Dictionary<string, string> defaultHeaders = Common.GetSdkHeaders("TestSevice", "V1", "TestOperation");
             Assert.IsNotNull(defaultHeaders);
             Assert.IsTrue(defaultHeaders["X-IBMCloud-SDK-Analytics"] == "service_name=TestSevice;service_version=V1;operation_id=TestOperation");
             Assert.IsNotNull(defaultHeaders["User-Agent"]);

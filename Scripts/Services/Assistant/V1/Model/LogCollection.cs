@@ -29,7 +29,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of objects describing log events.
         /// </summary>
         [JsonProperty("logs", NullValueHandling = NullValueHandling.Ignore)]
-        public List<LogExport> Logs { get; set; }
+        public List<ModelLog> Logs { get; set; }
         /// <summary>
         /// The pagination data for the returned objects.
         /// </summary>

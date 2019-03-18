@@ -89,7 +89,7 @@ namespace IBM.Watson.Examples
             profileTested = true;
         }
 
-        private void OnProfileAsCsv(DetailedResponse<FileStream> response, IBMError error, Dictionary<string, object> customData)
+        private void OnProfileAsCsv(DetailedResponse<MemoryStream> response, IBMError error, Dictionary<string, object> customData)
         {
             //Log.Debug("ExamplePersonaltyInsightsV3.OnProfile()", "Response: {0}", customData["json"].ToString());
             profileAsCsvTested = true;

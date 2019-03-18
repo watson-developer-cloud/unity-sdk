@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 
@@ -51,7 +52,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
-        /// The document conversion settings for the configuration.
+        /// Document conversion settings.
         /// </summary>
         [JsonProperty("conversions", NullValueHandling = NullValueHandling.Ignore)]
         public Conversions Conversions { get; set; }
@@ -59,12 +60,13 @@ namespace IBM.Watson.Discovery.V1.Model
         /// An array of document enrichment settings for the configuration.
         /// </summary>
         [JsonProperty("enrichments", NullValueHandling = NullValueHandling.Ignore)]
-        public object Enrichments { get; set; }
+        public List<Enrichment> Enrichments { get; set; }
         /// <summary>
-        /// An array of JSON normalization operations.
+        /// Defines operations that can be used to transform the final output JSON into a normalized form. Operations
+        /// are executed in the order that they appear in the array.
         /// </summary>
         [JsonProperty("normalizations", NullValueHandling = NullValueHandling.Ignore)]
-        public object Normalizations { get; set; }
+        public List<NormalizationOperation> Normalizations { get; set; }
         /// <summary>
         /// Object containing source parameters for the configuration.
         /// </summary>

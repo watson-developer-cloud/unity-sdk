@@ -30,7 +30,11 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public MessageOutput Output { get; set; }
         /// <summary>
-        /// State information for the conversation.
+        /// State information for the conversation. The context is stored by the assistant on a per-session basis. You
+        /// can use this property to access context variables.
+        ///
+        /// **Note:** The context is included in message responses only if **return_context**=`true` in the message
+        /// request.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContext Context { get; set; }

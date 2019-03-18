@@ -31,7 +31,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// Gets or Sets Results
+        /// Array of log query response results.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public List<LogQueryResponseResult> Results { get; set; }

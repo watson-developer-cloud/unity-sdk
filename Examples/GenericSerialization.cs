@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using IBM.Cloud.SDK;
 using Newtonsoft.Json;
-using IBM.Watson.Assistant.V2.Model.Handwritten;
+using IBM.Watson.Assistant.V2.Model;
 
 namespace IBM.Watson.Examples
 {

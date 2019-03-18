@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 
@@ -26,40 +27,61 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Workspace
     {
         /// <summary>
-        /// The name of the workspace.
+        /// The current status of the workspace.
+        /// </summary>
+        public class StatusValue
+        {
+            /// <summary>
+            /// Constant NON_EXISTENT for Non Existent
+            /// </summary>
+            public const string NON_EXISTENT = "Non Existent";
+            /// <summary>
+            /// Constant TRAINING for Training
+            /// </summary>
+            public const string TRAINING = "Training";
+            /// <summary>
+            /// Constant FAILED for Failed
+            /// </summary>
+            public const string FAILED = "Failed";
+            /// <summary>
+            /// Constant AVAILABLE for Available
+            /// </summary>
+            public const string AVAILABLE = "Available";
+            /// <summary>
+            /// Constant UNAVAILABLE for Unavailable
+            /// </summary>
+            public const string UNAVAILABLE = "Unavailable";
+            
+        }
+
+        /// <summary>
+        /// The current status of the workspace.
+        /// Constants for possible values can be found using Workspace.StatusValue
+        /// </summary>
+        [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+        public string Status { get; set; }
+        /// <summary>
+        /// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
+        /// must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
+        /// <summary>
+        /// The description of the workspace. This string cannot contain carriage return, newline, or tab characters,
+        /// and it must be no longer than 128 characters.
+        /// </summary>
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
         /// <summary>
         /// The language of the workspace.
         /// </summary>
         [JsonProperty("language", NullValueHandling = NullValueHandling.Ignore)]
         public string Language { get; set; }
         /// <summary>
-        /// The timestamp for creation of the workspace.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the last update to the workspace.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
-        /// <summary>
-        /// The workspace ID of the workspace.
-        /// </summary>
-        [JsonProperty("workspace_id", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string WorkspaceId { get; private set; }
-        /// <summary>
-        /// The description of the workspace.
-        /// </summary>
-        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; set; }
-        /// <summary>
         /// Any metadata related to the workspace.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// Whether training data from the workspace (including artifacts such as intents and entities) can be used by
         /// IBM for general service improvements. `true` indicates that workspace training data is not to be used.
@@ -71,5 +93,40 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("system_settings", NullValueHandling = NullValueHandling.Ignore)]
         public WorkspaceSystemSettings SystemSettings { get; set; }
+        /// <summary>
+        /// The workspace ID of the workspace.
+        /// </summary>
+        [JsonProperty("workspace_id", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string WorkspaceId { get; private set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
+        /// An array of intents.
+        /// </summary>
+        [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Intent> Intents { get; set; }
+        /// <summary>
+        /// An array of objects describing the entities for the workspace.
+        /// </summary>
+        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Entity> Entities { get; set; }
+        /// <summary>
+        /// An array of objects describing the dialog nodes in the workspace.
+        /// </summary>
+        [JsonProperty("dialog_nodes", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DialogNode> DialogNodes { get; set; }
+        /// <summary>
+        /// An array of counterexamples.
+        /// </summary>
+        [JsonProperty("counterexamples", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Counterexample> Counterexamples { get; set; }
     }
 }

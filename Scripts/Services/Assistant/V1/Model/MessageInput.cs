@@ -20,12 +20,13 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// The text of the user input.
+    /// An input object that includes the input text.
     /// </summary>
     public class MessageInput
     {
         /// <summary>
-        /// The user's input.
+        /// The text of the user input. This string cannot contain carriage return, newline, or tab characters, and it
+        /// must be no longer than 2048 characters.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }

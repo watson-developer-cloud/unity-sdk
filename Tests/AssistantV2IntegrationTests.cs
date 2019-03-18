@@ -86,15 +86,12 @@ namespace IBM.Watson.Tests
                 yield return null;
 
             messageResponse = null;
-            MessageRequest messageRequest = new MessageRequest()
+            var input = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "Are you open on Christmas?",
+                Options = new MessageInputOptions()
                 {
-                    Text = "Are you open on Christmas?",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Are you open on Christmas?");
@@ -108,22 +105,19 @@ namespace IBM.Watson.Tests
                 },
                 assistantId: assistantId,
                 sessionId: sessionId,
-                request: messageRequest
+                input: input
             );
 
             while (messageResponse == null)
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "What are your hours?",
+                Options = new MessageInputOptions()
                 {
-                    Text = "What are your hours?",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...What are your hours?");
@@ -137,22 +131,20 @@ namespace IBM.Watson.Tests
                 },
                 assistantId: assistantId,
                 sessionId: sessionId,
-                request: messageRequest
+                input: input
             );
 
             while (messageResponse == null)
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+
+            input = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "I'd like to make an appointment for 12pm.",
+                Options = new MessageInputOptions()
                 {
-                    Text = "I'd like to make an appointment for 12pm.",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
@@ -166,22 +158,20 @@ namespace IBM.Watson.Tests
                 },
                 assistantId: assistantId,
                 sessionId: sessionId,
-                request: messageRequest
+                input: input
             );
 
             while (messageResponse == null)
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "On Friday please.",
+                Options = new MessageInputOptions()
                 {
-                    Text = "On Friday please.",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
+
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...On Friday please.");
@@ -195,23 +185,21 @@ namespace IBM.Watson.Tests
                 },
                 assistantId: assistantId,
                 sessionId: sessionId,
-                request: messageRequest
+                input: input
             );
 
             while (messageResponse == null)
                 yield return null;
 
             messageResponse = null;
-            messageRequest = new MessageRequest()
+            input = new MessageInput()
             {
-                Input = new MessageInput()
+                Text = "Yes.",
+                Options = new MessageInputOptions()
                 {
-                    Text = "Yes.",
-                    Options = new MessageInputOptions()
-                    {
-                        ReturnContext = true
-                    }
+                    ReturnContext = true
                 }
+
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Yes.");
             service.Message(
@@ -224,12 +212,12 @@ namespace IBM.Watson.Tests
                 },
                 assistantId: assistantId,
                 sessionId: sessionId,
-                request: messageRequest
+                input: input
             );
 
             while (messageResponse == null)
                 yield return null;
-            
+
             object deleteSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to DeleteSession...");
             service.DeleteSession(

@@ -45,7 +45,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("collection_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CollectionId { get; set; }
         /// <summary>
-        /// Metadata of the query result.
+        /// Metadata of a query result.
         /// </summary>
         [JsonProperty("result_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public QueryResultMetadata ResultMetadata { get; set; }

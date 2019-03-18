@@ -29,12 +29,12 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The text of the user input example.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string ExampleText { get; set; }
+        public string Text { get; set; }
         /// <summary>
         /// The name of the intent.
         /// </summary>
         [JsonProperty("intent", NullValueHandling = NullValueHandling.Ignore)]
-        public string IntentName { get; set; }
+        public string Intent { get; set; }
         /// <summary>
         /// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input
         /// text.

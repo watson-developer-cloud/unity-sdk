@@ -26,17 +26,21 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Counterexample
     {
         /// <summary>
-        /// The text of the counterexample.
+        /// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+        ///
+        /// - It cannot contain carriage return, newline, or tab characters
+        /// - It cannot consist of only whitespace characters
+        /// - It must be no longer than 1024 characters.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
-        /// The timestamp for creation of the counterexample.
+        /// The timestamp for creation of the object.
         /// </summary>
         [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Created { get; private set; }
         /// <summary>
-        /// The timestamp for the last update to the counterexample.
+        /// The timestamp for the most recent update to the object.
         /// </summary>
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Updated { get; private set; }
