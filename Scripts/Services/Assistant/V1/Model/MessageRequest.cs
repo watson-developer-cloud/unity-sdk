@@ -22,9 +22,9 @@ using Newtonsoft.Json.Linq;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// BaseMessage.
+    /// A request sent to the workspace, including the user input and context.
     /// </summary>
-    public class BaseMessage
+    public class MessageRequest
     {
         /// <summary>
         /// An input object that includes the input text.
@@ -32,12 +32,14 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
         public JObject Input { get; set; }
         /// <summary>
-        /// An array of intents recognized in the user input, sorted in descending order of confidence.
+        /// Intents to use when evaluating the user input. Include intents from the previous response to continue using
+        /// those intents rather than trying to recognize intents in the new input.
         /// </summary>
         [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
         public List<JObject> Intents { get; set; }
         /// <summary>
-        /// An array of entities identified in the user input.
+        /// Entities to use when evaluating the message. Include entities from the previous response to continue using
+        /// those entities rather than detecting entities in the new input.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
         public List<JObject> Entities { get; set; }

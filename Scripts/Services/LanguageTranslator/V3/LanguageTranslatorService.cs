@@ -383,16 +383,14 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// overwrite the domain translaton data, including high frequency or high confidence phrase translations. You
         /// can upload only one glossary with a file size less than 10 MB per call. A forced glossary should contain
         /// single words or short phrases. (optional)</param>
-        /// <param name="forcedGlossaryFilename">The filename for forcedGlossary. (optional)</param>
         /// <param name="parallelCorpus">A TMX file with parallel sentences for source and target language. You can
         /// upload multiple parallel_corpus files in one request. All uploaded parallel_corpus files combined, your
         /// parallel corpus must contain at least 5,000 parallel sentences to train successfully. (optional)</param>
-        /// <param name="parallelCorpusFilename">The filename for parallelCorpus. (optional)</param>
         /// <param name="name">An optional model name that you can use to identify the model. Valid characters are
         /// letters, numbers, dashes, underscores, spaces and apostrophes. The maximum length is 32 characters.
         /// (optional)</param>
         /// <returns><see cref="TranslationModel" />TranslationModel</returns>
-        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.MemoryStream forcedGlossary = null, string forcedGlossaryFilename = null, System.IO.MemoryStream parallelCorpus = null, string parallelCorpusFilename = null, string name = null)
+        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.MemoryStream forcedGlossary = null, System.IO.MemoryStream parallelCorpus = null, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateModel`");
@@ -422,11 +420,11 @@ namespace IBM.Watson.LanguageTranslator.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (forcedGlossary != null)
             {
-                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, forcedGlossaryFilename, "application/octet-stream");
+                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, null, "application/octet-stream");
             }
             if (parallelCorpus != null)
             {
-                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, parallelCorpusFilename, "application/octet-stream");
+                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, null, "application/octet-stream");
             }
             if (!string.IsNullOrEmpty(baseModelId))
             {

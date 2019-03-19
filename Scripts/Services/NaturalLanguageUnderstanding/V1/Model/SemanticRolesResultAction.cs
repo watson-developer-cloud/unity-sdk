@@ -20,24 +20,24 @@ using Newtonsoft.Json;
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// Usage information.
+    /// The extracted action from the sentence.
     /// </summary>
-    public class Usage
+    public class SemanticRolesResultAction
     {
         /// <summary>
-        /// Number of features used in the API call.
+        /// Analyzed text that corresponds to the action.
         /// </summary>
-        [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Features { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
         /// <summary>
-        /// Number of text characters processed.
+        /// normalized version of the action.
         /// </summary>
-        [JsonProperty("text_characters", NullValueHandling = NullValueHandling.Ignore)]
-        public long? TextCharacters { get; set; }
+        [JsonProperty("normalized", NullValueHandling = NullValueHandling.Ignore)]
+        public string Normalized { get; set; }
         /// <summary>
-        /// Number of 10,000-character units processed.
+        /// Gets or Sets Verb
         /// </summary>
-        [JsonProperty("text_units", NullValueHandling = NullValueHandling.Ignore)]
-        public long? TextUnits { get; set; }
+        [JsonProperty("verb", NullValueHandling = NullValueHandling.Ignore)]
+        public SemanticRolesVerb Verb { get; set; }
     }
 }

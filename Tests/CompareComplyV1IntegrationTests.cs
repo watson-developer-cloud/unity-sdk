@@ -125,7 +125,6 @@ namespace IBM.Watson.Tests
                             Assert.IsNull(error);
                         },
                         file: ms,
-                        filename: "contract_A.pdf",
                         modelId: "contracts",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                     );
@@ -159,7 +158,6 @@ namespace IBM.Watson.Tests
                         },
                         file: ms,
                         modelId: "tables",
-                        filename: "TestTable.pdf",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
                     );
 
@@ -197,8 +195,6 @@ namespace IBM.Watson.Tests
                             },
                             file1: ms0,
                             file2: ms1,
-                            file1Filename: "contract_A.pdf",
-                            file2Filename: "contract_B.pdf",
                             file1Label: "Contract A",
                             file2Label: "Contract B",
                             modelId: "contracts",
@@ -422,8 +418,6 @@ namespace IBM.Watson.Tests
                             outputCredentialsFile: msOutput,
                             outputBucketLocation: "us-south",
                             outputBucketName: "compare-comply-integration-test-bucket-output",
-                            inputCredentialsFilename: "cloud-object-storage-credentials-input.json",
-                            outputCredentialsFilename: "cloud-object-storage-credentials-output.json",
                             modelId: "contracts"
                         );
                         }

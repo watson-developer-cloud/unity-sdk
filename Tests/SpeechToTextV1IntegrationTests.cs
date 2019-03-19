@@ -381,8 +381,7 @@ namespace IBM.Watson.Tests
                         customizationId: customizationId,
                         corpusName: corpusName,
                         corpusFile: ms,
-                        allowOverwrite: true,
-                        corpusFilename: Path.GetFileName(corpusPath)
+                        allowOverwrite: true
                     );
 
                     while (!isComplete)

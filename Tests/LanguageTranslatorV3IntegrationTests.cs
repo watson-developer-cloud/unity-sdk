@@ -163,8 +163,7 @@ namespace IBM.Watson.Tests
                         },
                         baseModelId: englishToFrenchModel,
                         forcedGlossary: ms,
-                        name: customModelName,
-                        forcedGlossaryFilename: Path.GetFileName(forcedGlossaryFilepath)
+                        name: customModelName
                     );
 
                     while (createModelResponse == null)

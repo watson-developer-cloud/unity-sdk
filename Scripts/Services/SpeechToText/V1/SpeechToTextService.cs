@@ -366,8 +366,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
         /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
         /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
-        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity). (optional,
-        /// default to 30)</param>
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
+        /// (optional)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -383,8 +383,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
         /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
         /// default value, `1`. See [Maximum
-        /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
-        /// default to 1)</param>
+        /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
+        /// (optional)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
         /// hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is
         /// considered if its confidence is greater than or equal to the threshold. Specify a probability between 0.0
@@ -901,8 +901,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
         /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
         /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
-        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity). (optional,
-        /// default to 30)</param>
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
+        /// (optional)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -918,8 +918,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
         /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
         /// default value, `1`. See [Maximum
-        /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives). (optional,
-        /// default to 1)</param>
+        /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
+        /// (optional)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
         /// hypothesis as a possible word alternative (also known as "Confusion Networks"). An alternative word is
         /// considered if its confidence is greater than or equal to the threshold. Specify a probability between 0.0
@@ -1880,8 +1880,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// phrases.
         ///
         /// The value that you assign is used for all recognition requests that use the model. You can override it for
-        /// any recognition request by specifying a customization weight for that request. (optional, default to
-        /// 0.3)</param>
+        /// any recognition request by specifying a customization weight for that request. (optional)</param>
         /// <returns><see cref="object" />object</returns>
         public bool TrainLanguageModel(Callback<object> callback, string customizationId, string wordTypeToAdd = null, double? customizationWeight = null)
         {
@@ -2100,12 +2099,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
         ///
         /// With the `curl` command, use the `--data-binary` option to upload the file for the request.</param>
-        /// <param name="corpusFilename">The filename for corpusFile. (optional)</param>
         /// <param name="allowOverwrite">If `true`, the specified corpus overwrites an existing corpus with the same
         /// name. If `false`, the request fails if a corpus with the same name already exists. The parameter has no
         /// effect if a corpus with the same name does not already exist. (optional, default to false)</param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.MemoryStream corpusFile, string corpusFilename = null, bool? allowOverwrite = null)
+        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.MemoryStream corpusFile, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddCorpus`");
@@ -2138,7 +2136,7 @@ namespace IBM.Watson.SpeechToText.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (corpusFile != null)
             {
-                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFilename, "text/plain");
+                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, null, "text/plain");
             }
             if (allowOverwrite != null)
             {

@@ -95,7 +95,7 @@ namespace IBM.Watson.Tests
                             fs0.CopyTo(ms0);
                             fs1.CopyTo(ms1);
                             Dictionary<string, MemoryStream> positiveExamples = new Dictionary<string, MemoryStream>();
-                            positiveExamples.Add("giraffe_positive_examples", ms0);
+                            positiveExamples.Add("giraffe", ms0);
                             service.CreateClassifier(
                                 callback: (DetailedResponse<Classifier> response, IBMError error) =>
                                 {
@@ -112,7 +112,9 @@ namespace IBM.Watson.Tests
                                 },
                                 name: classifierName,
                                 positiveExamples: positiveExamples,
-                                negativeExamples: ms1
+                                negativeExamples: ms1,
+                                positiveExamplesFilename: Path.GetFileName(giraffePositiveExamplesFilepath),
+                                negativeExamplesFilename: Path.GetFileName(negativeExamplesFilepath)
                             );
 
                             while (createClassifierResponse == null)

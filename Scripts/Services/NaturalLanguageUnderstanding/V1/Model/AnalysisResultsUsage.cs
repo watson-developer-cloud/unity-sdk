@@ -15,30 +15,29 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// SemanticRolesSubject.
+    /// API usage information for the request.
     /// </summary>
-    public class SemanticRolesSubject
+    public class AnalysisResultsUsage
     {
         /// <summary>
-        /// Text that corresponds to the subject role.
+        /// Number of features used in the API call.
         /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string Text { get; set; }
+        [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Features { get; set; }
         /// <summary>
-        /// An array of extracted entities.
+        /// Number of text characters processed.
         /// </summary>
-        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<SemanticRolesEntity> Entities { get; set; }
+        [JsonProperty("text_characters", NullValueHandling = NullValueHandling.Ignore)]
+        public long? TextCharacters { get; set; }
         /// <summary>
-        /// An array of extracted keywords.
+        /// Number of 10,000-character units processed.
         /// </summary>
-        [JsonProperty("keywords", NullValueHandling = NullValueHandling.Ignore)]
-        public List<SemanticRolesKeyword> Keywords { get; set; }
+        [JsonProperty("text_units", NullValueHandling = NullValueHandling.Ignore)]
+        public long? TextUnits { get; set; }
     }
 }

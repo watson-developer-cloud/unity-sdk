@@ -182,9 +182,7 @@ namespace IBM.Watson.Tests
                                     Assert.IsNull(error);
                                 },
                                 metadata: ms0,
-                                trainingData: ms1,
-                                metadataFilename: Path.GetFileName(metadataDataFilePath),
-                                trainingDataFilename: Path.GetFileName(classifierDataFilePath)
+                                trainingData: ms1
                             );
 
                             while (createClassifierResponse == null)

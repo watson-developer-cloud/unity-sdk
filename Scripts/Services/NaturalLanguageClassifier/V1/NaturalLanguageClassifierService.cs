@@ -284,13 +284,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         ///
         /// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`),
         /// Japanese (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).</param>
-        /// <param name="metadataFilename">The filename for trainingMetadata. (optional)</param>
         /// <param name="trainingData">Training data in CSV format. Each text value must have at least one class. The
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
         /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).</param>
-        /// <param name="trainingDataFilename">The filename for trainingData. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream metadata, System.IO.MemoryStream trainingData, string metadataFilename = null, string trainingDataFilename = null)
+        public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream metadata, System.IO.MemoryStream trainingData)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -321,11 +319,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (metadata != null)
             {
-                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, metadataFilename, "application/json");
+                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, null, "application/json");
             }
             if (trainingData != null)
             {
-                req.Forms["training_data"] = new RESTConnector.Form(trainingData, trainingDataFilename, "text/csv");
+                req.Forms["training_data"] = new RESTConnector.Form(trainingData, null, "text/csv");
             }
 
             req.OnResponse = OnCreateClassifierResponse;
