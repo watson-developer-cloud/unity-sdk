@@ -330,7 +330,8 @@ namespace IBM.Watson.Tests
                         environmentId: environmentId,
                         configurationId: createdConfigurationId,
                         file: ms,
-                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
                     );
 
                     while (testConfigurationInEnvironmentResponse == null)

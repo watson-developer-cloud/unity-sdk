@@ -78,78 +78,8 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
         }
 
-        #region Classify
-        [UnityTest, Order(0)]
-        public IEnumerator TestClassify()
-        {
-            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to Classify...");
-            ClassifiedImages classifyResponse = null;
-            using (FileStream fs = File.OpenRead(turtleImageFilepath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    service.Classify(
-                    callback: (DetailedResponse<ClassifiedImages> response, IBMError error) =>
-                    {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Classify result: {0}", response.Response);
-                        classifyResponse = response.Result;
-                        Assert.IsNotNull(classifyResponse);
-                        Assert.IsNotNull(classifyResponse.Images);
-                        Assert.IsTrue(classifyResponse.Images.Count > 0);
-                        Assert.IsNotNull(classifyResponse.Images[0].Classifiers);
-                        Assert.IsTrue(classifyResponse.Images[0].Classifiers.Count > 0);
-                        Assert.IsNull(error);
-                    },
-                    imagesFile: ms,
-                    imagesFileContentType: turtleImageContentType,
-                    imagesFilename: Path.GetFileName(turtleImageFilepath)
-                );
-
-                    while (classifyResponse == null)
-                        yield return null;
-                }
-            }
-        }
-        #endregion
-
-        #region DetectFaces
-        [UnityTest, Order(1)]
-        public IEnumerator TestDetectFaces()
-        {
-            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DetectFaces...");
-            DetectedFaces detectFacesResponse = null;
-            using (FileStream fs = File.OpenRead(obamaImageFilepath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    service.DetectFaces(
-                        callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
-                        {
-                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
-                            detectFacesResponse = response.Result;
-                            Assert.IsNotNull(detectFacesResponse);
-                            Assert.IsNotNull(detectFacesResponse.Images);
-                            Assert.IsTrue(detectFacesResponse.Images.Count > 0);
-                            Assert.IsNotNull(detectFacesResponse.Images[0].Faces);
-                            Assert.IsTrue(detectFacesResponse.Images[0].Faces.Count > 0);
-                            Assert.IsNull(error);
-                        },
-                        imagesFile: ms,
-                        imagesFileContentType: obamaImageContentType,
-                        imagesFilename: Path.GetFileName(obamaImageFilepath)
-                    );
-
-                    while (detectFacesResponse == null)
-                        yield return null;
-                }
-            }
-        }
-        #endregion
-
         #region CreateClassifier
-        [UnityTest, Order(2)]
+        [UnityTest, Order(0)]
         public IEnumerator TestCreateClassifier()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to CreateClassifier...");
@@ -189,6 +119,76 @@ namespace IBM.Watson.Tests
                                 yield return null;
                         }
                     }
+                }
+            }
+        }
+        #endregion
+
+        #region Classify
+        [UnityTest, Order(1)]
+        public IEnumerator TestClassify()
+        {
+            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to Classify...");
+            ClassifiedImages classifyResponse = null;
+            using (FileStream fs = File.OpenRead(turtleImageFilepath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.Classify(
+                    callback: (DetailedResponse<ClassifiedImages> response, IBMError error) =>
+                    {
+                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Classify result: {0}", response.Response);
+                        classifyResponse = response.Result;
+                        Assert.IsNotNull(classifyResponse);
+                        Assert.IsNotNull(classifyResponse.Images);
+                        Assert.IsTrue(classifyResponse.Images.Count > 0);
+                        Assert.IsNotNull(classifyResponse.Images[0].Classifiers);
+                        Assert.IsTrue(classifyResponse.Images[0].Classifiers.Count > 0);
+                        Assert.IsNull(error);
+                    },
+                    imagesFile: ms,
+                    imagesFileContentType: turtleImageContentType,
+                    imagesFilename: Path.GetFileName(turtleImageFilepath)
+                );
+
+                    while (classifyResponse == null)
+                        yield return null;
+                }
+            }
+        }
+        #endregion
+
+        #region DetectFaces
+        [UnityTest, Order(2)]
+        public IEnumerator TestDetectFaces()
+        {
+            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DetectFaces...");
+            DetectedFaces detectFacesResponse = null;
+            using (FileStream fs = File.OpenRead(obamaImageFilepath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.DetectFaces(
+                        callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
+                        {
+                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
+                            detectFacesResponse = response.Result;
+                            Assert.IsNotNull(detectFacesResponse);
+                            Assert.IsNotNull(detectFacesResponse.Images);
+                            Assert.IsTrue(detectFacesResponse.Images.Count > 0);
+                            Assert.IsNotNull(detectFacesResponse.Images[0].Faces);
+                            Assert.IsTrue(detectFacesResponse.Images[0].Faces.Count > 0);
+                            Assert.IsNull(error);
+                        },
+                        imagesFile: ms,
+                        imagesFileContentType: obamaImageContentType,
+                        imagesFilename: Path.GetFileName(obamaImageFilepath)
+                    );
+
+                    while (detectFacesResponse == null)
+                        yield return null;
                 }
             }
         }

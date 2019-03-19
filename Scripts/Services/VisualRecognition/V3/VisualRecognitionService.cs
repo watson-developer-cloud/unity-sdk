@@ -420,7 +420,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file", "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file.zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
@@ -742,7 +742,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file", "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file.zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
