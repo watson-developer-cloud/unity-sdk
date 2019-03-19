@@ -119,11 +119,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">The identifier of the model in the form of its name from the output of the **Get a
         /// model** method.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="SpeechModel" />SpeechModel</returns>
-        public bool GetModel(Callback<SpeechModel> callback, string modelId, Dictionary<string, object> customData = null)
+        public bool GetModel(Callback<SpeechModel> callback, string modelId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetModel`");
@@ -134,17 +131,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetModel"))
             {
@@ -196,11 +191,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// **See also:** [Languages and models](https://cloud.ibm.com/docs/services/speech-to-text/models.html).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="SpeechModels" />SpeechModels</returns>
-        public bool ListModels(Callback<SpeechModels> callback, Dictionary<string, object> customData = null)
+        public bool ListModels(Callback<SpeechModels> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
@@ -209,17 +201,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListModels"))
             {
@@ -459,11 +449,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// (optional, default to false)</param>
         /// <param name="contentType">The format (MIME type) of the audio. For more information about specifying an
         /// audio format, see **Audio formats (content types)** in the method description. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="SpeechRecognitionResults" />SpeechRecognitionResults</returns>
-        public bool Recognize(Callback<SpeechRecognitionResults> callback, byte[] audio, Dictionary<string, object> customData = null, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
+        public bool Recognize(Callback<SpeechRecognitionResults> callback, byte[] audio, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Recognize`");
@@ -474,17 +461,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "Recognize"))
             {
@@ -625,11 +610,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="id">The identifier of the asynchronous job that is to be used for the request. You must make
         /// the request with credentials for the instance of the service that owns the job.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
-        public bool CheckJob(Callback<RecognitionJob> callback, string id, Dictionary<string, object> customData = null)
+        public bool CheckJob(Callback<RecognitionJob> callback, string id)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CheckJob`");
@@ -640,17 +622,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CheckJob"))
             {
@@ -707,11 +687,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// jobs](https://cloud.ibm.com/docs/services/speech-to-text/async.html#jobs).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="RecognitionJobs" />RecognitionJobs</returns>
-        public bool CheckJobs(Callback<RecognitionJobs> callback, Dictionary<string, object> customData = null)
+        public bool CheckJobs(Callback<RecognitionJobs> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CheckJobs`");
@@ -720,17 +697,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CheckJobs"))
             {
@@ -1009,11 +984,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// (optional, default to false)</param>
         /// <param name="contentType">The format (MIME type) of the audio. For more information about specifying an
         /// audio format, see **Audio formats (content types)** in the method description. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
-        public bool CreateJob(Callback<RecognitionJob> callback, byte[] audio, Dictionary<string, object> customData = null, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
+        public bool CreateJob(Callback<RecognitionJob> callback, byte[] audio, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, string contentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateJob`");
@@ -1024,17 +996,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateJob"))
             {
@@ -1185,11 +1155,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="id">The identifier of the asynchronous job that is to be used for the request. You must make
         /// the request with credentials for the instance of the service that owns the job.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteJob(Callback<object> callback, string id, Dictionary<string, object> customData = null)
+        public bool DeleteJob(Callback<object> callback, string id)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteJob`");
@@ -1200,17 +1167,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteJob"))
             {
@@ -1294,11 +1259,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// that it sends via the `X-Callback-Signature` header. The service includes the header during URL verification
         /// and with every notification sent to the callback URL. It calculates the signature over the payload of the
         /// notification. If you omit the parameter, the service does not send the header. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="RegisterStatus" />RegisterStatus</returns>
-        public bool RegisterCallback(Callback<RegisterStatus> callback, string callbackUrl, Dictionary<string, object> customData = null, string userSecret = null)
+        public bool RegisterCallback(Callback<RegisterStatus> callback, string callbackUrl, string userSecret = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `RegisterCallback`");
@@ -1309,17 +1271,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "RegisterCallback"))
             {
@@ -1382,11 +1342,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="callbackUrl">The callback URL that is to be unregistered.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool UnregisterCallback(Callback<object> callback, string callbackUrl, Dictionary<string, object> customData = null)
+        public bool UnregisterCallback(Callback<object> callback, string callbackUrl)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UnregisterCallback`");
@@ -1397,17 +1354,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UnregisterCallback"))
             {
@@ -1486,11 +1441,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// base model; for example, `en-US` for either of the US English language models. (optional)</param>
         /// <param name="description">A description of the new custom language model. Use a localized description that
         /// matches the language of the custom model. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LanguageModel" />LanguageModel</returns>
-        public bool CreateLanguageModel(Callback<LanguageModel> callback, string name, string baseModelName, Dictionary<string, object> customData = null, string dialect = null, string description = null)
+        public bool CreateLanguageModel(Callback<LanguageModel> callback, string name, string baseModelName, string dialect = null, string description = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateLanguageModel`");
@@ -1503,17 +1455,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateLanguageModel"))
             {
@@ -1583,11 +1533,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool DeleteLanguageModel(Callback<object> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteLanguageModel`");
@@ -1598,17 +1545,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteLanguageModel"))
             {
@@ -1664,11 +1609,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LanguageModel" />LanguageModel</returns>
-        public bool GetLanguageModel(Callback<LanguageModel> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool GetLanguageModel(Callback<LanguageModel> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetLanguageModel`");
@@ -1679,17 +1621,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetLanguageModel"))
             {
@@ -1747,11 +1687,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
         /// models that are owned by the requesting credentials. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LanguageModels" />LanguageModels</returns>
-        public bool ListLanguageModels(Callback<LanguageModels> callback, Dictionary<string, object> customData = null, string language = null)
+        public bool ListLanguageModels(Callback<LanguageModels> callback, string language = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListLanguageModels`");
@@ -1760,17 +1697,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListLanguageModels"))
             {
@@ -1832,11 +1767,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool ResetLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool ResetLanguageModel(Callback<object> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ResetLanguageModel`");
@@ -1847,17 +1779,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ResetLanguageModel"))
             {
@@ -1952,11 +1882,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// The value that you assign is used for all recognition requests that use the model. You can override it for
         /// any recognition request by specifying a customization weight for that request. (optional, default to
         /// 0.3)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool TrainLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string wordTypeToAdd = null, double? customizationWeight = null)
+        public bool TrainLanguageModel(Callback<object> callback, string customizationId, string wordTypeToAdd = null, double? customizationWeight = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TrainLanguageModel`");
@@ -1967,17 +1894,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "TrainLanguageModel"))
             {
@@ -2051,11 +1976,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool UpgradeLanguageModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool UpgradeLanguageModel(Callback<object> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpgradeLanguageModel`");
@@ -2066,17 +1988,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UpgradeLanguageModel"))
             {
@@ -2183,11 +2103,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="allowOverwrite">If `true`, the specified corpus overwrites an existing corpus with the same
         /// name. If `false`, the request fails if a corpus with the same name already exists. The parameter has no
         /// effect if a corpus with the same name does not already exist. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.FileStream corpusFile, Dictionary<string, object> customData = null, bool? allowOverwrite = null)
+        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.FileStream corpusFile, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddCorpus`");
@@ -2202,17 +2119,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddCorpus"))
             {
@@ -2282,11 +2197,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="corpusName">The name of the corpus for the custom language model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteCorpus(Callback<object> callback, string customizationId, string corpusName, Dictionary<string, object> customData = null)
+        public bool DeleteCorpus(Callback<object> callback, string customizationId, string corpusName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCorpus`");
@@ -2299,17 +2211,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteCorpus"))
             {
@@ -2367,11 +2277,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="corpusName">The name of the corpus for the custom language model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Corpus" />Corpus</returns>
-        public bool GetCorpus(Callback<Corpus> callback, string customizationId, string corpusName, Dictionary<string, object> customData = null)
+        public bool GetCorpus(Callback<Corpus> callback, string customizationId, string corpusName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCorpus`");
@@ -2384,17 +2291,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetCorpus"))
             {
@@ -2451,11 +2356,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Corpora" />Corpora</returns>
-        public bool ListCorpora(Callback<Corpora> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool ListCorpora(Callback<Corpora> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCorpora`");
@@ -2466,17 +2368,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListCorpora"))
             {
@@ -2579,11 +2479,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="displayAs">An alternative spelling for the custom word when it appears in a transcript. Use the
         /// parameter when you want the word to have a spelling that is different from its usual representation or from
         /// its spelling in corpora training data. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddWord(Callback<object> callback, string customizationId, string wordName, Dictionary<string, object> customData = null, string word = null, List<string> soundsLike = null, string displayAs = null)
+        public bool AddWord(Callback<object> callback, string customizationId, string wordName, string word = null, List<string> soundsLike = null, string displayAs = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddWord`");
@@ -2596,17 +2493,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddWord"))
             {
@@ -2715,11 +2610,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// custom model.</param>
         /// <param name="words">An array of `CustomWord` objects that provides information about each custom word that
         /// is to be added to or updated in the custom language model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddWords(Callback<object> callback, string customizationId, List<CustomWord> words, Dictionary<string, object> customData = null)
+        public bool AddWords(Callback<object> callback, string customizationId, List<CustomWord> words)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddWords`");
@@ -2732,17 +2624,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddWords"))
             {
@@ -2812,11 +2702,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="wordName">The custom word that is to be deleted from the custom language model. URL-encode the
         /// word if it includes non-ASCII characters. For more information, see [Character
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteWord(Callback<object> callback, string customizationId, string wordName, Dictionary<string, object> customData = null)
+        public bool DeleteWord(Callback<object> callback, string customizationId, string wordName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteWord`");
@@ -2829,17 +2716,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteWord"))
             {
@@ -2898,11 +2783,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="wordName">The custom word that is to be read from the custom language model. URL-encode the
         /// word if it includes non-ASCII characters. For more information, see [Character
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Word" />Word</returns>
-        public bool GetWord(Callback<Word> callback, string customizationId, string wordName, Dictionary<string, object> customData = null)
+        public bool GetWord(Callback<Word> callback, string customizationId, string wordName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetWord`");
@@ -2915,17 +2797,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetWord"))
             {
@@ -2996,11 +2876,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// alphabetical ordering, the lexicographical precedence is numeric values, uppercase letters, and lowercase
         /// letters. For count ordering, values with the same count are ordered alphabetically. With the `curl` command,
         /// URL encode the `+` symbol as `%2B`. (optional, default to alphabetical)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Words" />Words</returns>
-        public bool ListWords(Callback<Words> callback, string customizationId, Dictionary<string, object> customData = null, string wordType = null, string sort = null)
+        public bool ListWords(Callback<Words> callback, string customizationId, string wordType = null, string sort = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListWords`");
@@ -3011,17 +2888,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListWords"))
             {
@@ -3129,11 +3004,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="allowOverwrite">If `true`, the specified grammar overwrites an existing grammar with the same
         /// name. If `false`, the request fails if a grammar with the same name already exists. The parameter has no
         /// effect if a grammar with the same name does not already exist. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, string grammarFile, string contentType, Dictionary<string, object> customData = null, bool? allowOverwrite = null)
+        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, string grammarFile, string contentType, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddGrammar`");
@@ -3150,17 +3022,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddGrammar"))
             {
@@ -3232,11 +3102,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="grammarName">The name of the grammar for the custom language model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteGrammar(Callback<object> callback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
+        public bool DeleteGrammar(Callback<object> callback, string customizationId, string grammarName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteGrammar`");
@@ -3249,17 +3116,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteGrammar"))
             {
@@ -3317,11 +3182,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="grammarName">The name of the grammar for the custom language model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Grammar" />Grammar</returns>
-        public bool GetGrammar(Callback<Grammar> callback, string customizationId, string grammarName, Dictionary<string, object> customData = null)
+        public bool GetGrammar(Callback<Grammar> callback, string customizationId, string grammarName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetGrammar`");
@@ -3334,17 +3196,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetGrammar"))
             {
@@ -3401,11 +3261,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Grammars" />Grammars</returns>
-        public bool ListGrammars(Callback<Grammars> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool ListGrammars(Callback<Grammars> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListGrammars`");
@@ -3416,17 +3273,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListGrammars"))
             {
@@ -3491,11 +3346,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// customization](https://cloud.ibm.com/docs/services/speech-to-text/custom.html#languageSupport).</param>
         /// <param name="description">A description of the new custom acoustic model. Use a localized description that
         /// matches the language of the custom model. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AcousticModel" />AcousticModel</returns>
-        public bool CreateAcousticModel(Callback<AcousticModel> callback, string name, string baseModelName, Dictionary<string, object> customData = null, string description = null)
+        public bool CreateAcousticModel(Callback<AcousticModel> callback, string name, string baseModelName, string description = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateAcousticModel`");
@@ -3508,17 +3360,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "CreateAcousticModel"))
             {
@@ -3586,11 +3436,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool DeleteAcousticModel(Callback<object> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteAcousticModel`");
@@ -3601,17 +3448,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteAcousticModel"))
             {
@@ -3667,11 +3512,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AcousticModel" />AcousticModel</returns>
-        public bool GetAcousticModel(Callback<AcousticModel> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool GetAcousticModel(Callback<AcousticModel> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetAcousticModel`");
@@ -3682,17 +3524,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetAcousticModel"))
             {
@@ -3750,11 +3590,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
         /// models that are owned by the requesting credentials. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AcousticModels" />AcousticModels</returns>
-        public bool ListAcousticModels(Callback<AcousticModels> callback, Dictionary<string, object> customData = null, string language = null)
+        public bool ListAcousticModels(Callback<AcousticModels> callback, string language = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListAcousticModels`");
@@ -3763,17 +3600,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListAcousticModels"))
             {
@@ -3835,11 +3670,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool ResetAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool ResetAcousticModel(Callback<object> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ResetAcousticModel`");
@@ -3850,17 +3682,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ResetAcousticModel"))
             {
@@ -3951,11 +3781,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// of the audio resources. The custom language model must be based on the same version of the same base model
         /// as the custom acoustic model. The credentials specified with the request must own both custom models.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool TrainAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string customLanguageModelId = null)
+        public bool TrainAcousticModel(Callback<object> callback, string customizationId, string customLanguageModelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TrainAcousticModel`");
@@ -3966,17 +3793,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "TrainAcousticModel"))
             {
@@ -4062,11 +3887,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// message `No input data modified since last training`. See [Upgrading a custom acoustic
         /// model](https://cloud.ibm.com/docs/services/speech-to-text/custom-upgrade.html#upgradeAcoustic). (optional,
         /// default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool UpgradeAcousticModel(Callback<object> callback, string customizationId, Dictionary<string, object> customData = null, string customLanguageModelId = null, bool? force = null)
+        public bool UpgradeAcousticModel(Callback<object> callback, string customizationId, string customLanguageModelId = null, bool? force = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpgradeAcousticModel`");
@@ -4077,17 +3899,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "UpgradeAcousticModel"))
             {
@@ -4251,11 +4071,8 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// For an archive-type resource, the media type of the archive file. For more information, see **Content types
         /// for archive-type resources** in the method description. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, byte[] audioResource, Dictionary<string, object> customData = null, string containedContentType = null, bool? allowOverwrite = null, string contentType = null)
+        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, byte[] audioResource, string containedContentType = null, bool? allowOverwrite = null, string contentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddAudio`");
@@ -4270,17 +4087,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "AddAudio"))
             {
@@ -4356,11 +4171,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="audioName">The name of the audio resource for the custom acoustic model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteAudio(Callback<object> callback, string customizationId, string audioName, Dictionary<string, object> customData = null)
+        public bool DeleteAudio(Callback<object> callback, string customizationId, string audioName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteAudio`");
@@ -4373,17 +4185,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteAudio"))
             {
@@ -4454,11 +4264,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
         /// <param name="audioName">The name of the audio resource for the custom acoustic model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AudioListing" />AudioListing</returns>
-        public bool GetAudio(Callback<AudioListing> callback, string customizationId, string audioName, Dictionary<string, object> customData = null)
+        public bool GetAudio(Callback<AudioListing> callback, string customizationId, string audioName)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetAudio`");
@@ -4471,17 +4278,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "GetAudio"))
             {
@@ -4540,11 +4345,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
         /// for the request. You must make the request with credentials for the instance of the service that owns the
         /// custom model.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AudioResources" />AudioResources</returns>
-        public bool ListAudio(Callback<AudioResources> callback, string customizationId, Dictionary<string, object> customData = null)
+        public bool ListAudio(Callback<AudioResources> callback, string customizationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListAudio`");
@@ -4555,17 +4357,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "ListAudio"))
             {
@@ -4624,11 +4424,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
+        public bool DeleteUserData(Callback<object> callback, string customerId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
@@ -4639,17 +4436,15 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("speech_to_text", "V1", "DeleteUserData"))
             {

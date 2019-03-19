@@ -170,11 +170,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
         /// <param name="contentType">The type of the input. A character encoding can be specified by including a
         /// `charset` parameter. For example, 'text/plain;charset=utf-8'. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ToneAnalysis" />ToneAnalysis</returns>
-        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, Dictionary<string, object> customData = null, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null)
+        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Tone`");
@@ -185,17 +182,15 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("tone_analyzer", "V3", "Tone"))
             {
@@ -292,11 +287,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="acceptLanguage">The desired language of the response. For two-character arguments, regional
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="UtteranceAnalyses" />UtteranceAnalyses</returns>
-        public bool ToneChat(Callback<UtteranceAnalyses> callback, List<Utterance> utterances, Dictionary<string, object> customData = null, string contentLanguage = null, string acceptLanguage = null)
+        public bool ToneChat(Callback<UtteranceAnalyses> callback, List<Utterance> utterances, string contentLanguage = null, string acceptLanguage = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ToneChat`");
@@ -307,17 +299,15 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("tone_analyzer", "V3", "ToneChat"))
             {

@@ -138,11 +138,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// translation. (optional)</param>
         /// <param name="source">Translation source language code. (optional)</param>
         /// <param name="target">Translation target language code. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TranslationResult" />TranslationResult</returns>
-        public bool Translate(Callback<TranslationResult> callback, List<string> text, Dictionary<string, object> customData = null, string modelId = null, string source = null, string target = null)
+        public bool Translate(Callback<TranslationResult> callback, List<string> text, string modelId = null, string source = null, string target = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Translate`");
@@ -153,17 +150,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "Translate"))
             {
@@ -227,11 +222,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">Input text in UTF-8 format.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="IdentifiedLanguages" />IdentifiedLanguages</returns>
-        public bool Identify(Callback<IdentifiedLanguages> callback, string text, Dictionary<string, object> customData = null)
+        public bool Identify(Callback<IdentifiedLanguages> callback, string text)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Identify`");
@@ -242,17 +234,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "Identify"))
             {
@@ -306,11 +296,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// or `es` for Spanish) and name of each language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="IdentifiableLanguages" />IdentifiableLanguages</returns>
-        public bool ListIdentifiableLanguages(Callback<IdentifiableLanguages> callback, Dictionary<string, object> customData = null)
+        public bool ListIdentifiableLanguages(Callback<IdentifiableLanguages> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListIdentifiableLanguages`");
@@ -319,17 +306,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages"))
             {
@@ -404,11 +389,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// <param name="name">An optional model name that you can use to identify the model. Valid characters are
         /// letters, numbers, dashes, underscores, spaces and apostrophes. The maximum length is 32 characters.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TranslationModel" />TranslationModel</returns>
-        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, Dictionary<string, object> customData = null, System.IO.FileStream forcedGlossary = null, System.IO.FileStream parallelCorpus = null, string name = null)
+        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.FileStream forcedGlossary = null, System.IO.FileStream parallelCorpus = null, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateModel`");
@@ -419,17 +401,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "CreateModel"))
             {
@@ -497,11 +477,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to delete.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteModelResult" />DeleteModelResult</returns>
-        public bool DeleteModel(Callback<DeleteModelResult> callback, string modelId, Dictionary<string, object> customData = null)
+        public bool DeleteModel(Callback<DeleteModelResult> callback, string modelId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteModel`");
@@ -512,17 +489,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "DeleteModel"))
             {
@@ -575,11 +550,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to get.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TranslationModel" />TranslationModel</returns>
-        public bool GetModel(Callback<TranslationModel> callback, string modelId, Dictionary<string, object> customData = null)
+        public bool GetModel(Callback<TranslationModel> callback, string modelId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetModel`");
@@ -590,17 +562,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "GetModel"))
             {
@@ -656,11 +626,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// (default and non-default) for each language pair. To return only default models, set this to `true`. To
         /// return only non-default models, set this to `false`. There is exactly one default model per language pair,
         /// the IBM provided base model. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TranslationModels" />TranslationModels</returns>
-        public bool ListModels(Callback<TranslationModels> callback, Dictionary<string, object> customData = null, string source = null, string target = null, bool? defaultModels = null)
+        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? defaultModels = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
@@ -669,17 +636,15 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListModels"))
             {
