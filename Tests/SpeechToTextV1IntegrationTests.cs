@@ -367,22 +367,27 @@ namespace IBM.Watson.Tests
             bool isComplete = false;
             using (FileStream fs = File.OpenRead(corpusPath))
             {
-                service.AddCorpus(
-                    callback: (DetailedResponse<object> response, IBMError error) =>
-                    {
-                        Log.Debug("SpeechToTextServiceV1IntegrationTests", "AddCorpus result: {0}", response.Response);
-                        Assert.IsNull(error);
-                        Assert.IsTrue(response.StatusCode == 201);
-                        isComplete = true;
-                    },
-                    customizationId: customizationId,
-                    corpusName: corpusName,
-                    corpusFile: fs,
-                    allowOverwrite: true
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.AddCorpus(
+                        callback: (DetailedResponse<object> response, IBMError error) =>
+                        {
+                            Log.Debug("SpeechToTextServiceV1IntegrationTests", "AddCorpus result: {0}", response.Response);
+                            Assert.IsNull(error);
+                            Assert.IsTrue(response.StatusCode == 201);
+                            isComplete = true;
+                        },
+                        customizationId: customizationId,
+                        corpusName: corpusName,
+                        corpusFile: ms,
+                        allowOverwrite: true,
+                        corpusFilename: Path.GetFileName(corpusPath)
+                    );
 
-                while (!isComplete)
-                    yield return null;
+                    while (!isComplete)
+                        yield return null;
+                }
             }
         }
         #endregion

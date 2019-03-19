@@ -145,26 +145,31 @@ namespace IBM.Watson.Tests
             TranslationModel createModelResponse = null;
             using (FileStream fs = File.OpenRead(forcedGlossaryFilepath))
             {
-                service.CreateModel(
-                    callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
-                    {
-                        Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", response.Response);
-                        createModelResponse = response.Result;
-                        customModelId = createModelResponse.ModelId;
-                        Assert.IsNotNull(createModelResponse);
-                        Assert.IsNotNull(customModelId);
-                        Assert.IsTrue(createModelResponse.Source == "en");
-                        Assert.IsTrue(createModelResponse.Target == "fr");
-                        Assert.IsTrue(createModelResponse.Name == customModelName);
-                        Assert.IsNull(error);
-                    },
-                    baseModelId: englishToFrenchModel,
-                    forcedGlossary: fs,
-                    name: customModelName
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.CreateModel(
+                        callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
+                        {
+                            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", response.Response);
+                            createModelResponse = response.Result;
+                            customModelId = createModelResponse.ModelId;
+                            Assert.IsNotNull(createModelResponse);
+                            Assert.IsNotNull(customModelId);
+                            Assert.IsTrue(createModelResponse.Source == "en");
+                            Assert.IsTrue(createModelResponse.Target == "fr");
+                            Assert.IsTrue(createModelResponse.Name == customModelName);
+                            Assert.IsNull(error);
+                        },
+                        baseModelId: englishToFrenchModel,
+                        forcedGlossary: ms,
+                        name: customModelName,
+                        forcedGlossaryFilename: Path.GetFileName(forcedGlossaryFilepath)
+                    );
 
-                while (createModelResponse == null)
-                    yield return null;
+                    while (createModelResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion

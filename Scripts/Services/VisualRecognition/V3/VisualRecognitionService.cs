@@ -137,6 +137,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// non-ASCII characters.
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
+        /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
         /// <param name="url">The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel
         /// density is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224
         /// pixels. The maximum image size is 10 MB.
@@ -163,7 +164,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
-        public bool Classify(Callback<ClassifiedImages> callback, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool Classify(Callback<ClassifiedImages> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
@@ -191,7 +192,7 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
-                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFilename, imagesFileContentType);
             }
             if (!string.IsNullOrEmpty(url))
             {
@@ -269,6 +270,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// UTF-8 encoding if it encounters non-ASCII characters.
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
+        /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
         /// <param name="url">The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum
         /// recommended pixel density is 32X32 pixels, but the service tends to perform better with images that are at
         /// least 224 x 224 pixels. The maximum image size is 10 MB. Redirects are followed, so you can use a shortened
@@ -279,7 +281,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
-        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DetectFaces`");
@@ -307,7 +309,7 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
-                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFilename, imagesFileContentType);
             }
             if (!string.IsNullOrEmpty(url))
             {
@@ -375,8 +377,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
+        /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, System.IO.FileStream negativeExamples = null)
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.MemoryStream> positiveExamples, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -414,15 +417,15 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
-                foreach (KeyValuePair<string, System.IO.FileStream> entry in positiveExamples)
+                foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
             {
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
             }
 
             req.OnResponse = OnCreateClassifierResponse;
@@ -704,8 +707,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
+        /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.MemoryStream> positiveExamples = null, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
@@ -735,15 +739,15 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
-                foreach (KeyValuePair<string, System.IO.FileStream> entry in positiveExamples)
+                foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
             {
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
             }
 
             req.OnResponse = OnUpdateClassifierResponse;

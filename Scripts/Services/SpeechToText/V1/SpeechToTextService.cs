@@ -2100,11 +2100,12 @@ namespace IBM.Watson.SpeechToText.V1
         /// encoding](https://cloud.ibm.com/docs/services/speech-to-text/language-resource.html#charEncoding).
         ///
         /// With the `curl` command, use the `--data-binary` option to upload the file for the request.</param>
+        /// <param name="corpusFilename">The filename for corpusFile. (optional)</param>
         /// <param name="allowOverwrite">If `true`, the specified corpus overwrites an existing corpus with the same
         /// name. If `false`, the request fails if a corpus with the same name already exists. The parameter has no
         /// effect if a corpus with the same name does not already exist. (optional, default to false)</param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.FileStream corpusFile, bool? allowOverwrite = null)
+        public bool AddCorpus(Callback<object> callback, string customizationId, string corpusName, System.IO.MemoryStream corpusFile, string corpusFilename = null, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddCorpus`");
@@ -2137,7 +2138,7 @@ namespace IBM.Watson.SpeechToText.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (corpusFile != null)
             {
-                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFile.Name, "text/plain");
+                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, corpusFilename, "text/plain");
             }
             if (allowOverwrite != null)
             {

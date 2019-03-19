@@ -133,18 +133,21 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The file to convert.</param>
+        /// <param name="filename">The filename for file.</param>
         /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="HTMLReturn" />HTMLReturn</returns>
-        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
+        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.MemoryStream file, string filename, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ConvertToHtml`");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `ConvertToHtml`");
+            if (string.IsNullOrEmpty(filename))
+                throw new ArgumentNullException("`filename` is required for `ConvertToHtml`");
 
             RequestObject<HTMLReturn> req = new RequestObject<HTMLReturn>
             {
@@ -169,7 +172,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(modelId))
             {
@@ -218,13 +221,14 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The file to classify.</param>
+        /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="ClassifyReturn" />ClassifyReturn</returns>
-        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
+        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.MemoryStream file, string filename = null, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyElements`");
@@ -254,7 +258,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(modelId))
             {
@@ -303,13 +307,14 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The file on which to run table extraction.</param>
+        /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="TableReturn" />TableReturn</returns>
-        public bool ExtractTables(Callback<TableReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
+        public bool ExtractTables(Callback<TableReturn> callback, System.IO.MemoryStream file, string filename = null, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ExtractTables`");
@@ -339,7 +344,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(modelId))
             {
@@ -388,7 +393,9 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file1">The first file to compare.</param>
+        /// <param name="file1Filename">The filename for file1. (optional)</param>
         /// <param name="file2">The second file to compare.</param>
+        /// <param name="file2Filename">The filename for file2. (optional)</param>
         /// <param name="file1Label">A text label for the first file. (optional, default to file_1)</param>
         /// <param name="file2Label">A text label for the second file. (optional, default to file_2)</param>
         /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
@@ -398,7 +405,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="file1ContentType">The content type of file1. (optional)</param>
         /// <param name="file2ContentType">The content type of file2. (optional)</param>
         /// <returns><see cref="CompareReturn" />CompareReturn</returns>
-        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.FileStream file1, System.IO.FileStream file2, string file1Label = null, string file2Label = null, string modelId = null, string file1ContentType = null, string file2ContentType = null)
+        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.MemoryStream file1, System.IO.MemoryStream file2, string file1Filename = null, string file2Filename = null, string file1Label = null, string file2Label = null, string modelId = null, string file1ContentType = null, string file2ContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CompareDocuments`");
@@ -430,11 +437,11 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file1 != null)
             {
-                req.Forms["file_1"] = new RESTConnector.Form(file1, file1.Name, file1ContentType);
+                req.Forms["file_1"] = new RESTConnector.Form(file1, file1Filename, file1ContentType);
             }
             if (file2 != null)
             {
-                req.Forms["file_2"] = new RESTConnector.Form(file2, file2.Name, file2ContentType);
+                req.Forms["file_2"] = new RESTConnector.Form(file2, file2Filename, file2ContentType);
             }
             if (!string.IsNullOrEmpty(file1Label))
             {
@@ -909,6 +916,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="inputCredentialsFile">A JSON file containing the input Cloud Object Storage credentials. At a
         /// minimum, the credentials must enable `READ` permissions on the bucket defined by the `input_bucket_name`
         /// parameter.</param>
+        /// <param name="inputCredentialsFilename">The filename for inputCredentialsFile. (optional)</param>
         /// <param name="inputBucketLocation">The geographical location of the Cloud Object Storage input bucket as
         /// listed on the **Endpoint** tab of your Cloud Object Storage instance; for example, `us-geo`, `eu-geo`, or
         /// `ap-geo`.</param>
@@ -916,6 +924,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="outputCredentialsFile">A JSON file that lists the Cloud Object Storage output credentials. At a
         /// minimum, the credentials must enable `READ` and `WRITE` permissions on the bucket defined by the
         /// `output_bucket_name` parameter.</param>
+        /// <param name="outputCredentialsFilename">The filename for outputCredentialsFile. (optional)</param>
         /// <param name="outputBucketLocation">The geographical location of the Cloud Object Storage output bucket as
         /// listed on the **Endpoint** tab of your Cloud Object Storage instance; for example, `us-geo`, `eu-geo`, or
         /// `ap-geo`.</param>
@@ -925,7 +934,7 @@ namespace IBM.Watson.CompareComply.V1
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.FileStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.FileStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, string modelId = null)
+        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.MemoryStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.MemoryStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, string inputCredentialsFilename = null, string outputCredentialsFilename = null, string modelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateBatch`");
@@ -967,7 +976,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (inputCredentialsFile != null)
             {
-                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, inputCredentialsFile.Name, "application/json");
+                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, inputCredentialsFilename, "application/json");
             }
             if (!string.IsNullOrEmpty(inputBucketLocation))
             {
@@ -979,7 +988,7 @@ namespace IBM.Watson.CompareComply.V1
             }
             if (outputCredentialsFile != null)
             {
-                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, outputCredentialsFile.Name, "application/json");
+                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, outputCredentialsFilename, "application/json");
             }
             if (!string.IsNullOrEmpty(outputBucketLocation))
             {

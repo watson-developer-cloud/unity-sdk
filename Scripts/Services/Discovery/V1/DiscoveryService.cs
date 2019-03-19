@@ -1043,6 +1043,7 @@ namespace IBM.Watson.Discovery.V1
         /// See the `GET /configurations/{configuration_id}` operation for an example configuration. (optional)</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
         /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -1058,7 +1059,7 @@ namespace IBM.Watson.Discovery.V1
         /// rejected. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="TestDocument" />TestDocument</returns>
-        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.FileStream file = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
+        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TestConfigurationInEnvironment`");
@@ -1092,7 +1093,7 @@ namespace IBM.Watson.Discovery.V1
             }
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
@@ -1720,8 +1721,9 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
+        /// <param name="stopwordFilename">The filename for stopwordFile.</param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.FileStream stopwordFile)
+        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.MemoryStream stopwordFile, string stopwordFilename)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
@@ -1731,6 +1733,8 @@ namespace IBM.Watson.Discovery.V1
                 throw new ArgumentNullException("`collectionId` is required for `CreateStopwordList`");
             if (stopwordFile == null)
                 throw new ArgumentNullException("`stopwordFile` is required for `CreateStopwordList`");
+            if (string.IsNullOrEmpty(stopwordFilename))
+                throw new ArgumentNullException("`stopwordFilename` is required for `CreateStopwordList`");
 
             RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
             {
@@ -1755,7 +1759,7 @@ namespace IBM.Watson.Discovery.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (stopwordFile != null)
             {
-                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFile.Name, "application/octet-stream");
+                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFilename, "application/octet-stream");
             }
 
             req.OnResponse = OnCreateStopwordListResponse;
@@ -2353,6 +2357,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
         /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2362,7 +2367,7 @@ namespace IBM.Watson.Discovery.V1
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
+        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddDocument`");
@@ -2394,7 +2399,7 @@ namespace IBM.Watson.Discovery.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
@@ -2604,6 +2609,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="documentId">The ID of the document.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
         /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2613,7 +2619,7 @@ namespace IBM.Watson.Discovery.V1
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
+        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
@@ -2647,7 +2653,7 @@ namespace IBM.Watson.Discovery.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, file.Name, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
             if (!string.IsNullOrEmpty(metadata))
             {
