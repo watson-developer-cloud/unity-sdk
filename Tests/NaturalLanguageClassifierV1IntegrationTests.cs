@@ -30,8 +30,6 @@ namespace IBM.Watson.Tests
     public class NaturalLanguageClassifierV1IntegrationTests
     {
         private NaturalLanguageClassifierService service;
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string classifierId;
         private string createdClassifierId;
         private string classifierDataFilePath;
@@ -45,7 +43,6 @@ namespace IBM.Watson.Tests
             LogSystem.InstallDefaultReactors();
             classifierDataFilePath = Application.dataPath + "/Watson/Tests/TestData/NaturalLanguageClassifierV1/weather-data.csv";
             metadataDataFilePath = Application.dataPath + "/Watson/Tests/TestData/NaturalLanguageClassifierV1/metadata.json";
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -63,8 +60,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region ListClassifiers
@@ -83,8 +79,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listClassifiersResponse.Classifiers);
                     Assert.IsTrue(listClassifiersResponse.Classifiers.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listClassifiersResponse == null)
@@ -112,9 +107,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 classifierId: classifierId,
-                text: textToClassify0,
-
-                customData: customData
+                text: textToClassify0
             );
 
             while (classifyResponse == null)
@@ -152,8 +145,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 classifierId: classifierId,
-                collection: collection,
-                customData: customData
+                collection: collection
             );
 
             while (classifyCollectionResponse == null)
@@ -184,8 +176,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     metadata: fs0,
-                    trainingData: fs1,
-                    customData: customData
+                    trainingData: fs1
                 );
 
                     while (createClassifierResponse == null)
@@ -213,8 +204,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getClassifierResponse.Language == "en");
                     Assert.IsNull(error);
                 },
-                classifierId: createdClassifierId,
-                customData: customData
+                classifierId: createdClassifierId
             );
 
             while (getClassifierResponse == null)
@@ -236,8 +226,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteClassifierResponse);
                     Assert.IsNull(error);
                 },
-                classifierId: createdClassifierId,
-                customData: customData
+                classifierId: createdClassifierId
             );
 
             while (deleteClassifierResponse == null)

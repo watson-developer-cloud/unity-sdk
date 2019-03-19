@@ -31,8 +31,6 @@ namespace IBM.Watson.Tests
     {
         private AssistantService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string workspaceId;
         private string createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private string createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
@@ -64,7 +62,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -82,8 +79,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         [UnityTest, Order(0)]
@@ -106,15 +102,13 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             JObject input = new JObject();
@@ -137,15 +131,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -168,15 +160,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -199,15 +189,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -230,15 +218,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -261,8 +247,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
@@ -290,8 +275,7 @@ namespace IBM.Watson.Tests
                 name: createdWorkspaceName,
                 description: createdWorkspaceDescription,
                 language: createdWorkspaceLanguage,
-                learningOptOut: true,
-                customData: customData
+                learningOptOut: true
             );
 
             while (createWorkspaceResponse == null)
@@ -318,8 +302,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 includeAudit: true,
-                sort: "-name",
-                customData: customData
+                sort: "-name"
             );
 
             while (getWorkspaceResponse == null)
@@ -344,8 +327,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-name",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listWorkspacesResponse == null)
@@ -372,8 +354,7 @@ namespace IBM.Watson.Tests
                 description: updatedWorkspaceDescription,
                 language: createdWorkspaceLanguage,
                 learningOptOut: true,
-                append: false,
-                customData: customData
+                append: false
             );
 
             while (updateWorkspaceResponse == null)
@@ -397,8 +378,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 intent: createdIntentName,
-                description: createdIntentDescription,
-                customData: customData
+                description: createdIntentDescription
             );
 
             while (createIntentResponse == null)
@@ -423,8 +403,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: createdIntentName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getIntentResponse == null)
@@ -451,8 +430,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-name",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listIntentsResponse == null)
@@ -477,8 +455,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: createdIntentName,
                 newIntent: updatedIntentName,
-                newDescription: updatedIntentDescription,
-                customData: customData
+                newDescription: updatedIntentDescription
             );
 
             while (updateIntentResponse == null)
@@ -501,8 +478,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
-                text: createdExampleText,
-                customData: customData
+                text: createdExampleText
             );
 
             while (createExampleResponse == null)
@@ -526,8 +502,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 text: createdExampleText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getExampleResponse == null)
@@ -554,8 +529,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-text",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listExamplesResponse == null)
@@ -579,8 +553,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 text: createdExampleText,
-                newText: updatedExampleText,
-                customData: customData
+                newText: updatedExampleText
             );
 
             while (updateExampleResponse == null)
@@ -602,8 +575,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                text: createdCounterExampleText,
-                customData: customData
+                text: createdCounterExampleText
             );
 
             while (createCounterexampleResponse == null)
@@ -626,8 +598,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 text: createdCounterExampleText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getCounterexampleResponse == null)
@@ -653,8 +624,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-text",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listCounterexamplesResponse == null)
@@ -677,8 +647,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 text: createdCounterExampleText,
-                newText: updatedCounterExampleText,
-                customData: customData
+                newText: updatedCounterExampleText
             );
 
             while (updateCounterexampleResponse == null)
@@ -703,8 +672,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: createdEntityName,
                 description: createdEntityDescription,
-                fuzzyMatch: true,
-                customData: customData
+                fuzzyMatch: true
             );
 
             while (createEntityResponse == null)
@@ -729,8 +697,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: createdEntityName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getEntityResponse == null)
@@ -757,8 +724,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-entity",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listEntitiesResponse == null)
@@ -784,8 +750,7 @@ namespace IBM.Watson.Tests
                 entity: createdEntityName,
                 newEntity: updatedEntityName,
                 newDescription: updatedEntityDescription,
-                newFuzzyMatch: true,
-                customData: customData
+                newFuzzyMatch: true
             );
 
             while (updateEntityResponse == null)
@@ -809,8 +774,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listMentionsResponse == null)
@@ -833,8 +797,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
-                value: createdValueText,
-                customData: customData
+                value: createdValueText
             );
 
             while (createValueResponse == null)
@@ -859,8 +822,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: createdValueText,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getValueResponse == null)
@@ -888,8 +850,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-value",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listValuesResponse == null)
@@ -913,8 +874,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: createdValueText,
-                newValue: updatedValueText,
-                customData: customData
+                newValue: updatedValueText
             );
 
             while (updateValueResponse == null)
@@ -938,9 +898,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: updatedValueText,
-                synonym: createdSynonymText,
-                customData: customData
-
+                synonym: createdSynonymText
             );
 
             while (createSynonymResponse == null)
@@ -965,8 +923,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 synonym: createdSynonymText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getSynonymResponse == null)
@@ -994,8 +951,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-synonym",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listSynonymsResponse == null)
@@ -1020,8 +976,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 synonym: createdSynonymText,
-                newSynonym: updatedSynonymText,
-                customData: customData
+                newSynonym: updatedSynonymText
             );
 
             while (updateSynonymResponse == null)
@@ -1045,8 +1000,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
-                description: createdDialogNodeDescription,
-                customData: customData
+                description: createdDialogNodeDescription
             );
 
             while (createDialogNodeResponse == null)
@@ -1070,8 +1024,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getDialogNodeResponse == null)
@@ -1097,8 +1050,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-dialog_node",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listDialogNodesResponse == null)
@@ -1123,8 +1075,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
                 newDialogNode: updatedDialogNode,
-                newDescription: updatedDialogNodeDescription,
-                customData: customData
+                newDescription: updatedDialogNodeDescription
             );
 
             while (updateDialogNodeResponse == null)
@@ -1145,8 +1096,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listAllLogsResponse.Logs);
                     Assert.IsNull(error);
                 },
-                filter: "(language::en,request.context.metadata.deployment::deployment_1)",
-                customData: customData
+                filter: "(language::en,request.context.metadata.deployment::deployment_1)"
             );
 
             while (listAllLogsResponse == null)
@@ -1169,8 +1119,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 filter: "(language::en,request.context.metadata.deployment::deployment_1)",
-                pageLimit: 1,
-                customData: customData
+                pageLimit: 1
             );
 
             while (listLogsResponse == null)
@@ -1190,8 +1139,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "test-customer-id",
-                customData: customData
+                customerId: "test-customer-id"
             );
 
             while (deleteUserDataResponse == null)
@@ -1213,8 +1161,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                dialogNode: updatedDialogNode,
-                customData: customData
+                dialogNode: updatedDialogNode
             );
 
             while (deleteDialogNodeResponse == null)
@@ -1237,8 +1184,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: updatedValueText,
-                synonym: updatedSynonymText,
-                customData: customData
+                synonym: updatedSynonymText
             );
 
             while (deleteSynonymResponse == null)
@@ -1260,8 +1206,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
-                value: updatedValueText,
-                customData: customData
+                value: updatedValueText
             );
 
             while (deleteValueResponse == null)
@@ -1282,8 +1227,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                entity: updatedEntityName,
-                customData: customData
+                entity: updatedEntityName
             );
 
             while (deleteEntityResponse == null)
@@ -1304,8 +1248,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                text: updatedCounterExampleText,
-                customData: customData
+                text: updatedCounterExampleText
             );
 
             while (deleteCounterexampleResponse == null)
@@ -1327,8 +1270,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
-                text: updatedExampleText,
-                customData: customData
+                text: updatedExampleText
             );
 
             while (deleteExampleResponse == null)
@@ -1349,8 +1291,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                intent: updatedIntentName,
-                customData: customData
+                intent: updatedIntentName
             );
 
             while (deleteIntentResponse == null)
@@ -1371,8 +1312,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteWorkspaceResponse);
                     Assert.IsNull(error);
                 },
-                workspaceId: workspaceId,
-                customData: customData
+                workspaceId: workspaceId
             );
 
             while (deleteWorkspaceResponse == null)

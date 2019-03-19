@@ -376,7 +376,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, System.IO.FileStream positiveExamples, System.IO.FileStream negativeExamples = null)
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -705,7 +705,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, System.IO.FileStream positiveExamples = null, System.IO.FileStream negativeExamples = null)
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");

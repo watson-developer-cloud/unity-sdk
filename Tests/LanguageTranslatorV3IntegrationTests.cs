@@ -31,8 +31,6 @@ namespace IBM.Watson.Tests
     {
         private LanguageTranslatorService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string forcedGlossaryFilepath;
         private string englishText = "Where is the library?";
         private string spanishText = "¿Dónde está la biblioteca?";
@@ -46,7 +44,6 @@ namespace IBM.Watson.Tests
         {
             LogSystem.InstallDefaultReactors();
             forcedGlossaryFilepath = Application.dataPath + "/Watson/Tests/TestData/LanguageTranslatorV3/glossary.tmx";
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -64,8 +61,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Translate
@@ -86,8 +82,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 text: new List<string>() { englishText },
-                modelId: englishToSpanishModel,
-                customData: customData
+                modelId: englishToSpanishModel
             );
 
             while (translateResponse == null)
@@ -111,8 +106,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(identifyResponse.Languages.Count > 0);
                     Assert.IsNull(error);
                 },
-                text: spanishText,
-                customData: customData
+                text: spanishText
             );
 
             while (identifyResponse == null)
@@ -135,8 +129,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listIdentifiableLanguagesResponse.Languages);
                     Assert.IsTrue(listIdentifiableLanguagesResponse.Languages.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listIdentifiableLanguagesResponse == null)
@@ -167,8 +160,7 @@ namespace IBM.Watson.Tests
                     },
                     baseModelId: englishToFrenchModel,
                     forcedGlossary: fs,
-                    name: customModelName,
-                    customData: customData
+                    name: customModelName
                 );
 
                 while (createModelResponse == null)
@@ -195,8 +187,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getModelResponse.Name == customModelName);
                     Assert.IsNull(error);
                 },
-                modelId: customModelId,
-                customData: customData
+                modelId: customModelId
             );
 
             while (getModelResponse == null)
@@ -222,8 +213,7 @@ namespace IBM.Watson.Tests
                 },
                 source: "en",
                 target: "fr",
-                defaultModels: true,
-                customData: customData
+                defaultModels: true
             );
 
             while (listModelsResponse == null)
@@ -247,8 +237,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(deleteModelResponse.Status == "OK");
                     Assert.IsNull(error);
                 },
-                modelId: customModelId,
-                customData: customData
+                modelId: customModelId
             );
 
             while (deleteModelResponse == null)

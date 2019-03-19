@@ -31,8 +31,6 @@ namespace IBM.Watson.Tests
     public class TextToSpeechV1IntegrationTests
     {
         private TextToSpeechService service;
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string allisionVoice = "en-US_AllisonVoice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string synthesizeMimeType = "audio/wav";
@@ -49,7 +47,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -67,8 +64,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region GetVoice
@@ -86,8 +82,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getVoiceResponse.Name == allisionVoice);
                     Assert.IsNull(error);
                 },
-                voice: allisionVoice,
-                customData: customData
+                voice: allisionVoice
             );
 
             while (getVoiceResponse == null)
@@ -110,8 +105,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listVoicesResponse._Voices);
                     Assert.IsTrue(listVoicesResponse._Voices.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listVoicesResponse == null)
@@ -138,8 +132,7 @@ namespace IBM.Watson.Tests
                 },
                 text: synthesizeText,
                 voice: allisionVoice,
-                accept: synthesizeMimeType,
-                customData: customData
+                accept: synthesizeMimeType
             );
 
             while (synthesizeResponse == null)
@@ -166,8 +159,7 @@ namespace IBM.Watson.Tests
                 },
                 text: synthesizeText,
                 voice: allisionVoice,
-                format: "ipa",
-                customData: customData
+                format: "ipa"
             );
 
             while (getPronunciationResponse == null)
@@ -193,9 +185,7 @@ namespace IBM.Watson.Tests
                 },
                 name: voiceModelName,
                 language: voiceModelLanguage,
-                description: voiceModelDescription,
-
-                customData: customData
+                description: voiceModelDescription
             );
 
             while (createVoiceModelResponse == null)
@@ -221,8 +211,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getVoiceModelResponse.Description == voiceModelDescription);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (getVoiceModelResponse == null)
@@ -246,8 +235,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listVoiceModelsResponse.Customizations.Count > 0);
                     Assert.IsNull(error);
                 },
-                language: voiceModelLanguage,
-                customData: customData
+                language: voiceModelLanguage
             );
 
             while (listVoiceModelsResponse == null)
@@ -271,8 +259,7 @@ namespace IBM.Watson.Tests
                 },
                 customizationId: customizationId,
                 name: voiceModelNameUpdated,
-                description: voiceModelDescriptionUpdated,
-                customData: customData
+                description: voiceModelDescriptionUpdated
             );
 
             while (updateVoiceModelResponse == null)
@@ -296,8 +283,7 @@ namespace IBM.Watson.Tests
                 },
                 customizationId: customizationId,
                 word: customWord,
-                translation: customWordTranslation,
-                customData: customData
+                translation: customWordTranslation
             );
 
             while (!isComplete)
@@ -339,8 +325,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: customizationId,
-                words: words,
-                customData: customData
+                words: words
             );
 
             while (!isComplete)
@@ -364,8 +349,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                word: customWord,
-                customData: customData
+                word: customWord
             );
 
             while (getWordResponse == null)
@@ -389,8 +373,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listWordsResponse._Words.Count > 0);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (listWordsResponse == null)
@@ -413,8 +396,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: customizationId,
-                word: customWord,
-                customData: customData
+                word: customWord
             );
 
             while (!isComplete)
@@ -436,8 +418,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (!isComplete)
@@ -459,8 +440,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (deleteUserDataResponse == null)

@@ -29,8 +29,6 @@ namespace IBM.Watson.Tests
     {
         private NaturalLanguageUnderstandingService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string nluText = "Analyze various features of text content at scale. Provide text, raw HTML, or a public URL, and IBM Watson Natural Language Understanding will give you results for the features you request. The service cleans HTML content before analysis by default, so the results can ignore most advertisements and other unwanted content.";
         private string modelId;
 
@@ -38,7 +36,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -56,8 +53,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Analyze
@@ -89,8 +85,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 features: features,
-                text: nluText,
-                customData: customData
+                text: nluText
             );
 
             while (analyzeResponse == null)
@@ -113,8 +108,7 @@ namespace IBM.Watson.Tests
         //            Assert.IsNotNull(deleteModelResponse);
         //            Assert.IsNull(error);
         //        },
-        //        modelId: modelId,
-        //        customData: customData
+        //        modelId: modelId
         //    );
 
         //    while (deleteModelResponse == null)
@@ -136,8 +130,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listModelsResponse);
                     Assert.IsNotNull(listModelsResponse.Models);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listModelsResponse == null)

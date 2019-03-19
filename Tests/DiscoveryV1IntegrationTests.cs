@@ -34,8 +34,6 @@ namespace IBM.Watson.Tests
     {
         private DiscoveryService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string watsonBeatsJeopardyTxtFilePath;
         private string watsonBeatsJeopardyHtmlFilePath;
         private string stopwordsFilePath;
@@ -71,7 +69,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
             environmentId = Environment.GetEnvironmentVariable("DISCOVERY_ENVIRONMENT_ID");
             createdConfigurationName = Guid.NewGuid().ToString();
             updatedConfigurationName = createdConfigurationName + "-updated";
@@ -99,8 +96,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region CreateEnvironment
@@ -122,9 +118,7 @@ namespace IBM.Watson.Tests
                 },
                 name: createdEnvironmentName,
                 description: createdEnvironmentDescription,
-                size: "S",
-
-                customData: customData
+                size: "S"
             );
 
             while (createEnvironmentResponse == null)
@@ -147,8 +141,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getEnvironmentResponse.EnvironmentId == environmentId);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (getEnvironmentResponse == null)
@@ -171,8 +164,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listEnvironmentsResponse.Environments);
                     Assert.IsTrue(listEnvironmentsResponse.Environments.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listEnvironmentsResponse == null)
@@ -201,9 +193,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 name: updatedEnvironmentName,
                 description: updatedEnvironmentDescription,
-                size: "LT",
-
-                customData: customData
+                size: "LT"
             );
 
             while (updateEnvironmentResponse == null)
@@ -231,8 +221,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 name: createdConfigurationName,
-                description: createdConfigurationDescription,
-                customData: customData
+                description: createdConfigurationDescription
             );
 
             while (createConfigurationResponse == null)
@@ -258,8 +247,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (getConfigurationResponse == null)
@@ -285,8 +273,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                name: createdConfigurationName,
-                customData: customData
+                name: createdConfigurationName
             );
 
             while (listConfigurationsResponse == null)
@@ -311,8 +298,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 configurationId: createdConfigurationId,
                 name: updatedConfigurationName,
-                description: updatedConfigurationDescription,
-                customData: customData
+                description: updatedConfigurationDescription
             );
 
             while (updateConfigurationResponse == null)
@@ -336,14 +322,12 @@ namespace IBM.Watson.Tests
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse);
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
-                        Assert.IsTrue(testConfigurationInEnvironmentResponse.Snapshots.Count > 0);
                         Assert.IsNull(error);
                     },
                     environmentId: environmentId,
                     configurationId: createdConfigurationId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (testConfigurationInEnvironmentResponse == null)
@@ -376,8 +360,7 @@ namespace IBM.Watson.Tests
                 name: createdCollectionName,
                 description: createdCollectionDescription,
                 configurationId: createdConfigurationId,
-                language: "en",
-                customData: customData
+                language: "en"
             );
 
             while (createCollectionResponse == null)
@@ -409,8 +392,7 @@ namespace IBM.Watson.Tests
                 name: createdJapaneseCollectionName,
                 description: createdJapaneseCollectionDescription,
                 configurationId: createdConfigurationId,
-                language: "ja",
-                customData: customData
+                language: "ja"
             );
 
             while (createCollectionResponse == null)
@@ -437,8 +419,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (getCollectionResponse == null)
@@ -463,8 +444,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                name: createdCollectionName,
-                customData: customData
+                name: createdCollectionName
             );
 
             while (listCollectionsResponse == null)
@@ -494,8 +474,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 name: updatedCollectionName,
                 description: updatedCollectionDescription,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (updateCollectionResponse == null)
@@ -519,8 +498,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionIds: new List<string>() { collectionId },
-                customData: customData
+                collectionIds: new List<string>() { collectionId }
             );
 
             while (listFieldsResponse == null)
@@ -544,8 +522,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listCollectionFieldsResponse == null)
@@ -587,9 +564,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                expansions: expansions,
-
-                customData: customData
+                expansions: expansions
             );
 
             while (createExpansionsResponse == null)
@@ -619,8 +594,7 @@ namespace IBM.Watson.Tests
                     },
                     environmentId: environmentId,
                     collectionId: collectionId,
-                    stopwordFile: fs,
-                    customData: customData
+                    stopwordFile: fs
                 );
 
                 while (createStopwordListResponse == null)
@@ -675,8 +649,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: createdJapaneseCollectionId,
-                tokenizationRules: tokenizationRules,
-                customData: customData
+                tokenizationRules: tokenizationRules
             );
 
             while (createTokenizationDictionaryResponse == null)
@@ -708,8 +681,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (getStopwordListStatusResponse == null)
@@ -736,8 +708,7 @@ namespace IBM.Watson.Tests
 
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (getTokenizationDictionaryStatusResponse == null)
@@ -762,8 +733,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listExpansionsResponse == null)
@@ -792,8 +762,7 @@ namespace IBM.Watson.Tests
                     environmentId: environmentId,
                     collectionId: collectionId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (addDocumentResponse == null)
@@ -819,8 +788,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                documentId: addedDocumentId,
-                customData: customData
+                documentId: addedDocumentId
             );
 
             while (getDocumentStatusResponse == null)
@@ -849,8 +817,7 @@ namespace IBM.Watson.Tests
                     collectionId: collectionId,
                     documentId: addedDocumentId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (updateDocumentResponse == null)
@@ -880,8 +847,7 @@ namespace IBM.Watson.Tests
                 passages: true,
                 count: 10,
                 highlight: true,
-                loggingOptOut: true,
-                customData: customData
+                loggingOptOut: true
             );
 
             while (federatedQueryResponse == null)
@@ -907,8 +873,7 @@ namespace IBM.Watson.Tests
                 collectionIds: new List<string>() { collectionId },
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (federatedQueryNoticesResponse == null)
@@ -937,8 +902,7 @@ namespace IBM.Watson.Tests
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (queryResponse == null)
@@ -969,8 +933,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 entity: entity,
                 feature: "disambiguate",
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryEntitiesResponse == null)
@@ -997,8 +960,7 @@ namespace IBM.Watson.Tests
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (queryNoticesResponse == null)
@@ -1030,8 +992,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 entities: entities,
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryRelationsResponse == null)
@@ -1067,8 +1028,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 naturalLanguageQuery: "When did Watson win Jeopardy",
-                examples: examples,
-                customData: customData
+                examples: examples
             );
 
             while (addTrainingDataResponse == null)
@@ -1096,8 +1056,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 queryId: queryId,
                 documentId: addedDocumentId,
-                relevance: 2,
-                customData: customData
+                relevance: 2
             );
 
             while (createTrainingExampleResponse == null)
@@ -1123,8 +1082,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (getTrainingDataResponse == null)
@@ -1150,8 +1108,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 queryId: queryId,
-                exampleId: addedDocumentId,
-                customData: customData
+                exampleId: addedDocumentId
             );
 
             while (getTrainingExampleResponse == null)
@@ -1176,8 +1133,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listTrainingDataResponse == null)
@@ -1203,8 +1159,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (listTrainingExamplesResponse == null)
@@ -1231,8 +1186,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 queryId: queryId,
                 exampleId: addedDocumentId,
-                relevance: 3,
-                customData: customData
+                relevance: 3
             );
 
             while (updateTrainingExampleResponse == null)
@@ -1263,8 +1217,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 type: "click",
-                data: data,
-                customData: customData
+                data: data
             );
 
             while (createEventResponse == null)
@@ -1287,8 +1240,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsEventRateResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsEventRateResponse == null)
@@ -1311,8 +1263,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsQueryResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryResponse == null)
@@ -1335,8 +1286,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsQueryEventResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryEventResponse == null)
@@ -1359,8 +1309,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsQueryNoResultsResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryNoResultsResponse == null)
@@ -1383,8 +1332,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsQueryTokenEventResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (getMetricsQueryTokenEventResponse == null)
@@ -1408,8 +1356,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 query: "When did Watson beat Jeopardy",
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryLogResponse == null)
@@ -1445,9 +1392,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 sourceType: "box",
-                credentialDetails: credentialDetails,
-
-                customData: customData
+                credentialDetails: credentialDetails
             );
 
             while (createCredentialsResponse == null)
@@ -1472,8 +1417,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                credentialId: credentialId,
-                customData: customData
+                credentialId: credentialId
             );
 
             while (getCredentialsResponse == null)
@@ -1497,8 +1441,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listCredentialsResponse._Credentials.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listCredentialsResponse == null)
@@ -1536,8 +1479,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 credentialId: credentialId,
                 sourceType: "box",
-                credentialDetails: credentialDetails,
-                customData: customData
+                credentialDetails: credentialDetails
             );
 
             while (updateCredentialsResponse == null)
@@ -1561,8 +1503,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(gatewayId);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (createGatewayResponse == null)
@@ -1586,8 +1527,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                gatewayId: gatewayId,
-                customData: customData
+                gatewayId: gatewayId
             );
 
             while (getGatewayResponse == null)
@@ -1611,8 +1551,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listGatewaysResponse.Gateways.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listGatewaysResponse == null)
@@ -1637,8 +1576,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                gatewayId: gatewayId,
-                customData: customData
+                gatewayId: gatewayId
             );
 
             while (deleteGatewayResponse == null)
@@ -1663,8 +1601,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                credentialId: credentialId,
-                customData: customData
+                credentialId: credentialId
             );
 
             while (deleteCredentialsResponse == null)
@@ -1685,8 +1622,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (!isComplete)
@@ -1710,8 +1646,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 queryId: queryId,
-                exampleId: addedDocumentId,
-                customData: customData
+                exampleId: addedDocumentId
             );
 
             while (!isComplete)
@@ -1734,8 +1669,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (!isComplete)
@@ -1757,8 +1691,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1784,8 +1717,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                documentId: addedDocumentId,
-                customData: customData
+                documentId: addedDocumentId
             );
 
             while (deleteDocumentResponse == null)
@@ -1808,8 +1740,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (!isComplete)
@@ -1832,8 +1763,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1855,8 +1785,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1882,8 +1811,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (deleteCollectionResponse == null)
@@ -1909,8 +1837,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (deleteCollectionResponse == null)
@@ -1933,8 +1860,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (deleteConfigurationResponse == null)
@@ -1957,8 +1883,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteEnvironmentResponse);
                     Assert.IsNull(error);
                 },
-                environmentId: createdEnvironmentId,
-                customData: customData
+                environmentId: createdEnvironmentId
             );
 
             while (deleteEnvironmentResponse == null)
@@ -1990,8 +1915,7 @@ namespace IBM.Watson.Tests
                     getTokenizationDictionaryStatusResponse = response.Result;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
             }
             catch
@@ -2015,8 +1939,7 @@ namespace IBM.Watson.Tests
                 service.GetStopwordListStatus(
                     callback: OnCheckStopwordsListStatus,
                     environmentId: environmentId,
-                    collectionId: collectionId,
-                    customData: customData
+                    collectionId: collectionId
                 );
             }
             catch
@@ -2057,8 +1980,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listCollectionsResponse.Collections.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listCollectionsResponse == null)
@@ -2080,8 +2002,7 @@ namespace IBM.Watson.Tests
                         count++;
                     },
                     environmentId: environmentId,
-                    collectionId: collectionId,
-                    customData: customData
+                    collectionId: collectionId
                 );
 
             while (count < collectionIdsToDelete.Count)

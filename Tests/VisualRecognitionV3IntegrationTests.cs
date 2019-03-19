@@ -33,8 +33,6 @@ namespace IBM.Watson.Tests
     {
         private VisualRecognitionService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string giraffePositiveExamplesFilepath;
         private string turtlePositiveExamplesFilepath;
         private string negativeExamplesFilepath;
@@ -52,7 +50,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
 
             giraffePositiveExamplesFilepath = Application.dataPath + "/Watson/Tests/TestData/VisualRecognitionV3/giraffe_positive_examples.zip";
             turtlePositiveExamplesFilepath = Application.dataPath + "/Watson/Tests/TestData/VisualRecognitionV3/turtle_positive_examples.zip";
@@ -78,8 +75,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Classify
@@ -103,8 +99,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     imagesFile: fs,
-                    imagesFileContentType: turtleImageContentType,
-                    customData: customData
+                    imagesFileContentType: turtleImageContentType
                 );
 
                 while (classifyResponse == null)
@@ -134,8 +129,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     imagesFile: fs,
-                    imagesFileContentType: obamaImageContentType,
-                    customData: customData
+                    imagesFileContentType: obamaImageContentType
                 );
 
                 while (detectFacesResponse == null)
@@ -172,8 +166,7 @@ namespace IBM.Watson.Tests
                         },
                         name: classifierName,
                         positiveExamples: positiveExamples,
-                        negativeExamples: fs1,
-                        customData: customData
+                        negativeExamples: fs1
                     );
 
                     while (createClassifierResponse == null)
@@ -198,8 +191,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getClassifierResponse.ClassifierId == classifierId);
                     Assert.IsNull(error);
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (getClassifierResponse == null)
@@ -223,8 +215,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listClassifiersResponse._Classifiers.Count > 0);
                     Assert.IsNull(error);
                 },
-                verbose: true,
-                customData: customData
+                verbose: true
             );
 
             while (listClassifiersResponse == null)
@@ -267,8 +258,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     classifierId: classifierId,
-                    positiveExamples: positiveExamples,
-                    customData: customData
+                    positiveExamples: positiveExamples
                 );
 
                 while (updateClassifierResponse == null)
@@ -311,8 +301,7 @@ namespace IBM.Watson.Tests
                         fs.Close();
                     }
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (getCoreMlModelResponse == null)
@@ -334,8 +323,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (!isComplete)
@@ -357,8 +345,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (deleteUserDataResponse == null)
@@ -390,8 +377,7 @@ namespace IBM.Watson.Tests
                             Runnable.Run(CheckClassifierStatus());
                         }
                     },
-                    classifierId: classifierId,
-                    customData: customData
+                    classifierId: classifierId
                 );
             }
             catch

@@ -205,7 +205,7 @@ namespace IBM.Watsson.Examples
             yield break;
         }
 
-        private void OnRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
+        private void OnRecognize(SpeechRecognitionEvent result)
         {
             if (result != null && result.results.Length > 0)
             {
@@ -239,7 +239,7 @@ namespace IBM.Watsson.Examples
             }
         }
 
-        private void OnRecognizeSpeaker(SpeakerRecognitionEvent result, Dictionary<string, object> customData)
+        private void OnRecognizeSpeaker(SpeakerRecognitionEvent result)
         {
             if (result != null)
             {

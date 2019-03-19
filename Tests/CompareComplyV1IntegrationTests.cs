@@ -32,8 +32,6 @@ namespace IBM.Watson.Tests
     {
         private CompareComplyService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string contractAFilepath;
         private string contractBFilepath;
         private string tableFilepath;
@@ -46,7 +44,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
 
             contractAFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_A.pdf";
             contractBFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_B.pdf";
@@ -71,8 +68,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region ConvertToHtml
@@ -94,8 +90,7 @@ namespace IBM.Watson.Tests
                     },
                     file: fs,
                     modelId: "contracts",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                 );
 
                 while (convertToHtmlResponse == null)
@@ -123,8 +118,7 @@ namespace IBM.Watson.Tests
                     },
                     file: fs,
                     modelId: "contracts",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                 );
 
                 while (classifyElementsResponse == null)
@@ -152,8 +146,7 @@ namespace IBM.Watson.Tests
                     },
                     file: fs,
                     modelId: "tables",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
                 );
 
                 while (extractTablesResponse == null)
@@ -187,8 +180,7 @@ namespace IBM.Watson.Tests
                         file2Label: "Contract B",
                         modelId: "contracts",
                         file1ContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
-                        file2ContentType: Utility.GetMimeType(Path.GetExtension(contractBFilepath)),
-                        customData: customData
+                        file2ContentType: Utility.GetMimeType(Path.GetExtension(contractBFilepath))
                     );
 
                     while (compareDocumentsResponse == null)
@@ -315,8 +307,7 @@ namespace IBM.Watson.Tests
                 },
                 feedbackData: feedbackData,
                 userId: "user_id_123x",
-                comment: "Test feedback comment",
-                customData: customData
+                comment: "Test feedback comment"
             );
 
             while (addFeedbackResponse == null)
@@ -340,8 +331,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 feedbackId: createdFeedbackId,
-                modelId: "contracts",
-                customData: customData
+                modelId: "contracts"
             );
 
             while (getFeedbackResponse == null)
@@ -366,8 +356,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 feedbackType: "element_classification",
-                includeTotal: true,
-                customData: customData
+                includeTotal: true
             );
 
             while (listFeedbackResponse == null)
@@ -402,8 +391,7 @@ namespace IBM.Watson.Tests
                         outputCredentialsFile: fsOutput,
                         outputBucketLocation: "us-south",
                         outputBucketName: "compare-comply-integration-test-bucket-output",
-                        modelId: "contracts",
-                        customData: customData
+                        modelId: "contracts"
                     );
                 }
             }
@@ -427,8 +415,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getBatchResponse.BatchId == createdBatchId);
                     Assert.IsNull(error);
                 },
-                batchId: createdBatchId,
-                customData: customData
+                batchId: createdBatchId
             );
 
             while (getBatchResponse == null)
@@ -451,8 +438,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listBatchesResponse._Batches);
                     Assert.IsTrue(listBatchesResponse._Batches.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listBatchesResponse == null)
@@ -476,8 +462,7 @@ namespace IBM.Watson.Tests
                 },
                 batchId: createdBatchId,
                 action: "rescan",
-                modelId: "contracts",
-                customData: customData
+                modelId: "contracts"
             );
 
             while (updateBatchResponse == null)
@@ -502,8 +487,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 feedbackId: createdFeedbackId,
-                modelId: "contracts",
-                customData: customData
+                modelId: "contracts"
             );
 
             while (deleteFeedbackResponse == null)

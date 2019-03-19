@@ -52,6 +52,7 @@ namespace IBM.Watson.Tests
 
             SessionResponse createSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to CreateSession...");
+            service.WithHeader("X-Watson-Test", "1");
             service.CreateSession(
                 callback: (DetailedResponse<SessionResponse> response, IBMError error) =>
                 {
@@ -70,6 +71,7 @@ namespace IBM.Watson.Tests
 
             MessageResponse messageResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -95,6 +97,7 @@ namespace IBM.Watson.Tests
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Are you open on Christmas?");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -121,6 +124,7 @@ namespace IBM.Watson.Tests
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...What are your hours?");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -148,6 +152,7 @@ namespace IBM.Watson.Tests
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -175,6 +180,7 @@ namespace IBM.Watson.Tests
                 }
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...On Friday please.");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -202,6 +208,7 @@ namespace IBM.Watson.Tests
 
             };
             Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...Yes.");
+            service.WithHeader("X-Watson-Test", "1");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -220,6 +227,7 @@ namespace IBM.Watson.Tests
 
             object deleteSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to DeleteSession...");
+            service.WithHeader("X-Watson-Test", "1");
             service.DeleteSession(
                 callback: (DetailedResponse<object> response, IBMError error) =>
                 {

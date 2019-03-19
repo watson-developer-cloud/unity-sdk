@@ -32,8 +32,6 @@ namespace IBM.Watson.Tests
     public class SpeechToTextV1IntegrationTests
     {
         private SpeechToTextService service;
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string usBroadbandModel = "en-US_BroadbandModel";
         private string grammarPath;
         private string testAudioPath;
@@ -71,7 +69,6 @@ namespace IBM.Watson.Tests
             testAudioPath = Application.dataPath + "/Watson/Tests/TestData/SpeechToTextV1/test-audio.wav";
             corpusPath = Application.dataPath + "/Watson/Tests/TestData/SpeechToTextV1/theJabberwocky-utf8.txt";
             Runnable.Run(DownloadAcousticResource());
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -89,8 +86,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region GetModel
@@ -108,8 +104,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getModelResponse.Name == usBroadbandModel);
                     Assert.IsNull(error);
                 },
-                modelId: usBroadbandModel,
-                customData: customData
+                modelId: usBroadbandModel
             );
 
             while (getModelResponse == null)
@@ -132,8 +127,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listModelsResponse.Models);
                     Assert.IsTrue(listModelsResponse.Models.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listModelsResponse == null)
@@ -160,8 +154,7 @@ namespace IBM.Watson.Tests
                 },
                 audio: audio,
                 model: usBroadbandModel,
-                contentType: "audio/wav",
-                customData: customData
+                contentType: "audio/wav"
             );
 
             while (recognizeResponse == null)
@@ -190,8 +183,7 @@ namespace IBM.Watson.Tests
                 },
                 audio: audio,
                 model: usBroadbandModel,
-                contentType: "auido/wav",
-                customData: customData
+                contentType: "auido/wav"
             );
 
             while (createJobResponse == null)
@@ -215,8 +207,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(checkJobResponse.Status);
                     Assert.IsNull(error);
                 },
-                id: jobId,
-                customData: customData
+                id: jobId
             );
 
             while (checkJobResponse == null)
@@ -238,8 +229,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(checkJobsResponse);
                     Assert.IsNotNull(checkJobsResponse.Recognitions);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (checkJobsResponse == null)
@@ -262,8 +252,7 @@ namespace IBM.Watson.Tests
         //            Assert.IsNull(error);
         //        },
         //        callbackUrl: callbackUrl,
-        //        userSecret: userSecret,
-        //        customData: customData
+        //        userSecret: userSecret
         //    );
 
         //    while (registerCallbackResponse == null)
@@ -285,8 +274,7 @@ namespace IBM.Watson.Tests
         //            Assert.IsNotNull(unregisterCallbackResponse);
         //            Assert.IsNull(error);
         //        },
-        //        callbackUrl: callbackUrl,
-        //        customData: customData
+        //        callbackUrl: callbackUrl
         //    );
 
         //    while (unregisterCallbackResponse == null)
@@ -313,9 +301,7 @@ namespace IBM.Watson.Tests
                 name: languageModelName,
                 baseModelName: usBroadbandModel,
                 dialect: languageModelDialect,
-                description: languageModelDescription,
-
-                customData: customData
+                description: languageModelDescription
             );
 
             while (createLanguageModelResponse == null)
@@ -341,8 +327,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getLanguageModelResponse.Dialect == languageModelDialect);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (getLanguageModelResponse == null)
@@ -366,8 +351,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listLanguageModelsResponse.Customizations.Count > 0);
                     Assert.IsNull(error);
                 },
-                language: "en-US",
-                customData: customData
+                language: "en-US"
             );
 
             while (listLanguageModelsResponse == null)
@@ -394,8 +378,7 @@ namespace IBM.Watson.Tests
                     customizationId: customizationId,
                     corpusName: corpusName,
                     corpusFile: fs,
-                    allowOverwrite: true,
-                    customData: customData
+                    allowOverwrite: true
                 );
 
                 while (!isComplete)
@@ -421,8 +404,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                corpusName: corpusName,
-                customData: customData
+                corpusName: corpusName
             );
 
             while (getCorpusResponse == null)
@@ -446,8 +428,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listCorporaResponse._Corpora.Count > 0);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (listCorporaResponse == null)
@@ -483,8 +464,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(trainLanguageModelResponse);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (trainLanguageModelResponse == null)
@@ -523,8 +503,7 @@ namespace IBM.Watson.Tests
                 customizationId: customizationId,
                 wordName: wordName,
                 soundsLike: soundsLike,
-                displayAs: displayAs,
-                customData: customData
+                displayAs: displayAs
             );
 
             while (!isComplete)
@@ -577,9 +556,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: customizationId,
-                words: words,
-
-                customData: customData
+                words: words
             );
 
             while (!isComplete)
@@ -603,8 +580,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                wordName: wordName,
-                customData: customData
+                wordName: wordName
             );
 
             while (getWordResponse == null)
@@ -630,8 +606,7 @@ namespace IBM.Watson.Tests
                 },
                 customizationId: customizationId,
                 wordType: "all",
-                sort: "alphabetical",
-                customData: customData
+                sort: "alphabetical"
             );
 
             while (listWordsResponse == null)
@@ -667,8 +642,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(trainLanguageModelResponse);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (trainLanguageModelResponse == null)
@@ -708,8 +682,7 @@ namespace IBM.Watson.Tests
                 grammarName: grammarName,
                 grammarFile: File.ReadAllText(grammarPath),
                 contentType: grammarsContentType,
-                allowOverwrite: true,
-                customData: customData
+                allowOverwrite: true
             );
 
             while (!isComplete)
@@ -733,8 +706,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                grammarName: grammarName,
-                customData: customData
+                grammarName: grammarName
             );
 
             while (getGrammarResponse == null)
@@ -758,8 +730,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listGrammarsResponse._Grammars.Count > 0);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (listGrammarsResponse == null)
@@ -795,8 +766,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(trainLanguageModelResponse);
                     Assert.IsNull(error);
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (trainLanguageModelResponse == null)
@@ -832,8 +802,7 @@ namespace IBM.Watson.Tests
         //            Assert.IsNotNull(upgradeLanguageModelResponse);
         //            Assert.IsNull(error);
         //        },
-        //        customizationId: customizationId,
-        //        customData: customData
+        //        customizationId: customizationId
         //    );
 
         //    while (upgradeLanguageModelResponse == null)
@@ -859,8 +828,7 @@ namespace IBM.Watson.Tests
                 },
                 name: acousticModelName,
                 baseModelName: usBroadbandModel,
-                description: acousticModelDescription,
-                customData: customData
+                description: acousticModelDescription
             );
 
             while (createAcousticModelResponse == null)
@@ -886,8 +854,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getAcousticModelResponse.BaseModelName == usBroadbandModel);
                     Assert.IsNull(error);
                 },
-                customizationId: acousticModelCustomizationId,
-                customData: customData
+                customizationId: acousticModelCustomizationId
             );
 
             while (getAcousticModelResponse == null)
@@ -911,8 +878,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listAcousticModelsResponse.Customizations.Count > 0);
                     Assert.IsNull(error);
                 },
-                language: languageModelDialect,
-                customData: customData
+                language: languageModelDialect
             );
 
             while (listAcousticModelsResponse == null)
@@ -936,8 +902,7 @@ namespace IBM.Watson.Tests
         //        },
         //        customizationId: customizationId,
         //        customLanguageModelId: customLanguageModelId,
-        //        force: force,
-        //        customData: customData
+        //        force: force
         //    );
 
         //    while (upgradeAcousticModelResponse == null)
@@ -964,8 +929,7 @@ namespace IBM.Watson.Tests
                 audioResource: acousticResourceData,
                 allowOverwrite: true,
                 contentType: acousticResourceMimeType,
-                containedContentType: acousticResourceMimeType,
-                customData: customData
+                containedContentType: acousticResourceMimeType
             );
 
             while (!isComplete)
@@ -989,8 +953,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 customizationId: acousticModelCustomizationId,
-                audioName: acousticResourceName,
-                customData: customData
+                audioName: acousticResourceName
             );
 
             while (getAudioResponse == null)
@@ -1014,8 +977,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(listAudioResponse.Audio.Count > 0);
                     Assert.IsNull(error);
                 },
-                customizationId: acousticModelCustomizationId,
-                customData: customData
+                customizationId: acousticModelCustomizationId
             );
 
             while (listAudioResponse == null)
@@ -1052,8 +1014,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: acousticModelCustomizationId,
-                customLanguageModelId: customizationId,
-                customData: customData
+                customLanguageModelId: customizationId
             );
 
             while (!isComplete)
@@ -1090,8 +1051,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: acousticModelCustomizationId,
-                audioName: acousticResourceName,
-                customData: customData
+                audioName: acousticResourceName
             );
 
             while (!isComplete)
@@ -1113,8 +1073,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customizationId: acousticModelCustomizationId,
-                customData: customData
+                customizationId: acousticModelCustomizationId
             );
 
             while (!isComplete)
@@ -1136,8 +1095,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customizationId: acousticModelCustomizationId,
-                customData: customData
+                customizationId: acousticModelCustomizationId
             );
 
             while (!isComplete)
@@ -1160,8 +1118,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: customizationId,
-                grammarName: grammarName,
-                customData: customData
+                grammarName: grammarName
             );
 
             while (!isComplete)
@@ -1184,8 +1141,7 @@ namespace IBM.Watson.Tests
                     isComplete = true;
                 },
                 customizationId: customizationId,
-                wordName: wordName,
-                customData: customData
+                wordName: wordName
             );
 
             while (!isComplete)
@@ -1208,8 +1164,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(response.StatusCode == 200);
                 },
                 customizationId: customizationId,
-                corpusName: corpusName,
-                customData: customData
+                corpusName: corpusName
             );
 
             while (!isComplete)
@@ -1231,8 +1186,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (!isComplete)
@@ -1254,8 +1208,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(response.StatusCode == 200);
                     isComplete = true;
                 },
-                customizationId: customizationId,
-                customData: customData
+                customizationId: customizationId
             );
 
             while (!isComplete)
@@ -1278,8 +1231,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(response.StatusCode == 204);
                     isComplete = true;
                 },
-                id: jobId,
-                customData: customData
+                id: jobId
             );
 
             while (!isComplete)
@@ -1301,8 +1253,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (deleteUserDataResponse == null)
@@ -1334,8 +1285,7 @@ namespace IBM.Watson.Tests
                             isLanguageModelReady = true;
                         }
                     },
-                    customizationId: customizationId,
-                    customData: customData
+                    customizationId: customizationId
                 );
             }
             catch
@@ -1373,8 +1323,7 @@ namespace IBM.Watson.Tests
                         }
                     },
                     customizationId: customizationId,
-                    corpusName: corpusName,
-                    customData: customData
+                    corpusName: corpusName
                 );
             }
             catch
@@ -1411,8 +1360,7 @@ namespace IBM.Watson.Tests
                         }
                     },
                     customizationId: customizationId,
-                    grammarName: grammarName,
-                    customData: customData
+                    grammarName: grammarName
                 );
             }
             catch
@@ -1440,17 +1388,16 @@ namespace IBM.Watson.Tests
                     {
                         getAcousticModelResponse = response.Result;
                         Log.Debug("SpeechToTextServiceV1IntegrationTests", "CheckAcousticModelStatus: {0}", getAcousticModelResponse.Status);
-                        if (getAcousticModelResponse.Status != AcousticModel.StatusValue.READY)
-                        {
-                            Runnable.Run(CheckAcousticModelStatus());
-                        }
-                        else
+                        if (getAcousticModelResponse.Status == AcousticModel.StatusValue.READY || getAcousticModelResponse.Status == AcousticModel.StatusValue.AVAILABLE)
                         {
                             isAcousticModelReady = true;
                         }
+                        else
+                        {
+                            Runnable.Run(CheckAcousticModelStatus());
+                        }
                     },
-                    customizationId: acousticModelCustomizationId,
-                    customData: customData
+                    customizationId: acousticModelCustomizationId
                 );
             }
             catch
@@ -1489,8 +1436,7 @@ namespace IBM.Watson.Tests
                         }
                     },
                     customizationId: acousticModelCustomizationId,
-                    audioName: acousticResourceName,
-                    customData: customData
+                    audioName: acousticResourceName
                 );
             }
             catch
