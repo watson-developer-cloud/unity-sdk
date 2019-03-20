@@ -32,13 +32,14 @@ Ensure that you have the following prerequisites:
 
 ## Configuring Unity
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The IBM Watson SDK for Unity does not support Unity Web Player.
-* If using Unity 2018.2 or later you'll need to set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
+* If using Unity 2018.2 or later you'll need to set Scripting Runtime Version and Api Compatibility Level in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
+1. Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
+2. Using the command line, from the sdk directory run `git submodule init` and `git submodule update` to get the correct commit of the SDK core.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
@@ -124,17 +125,12 @@ IEnumerator TokenExample()
 
     _assistant = new Assistant(_credentials);
     _assistant.VersionDate = "2018-02-16";
-    _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
+    _assistant.ListWorkspaces(OnListWorkspaces);
 }
 
-private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
 {
-    Log.Debug("OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
-}
-
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Debug("OnFail()", "Failed: {0}", error.ToString());
+    Log.Debug("OnListWorkspaces()", "Response: {0}", response.Response);
 }
 ```
 
@@ -153,23 +149,18 @@ void TokenExample()
 
     _assistant = new Assistant(_credentials);
     _assistant.VersionDate = "2018-02-16";
-    _assistant.ListWorkspaces(OnListWorkspaces, OnFail);
+    _assistant.ListWorkspaces(OnListWorkspaces);
 }
 
-private void OnListWorkspaces(WorkspaceCollection response, Dictionary<string, object> customData)
+private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
 {
-    Log.Debug("OnListWorkspaces()", "Response: {0}", customData["json"].ToString());
-}
-
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Debug("OnFail()", "Failed: {0}", error.ToString());
+    Log.Debug("OnListWorkspaces()", "Response: {0}", response.Response);
 }
 ```
 
 ### Username and password
 ```cs
-using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
+using IBM.Watson.Assistant.v1;
 using IBM.Watson.DeveloperCloud.Utilities;
 
 void Start()
@@ -180,37 +171,25 @@ void Start()
 ```
 
 ## Callbacks
-Success and failure callbacks are required. You can specify the return type in the callback.  
+Success callbacks are required. You can specify the return type in the callback.  
 ```cs
 private void Example()
 {
     //  Call with sepcific callbacks
-    assistant.Message(OnMessage, OnGetEnvironmentsFail, _workspaceId, "");
-    discovery.GetEnvironments(OnGetEnvironments, OnFail);
+    assistant.Message(OnMessage, _workspaceId);
+    discovery.GetEnvironments(OnGetEnvironments);
 }
 
 //  OnMessage callback
-private void OnMessage(object resp, Dictionary<string, object> customData)
+private void OnMessage(DetailedResponse<JObject> resp, IBMError error)
 {
-    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", customData["json"].ToString());
+    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", resp.Response);
 }
 
 //  OnGetEnvironments callback
-private void OnGetEnvironments(GetEnvironmentsResponse resp, Dictionary<string, object> customData)
+private void OnGetEnvironments(DetailedResponse<GetEnvironmentsResponse> resp, IBMError error)
 {
-    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", customData["json"].ToString());
-}
-
-//  OnMessageFail callback
-private void OnMessageFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleCallback.OnMessageFail()", "Error received: {0}", error.ToString());
-}
-
-//  OnGetEnvironmentsFail callback
-private void OnGetEnvironmentsFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleCallback.OnGetEnvironmentsFail()", "Error received: {0}", error.ToString());
+    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", resp.Response);
 }
 ```
 
@@ -219,128 +198,44 @@ Since the success callback signature is generic and the failure callback always 
 private void Example()
 {
     //  Call with generic callbacks
-    assistant.Message(OnSuccess, OnMessageFail, "<workspace-id>", "");
-    discovery.GetEnvironments(OnSuccess, OnFail);
+    assistant.Message(OnSuccess, "<workspace-id>", "");
+    discovery.GetEnvironments(OnSuccess);
 }
 
 //  Generic success callback
-private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
+private void OnSuccess<T>(DetailedResponse<T> resp, IBMError error)
 {
-    Log.Debug("ExampleCallback.OnSuccess()", "Response received: {0}", customData["json"].ToString());
-}
-
-//  Generic fail callback
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleCallback.OnFail()", "Error received: {0}", error.ToString());
-}
-```
-
-## Custom data
-Custom data can be passed through a `Dictionary<string, object> customData` in each call. In most cases, the raw json response is returned in the customData under `"json"` entry. In cases where there is no returned json, the entry will contain the success and http response code of the call.
-
-```cs
-void Example()
-{
-    Dictionary<string, object> customData = new Dictionary<string, object>();
-    customData.Add("foo", "bar");
-    assistant.Message(OnSuccess, OnFail, "<workspace-id>", "", customData);
-}
-
-//  Generic success callback
-private void OnSuccess<T>(T resp, Dictionary<string, object> customData)
-{
-    Log.Debug("ExampleCustomData.OnSuccess()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
-}
-
-//  Generic fail callback
-private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-{
-    Log.Error("ExampleCustomData.OnFail()", "Error received: {0}", error.ToString());  // returns error string
-    Log.Debug("ExampleCustomData.OnFail()", "Custom Data: {0}", customData["foo"].ToString());  // returns "bar"
+    Log.Debug("ExampleCallback.OnSuccess()", "Response received: {0}", resp.Response);
 }
 ```
 
 ## Custom Request Headers
-You can send custom request headers by adding them to the `customData` object.
+You can send custom request headers by adding them to the service.
 
 ```cs
 void Example()
 {
-    //  Create customData object
-    Dictionary<string, object> customData = new Dictionary<string, object>();
-    //  Create a dictionary of custom headers
-    Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-    //  Add to the header dictionary
-    customHeaders.Add("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
-    //  Add the header dictionary to the custom data object
-    customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
-
-    assistant.Message(OnSuccess, OnFail, "<workspace-id>", customData: customData);
+    assistant.AddHeader("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
+    assistant.Message(OnSuccess, "<workspace-id>");
 }
 ```
 
 ## Response Headers
-You can get responseheaders in the `customData` object in the callback.
+You can get response headers in the `headers` object in the DetailedResponse.
 
 ```cs
 void Example()
 {
-    assistant.Message(OnMessage, OnFail, "<workspace-id>");
+    assistant.Message(OnMessage, "<workspace-id>");
 }
 
-private void OnMessage(object resp, Dictionary<string, object> customData)
+private void OnMessage(DetailedResponse<JOBject> resp, IBMError error)
 {
     //  List all headers in the response headers object
-    if (customData.ContainsKey(Constants.String.RESPONSE_HEADERS))
+    foreach (KeyValuePair<string, string> kvp in resp.Headers)
     {
-        foreach (KeyValuePair<string, string> kvp in customData[Constants.String.RESPONSE_HEADERS] as Dictionary<string, string>)
-        {
-            Log.Debug("ExampleCustomHeader.OnMessage()", "{0}: {1}", kvp.Key, kvp.Value);
-        }
+        Log.Debug("ExampleCustomHeader.OnMessage()", "{0}: {1}", kvp.Key, kvp.Value);
     }
-}
-```
-
-## Authentication Tokens
-
-**Authenticating with the `X-Watson-Authorization-Token` header is deprecated. The token continues to work with Cloud Foundry services, but is not supported for services that use Identity and Access Management (IAM) authentication. For details see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html#iam) or the [README](#IAM) in the IBM Watson SDK you use.**
-
-You use tokens to write applications that make authenticated requests to IBM Watson™ services without embedding service credentials in every call.
-
-You can write an authentication proxy in IBM Cloud that obtains and returns a token to your client application, which can then use the token to call the service directly. This proxy eliminates the need to channel all service requests through an intermediate server-side application, which is otherwise necessary to avoid exposing your service credentials from your client application.
-
-```cs
-using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-
-void Start()
-{
-    Credentials credentials = new Credentials(<service-url>)
-    {
-        AuthenticationToken = <authentication-token>
-    };
-    Assistant _assistant = new Assistant(credentials);
-}
-```
-
-There is a helper class included to obtain tokens from within your Unity application.
-
-```cs
-using IBM.Watson.DeveloperCloud.Utilities;
-
-AuthenticationToken _authenticationToken;
-
-void Start()
-{
-    if (!Utility.GetToken(OnGetToken, <service-url>, <service-username>, <service-password>))
-        Log.Debug("ExampleGetToken.Start()", "Failed to get token.");
-}
-
-private void OnGetToken(AuthenticationToken authenticationToken, string customData)
-{
-    _authenticationToken = authenticationToken;
-    Log.Debug("ExampleGetToken.OnGetToken()", "created: {0} | time to expiration: {1} minutes | token: {2}", _authenticationToken.Created, _authenticationToken.TimeUntilExpiration, _authenticationToken.Token);
 }
 ```
 
@@ -366,7 +261,7 @@ The Watson Unity SDK does not support IBM Cloud Private because connection via p
 Documentation can be found [here][documentation]. You can also access the documentation by selecting API Reference the Watson menu (**Watson -> API Reference**).
 
 ## Getting started videos
-You can view Getting Started videos for the IBM Watson SDK for Unity on [YouTube](https://www.youtube.com/watch?v=Sa5hmukwHV8&list=PLZDyxLlNKRY8MdgiUq45cZztn_f0EVz6c).
+You can view Getting Started videos for the IBM Watson SDK for Unity on [YouTube](https://www.youtube.com/watch?v=sNPsdUWSi34&list=PLZDyxLlNKRY9b2vurEhkSoNWZN5c5l4Nr).
 
 ## Questions
 
