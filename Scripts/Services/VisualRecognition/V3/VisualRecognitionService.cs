@@ -27,7 +27,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.VisualRecognition.V3
 {
-    public class VisualRecognitionService : BaseService
+    public partial class VisualRecognitionService : BaseService
     {
         private const string serviceId = "watson_vision_combined";
         private const string defaultUrl = "https://gateway.watsonplatform.net/visual-recognition/api";
@@ -162,11 +162,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
-        public bool Classify(Callback<ClassifiedImages> callback, Dictionary<string, object> customData = null, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool Classify(Callback<ClassifiedImages> callback, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
@@ -175,17 +172,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "Classify"))
             {
@@ -229,7 +224,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ClassifiedImages> response = new DetailedResponse<ClassifiedImages>();
-            Dictionary<string, object> customData = ((RequestObject<ClassifiedImages>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -240,14 +234,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ClassifiedImages>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -256,7 +243,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<ClassifiedImages>)req).Callback != null)
-                ((RequestObject<ClassifiedImages>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ClassifiedImages>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Detect faces in images.
@@ -291,11 +278,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
-        public bool DetectFaces(Callback<DetectedFaces> callback, Dictionary<string, object> customData = null, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DetectFaces`");
@@ -304,17 +288,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DetectFaces"))
             {
@@ -346,7 +328,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnDetectFacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DetectedFaces> response = new DetailedResponse<DetectedFaces>();
-            Dictionary<string, object> customData = ((RequestObject<DetectedFaces>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -357,14 +338,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DetectedFaces>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -373,7 +347,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<DetectedFaces>)req).Callback != null)
-                ((RequestObject<DetectedFaces>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DetectedFaces>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a classifier.
@@ -401,11 +375,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, Dictionary<string, object> customData = null, System.IO.FileStream negativeExamples = null)
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -420,17 +391,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "CreateClassifier"))
             {
@@ -470,7 +439,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnCreateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
-            Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -481,14 +449,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -497,18 +458,15 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
-                ((RequestObject<Classifier>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a classifier.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteClassifier(Callback<object> callback, string classifierId, Dictionary<string, object> customData = null)
+        public bool DeleteClassifier(Callback<object> callback, string classifierId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
@@ -519,17 +477,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier"))
             {
@@ -552,7 +508,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -563,14 +518,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -579,7 +527,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Retrieve classifier details.
@@ -588,11 +536,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool GetClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null)
+        public bool GetClassifier(Callback<Classifier> callback, string classifierId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetClassifier`");
@@ -603,17 +548,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "GetClassifier"))
             {
@@ -636,7 +579,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnGetClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
-            Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -647,14 +589,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -663,7 +598,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
-                ((RequestObject<Classifier>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Retrieve a list of classifiers.
@@ -671,11 +606,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="verbose">Specify `true` to return details about the classifiers. Omit this parameter to return
         /// a brief list of classifiers. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifiers" />Classifiers</returns>
-        public bool ListClassifiers(Callback<Classifiers> callback, Dictionary<string, object> customData = null, bool? verbose = null)
+        public bool ListClassifiers(Callback<Classifiers> callback, bool? verbose = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
@@ -684,17 +616,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers"))
             {
@@ -721,7 +651,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifiers> response = new DetailedResponse<Classifiers>();
-            Dictionary<string, object> customData = ((RequestObject<Classifiers>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -732,14 +661,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifiers>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -748,7 +670,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<Classifiers>)req).Callback != null)
-                ((RequestObject<Classifiers>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifiers>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a classifier.
@@ -782,11 +704,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
@@ -797,17 +716,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "UpdateClassifier"))
             {
@@ -843,7 +760,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnUpdateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
-            Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -854,14 +770,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -870,7 +779,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
-                ((RequestObject<Classifier>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Retrieve a Core ML model of a classifier.
@@ -880,11 +789,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="byte[]" />byte[]</returns>
-        public bool GetCoreMlModel(Callback<byte[]> callback, string classifierId, Dictionary<string, object> customData = null)
+        public bool GetCoreMlModel(Callback<byte[]> callback, string classifierId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCoreMlModel`");
@@ -895,17 +801,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "GetCoreMlModel"))
             {
@@ -928,7 +832,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnGetCoreMlModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<byte[]> response = new DetailedResponse<byte[]>();
-            Dictionary<string, object> customData = ((RequestObject<byte[]>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -938,7 +841,7 @@ namespace IBM.Watson.VisualRecognition.V3
             response.Result = resp.Data;
 
             if (((RequestObject<byte[]>)req).Callback != null)
-                ((RequestObject<byte[]>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -952,11 +855,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
+        public bool DeleteUserData(Callback<object> callback, string customerId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
@@ -967,17 +867,15 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteUserData"))
             {
@@ -1004,7 +902,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1015,14 +912,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1031,7 +921,7 @@ namespace IBM.Watson.VisualRecognition.V3
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }

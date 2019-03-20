@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 {
-    public class NaturalLanguageUnderstandingService : BaseService
+    public partial class NaturalLanguageUnderstandingService : BaseService
     {
         private const string serviceId = "natural-language-understanding";
         private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-understanding/api";
@@ -168,11 +168,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// more information. (optional)</param>
         /// <param name="limitTextCharacters">Sets the maximum number of characters that are processed by the service.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="AnalysisResults" />AnalysisResults</returns>
-        public bool Analyze(Callback<AnalysisResults> callback, Features features, Dictionary<string, object> customData = null, string text = null, string html = null, string url = null, bool? clean = null, string xpath = null, bool? fallbackToRaw = null, bool? returnAnalyzedText = null, string language = null, long? limitTextCharacters = null)
+        public bool Analyze(Callback<AnalysisResults> callback, Features features, string text = null, string html = null, string url = null, bool? clean = null, string xpath = null, bool? fallbackToRaw = null, bool? returnAnalyzedText = null, string language = null, long? limitTextCharacters = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Analyze`");
@@ -183,17 +180,15 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural-language-understanding", "V1", "Analyze"))
             {
@@ -241,7 +236,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<AnalysisResults> response = new DetailedResponse<AnalysisResults>();
-            Dictionary<string, object> customData = ((RequestObject<AnalysisResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -252,14 +246,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<AnalysisResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -268,7 +255,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<AnalysisResults>)req).Callback != null)
-                ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete model.
@@ -277,11 +264,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">Model ID of the model to delete.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteModelResults" />DeleteModelResults</returns>
-        public bool DeleteModel(Callback<DeleteModelResults> callback, string modelId, Dictionary<string, object> customData = null)
+        public bool DeleteModel(Callback<DeleteModelResults> callback, string modelId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteModel`");
@@ -292,17 +276,15 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural-language-understanding", "V1", "DeleteModel"))
             {
@@ -325,7 +307,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteModelResults> response = new DetailedResponse<DeleteModelResults>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteModelResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -336,14 +317,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteModelResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -352,7 +326,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<DeleteModelResults>)req).Callback != null)
-                ((RequestObject<DeleteModelResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteModelResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List models.
@@ -362,11 +336,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// deployed to your Natural Language Understanding service.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListModelsResults" />ListModelsResults</returns>
-        public bool ListModels(Callback<ListModelsResults> callback, Dictionary<string, object> customData = null)
+        public bool ListModels(Callback<ListModelsResults> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
@@ -375,17 +346,15 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels"))
             {
@@ -408,7 +377,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListModelsResults> response = new DetailedResponse<ListModelsResults>();
-            Dictionary<string, object> customData = ((RequestObject<ListModelsResults>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -419,14 +387,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListModelsResults>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -435,7 +396,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             }
 
             if (((RequestObject<ListModelsResults>)req).Callback != null)
-                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error);
         }
     }
 }

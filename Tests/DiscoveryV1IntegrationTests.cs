@@ -34,8 +34,6 @@ namespace IBM.Watson.Tests
     {
         private DiscoveryService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string watsonBeatsJeopardyTxtFilePath;
         private string watsonBeatsJeopardyHtmlFilePath;
         private string stopwordsFilePath;
@@ -71,7 +69,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
             environmentId = Environment.GetEnvironmentVariable("DISCOVERY_ENVIRONMENT_ID");
             createdConfigurationName = Guid.NewGuid().ToString();
             updatedConfigurationName = createdConfigurationName + "-updated";
@@ -99,8 +96,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region CreateEnvironment
@@ -111,9 +107,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateEnvironment...");
             ModelEnvironment createEnvironmentResponse = null;
             service.CreateEnvironment(
-                callback: (DetailedResponse<ModelEnvironment> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelEnvironment> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEnvironment result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEnvironment result: {0}", response.Response);
                     createEnvironmentResponse = response.Result;
                     createdEnvironmentId = createEnvironmentResponse.EnvironmentId;
                     Assert.IsNotNull(createEnvironmentResponse);
@@ -122,9 +118,7 @@ namespace IBM.Watson.Tests
                 },
                 name: createdEnvironmentName,
                 description: createdEnvironmentDescription,
-                size: "S",
-
-                customData: customData
+                size: "S"
             );
 
             while (createEnvironmentResponse == null)
@@ -139,16 +133,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetEnvironment...");
             ModelEnvironment getEnvironmentResponse = null;
             service.GetEnvironment(
-                callback: (DetailedResponse<ModelEnvironment> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelEnvironment> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetEnvironment result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetEnvironment result: {0}", response.Response);
                     getEnvironmentResponse = response.Result;
                     Assert.IsNotNull(getEnvironmentResponse);
                     Assert.IsTrue(getEnvironmentResponse.EnvironmentId == environmentId);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (getEnvironmentResponse == null)
@@ -163,16 +156,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListEnvironments...");
             ListEnvironmentsResponse listEnvironmentsResponse = null;
             service.ListEnvironments(
-                callback: (DetailedResponse<ListEnvironmentsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListEnvironmentsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListEnvironments result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListEnvironments result: {0}", response.Response);
                     listEnvironmentsResponse = response.Result;
                     Assert.IsNotNull(listEnvironmentsResponse);
                     Assert.IsNotNull(listEnvironmentsResponse.Environments);
                     Assert.IsTrue(listEnvironmentsResponse.Environments.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listEnvironmentsResponse == null)
@@ -188,9 +180,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateEnvironment...");
             ModelEnvironment updateEnvironmentResponse = null;
             service.UpdateEnvironment(
-                callback: (DetailedResponse<ModelEnvironment> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelEnvironment> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateEnvironment result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateEnvironment result: {0}", response.Response);
                     updateEnvironmentResponse = response.Result;
                     Assert.IsNotNull(updateEnvironmentResponse);
                     Assert.IsTrue(updateEnvironmentResponse.Name == updatedEnvironmentName);
@@ -201,9 +193,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 name: updatedEnvironmentName,
                 description: updatedEnvironmentDescription,
-                size: "LT",
-
-                customData: customData
+                size: "LT"
             );
 
             while (updateEnvironmentResponse == null)
@@ -218,9 +208,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateConfiguration...");
             Configuration createConfigurationResponse = null;
             service.CreateConfiguration(
-                callback: (DetailedResponse<Configuration> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Configuration> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateConfiguration result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateConfiguration result: {0}", response.Response);
                     createConfigurationResponse = response.Result;
                     createdConfigurationId = createConfigurationResponse.ConfigurationId;
                     Assert.IsNotNull(createConfigurationResponse);
@@ -231,8 +221,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 name: createdConfigurationName,
-                description: createdConfigurationDescription,
-                customData: customData
+                description: createdConfigurationDescription
             );
 
             while (createConfigurationResponse == null)
@@ -247,9 +236,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetConfiguration...");
             Configuration getConfigurationResponse = null;
             service.GetConfiguration(
-                callback: (DetailedResponse<Configuration> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Configuration> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetConfiguration result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetConfiguration result: {0}", response.Response);
                     getConfigurationResponse = response.Result;
                     Assert.IsNotNull(getConfigurationResponse);
                     Assert.IsTrue(getConfigurationResponse.ConfigurationId == createdConfigurationId);
@@ -258,8 +247,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (getConfigurationResponse == null)
@@ -274,9 +262,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListConfigurations...");
             ListConfigurationsResponse listConfigurationsResponse = null;
             service.ListConfigurations(
-                callback: (DetailedResponse<ListConfigurationsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListConfigurationsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListConfigurations result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListConfigurations result: {0}", response.Response);
                     listConfigurationsResponse = response.Result;
                     Assert.IsNotNull(listConfigurationsResponse);
                     Assert.IsNotNull(listConfigurationsResponse.Configurations);
@@ -285,8 +273,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                name: createdConfigurationName,
-                customData: customData
+                name: createdConfigurationName
             );
 
             while (listConfigurationsResponse == null)
@@ -301,9 +288,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateConfiguration...");
             Configuration updateConfigurationResponse = null;
             service.UpdateConfiguration(
-                callback: (DetailedResponse<Configuration> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Configuration> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateConfiguration result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateConfiguration result: {0}", response.Response);
                     updateConfigurationResponse = response.Result;
                     Assert.IsNotNull(updateConfigurationResponse);
                     Assert.IsNull(error);
@@ -311,8 +298,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 configurationId: createdConfigurationId,
                 name: updatedConfigurationName,
-                description: updatedConfigurationDescription,
-                customData: customData
+                description: updatedConfigurationDescription
             );
 
             while (updateConfigurationResponse == null)
@@ -329,21 +315,19 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
                 service.TestConfigurationInEnvironment(
-                    callback: (DetailedResponse<TestDocument> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<TestDocument> response, IBMError error) =>
                     {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", response.Response);
                         testConfigurationInEnvironmentResponse = response.Result;
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse);
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
                         Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
-                        Assert.IsTrue(testConfigurationInEnvironmentResponse.Snapshots.Count > 0);
                         Assert.IsNull(error);
                     },
                     environmentId: environmentId,
                     configurationId: createdConfigurationId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (testConfigurationInEnvironmentResponse == null)
@@ -359,9 +343,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateCollection...");
             Collection createCollectionResponse = null;
             service.CreateCollection(
-                callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Collection> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCollection result: {0}", response.Response);
                     createCollectionResponse = response.Result;
                     collectionId = createCollectionResponse.CollectionId;
                     Assert.IsNotNull(createCollectionResponse);
@@ -376,8 +360,7 @@ namespace IBM.Watson.Tests
                 name: createdCollectionName,
                 description: createdCollectionDescription,
                 configurationId: createdConfigurationId,
-                language: "en",
-                customData: customData
+                language: "en"
             );
 
             while (createCollectionResponse == null)
@@ -392,9 +375,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateJapaneseCollection...");
             Collection createCollectionResponse = null;
             service.CreateCollection(
-                callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Collection> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCollection result: {0}", response.Response);
                     createCollectionResponse = response.Result;
                     createdJapaneseCollectionId = createCollectionResponse.CollectionId;
                     Assert.IsNotNull(createCollectionResponse);
@@ -409,8 +392,7 @@ namespace IBM.Watson.Tests
                 name: createdJapaneseCollectionName,
                 description: createdJapaneseCollectionDescription,
                 configurationId: createdConfigurationId,
-                language: "ja",
-                customData: customData
+                language: "ja"
             );
 
             while (createCollectionResponse == null)
@@ -425,9 +407,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetCollection...");
             Collection getCollectionResponse = null;
             service.GetCollection(
-                callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Collection> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCollection result: {0}", response.Response);
                     getCollectionResponse = response.Result;
                     Assert.IsNotNull(getCollectionResponse);
                     Assert.IsTrue(getCollectionResponse.Name == createdCollectionName);
@@ -437,8 +419,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (getCollectionResponse == null)
@@ -453,9 +434,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListCollections...");
             ListCollectionsResponse listCollectionsResponse = null;
             service.ListCollections(
-                callback: (DetailedResponse<ListCollectionsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListCollectionsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollections result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollections result: {0}", response.Response);
                     listCollectionsResponse = response.Result;
                     Assert.IsNotNull(listCollectionsResponse);
                     Assert.IsNotNull(listCollectionsResponse.Collections);
@@ -463,8 +444,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                name: createdCollectionName,
-                customData: customData
+                name: createdCollectionName
             );
 
             while (listCollectionsResponse == null)
@@ -479,9 +459,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateCollection...");
             Collection updateCollectionResponse = null;
             service.UpdateCollection(
-                callback: (DetailedResponse<Collection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Collection> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCollection result: {0}", response.Response);
                     updateCollectionResponse = response.Result;
                     Assert.IsNotNull(updateCollectionResponse);
                     Assert.IsTrue(updateCollectionResponse.Name == updatedCollectionName);
@@ -494,8 +474,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 name: updatedCollectionName,
                 description: updatedCollectionDescription,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (updateCollectionResponse == null)
@@ -510,17 +489,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListFields...");
             ListCollectionFieldsResponse listFieldsResponse = null;
             service.ListFields(
-                callback: (DetailedResponse<ListCollectionFieldsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListCollectionFieldsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListFields result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListFields result: {0}", response.Response);
                     listFieldsResponse = response.Result;
                     Assert.IsNotNull(listFieldsResponse);
                     Assert.IsNotNull(listFieldsResponse.Fields);
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionIds: new List<string>() { collectionId },
-                customData: customData
+                collectionIds: new List<string>() { collectionId }
             );
 
             while (listFieldsResponse == null)
@@ -535,17 +513,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListCollectionFields...");
             ListCollectionFieldsResponse listCollectionFieldsResponse = null;
             service.ListCollectionFields(
-                callback: (DetailedResponse<ListCollectionFieldsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListCollectionFieldsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollectionFields result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollectionFields result: {0}", response.Response);
                     listCollectionFieldsResponse = response.Result;
                     Assert.IsNotNull(listCollectionFieldsResponse);
                     Assert.IsNotNull(listCollectionFieldsResponse.Fields);
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listCollectionFieldsResponse == null)
@@ -574,9 +551,9 @@ namespace IBM.Watson.Tests
                 }
             };
             service.CreateExpansions(
-                callback: (DetailedResponse<Expansions> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Expansions> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateExpansions result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateExpansions result: {0}", response.Response);
                     createExpansionsResponse = response.Result;
                     Assert.IsNotNull(createExpansionsResponse);
                     Assert.IsNotNull(createExpansionsResponse._Expansions);
@@ -587,9 +564,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                expansions: expansions,
-
-                customData: customData
+                expansions: expansions
             );
 
             while (createExpansionsResponse == null)
@@ -608,9 +583,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(stopwordsFilePath))
             {
                 service.CreateStopwordList(
-                    callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
                     {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateStopwordList result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateStopwordList result: {0}", response.Response);
                         createStopwordListResponse = response.Result;
                         Assert.IsNotNull(createStopwordListResponse);
                         Assert.IsNotNull(createStopwordListResponse.Status);
@@ -619,8 +594,7 @@ namespace IBM.Watson.Tests
                     },
                     environmentId: environmentId,
                     collectionId: collectionId,
-                    stopwordFile: fs,
-                    customData: customData
+                    stopwordFile: fs
                 );
 
                 while (createStopwordListResponse == null)
@@ -664,9 +638,9 @@ namespace IBM.Watson.Tests
             #endregion
 
             service.CreateTokenizationDictionary(
-                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTokenizationDictionary result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTokenizationDictionary result: {0}", response.Response);
                     createTokenizationDictionaryResponse = response.Result;
                     Assert.IsNotNull(createTokenizationDictionaryResponse);
                     Assert.IsNotNull(createTokenizationDictionaryResponse.Status);
@@ -675,8 +649,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: createdJapaneseCollectionId,
-                tokenizationRules: tokenizationRules,
-                customData: customData
+                tokenizationRules: tokenizationRules
             );
 
             while (createTokenizationDictionaryResponse == null)
@@ -698,9 +671,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetStopwordListStatus...");
             TokenDictStatusResponse getStopwordListStatusResponse = null;
             service.GetStopwordListStatus(
-                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetStopwordListStatus result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetStopwordListStatus result: {0}", response.Response);
                     getStopwordListStatusResponse = response.Result;
                     Assert.IsNotNull(getStopwordListStatusResponse);
                     Assert.IsNotNull(getStopwordListStatusResponse.Status);
@@ -708,8 +681,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (getStopwordListStatusResponse == null)
@@ -725,9 +697,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTokenizationDictionaryStatus...");
             TokenDictStatusResponse getTokenizationDictionaryStatusResponse = null;
             service.GetTokenizationDictionaryStatus(
-                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", response.Response);
                     getTokenizationDictionaryStatusResponse = response.Result;
                     Assert.IsNotNull(getTokenizationDictionaryStatusResponse);
                     Assert.IsNotNull(getTokenizationDictionaryStatusResponse.Status);
@@ -736,8 +708,7 @@ namespace IBM.Watson.Tests
 
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (getTokenizationDictionaryStatusResponse == null)
@@ -752,9 +723,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListExpansions...");
             Expansions listExpansionsResponse = null;
             service.ListExpansions(
-                callback: (DetailedResponse<Expansions> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Expansions> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListExpansions result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListExpansions result: {0}", response.Response);
                     listExpansionsResponse = response.Result;
                     Assert.IsNotNull(listExpansionsResponse);
                     Assert.IsNotNull(listExpansionsResponse._Expansions);
@@ -762,8 +733,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listExpansionsResponse == null)
@@ -780,9 +750,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
                 service.AddDocument(
-                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
                     {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", response.Response);
                         addDocumentResponse = response.Result;
                         addedDocumentId = addDocumentResponse.DocumentId;
                         Assert.IsNotNull(addDocumentResponse);
@@ -792,8 +762,7 @@ namespace IBM.Watson.Tests
                     environmentId: environmentId,
                     collectionId: collectionId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (addDocumentResponse == null)
@@ -809,9 +778,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetDocumentStatus...");
             DocumentStatus getDocumentStatusResponse = null;
             service.GetDocumentStatus(
-                callback: (DetailedResponse<DocumentStatus> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DocumentStatus> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetDocumentStatus result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetDocumentStatus result: {0}", response.Response);
                     getDocumentStatusResponse = response.Result;
                     Assert.IsNotNull(getDocumentStatusResponse);
                     Assert.IsTrue(getDocumentStatusResponse.DocumentId == addedDocumentId);
@@ -819,8 +788,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                documentId: addedDocumentId,
-                customData: customData
+                documentId: addedDocumentId
             );
 
             while (getDocumentStatusResponse == null)
@@ -837,9 +805,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
                 service.UpdateDocument(
-                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
                     {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", response.Response);
                         updateDocumentResponse = response.Result;
                         Assert.IsNotNull(updateDocumentResponse);
                         Assert.IsTrue(updateDocumentResponse.DocumentId == addedDocumentId);
@@ -849,8 +817,7 @@ namespace IBM.Watson.Tests
                     collectionId: collectionId,
                     documentId: addedDocumentId,
                     file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                    customData: customData
+                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
                 );
 
                 while (updateDocumentResponse == null)
@@ -866,9 +833,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQuery...");
             QueryResponse federatedQueryResponse = null;
             service.FederatedQuery(
-                callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQuery result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQuery result: {0}", response.Response);
                     federatedQueryResponse = response.Result;
                     Assert.IsNotNull(federatedQueryResponse);
                     Assert.IsNotNull(federatedQueryResponse.MatchingResults);
@@ -880,8 +847,7 @@ namespace IBM.Watson.Tests
                 passages: true,
                 count: 10,
                 highlight: true,
-                loggingOptOut: true,
-                customData: customData
+                loggingOptOut: true
             );
 
             while (federatedQueryResponse == null)
@@ -896,9 +862,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to FederatedQueryNotices...");
             QueryNoticesResponse federatedQueryNoticesResponse = null;
             service.FederatedQueryNotices(
-                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQueryNotices result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "FederatedQueryNotices result: {0}", response.Response);
                     federatedQueryNoticesResponse = response.Result;
                     Assert.IsNotNull(federatedQueryNoticesResponse);
                     Assert.IsNull(error);
@@ -907,8 +873,7 @@ namespace IBM.Watson.Tests
                 collectionIds: new List<string>() { collectionId },
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (federatedQueryNoticesResponse == null)
@@ -923,9 +888,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to Query...");
             QueryResponse queryResponse = null;
             service.Query(
-                callback: (DetailedResponse<QueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", response.Response);
                     queryResponse = response.Result;
                     sessionToken = queryResponse.SessionToken;
                     Assert.IsNotNull(queryResponse);
@@ -937,8 +902,7 @@ namespace IBM.Watson.Tests
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (queryResponse == null)
@@ -958,9 +922,9 @@ namespace IBM.Watson.Tests
             };
 
             service.QueryEntities(
-                callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", response.Response);
                     queryEntitiesResponse = response.Result;
                     Assert.IsNotNull(queryEntitiesResponse);
                     Assert.IsNull(error);
@@ -969,8 +933,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 entity: entity,
                 feature: "disambiguate",
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryEntitiesResponse == null)
@@ -985,9 +948,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryNotices...");
             QueryNoticesResponse queryNoticesResponse = null;
             service.QueryNotices(
-                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryNotices result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryNotices result: {0}", response.Response);
                     queryNoticesResponse = response.Result;
                     Assert.IsNotNull(queryNoticesResponse);
                     Assert.IsNull(error);
@@ -997,8 +960,7 @@ namespace IBM.Watson.Tests
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
-                highlight: true,
-                customData: customData
+                highlight: true
             );
 
             while (queryNoticesResponse == null)
@@ -1020,9 +982,9 @@ namespace IBM.Watson.Tests
                 }
             };
             service.QueryRelations(
-                callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", response.Response);
                     queryRelationsResponse = response.Result;
                     Assert.IsNotNull(queryRelationsResponse);
                     Assert.IsNull(error);
@@ -1030,8 +992,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 entities: entities,
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryRelationsResponse == null)
@@ -1054,9 +1015,9 @@ namespace IBM.Watson.Tests
                 }
             };
             service.AddTrainingData(
-                callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingQuery> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "AddTrainingData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "AddTrainingData result: {0}", response.Response);
                     addTrainingDataResponse = response.Result;
                     queryId = addTrainingDataResponse.QueryId;
                     Assert.IsNotNull(addTrainingDataResponse);
@@ -1067,8 +1028,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 naturalLanguageQuery: "When did Watson win Jeopardy",
-                examples: examples,
-                customData: customData
+                examples: examples
             );
 
             while (addTrainingDataResponse == null)
@@ -1084,9 +1044,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateTrainingExample...");
             TrainingExample createTrainingExampleResponse = null;
             service.CreateTrainingExample(
-                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingExample> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTrainingExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateTrainingExample result: {0}", response.Response);
                     createTrainingExampleResponse = response.Result;
                     Assert.IsNotNull(createTrainingExampleResponse);
                     Assert.IsTrue(createTrainingExampleResponse.DocumentId == addedDocumentId);
@@ -1096,8 +1056,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 queryId: queryId,
                 documentId: addedDocumentId,
-                relevance: 2,
-                customData: customData
+                relevance: 2
             );
 
             while (createTrainingExampleResponse == null)
@@ -1112,9 +1071,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingData...");
             TrainingQuery getTrainingDataResponse = null;
             service.GetTrainingData(
-                callback: (DetailedResponse<TrainingQuery> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingQuery> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingData result: {0}", response.Response);
                     getTrainingDataResponse = response.Result;
                     Assert.IsNotNull(getTrainingDataResponse);
                     Assert.IsTrue(getTrainingDataResponse.QueryId == queryId);
@@ -1123,8 +1082,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (getTrainingDataResponse == null)
@@ -1139,9 +1097,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetTrainingExample...");
             TrainingExample getTrainingExampleResponse = null;
             service.GetTrainingExample(
-                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingExample> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTrainingExample result: {0}", response.Response);
                     getTrainingExampleResponse = response.Result;
                     Assert.IsNotNull(getTrainingExampleResponse);
                     Assert.IsTrue(getTrainingExampleResponse.DocumentId == addedDocumentId);
@@ -1150,8 +1108,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 collectionId: collectionId,
                 queryId: queryId,
-                exampleId: addedDocumentId,
-                customData: customData
+                exampleId: addedDocumentId
             );
 
             while (getTrainingExampleResponse == null)
@@ -1166,9 +1123,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingData...");
             TrainingDataSet listTrainingDataResponse = null;
             service.ListTrainingData(
-                callback: (DetailedResponse<TrainingDataSet> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingDataSet> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingData result: {0}", response.Response);
                     listTrainingDataResponse = response.Result;
                     Assert.IsNotNull(listTrainingDataResponse);
                     Assert.IsNotNull(listTrainingDataResponse.Queries);
@@ -1176,8 +1133,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (listTrainingDataResponse == null)
@@ -1192,9 +1148,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListTrainingExamples...");
             TrainingExampleList listTrainingExamplesResponse = null;
             service.ListTrainingExamples(
-                callback: (DetailedResponse<TrainingExampleList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingExampleList> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingExamples result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListTrainingExamples result: {0}", response.Response);
                     listTrainingExamplesResponse = response.Result;
                     Assert.IsNotNull(listTrainingExamplesResponse);
                     Assert.IsNotNull(listTrainingExamplesResponse.Examples);
@@ -1203,8 +1159,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (listTrainingExamplesResponse == null)
@@ -1219,9 +1174,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to UpdateTrainingExample...");
             TrainingExample updateTrainingExampleResponse = null;
             service.UpdateTrainingExample(
-                callback: (DetailedResponse<TrainingExample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TrainingExample> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateTrainingExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateTrainingExample result: {0}", response.Response);
                     updateTrainingExampleResponse = response.Result;
                     Assert.IsNotNull(updateTrainingExampleResponse);
                     Assert.IsTrue(updateTrainingExampleResponse.DocumentId == addedDocumentId);
@@ -1231,8 +1186,7 @@ namespace IBM.Watson.Tests
                 collectionId: collectionId,
                 queryId: queryId,
                 exampleId: addedDocumentId,
-                relevance: 3,
-                customData: customData
+                relevance: 3
             );
 
             while (updateTrainingExampleResponse == null)
@@ -1254,17 +1208,16 @@ namespace IBM.Watson.Tests
                 DocumentId = addedDocumentId
             };
             service.CreateEvent(
-                callback: (DetailedResponse<CreateEventResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<CreateEventResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEvent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateEvent result: {0}", response.Response);
                     createEventResponse = response.Result;
                     Assert.IsNotNull(createEventResponse);
                     Assert.IsTrue(createEventResponse.Type == "click");
                     Assert.IsNull(error);
                 },
                 type: "click",
-                data: data,
-                customData: customData
+                data: data
             );
 
             while (createEventResponse == null)
@@ -1279,16 +1232,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsEventRate...");
             MetricResponse getMetricsEventRateResponse = null;
             service.GetMetricsEventRate(
-                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MetricResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsEventRate result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsEventRate result: {0}", response.Response);
                     getMetricsEventRateResponse = response.Result;
                     Assert.IsNotNull(getMetricsEventRateResponse);
                     Assert.IsNotNull(getMetricsEventRateResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsEventRateResponse == null)
@@ -1303,16 +1255,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQuery...");
             MetricResponse getMetricsQueryResponse = null;
             service.GetMetricsQuery(
-                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MetricResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQuery result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQuery result: {0}", response.Response);
                     getMetricsQueryResponse = response.Result;
                     Assert.IsNotNull(getMetricsQueryResponse);
                     Assert.IsNotNull(getMetricsQueryResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryResponse == null)
@@ -1327,16 +1278,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryEvent...");
             MetricResponse getMetricsQueryEventResponse = null;
             service.GetMetricsQueryEvent(
-                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MetricResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryEvent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryEvent result: {0}", response.Response);
                     getMetricsQueryEventResponse = response.Result;
                     Assert.IsNotNull(getMetricsQueryEventResponse);
                     Assert.IsNotNull(getMetricsQueryEventResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryEventResponse == null)
@@ -1351,16 +1301,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryNoResults...");
             MetricResponse getMetricsQueryNoResultsResponse = null;
             service.GetMetricsQueryNoResults(
-                callback: (DetailedResponse<MetricResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MetricResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryNoResults result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryNoResults result: {0}", response.Response);
                     getMetricsQueryNoResultsResponse = response.Result;
                     Assert.IsNotNull(getMetricsQueryNoResultsResponse);
                     Assert.IsNotNull(getMetricsQueryNoResultsResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document",
-                customData: customData
+                resultType: "document"
             );
 
             while (getMetricsQueryNoResultsResponse == null)
@@ -1375,16 +1324,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetMetricsQueryTokenEvent...");
             MetricTokenResponse getMetricsQueryTokenEventResponse = null;
             service.GetMetricsQueryTokenEvent(
-                callback: (DetailedResponse<MetricTokenResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MetricTokenResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryTokenEvent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetMetricsQueryTokenEvent result: {0}", response.Response);
                     getMetricsQueryTokenEventResponse = response.Result;
                     Assert.IsNotNull(getMetricsQueryTokenEventResponse);
                     Assert.IsNotNull(getMetricsQueryTokenEventResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (getMetricsQueryTokenEventResponse == null)
@@ -1399,17 +1347,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryLog...");
             LogQueryResponse queryLogResponse = null;
             service.QueryLog(
-                callback: (DetailedResponse<LogQueryResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<LogQueryResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryLog result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryLog result: {0}", response.Response);
                     queryLogResponse = response.Result;
                     Assert.IsNotNull(queryLogResponse);
                     Assert.IsNotNull(queryLogResponse.Results);
                     Assert.IsNull(error);
                 },
                 query: "When did Watson beat Jeopardy",
-                count: 10,
-                customData: customData
+                count: 10
             );
 
             while (queryLogResponse == null)
@@ -1434,9 +1381,9 @@ namespace IBM.Watson.Tests
                 PrivateKey = "myPrivateKey"
             };
             service.CreateCredentials(
-                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCredentials result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateCredentials result: {0}", response.Response);
                     createCredentialsResponse = response.Result;
                     credentialId = createCredentialsResponse.CredentialId;
                     Assert.IsNotNull(createCredentialsResponse);
@@ -1445,9 +1392,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 sourceType: "box",
-                credentialDetails: credentialDetails,
-
-                customData: customData
+                credentialDetails: credentialDetails
             );
 
             while (createCredentialsResponse == null)
@@ -1462,9 +1407,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetCredentials...");
             ModelCredentials getCredentialsResponse = null;
             service.GetCredentials(
-                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCredentials result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetCredentials result: {0}", response.Response);
                     getCredentialsResponse = response.Result;
                     Assert.IsNotNull(getCredentialsResponse);
                     Assert.IsTrue(getCredentialsResponse.CredentialId == credentialId);
@@ -1472,8 +1417,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                credentialId: credentialId,
-                customData: customData
+                credentialId: credentialId
             );
 
             while (getCredentialsResponse == null)
@@ -1488,17 +1432,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListCredentials...");
             CredentialsList listCredentialsResponse = null;
             service.ListCredentials(
-                callback: (DetailedResponse<CredentialsList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<CredentialsList> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCredentials result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCredentials result: {0}", response.Response);
                     listCredentialsResponse = response.Result;
                     Assert.IsNotNull(listCredentialsResponse);
                     Assert.IsNotNull(listCredentialsResponse._Credentials);
                     Assert.IsTrue(listCredentialsResponse._Credentials.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listCredentialsResponse == null)
@@ -1523,9 +1466,9 @@ namespace IBM.Watson.Tests
                 PrivateKey = Convert.ToBase64String(Encoding.ASCII.GetBytes("myPrivateKeyUpdated"))
             };
             service.UpdateCredentials(
-                callback: (DetailedResponse<ModelCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ModelCredentials> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCredentials result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateCredentials result: {0}", response.Response);
                     updateCredentialsResponse = response.Result;
                     Assert.IsNotNull(updateCredentialsResponse);
                     Assert.IsNotNull(updateCredentialsResponse.CredentialDetails);
@@ -1536,8 +1479,7 @@ namespace IBM.Watson.Tests
                 environmentId: environmentId,
                 credentialId: credentialId,
                 sourceType: "box",
-                credentialDetails: credentialDetails,
-                customData: customData
+                credentialDetails: credentialDetails
             );
 
             while (updateCredentialsResponse == null)
@@ -1552,17 +1494,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateGateway...");
             Gateway createGatewayResponse = null;
             service.CreateGateway(
-                callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Gateway> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateGateway result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateGateway result: {0}", response.Response);
                     createGatewayResponse = response.Result;
                     gatewayId = createGatewayResponse.GatewayId;
                     Assert.IsNotNull(createGatewayResponse);
                     Assert.IsNotNull(gatewayId);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (createGatewayResponse == null)
@@ -1577,17 +1518,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to GetGateway...");
             Gateway getGatewayResponse = null;
             service.GetGateway(
-                callback: (DetailedResponse<Gateway> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Gateway> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetGateway result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetGateway result: {0}", response.Response);
                     getGatewayResponse = response.Result;
                     Assert.IsNotNull(getGatewayResponse);
                     Assert.IsTrue(getGatewayResponse.GatewayId == gatewayId);
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                gatewayId: gatewayId,
-                customData: customData
+                gatewayId: gatewayId
             );
 
             while (getGatewayResponse == null)
@@ -1602,17 +1542,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to ListGateways...");
             GatewayList listGatewaysResponse = null;
             service.ListGateways(
-                callback: (DetailedResponse<GatewayList> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<GatewayList> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListGateways result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListGateways result: {0}", response.Response);
                     listGatewaysResponse = response.Result;
                     Assert.IsNotNull(listGatewaysResponse);
                     Assert.IsNotNull(listGatewaysResponse.Gateways);
                     Assert.IsTrue(listGatewaysResponse.Gateways.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listGatewaysResponse == null)
@@ -1627,9 +1566,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteGateway...");
             GatewayDelete deleteGatewayResponse = null;
             service.DeleteGateway(
-                callback: (DetailedResponse<GatewayDelete> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<GatewayDelete> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteGateway result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteGateway result: {0}", response.Response);
                     deleteGatewayResponse = response.Result;
                     Assert.IsNotNull(deleteGatewayResponse);
                     Assert.IsTrue(deleteGatewayResponse.GatewayId == gatewayId);
@@ -1637,8 +1576,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                gatewayId: gatewayId,
-                customData: customData
+                gatewayId: gatewayId
             );
 
             while (deleteGatewayResponse == null)
@@ -1653,9 +1591,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteCredentials...");
             DeleteCredentials deleteCredentialsResponse = null;
             service.DeleteCredentials(
-                callback: (DetailedResponse<DeleteCredentials> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteCredentials> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCredentials result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCredentials result: {0}", response.Response);
                     deleteCredentialsResponse = response.Result;
                     Assert.IsNotNull(deleteCredentialsResponse);
                     Assert.IsTrue(deleteCredentialsResponse.CredentialId == credentialId);
@@ -1663,8 +1601,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                credentialId: credentialId,
-                customData: customData
+                credentialId: credentialId
             );
 
             while (deleteCredentialsResponse == null)
@@ -1679,14 +1616,13 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteUserData...");
             bool isComplete = false;
             service.DeleteUserData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteUserData result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (!isComplete)
@@ -1701,17 +1637,16 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingExample...");
             bool isComplete = false;
             service.DeleteTrainingExample(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingExample result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
                 queryId: queryId,
-                exampleId: addedDocumentId,
-                customData: customData
+                exampleId: addedDocumentId
             );
 
             while (!isComplete)
@@ -1726,16 +1661,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTrainingData...");
             bool isComplete = false;
             service.DeleteTrainingData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTrainingData result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                queryId: queryId,
-                customData: customData
+                queryId: queryId
             );
 
             while (!isComplete)
@@ -1750,15 +1684,14 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteAllTrainingData...");
             bool isComplete = false;
             service.DeleteAllTrainingData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteAllTrainingData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteAllTrainingData result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1773,9 +1706,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteDocument...");
             DeleteDocumentResponse deleteDocumentResponse = null;
             service.DeleteDocument(
-                callback: (DetailedResponse<DeleteDocumentResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteDocumentResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteDocument result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteDocument result: {0}", response.Response);
                     deleteDocumentResponse = response.Result;
                     Assert.IsNotNull(deleteDocumentResponse);
                     Assert.IsNotNull(deleteDocumentResponse.DocumentId);
@@ -1784,8 +1717,7 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 collectionId: collectionId,
-                documentId: addedDocumentId,
-                customData: customData
+                documentId: addedDocumentId
             );
 
             while (deleteDocumentResponse == null)
@@ -1801,15 +1733,14 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteTokenizationDictionary...");
             bool isComplete = false;
             service.DeleteTokenizationDictionary(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTokenizationDictionary result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteTokenizationDictionary result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (!isComplete)
@@ -1825,15 +1756,14 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteStopwordList...");
             bool isComplete = false;
             service.DeleteStopwordList(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteStopwordList result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteStopwordList result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1848,15 +1778,14 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteExpansions...");
             bool isComplete = false;
             service.DeleteExpansions(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteExpansions result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteExpansions result: {0}", response.Response);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (!isComplete)
@@ -1871,9 +1800,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteJapanseCollection...");
             DeleteCollectionResponse deleteCollectionResponse = null;
             service.DeleteCollection(
-                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteJapaneseCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteJapaneseCollection result: {0}", response.Response);
                     deleteCollectionResponse = response.Result;
                     Assert.IsNotNull(deleteCollectionResponse);
                     Assert.IsNotNull(deleteCollectionResponse.CollectionId);
@@ -1882,8 +1811,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: createdJapaneseCollectionId,
-                customData: customData
+                collectionId: createdJapaneseCollectionId
             );
 
             while (deleteCollectionResponse == null)
@@ -1898,9 +1826,9 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteCollection...");
             DeleteCollectionResponse deleteCollectionResponse = null;
             service.DeleteCollection(
-                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", response.Response);
                     deleteCollectionResponse = response.Result;
                     Assert.IsNotNull(deleteCollectionResponse);
                     Assert.IsNotNull(deleteCollectionResponse.CollectionId);
@@ -1909,8 +1837,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
 
             while (deleteCollectionResponse == null)
@@ -1925,16 +1852,15 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteConfiguration...");
             DeleteConfigurationResponse deleteConfigurationResponse = null;
             service.DeleteConfiguration(
-                callback: (DetailedResponse<DeleteConfigurationResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteConfigurationResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteConfiguration result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteConfiguration result: {0}", response.Response);
                     deleteConfigurationResponse = response.Result;
                     Assert.IsNotNull(deleteConfigurationResponse);
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                configurationId: createdConfigurationId,
-                customData: customData
+                configurationId: createdConfigurationId
             );
 
             while (deleteConfigurationResponse == null)
@@ -1950,15 +1876,14 @@ namespace IBM.Watson.Tests
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to DeleteEnvironment...");
             DeleteEnvironmentResponse deleteEnvironmentResponse = null;
             service.DeleteEnvironment(
-                callback: (DetailedResponse<DeleteEnvironmentResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteEnvironmentResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteEnvironment result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteEnvironment result: {0}", response.Response);
                     deleteEnvironmentResponse = response.Result;
                     Assert.IsNotNull(deleteEnvironmentResponse);
                     Assert.IsNull(error);
                 },
-                environmentId: createdEnvironmentId,
-                customData: customData
+                environmentId: createdEnvironmentId
             );
 
             while (deleteEnvironmentResponse == null)
@@ -1976,9 +1901,9 @@ namespace IBM.Watson.Tests
             try
             {
                 service.GetTokenizationDictionaryStatus(
-                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "GetTokenizationDictionaryStatus result: {0}", response.Response);
                     if (getTokenizationDictionaryStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
                     {
                         isTokenizationDictionaryReady = true;
@@ -1990,8 +1915,7 @@ namespace IBM.Watson.Tests
                     getTokenizationDictionaryStatusResponse = response.Result;
                 },
                 environmentId: environmentId,
-                collectionId: collectionId,
-                customData: customData
+                collectionId: collectionId
             );
             }
             catch
@@ -2015,8 +1939,7 @@ namespace IBM.Watson.Tests
                 service.GetStopwordListStatus(
                     callback: OnCheckStopwordsListStatus,
                     environmentId: environmentId,
-                    collectionId: collectionId,
-                    customData: customData
+                    collectionId: collectionId
                 );
             }
             catch
@@ -2025,10 +1948,10 @@ namespace IBM.Watson.Tests
             }
         }
 
-        private void OnCheckStopwordsListStatus(DetailedResponse<TokenDictStatusResponse> response, IBMError error, Dictionary<string, object> customResponseData)
+        private void OnCheckStopwordsListStatus(DetailedResponse<TokenDictStatusResponse> response, IBMError error)
         {
             TokenDictStatusResponse getStopwordListStatusResponse = null;
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "OnCheckStopwordsListStatus result: {0}", customResponseData["json"].ToString());
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "OnCheckStopwordsListStatus result: {0}", response.Response);
             getStopwordListStatusResponse = response.Result;
 
             if (getStopwordListStatusResponse.Status == TokenDictStatusResponse.StatusValue.ACTIVE)
@@ -2048,17 +1971,16 @@ namespace IBM.Watson.Tests
         {
             ListCollectionsResponse listCollectionsResponse = null;
             service.ListCollections(
-                callback: (DetailedResponse<ListCollectionsResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ListCollectionsResponse> response, IBMError error) =>
                 {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollections result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "ListCollections result: {0}", response.Response);
                     listCollectionsResponse = response.Result;
                     Assert.IsNotNull(listCollectionsResponse);
                     Assert.IsNotNull(listCollectionsResponse.Collections);
                     Assert.IsTrue(listCollectionsResponse.Collections.Count > 0);
                     Assert.IsNull(error);
                 },
-                environmentId: environmentId,
-                customData: customData
+                environmentId: environmentId
             );
 
             while (listCollectionsResponse == null)
@@ -2074,14 +1996,13 @@ namespace IBM.Watson.Tests
 
             foreach (string collectionId in collectionIdsToDelete)
                 service.DeleteCollection(
-                    callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<DeleteCollectionResponse> response, IBMError error) =>
                     {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("DiscoveryServiceV1IntegrationTests", "DeleteCollection result: {0}", response.Response);
                         count++;
                     },
                     environmentId: environmentId,
-                    collectionId: collectionId,
-                    customData: customData
+                    collectionId: collectionId
                 );
 
             while (count < collectionIdsToDelete.Count)

@@ -31,8 +31,6 @@ namespace IBM.Watson.Tests
     {
         private LanguageTranslatorService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string forcedGlossaryFilepath;
         private string englishText = "Where is the library?";
         private string spanishText = "¿Dónde está la biblioteca?";
@@ -46,7 +44,6 @@ namespace IBM.Watson.Tests
         {
             LogSystem.InstallDefaultReactors();
             forcedGlossaryFilepath = Application.dataPath + "/Watson/Tests/TestData/LanguageTranslatorV3/glossary.tmx";
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -64,8 +61,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Translate
@@ -75,9 +71,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to Translate...");
             TranslationResult translateResponse = null;
             service.Translate(
-                callback: (DetailedResponse<TranslationResult> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationResult> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", response.Response);
                     translateResponse = response.Result;
                     Assert.IsNotNull(translateResponse);
                     Assert.IsNotNull(translateResponse.Translations);
@@ -86,8 +82,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 text: new List<string>() { englishText },
-                modelId: englishToSpanishModel,
-                customData: customData
+                modelId: englishToSpanishModel
             );
 
             while (translateResponse == null)
@@ -102,17 +97,16 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to Identify...");
             IdentifiedLanguages identifyResponse = null;
             service.Identify(
-                callback: (DetailedResponse<IdentifiedLanguages> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<IdentifiedLanguages> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Identify result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Identify result: {0}", response.Response);
                     identifyResponse = response.Result;
                     Assert.IsNotNull(identifyResponse);
                     Assert.IsNotNull(identifyResponse.Languages);
                     Assert.IsTrue(identifyResponse.Languages.Count > 0);
                     Assert.IsNull(error);
                 },
-                text: spanishText,
-                customData: customData
+                text: spanishText
             );
 
             while (identifyResponse == null)
@@ -127,16 +121,15 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to ListIdentifiableLanguages...");
             IdentifiableLanguages listIdentifiableLanguagesResponse = null;
             service.ListIdentifiableLanguages(
-                callback: (DetailedResponse<IdentifiableLanguages> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<IdentifiableLanguages> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListIdentifiableLanguages result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListIdentifiableLanguages result: {0}", response.Response);
                     listIdentifiableLanguagesResponse = response.Result;
                     Assert.IsNotNull(listIdentifiableLanguagesResponse);
                     Assert.IsNotNull(listIdentifiableLanguagesResponse.Languages);
                     Assert.IsTrue(listIdentifiableLanguagesResponse.Languages.Count > 0);
                     Assert.IsNull(error);
-                },
-                customData: customData
+                }
             );
 
             while (listIdentifiableLanguagesResponse == null)
@@ -153,9 +146,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(forcedGlossaryFilepath))
             {
                 service.CreateModel(
-                    callback: (DetailedResponse<TranslationModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
                     {
-                        Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "CreateModel result: {0}", response.Response);
                         createModelResponse = response.Result;
                         customModelId = createModelResponse.ModelId;
                         Assert.IsNotNull(createModelResponse);
@@ -167,8 +160,7 @@ namespace IBM.Watson.Tests
                     },
                     baseModelId: englishToFrenchModel,
                     forcedGlossary: fs,
-                    name: customModelName,
-                    customData: customData
+                    name: customModelName
                 );
 
                 while (createModelResponse == null)
@@ -184,9 +176,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to GetModel...");
             TranslationModel getModelResponse = null;
             service.GetModel(
-                callback: (DetailedResponse<TranslationModel> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationModel> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "GetModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "GetModel result: {0}", response.Response);
                     getModelResponse = response.Result;
                     Assert.IsNotNull(getModelResponse);
                     Assert.IsTrue(getModelResponse.ModelId == customModelId);
@@ -195,8 +187,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(getModelResponse.Name == customModelName);
                     Assert.IsNull(error);
                 },
-                modelId: customModelId,
-                customData: customData
+                modelId: customModelId
             );
 
             while (getModelResponse == null)
@@ -211,9 +202,9 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to ListModels...");
             TranslationModels listModelsResponse = null;
             service.ListModels(
-                callback: (DetailedResponse<TranslationModels> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<TranslationModels> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListModels result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListModels result: {0}", response.Response);
                     listModelsResponse = response.Result;
                     Assert.IsNotNull(listModelsResponse);
                     Assert.IsNotNull(listModelsResponse.Models);
@@ -222,8 +213,7 @@ namespace IBM.Watson.Tests
                 },
                 source: "en",
                 target: "fr",
-                defaultModels: true,
-                customData: customData
+                defaultModels: true
             );
 
             while (listModelsResponse == null)
@@ -238,17 +228,16 @@ namespace IBM.Watson.Tests
             Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to DeleteModel...");
             DeleteModelResult deleteModelResponse = null;
             service.DeleteModel(
-                callback: (DetailedResponse<DeleteModelResult> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DeleteModelResult> response, IBMError error) =>
                 {
-                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "DeleteModel result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "DeleteModel result: {0}", response.Response);
                     deleteModelResponse = response.Result;
                     Assert.IsNotNull(deleteModelResponse);
                     Assert.IsNotNull(deleteModelResponse.Status);
                     Assert.IsTrue(deleteModelResponse.Status == "OK");
                     Assert.IsNull(error);
                 },
-                modelId: customModelId,
-                customData: customData
+                modelId: customModelId
             );
 
             while (deleteModelResponse == null)

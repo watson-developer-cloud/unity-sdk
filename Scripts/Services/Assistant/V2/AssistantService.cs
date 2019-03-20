@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Assistant.V2
 {
-    public class AssistantService : BaseService
+    public partial class AssistantService : BaseService
     {
         private const string serviceId = "conversation";
         private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
@@ -138,11 +138,8 @@ namespace IBM.Watson.Assistant.V2
         /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="SessionResponse" />SessionResponse</returns>
-        public bool CreateSession(Callback<SessionResponse> callback, string assistantId, Dictionary<string, object> customData = null)
+        public bool CreateSession(Callback<SessionResponse> callback, string assistantId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateSession`");
@@ -153,17 +150,15 @@ namespace IBM.Watson.Assistant.V2
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "CreateSession"))
             {
@@ -186,7 +181,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SessionResponse> response = new DetailedResponse<SessionResponse>();
-            Dictionary<string, object> customData = ((RequestObject<SessionResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -197,14 +191,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SessionResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -213,7 +200,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<SessionResponse>)req).Callback != null)
-                ((RequestObject<SessionResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SessionResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete session.
@@ -227,11 +214,8 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteSession(Callback<object> callback, string assistantId, string sessionId, Dictionary<string, object> customData = null)
+        public bool DeleteSession(Callback<object> callback, string assistantId, string sessionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteSession`");
@@ -244,17 +228,15 @@ namespace IBM.Watson.Assistant.V2
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "DeleteSession"))
             {
@@ -277,7 +259,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -288,14 +269,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -304,7 +278,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Send user input to assistant.
@@ -324,11 +298,8 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="context">State information for the conversation. The context is stored by the assistant on a
         /// per-session basis. You can use this property to set or modify context variables, which can also be accessed
         /// by dialog nodes. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, Dictionary<string, object> customData = null, MessageInput input = null, MessageContext context = null)
+        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageInput input = null, MessageContext context = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -341,17 +312,15 @@ namespace IBM.Watson.Assistant.V2
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "Message"))
             {
@@ -383,7 +352,6 @@ namespace IBM.Watson.Assistant.V2
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -394,14 +362,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MessageResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -410,7 +371,7 @@ namespace IBM.Watson.Assistant.V2
             }
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
-                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
     }
 }

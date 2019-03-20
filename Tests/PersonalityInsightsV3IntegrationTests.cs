@@ -31,15 +31,12 @@ namespace IBM.Watson.Tests
     {
         private PersonalityInsightsService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string contentToProfile = "The IBM Watson™ Personality Insights service provides a Representational State Transfer (REST) Application Programming Interface (API) that enables applications to derive insights from social media, enterprise data, or other digital communications. The service uses linguistic analytics to infer individuals' intrinsic personality characteristics, including Big Five, Needs, and Values, from digital communications such as email, text messages, tweets, and forum posts. The service can automatically infer, from potentially noisy social media, portraits of individuals that reflect their personality characteristics. The service can report consumption preferences based on the results of its analysis, and for JSON content that is timestamped, it can report temporal behavior.";
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -57,8 +54,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Profile
@@ -81,9 +77,9 @@ namespace IBM.Watson.Tests
             };
 
             service.Profile(
-                callback: (DetailedResponse<Profile> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Profile> response, IBMError error) =>
                 {
-                    Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Profile result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Profile result: {0}", response.Response);
                     profileResponse = response.Result;
                     Assert.IsNotNull(profileResponse);
                     Assert.IsNotNull(profileResponse.Personality);
@@ -95,8 +91,7 @@ namespace IBM.Watson.Tests
                 rawScores: true,
                 csvHeaders: true,
                 consumptionPreferences: true,
-                contentType: "text/plain",
-                customData: customData
+                contentType: "text/plain"
             );
 
             while (profileResponse == null)
@@ -124,7 +119,7 @@ namespace IBM.Watson.Tests
             };
 
             service.ProfileAsCsv(
-                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error) =>
                 {
                     profileAsCsvResponse = response.Result;
                     Assert.IsNotNull(profileAsCsvResponse);
@@ -144,8 +139,7 @@ namespace IBM.Watson.Tests
                 rawScores: true,
                 csvHeaders: true,
                 consumptionPreferences: true,
-                contentType: "text/plain",
-                customData: customData
+                contentType: "text/plain"
             );
 
             while (profileAsCsvResponse == null)

@@ -30,6 +30,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
         /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
         /// </summary>
         public class SourceTypeValue
         {
@@ -49,6 +50,10 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant WEB_CRAWL for web_crawl
             /// </summary>
             public const string WEB_CRAWL = "web_crawl";
+            /// <summary>
+            /// Constant CLOUD_OBJECT_STORAGE for cloud_object_storage
+            /// </summary>
+            public const string CLOUD_OBJECT_STORAGE = "cloud_object_storage";
             
         }
 
@@ -58,6 +63,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
         /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
         /// Constants for possible values can be found using ModelCredentials.SourceTypeValue
         /// </summary>
         [JsonProperty("source_type", NullValueHandling = NullValueHandling.Ignore)]

@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.CompareComply.V1
 {
-    public class CompareComplyService : BaseService
+    public partial class CompareComplyService : BaseService
     {
         private const string serviceId = "compare-comply";
         private const string defaultUrl = "https://gateway.watsonplatform.net/compare-comply/api";
@@ -138,11 +138,8 @@ namespace IBM.Watson.CompareComply.V1
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="HTMLReturn" />HTMLReturn</returns>
-        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.FileStream file, Dictionary<string, object> customData = null, string modelId = null, string fileContentType = null)
+        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ConvertToHtml`");
@@ -153,17 +150,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "ConvertToHtml"))
             {
@@ -195,7 +190,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnConvertToHtmlResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<HTMLReturn> response = new DetailedResponse<HTMLReturn>();
-            Dictionary<string, object> customData = ((RequestObject<HTMLReturn>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -206,14 +200,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<HTMLReturn>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -222,7 +209,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<HTMLReturn>)req).Callback != null)
-                ((RequestObject<HTMLReturn>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<HTMLReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Classify the elements of a document.
@@ -236,11 +223,8 @@ namespace IBM.Watson.CompareComply.V1
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ClassifyReturn" />ClassifyReturn</returns>
-        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.FileStream file, Dictionary<string, object> customData = null, string modelId = null, string fileContentType = null)
+        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyElements`");
@@ -251,17 +235,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "ClassifyElements"))
             {
@@ -293,7 +275,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnClassifyElementsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ClassifyReturn> response = new DetailedResponse<ClassifyReturn>();
-            Dictionary<string, object> customData = ((RequestObject<ClassifyReturn>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -304,14 +285,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ClassifyReturn>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -320,7 +294,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<ClassifyReturn>)req).Callback != null)
-                ((RequestObject<ClassifyReturn>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ClassifyReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Extract a document's tables.
@@ -334,11 +308,8 @@ namespace IBM.Watson.CompareComply.V1
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TableReturn" />TableReturn</returns>
-        public bool ExtractTables(Callback<TableReturn> callback, System.IO.FileStream file, Dictionary<string, object> customData = null, string modelId = null, string fileContentType = null)
+        public bool ExtractTables(Callback<TableReturn> callback, System.IO.FileStream file, string modelId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ExtractTables`");
@@ -349,17 +320,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "ExtractTables"))
             {
@@ -391,7 +360,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnExtractTablesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TableReturn> response = new DetailedResponse<TableReturn>();
-            Dictionary<string, object> customData = ((RequestObject<TableReturn>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -402,14 +370,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TableReturn>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -418,7 +379,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<TableReturn>)req).Callback != null)
-                ((RequestObject<TableReturn>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TableReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Compare two documents.
@@ -436,11 +397,8 @@ namespace IBM.Watson.CompareComply.V1
         /// (optional)</param>
         /// <param name="file1ContentType">The content type of file1. (optional)</param>
         /// <param name="file2ContentType">The content type of file2. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="CompareReturn" />CompareReturn</returns>
-        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.FileStream file1, System.IO.FileStream file2, Dictionary<string, object> customData = null, string file1Label = null, string file2Label = null, string modelId = null, string file1ContentType = null, string file2ContentType = null)
+        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.FileStream file1, System.IO.FileStream file2, string file1Label = null, string file2Label = null, string modelId = null, string file1ContentType = null, string file2ContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CompareDocuments`");
@@ -453,17 +411,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "CompareDocuments"))
             {
@@ -507,7 +463,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnCompareDocumentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CompareReturn> response = new DetailedResponse<CompareReturn>();
-            Dictionary<string, object> customData = ((RequestObject<CompareReturn>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -518,14 +473,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CompareReturn>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -534,7 +482,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<CompareReturn>)req).Callback != null)
-                ((RequestObject<CompareReturn>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CompareReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add feedback.
@@ -548,11 +496,8 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="feedbackData">Feedback data for submission.</param>
         /// <param name="userId">An optional string identifying the user. (optional)</param>
         /// <param name="comment">An optional comment on or description of the feedback. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="FeedbackReturn" />FeedbackReturn</returns>
-        public bool AddFeedback(Callback<FeedbackReturn> callback, FeedbackDataInput feedbackData, Dictionary<string, object> customData = null, string userId = null, string comment = null)
+        public bool AddFeedback(Callback<FeedbackReturn> callback, FeedbackDataInput feedbackData, string userId = null, string comment = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddFeedback`");
@@ -563,17 +508,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "AddFeedback"))
             {
@@ -607,7 +550,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnAddFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<FeedbackReturn> response = new DetailedResponse<FeedbackReturn>();
-            Dictionary<string, object> customData = ((RequestObject<FeedbackReturn>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -618,14 +560,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<FeedbackReturn>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -634,7 +569,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<FeedbackReturn>)req).Callback != null)
-                ((RequestObject<FeedbackReturn>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<FeedbackReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Deletes a specified feedback entry.
@@ -645,11 +580,8 @@ namespace IBM.Watson.CompareComply.V1
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="FeedbackDeleted" />FeedbackDeleted</returns>
-        public bool DeleteFeedback(Callback<FeedbackDeleted> callback, string feedbackId, Dictionary<string, object> customData = null, string modelId = null)
+        public bool DeleteFeedback(Callback<FeedbackDeleted> callback, string feedbackId, string modelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteFeedback`");
@@ -660,17 +592,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "DeleteFeedback"))
             {
@@ -697,7 +627,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnDeleteFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<FeedbackDeleted> response = new DetailedResponse<FeedbackDeleted>();
-            Dictionary<string, object> customData = ((RequestObject<FeedbackDeleted>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -708,14 +637,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<FeedbackDeleted>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -724,7 +646,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<FeedbackDeleted>)req).Callback != null)
-                ((RequestObject<FeedbackDeleted>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<FeedbackDeleted>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List a specified feedback entry.
@@ -735,11 +657,8 @@ namespace IBM.Watson.CompareComply.V1
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="GetFeedback" />GetFeedback</returns>
-        public bool GetFeedback(Callback<GetFeedback> callback, string feedbackId, Dictionary<string, object> customData = null, string modelId = null)
+        public bool GetFeedback(Callback<GetFeedback> callback, string feedbackId, string modelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetFeedback`");
@@ -750,17 +669,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "GetFeedback"))
             {
@@ -787,7 +704,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnGetFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GetFeedback> response = new DetailedResponse<GetFeedback>();
-            Dictionary<string, object> customData = ((RequestObject<GetFeedback>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -798,14 +714,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GetFeedback>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -814,7 +723,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<GetFeedback>)req).Callback != null)
-                ((RequestObject<GetFeedback>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<GetFeedback>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List the feedback in documents.
@@ -860,11 +769,8 @@ namespace IBM.Watson.CompareComply.V1
         /// `document_title`. (optional)</param>
         /// <param name="includeTotal">An optional boolean value. If specified as `true`, the `pagination` object in the
         /// output includes a value called `total` that gives the total count of feedback created. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="FeedbackList" />FeedbackList</returns>
-        public bool ListFeedback(Callback<FeedbackList> callback, Dictionary<string, object> customData = null, string feedbackType = null, DateTime? before = null, DateTime? after = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
+        public bool ListFeedback(Callback<FeedbackList> callback, string feedbackType = null, DateTime? before = null, DateTime? after = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListFeedback`");
@@ -873,17 +779,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "ListFeedback"))
             {
@@ -970,7 +874,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnListFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<FeedbackList> response = new DetailedResponse<FeedbackList>();
-            Dictionary<string, object> customData = ((RequestObject<FeedbackList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -981,14 +884,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<FeedbackList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -997,7 +893,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<FeedbackList>)req).Callback != null)
-                ((RequestObject<FeedbackList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<FeedbackList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Submit a batch-processing request.
@@ -1028,11 +924,8 @@ namespace IBM.Watson.CompareComply.V1
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.FileStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.FileStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, Dictionary<string, object> customData = null, string modelId = null)
+        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.FileStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.FileStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, string modelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateBatch`");
@@ -1055,17 +948,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "CreateBatch"))
             {
@@ -1121,7 +1012,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnCreateBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<BatchStatus> response = new DetailedResponse<BatchStatus>();
-            Dictionary<string, object> customData = ((RequestObject<BatchStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1132,14 +1022,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<BatchStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1148,7 +1031,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<BatchStatus>)req).Callback != null)
-                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get information about a specific batch-processing request.
@@ -1157,11 +1040,8 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="batchId">The ID of the batch-processing request whose information you want to retrieve.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool GetBatch(Callback<BatchStatus> callback, string batchId, Dictionary<string, object> customData = null)
+        public bool GetBatch(Callback<BatchStatus> callback, string batchId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetBatch`");
@@ -1172,17 +1052,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "GetBatch"))
             {
@@ -1205,7 +1083,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnGetBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<BatchStatus> response = new DetailedResponse<BatchStatus>();
-            Dictionary<string, object> customData = ((RequestObject<BatchStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1216,14 +1093,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<BatchStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1232,7 +1102,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<BatchStatus>)req).Callback != null)
-                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List submitted batch-processing jobs.
@@ -1240,11 +1110,8 @@ namespace IBM.Watson.CompareComply.V1
         /// List the batch-processing jobs submitted by users.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Batches" />Batches</returns>
-        public bool ListBatches(Callback<Batches> callback, Dictionary<string, object> customData = null)
+        public bool ListBatches(Callback<Batches> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListBatches`");
@@ -1253,17 +1120,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "ListBatches"))
             {
@@ -1286,7 +1151,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnListBatchesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Batches> response = new DetailedResponse<Batches>();
-            Dictionary<string, object> customData = ((RequestObject<Batches>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1297,14 +1161,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Batches>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1313,7 +1170,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<Batches>)req).Callback != null)
-                ((RequestObject<Batches>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Batches>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a pending or active batch-processing request.
@@ -1328,11 +1185,8 @@ namespace IBM.Watson.CompareComply.V1
         /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
         /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool UpdateBatch(Callback<BatchStatus> callback, string batchId, string action, Dictionary<string, object> customData = null, string modelId = null)
+        public bool UpdateBatch(Callback<BatchStatus> callback, string batchId, string action, string modelId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateBatch`");
@@ -1345,17 +1199,15 @@ namespace IBM.Watson.CompareComply.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("compare-comply", "V1", "UpdateBatch"))
             {
@@ -1386,7 +1238,6 @@ namespace IBM.Watson.CompareComply.V1
         private void OnUpdateBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<BatchStatus> response = new DetailedResponse<BatchStatus>();
-            Dictionary<string, object> customData = ((RequestObject<BatchStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1397,14 +1248,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<BatchStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1413,7 +1257,7 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             if (((RequestObject<BatchStatus>)req).Callback != null)
-                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.NaturalLanguageClassifier.V1
 {
-    public class NaturalLanguageClassifierService : BaseService
+    public partial class NaturalLanguageClassifierService : BaseService
     {
         private const string serviceId = "natural_language_classifier";
         private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
@@ -117,11 +117,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to use.</param>
         /// <param name="text">The submitted phrase. The maximum length is 2048 characters.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classification" />Classification</returns>
-        public bool Classify(Callback<Classification> callback, string classifierId, string text, Dictionary<string, object> customData = null)
+        public bool Classify(Callback<Classification> callback, string classifierId, string text)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
@@ -134,17 +131,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "Classify"))
             {
@@ -173,7 +168,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classification> response = new DetailedResponse<Classification>();
-            Dictionary<string, object> customData = ((RequestObject<Classification>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -184,14 +178,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classification>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -200,7 +187,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<Classification>)req).Callback != null)
-                ((RequestObject<Classification>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classification>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Classify multiple phrases.
@@ -213,11 +200,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to use.</param>
         /// <param name="collection">The submitted phrases.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ClassificationCollection" />ClassificationCollection</returns>
-        public bool ClassifyCollection(Callback<ClassificationCollection> callback, string classifierId, List<ClassifyInput> collection, Dictionary<string, object> customData = null)
+        public bool ClassifyCollection(Callback<ClassificationCollection> callback, string classifierId, List<ClassifyInput> collection)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyCollection`");
@@ -230,17 +214,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "ClassifyCollection"))
             {
@@ -269,7 +251,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnClassifyCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ClassificationCollection> response = new DetailedResponse<ClassificationCollection>();
-            Dictionary<string, object> customData = ((RequestObject<ClassificationCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -280,14 +261,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ClassificationCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -296,7 +270,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<ClassificationCollection>)req).Callback != null)
-                ((RequestObject<ClassificationCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ClassificationCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create classifier.
@@ -313,11 +287,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <param name="trainingData">Training data in CSV format. Each text value must have at least one class. The
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
         /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, System.IO.FileStream metadata, System.IO.FileStream trainingData, Dictionary<string, object> customData = null)
+        public bool CreateClassifier(Callback<Classifier> callback, System.IO.FileStream metadata, System.IO.FileStream trainingData)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -330,17 +301,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "CreateClassifier"))
             {
@@ -371,7 +340,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnCreateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
-            Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -382,14 +350,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -398,18 +359,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
-                ((RequestObject<Classifier>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete classifier.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to delete.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteClassifier(Callback<object> callback, string classifierId, Dictionary<string, object> customData = null)
+        public bool DeleteClassifier(Callback<object> callback, string classifierId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
@@ -420,17 +378,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier"))
             {
@@ -452,7 +408,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -463,14 +418,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -479,7 +427,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get information about a classifier.
@@ -488,11 +436,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">Classifier ID to query.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool GetClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, object> customData = null)
+        public bool GetClassifier(Callback<Classifier> callback, string classifierId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetClassifier`");
@@ -503,17 +448,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "GetClassifier"))
             {
@@ -535,7 +478,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnGetClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Classifier> response = new DetailedResponse<Classifier>();
-            Dictionary<string, object> customData = ((RequestObject<Classifier>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -546,14 +488,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -562,7 +497,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
-                ((RequestObject<Classifier>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List classifiers.
@@ -570,11 +505,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// Returns an empty array if no classifiers are available.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ClassifierList" />ClassifierList</returns>
-        public bool ListClassifiers(Callback<ClassifierList> callback, Dictionary<string, object> customData = null)
+        public bool ListClassifiers(Callback<ClassifierList> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
@@ -583,17 +515,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers"))
             {
@@ -615,7 +545,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ClassifierList> response = new DetailedResponse<ClassifierList>();
-            Dictionary<string, object> customData = ((RequestObject<ClassifierList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -626,14 +555,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ClassifierList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -642,7 +564,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             if (((RequestObject<ClassifierList>)req).Callback != null)
-                ((RequestObject<ClassifierList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ClassifierList>)req).Callback(response, resp.Error);
         }
     }
 }

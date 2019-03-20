@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Assistant.V1
 {
-    public class AssistantService : BaseService
+    public partial class AssistantService : BaseService
     {
         private const string serviceId = "conversation";
         private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
@@ -147,11 +147,8 @@ namespace IBM.Watson.Assistant.V1
         /// triggered, and messages from the log. (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, Dictionary<string, object> customData = null, JObject input = null, List<JObject> intents = null, List<JObject> entities = null, bool? alternateIntents = null, JObject context = null, JObject output = null, bool? nodesVisitedDetails = null)
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, JObject input = null, List<JObject> intents = null, List<JObject> entities = null, bool? alternateIntents = null, JObject context = null, JObject output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -162,17 +159,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "Message"))
             {
@@ -216,7 +211,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MessageResponse> response = new DetailedResponse<MessageResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MessageResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -227,14 +221,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MessageResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -243,7 +230,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
-                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create workspace.
@@ -270,11 +257,8 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -283,17 +267,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateWorkspace"))
             {
@@ -341,7 +323,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -352,14 +333,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -368,7 +342,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete workspace.
@@ -379,11 +353,8 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteWorkspace(Callback<object> callback, string workspaceId, Dictionary<string, object> customData = null)
+        public bool DeleteWorkspace(Callback<object> callback, string workspaceId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteWorkspace`");
@@ -394,17 +365,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace"))
             {
@@ -427,7 +396,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -438,14 +406,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -454,7 +415,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get information about a workspace.
@@ -474,11 +435,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="sort">Indicates how the returned workspace data will be sorted. This parameter is valid only if
         /// **export**=`true`. Specify `sort=stable` to sort all workspace objects by unique identifier, in ascending
         /// alphabetical order. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool GetWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null, string sort = null)
+        public bool GetWorkspace(Callback<Workspace> callback, string workspaceId, bool? export = null, bool? includeAudit = null, string sort = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetWorkspace`");
@@ -489,17 +447,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetWorkspace"))
             {
@@ -534,7 +490,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -545,14 +500,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -561,7 +509,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List workspaces.
@@ -580,11 +528,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
-        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
@@ -593,17 +538,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListWorkspaces"))
             {
@@ -646,7 +589,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListWorkspacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<WorkspaceCollection> response = new DetailedResponse<WorkspaceCollection>();
-            Dictionary<string, object> customData = ((RequestObject<WorkspaceCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -657,14 +599,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<WorkspaceCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -673,7 +608,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<WorkspaceCollection>)req).Callback != null)
-                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update workspace.
@@ -709,11 +644,8 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, Dictionary<string, object> customData = null, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -724,17 +656,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateWorkspace"))
             {
@@ -786,7 +716,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
-            Dictionary<string, object> customData = ((RequestObject<Workspace>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -797,14 +726,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Workspace>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -813,7 +735,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Workspace>)req).Callback != null)
-                ((RequestObject<Workspace>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create intent.
@@ -831,11 +753,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the intent. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="examples">An array of user input examples for the intent. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string description = null, List<Example> examples = null)
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateIntent`");
@@ -848,17 +767,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateIntent"))
             {
@@ -892,7 +809,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -903,14 +819,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -919,7 +828,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete intent.
@@ -931,11 +840,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteIntent(Callback<object> callback, string workspaceId, string intent, Dictionary<string, object> customData = null)
+        public bool DeleteIntent(Callback<object> callback, string workspaceId, string intent)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteIntent`");
@@ -948,17 +854,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteIntent"))
             {
@@ -981,7 +885,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -992,14 +895,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1008,7 +904,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get intent.
@@ -1026,11 +922,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetIntent`");
@@ -1043,17 +936,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetIntent"))
             {
@@ -1084,7 +975,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1095,14 +985,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1111,7 +994,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List intents.
@@ -1135,11 +1018,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="IntentCollection" />IntentCollection</returns>
-        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListIntents`");
@@ -1150,17 +1030,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListIntents"))
             {
@@ -1207,7 +1085,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListIntentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<IntentCollection> response = new DetailedResponse<IntentCollection>();
-            Dictionary<string, object> customData = ((RequestObject<IntentCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1218,14 +1095,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<IntentCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1234,7 +1104,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<IntentCollection>)req).Callback != null)
-                ((RequestObject<IntentCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<IntentCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update intent.
@@ -1254,11 +1124,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newDescription">The description of the intent. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
+        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateIntent`");
@@ -1271,17 +1138,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateIntent"))
             {
@@ -1315,7 +1180,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            Dictionary<string, object> customData = ((RequestObject<Intent>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1326,14 +1190,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1342,7 +1199,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create user input example.
@@ -1360,11 +1217,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 1024 characters.</param>
         /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, List<Mention> mentions = null)
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExample`");
@@ -1379,17 +1233,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateExample"))
             {
@@ -1421,7 +1273,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1432,14 +1283,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1448,7 +1292,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete user input example.
@@ -1461,11 +1305,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
         /// <param name="text">The text of the user input example.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteExample(Callback<object> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null)
+        public bool DeleteExample(Callback<object> callback, string workspaceId, string intent, string text)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteExample`");
@@ -1480,17 +1321,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteExample"))
             {
@@ -1513,7 +1352,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1524,14 +1362,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1540,7 +1371,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get user input example.
@@ -1555,11 +1386,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="text">The text of the user input example.</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, bool? includeAudit = null)
+        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetExample`");
@@ -1574,17 +1402,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetExample"))
             {
@@ -1611,7 +1437,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1622,14 +1447,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1638,7 +1456,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List user input examples.
@@ -1659,11 +1477,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ExampleCollection" />ExampleCollection</returns>
-        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListExamples`");
@@ -1676,17 +1491,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListExamples"))
             {
@@ -1729,7 +1542,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ExampleCollection> response = new DetailedResponse<ExampleCollection>();
-            Dictionary<string, object> customData = ((RequestObject<ExampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1740,14 +1552,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ExampleCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1756,7 +1561,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<ExampleCollection>)req).Callback != null)
-                ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update user input example.
@@ -1775,11 +1580,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 1024 characters. (optional)</param>
         /// <param name="newMentions">An array of contextual entity mentions. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, Dictionary<string, object> customData = null, string newText = null, List<Mention> newMentions = null)
+        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mention> newMentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateExample`");
@@ -1794,17 +1596,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateExample"))
             {
@@ -1836,7 +1636,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Example> response = new DetailedResponse<Example>();
-            Dictionary<string, object> customData = ((RequestObject<Example>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1847,14 +1646,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Example>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1863,7 +1655,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create counterexample.
@@ -1880,11 +1672,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters
         /// - It cannot consist of only whitespace characters
         /// - It must be no longer than 1024 characters.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null)
+        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
@@ -1897,17 +1686,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateCounterexample"))
             {
@@ -1937,7 +1724,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1948,14 +1734,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1964,7 +1743,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete counterexample.
@@ -1977,11 +1756,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteCounterexample(Callback<object> callback, string workspaceId, string text, Dictionary<string, object> customData = null)
+        public bool DeleteCounterexample(Callback<object> callback, string workspaceId, string text)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCounterexample`");
@@ -1994,17 +1770,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample"))
             {
@@ -2027,7 +1801,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2038,14 +1811,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2054,7 +1820,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get counterexample.
@@ -2069,11 +1835,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null, bool? includeAudit = null)
+        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCounterexample`");
@@ -2086,17 +1849,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetCounterexample"))
             {
@@ -2123,7 +1884,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2134,14 +1894,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2150,7 +1903,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List counterexamples.
@@ -2171,11 +1924,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="CounterexampleCollection" />CounterexampleCollection</returns>
-        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCounterexamples`");
@@ -2186,17 +1936,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListCounterexamples"))
             {
@@ -2239,7 +1987,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListCounterexamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CounterexampleCollection> response = new DetailedResponse<CounterexampleCollection>();
-            Dictionary<string, object> customData = ((RequestObject<CounterexampleCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2250,14 +1997,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CounterexampleCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2266,7 +2006,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<CounterexampleCollection>)req).Callback != null)
-                ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update counterexample.
@@ -2284,11 +2024,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters
         /// - It cannot consist of only whitespace characters
         /// - It must be no longer than 1024 characters. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, Dictionary<string, object> customData = null, string newText = null)
+        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, string newText = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCounterexample`");
@@ -2301,17 +2038,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateCounterexample"))
             {
@@ -2341,7 +2076,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            Dictionary<string, object> customData = ((RequestObject<Counterexample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2352,14 +2086,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2368,7 +2095,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity.
@@ -2390,11 +2117,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="metadata">Any metadata related to the entity. (optional)</param>
         /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="values">An array of objects describing the entity values. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEntity`");
@@ -2407,17 +2131,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateEntity"))
             {
@@ -2455,7 +2177,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2466,14 +2187,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2482,7 +2196,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity.
@@ -2494,11 +2208,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteEntity(Callback<object> callback, string workspaceId, string entity, Dictionary<string, object> customData = null)
+        public bool DeleteEntity(Callback<object> callback, string workspaceId, string entity)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteEntity`");
@@ -2511,17 +2222,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteEntity"))
             {
@@ -2544,7 +2253,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2555,14 +2263,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2571,7 +2272,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity.
@@ -2589,11 +2290,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetEntity`");
@@ -2606,17 +2304,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetEntity"))
             {
@@ -2647,7 +2343,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2658,14 +2353,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2674,7 +2362,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entities.
@@ -2698,11 +2386,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="EntityCollection" />EntityCollection</returns>
-        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListEntities`");
@@ -2713,17 +2398,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListEntities"))
             {
@@ -2770,7 +2453,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<EntityCollection> response = new DetailedResponse<EntityCollection>();
-            Dictionary<string, object> customData = ((RequestObject<EntityCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2781,14 +2463,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2797,7 +2472,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<EntityCollection>)req).Callback != null)
-                ((RequestObject<EntityCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<EntityCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity.
@@ -2819,11 +2494,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
         /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="newValues">An array of objects describing the entity values. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
+        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEntity`");
@@ -2836,17 +2508,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateEntity"))
             {
@@ -2884,7 +2554,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            Dictionary<string, object> customData = ((RequestObject<Entity>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2895,14 +2564,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2911,7 +2573,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity mentions.
@@ -2929,11 +2591,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="EntityMentionCollection" />EntityMentionCollection</returns>
-        public bool ListMentions(Callback<EntityMentionCollection> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        public bool ListMentions(Callback<EntityMentionCollection> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListMentions`");
@@ -2946,17 +2605,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListMentions"))
             {
@@ -2987,7 +2644,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListMentionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<EntityMentionCollection> response = new DetailedResponse<EntityMentionCollection>();
-            Dictionary<string, object> customData = ((RequestObject<EntityMentionCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2998,14 +2654,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<EntityMentionCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3014,7 +2663,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<EntityMentionCollection>)req).Callback != null)
-                ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity value.
@@ -3042,11 +2691,8 @@ namespace IBM.Watson.Assistant.V1
         /// characters. For more information about how to specify a pattern, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateValue`");
@@ -3061,17 +2707,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateValue"))
             {
@@ -3109,7 +2753,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3120,14 +2763,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3136,7 +2772,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity value.
@@ -3149,11 +2785,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteValue(Callback<object> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null)
+        public bool DeleteValue(Callback<object> callback, string workspaceId, string entity, string value)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteValue`");
@@ -3168,17 +2801,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteValue"))
             {
@@ -3201,7 +2832,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3212,14 +2842,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3228,7 +2851,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity value.
@@ -3246,11 +2869,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, bool? export = null, bool? includeAudit = null)
+        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetValue`");
@@ -3265,17 +2885,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetValue"))
             {
@@ -3306,7 +2924,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3317,14 +2934,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3333,7 +2943,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity values.
@@ -3357,11 +2967,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ValueCollection" />ValueCollection</returns>
-        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, Dictionary<string, object> customData = null, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListValues`");
@@ -3374,17 +2981,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListValues"))
             {
@@ -3431,7 +3036,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListValuesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ValueCollection> response = new DetailedResponse<ValueCollection>();
-            Dictionary<string, object> customData = ((RequestObject<ValueCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3442,14 +3046,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ValueCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3458,7 +3055,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<ValueCollection>)req).Callback != null)
-                ((RequestObject<ValueCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ValueCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity value.
@@ -3489,11 +3086,8 @@ namespace IBM.Watson.Assistant.V1
         /// characters. For more information about how to specify a pattern, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateValue`");
@@ -3508,17 +3102,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateValue"))
             {
@@ -3556,7 +3148,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Value> response = new DetailedResponse<Value>();
-            Dictionary<string, object> customData = ((RequestObject<Value>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3567,14 +3158,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Value>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3583,7 +3167,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create entity value synonym.
@@ -3600,11 +3184,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null)
+        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateSynonym`");
@@ -3621,17 +3202,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateSynonym"))
             {
@@ -3661,7 +3240,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3672,14 +3250,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3688,7 +3259,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete entity value synonym.
@@ -3702,11 +3273,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="synonym">The text of the synonym.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteSynonym(Callback<object> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null)
+        public bool DeleteSynonym(Callback<object> callback, string workspaceId, string entity, string value, string synonym)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteSynonym`");
@@ -3723,17 +3291,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteSynonym"))
             {
@@ -3756,7 +3322,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3767,14 +3332,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3783,7 +3341,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get entity value synonym.
@@ -3799,11 +3357,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="synonym">The text of the synonym.</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null, bool? includeAudit = null)
+        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetSynonym`");
@@ -3820,17 +3375,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetSynonym"))
             {
@@ -3857,7 +3410,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3868,14 +3420,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3884,7 +3429,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity value synonyms.
@@ -3906,11 +3451,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="SynonymCollection" />SynonymCollection</returns>
-        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListSynonyms`");
@@ -3925,17 +3467,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListSynonyms"))
             {
@@ -3978,7 +3518,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListSynonymsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<SynonymCollection> response = new DetailedResponse<SynonymCollection>();
-            Dictionary<string, object> customData = ((RequestObject<SynonymCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3989,14 +3528,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<SynonymCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4005,7 +3537,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<SynonymCollection>)req).Callback != null)
-                ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update entity value synonym.
@@ -4023,11 +3555,8 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, Dictionary<string, object> customData = null, string newSynonym = null)
+        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, string newSynonym = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateSynonym`");
@@ -4044,17 +3573,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateSynonym"))
             {
@@ -4084,7 +3611,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            Dictionary<string, object> customData = ((RequestObject<Synonym>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4095,14 +3621,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4111,7 +3630,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create dialog node.
@@ -4156,11 +3675,8 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. This string must be no longer than 512 characters. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -4173,17 +3689,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateDialogNode"))
             {
@@ -4247,7 +3761,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnCreateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4258,14 +3771,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4274,7 +3780,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete dialog node.
@@ -4286,11 +3792,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null)
+        public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteDialogNode`");
@@ -4303,17 +3806,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode"))
             {
@@ -4336,7 +3837,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4347,14 +3847,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4363,7 +3856,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get dialog node.
@@ -4377,11 +3870,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool GetDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, bool? includeAudit = null)
+        public bool GetDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetDialogNode`");
@@ -4394,17 +3884,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetDialogNode"))
             {
@@ -4431,7 +3919,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnGetDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4442,14 +3929,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4458,7 +3938,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List dialog nodes.
@@ -4478,11 +3958,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
-        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, Dictionary<string, object> customData = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
@@ -4493,17 +3970,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListDialogNodes"))
             {
@@ -4546,7 +4021,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListDialogNodesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNodeCollection> response = new DetailedResponse<DialogNodeCollection>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNodeCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4557,14 +4031,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNodeCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4573,7 +4040,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNodeCollection>)req).Callback != null)
-                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update dialog node.
@@ -4620,11 +4087,8 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. This string must be no longer than 512 characters. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, Dictionary<string, object> customData = null, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4637,17 +4101,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "UpdateDialogNode"))
             {
@@ -4711,7 +4173,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnUpdateDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DialogNode> response = new DetailedResponse<DialogNode>();
-            Dictionary<string, object> customData = ((RequestObject<DialogNode>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4722,14 +4183,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DialogNode>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4738,7 +4192,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<DialogNode>)req).Callback != null)
-                ((RequestObject<DialogNode>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List log events in all workspaces.
@@ -4759,11 +4213,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
         /// 100)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>
-        public bool ListAllLogs(Callback<LogCollection> callback, string filter, Dictionary<string, object> customData = null, string sort = null, long? pageLimit = null, string cursor = null)
+        public bool ListAllLogs(Callback<LogCollection> callback, string filter, string sort = null, long? pageLimit = null, string cursor = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListAllLogs`");
@@ -4774,17 +4225,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListAllLogs"))
             {
@@ -4823,7 +4272,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListAllLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
-            Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4834,14 +4282,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4850,7 +4291,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<LogCollection>)req).Callback != null)
-                ((RequestObject<LogCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List log events in a workspace.
@@ -4872,11 +4313,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
         /// 100)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>
-        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, Dictionary<string, object> customData = null, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)
+        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListLogs`");
@@ -4887,17 +4325,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListLogs"))
             {
@@ -4936,7 +4372,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnListLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
-            Dictionary<string, object> customData = ((RequestObject<LogCollection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4947,14 +4382,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4963,7 +4391,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<LogCollection>)req).Callback != null)
-                ((RequestObject<LogCollection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -4977,11 +4405,8 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
+        public bool DeleteUserData(Callback<object> callback, string customerId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
@@ -4992,17 +4417,15 @@ namespace IBM.Watson.Assistant.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteUserData"))
             {
@@ -5029,7 +4452,6 @@ namespace IBM.Watson.Assistant.V1
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5040,14 +4462,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5056,7 +4471,7 @@ namespace IBM.Watson.Assistant.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -29,8 +29,6 @@ namespace IBM.Watson.Tests
     {
         private ToneAnalyzerService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string inputText = "Hello! Welcome to IBM Watson! How can I help you?";
         private string chatUser = "testChatUser";
 
@@ -38,7 +36,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -56,8 +53,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Tone
@@ -71,9 +67,9 @@ namespace IBM.Watson.Tests
                 Text = inputText
             };
             service.Tone(
-                callback: (DetailedResponse<ToneAnalysis> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ToneAnalysis> response, IBMError error) =>
                 {
-                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "Tone result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "Tone result: {0}", response.Response);
                     toneResponse = response.Result;
                     Assert.IsNotNull(toneResponse);
                     Assert.IsNotNull(toneResponse.SentencesTone);
@@ -83,8 +79,7 @@ namespace IBM.Watson.Tests
                 toneInput: toneInput,
                 contentLanguage: "en",
                 acceptLanguage: "en",
-                contentType: "text/plain",
-                customData: customData
+                contentType: "text/plain"
             );
 
             while (toneResponse == null)
@@ -107,9 +102,9 @@ namespace IBM.Watson.Tests
                 }
             };
             service.ToneChat(
-                callback: (DetailedResponse<UtteranceAnalyses> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<UtteranceAnalyses> response, IBMError error) =>
                 {
-                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "ToneChat result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "ToneChat result: {0}", response.Response);
                     toneChatResponse = response.Result;
                     Assert.IsNotNull(toneChatResponse);
                     Assert.IsNotNull(toneChatResponse.UtterancesTone);
@@ -117,8 +112,7 @@ namespace IBM.Watson.Tests
                 },
                 utterances: utterances,
                 contentLanguage: "en",
-                acceptLanguage: "en",
-                customData: customData
+                acceptLanguage: "en"
             );
 
             while (toneChatResponse == null)

@@ -246,13 +246,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// This callback object is used by the Recognize() and StartListening() methods.
         /// </summary>
         /// <param name="results">The ResultList object containing the results.</param>
-        public delegate void OnRecognize(SpeechRecognitionEvent results, Dictionary<string, object> customData = null);
+        public delegate void OnRecognize(SpeechRecognitionEvent results);
 
         /// <summary>
         /// This callback object is used by the RecognizeSpeaker() method.
         /// </summary>
         /// <param name="speakerRecognitionEvent">Array of speaker label results.</param>
-        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent, Dictionary<string, object> customData = null);
+        public delegate void OnRecognizeSpeaker(SpeakerRecognitionEvent speakerRecognitionEvent);
 
         /// <summary>
         /// This starts the service listening and it will invoke the callback for any recognized speech.
@@ -262,7 +262,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">All recognize results are passed to this callback.</param>
         /// <param name="speakerLabelCallback">Speaker label goes through this callback if it arrives separately from recognize result.</param>
         /// <returns>Returns true on success, false on failure.</returns>
-        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null, Dictionary<string, object> customData = null)
+        public bool StartListening(OnRecognize callback, OnRecognizeSpeaker speakerLabelCallback = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
@@ -270,17 +270,11 @@ namespace IBM.Watson.SpeechToText.V1
                 return false;
             if (!CreateListenConnector())
                 return false;
-
-            if (customData == null)
-                customData = new Dictionary<string, object>();
-
+            
             Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-            if (customData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in customData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    customHeaders.Add(kvp.Key, kvp.Value);
-                }
+                customHeaders.Add(kvp.Key, kvp.Value);
             }
 
             if (customHeaders != null && _listenSocket != null)
@@ -539,10 +533,6 @@ namespace IBM.Watson.SpeechToText.V1
             if (msg is WSConnector.TextMessage)
             {
                 WSConnector.TextMessage tm = (WSConnector.TextMessage)msg;
-                Dictionary<string, object> customData = new Dictionary<string, object>();
-                customData.Add(Constants.String.JSON, tm.Text);
-                if (tm.Headers != null && tm.Headers.Count > 0)
-                    customData.Add(Constants.String.RESPONSE_HEADERS, tm.Headers);
 
                 IDictionary json = Json.Deserialize(tm.Text) as IDictionary;
                 if (json != null)
@@ -558,7 +548,7 @@ namespace IBM.Watson.SpeechToText.V1
                             //    SendStart();
 
                             if (_listenCallback != null)
-                                _listenCallback(results, customData);
+                                _listenCallback(results);
                             else
                                 StopListening();            // automatically stop listening if our callback is destroyed.
                         }

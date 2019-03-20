@@ -33,8 +33,6 @@ namespace IBM.Watson.Tests
     {
         private VisualRecognitionService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string giraffePositiveExamplesFilepath;
         private string turtlePositiveExamplesFilepath;
         private string negativeExamplesFilepath;
@@ -52,7 +50,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
 
             giraffePositiveExamplesFilepath = Application.dataPath + "/Watson/Tests/TestData/VisualRecognitionV3/giraffe_positive_examples.zip";
             turtlePositiveExamplesFilepath = Application.dataPath + "/Watson/Tests/TestData/VisualRecognitionV3/turtle_positive_examples.zip";
@@ -78,8 +75,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         #region Classify
@@ -91,9 +87,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(turtleImageFilepath))
             {
                 service.Classify(
-                    callback: (DetailedResponse<ClassifiedImages> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<ClassifiedImages> response, IBMError error) =>
                     {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Classify result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Classify result: {0}", response.Response);
                         classifyResponse = response.Result;
                         Assert.IsNotNull(classifyResponse);
                         Assert.IsNotNull(classifyResponse.Images);
@@ -103,8 +99,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     imagesFile: fs,
-                    imagesFileContentType: turtleImageContentType,
-                    customData: customData
+                    imagesFileContentType: turtleImageContentType
                 );
 
                 while (classifyResponse == null)
@@ -122,9 +117,9 @@ namespace IBM.Watson.Tests
             using (FileStream fs = File.OpenRead(obamaImageFilepath))
             {
                 service.DetectFaces(
-                    callback: (DetailedResponse<DetectedFaces> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
                     {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
                         detectFacesResponse = response.Result;
                         Assert.IsNotNull(detectFacesResponse);
                         Assert.IsNotNull(detectFacesResponse.Images);
@@ -134,8 +129,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     imagesFile: fs,
-                    imagesFileContentType: obamaImageContentType,
-                    customData: customData
+                    imagesFileContentType: obamaImageContentType
                 );
 
                 while (detectFacesResponse == null)
@@ -157,9 +151,9 @@ namespace IBM.Watson.Tests
                     Dictionary<string, FileStream> positiveExamples = new Dictionary<string, FileStream>();
                     positiveExamples.Add("giraffe_positive_examples", fs0);
                     service.CreateClassifier(
-                        callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                        callback: (DetailedResponse<Classifier> response, IBMError error) =>
                         {
-                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CreateClassifier result: {0}", customResponseData["json"].ToString());
+                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CreateClassifier result: {0}", response.Response);
                             createClassifierResponse = response.Result;
                             classifierId = createClassifierResponse.ClassifierId;
                             Assert.IsNotNull(createClassifierResponse);
@@ -172,8 +166,7 @@ namespace IBM.Watson.Tests
                         },
                         name: classifierName,
                         positiveExamples: positiveExamples,
-                        negativeExamples: fs1,
-                        customData: customData
+                        negativeExamples: fs1
                     );
 
                     while (createClassifierResponse == null)
@@ -190,16 +183,15 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetClassifier...");
             Classifier getClassifierResponse = null;
             service.GetClassifier(
-                callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Classifier> response, IBMError error) =>
                 {
-                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "GetClassifier result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "GetClassifier result: {0}", response.Response);
                     getClassifierResponse = response.Result;
                     Assert.IsNotNull(getClassifierResponse);
                     Assert.IsTrue(getClassifierResponse.ClassifierId == classifierId);
                     Assert.IsNull(error);
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (getClassifierResponse == null)
@@ -214,17 +206,16 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to ListClassifiers...");
             Classifiers listClassifiersResponse = null;
             service.ListClassifiers(
-                callback: (DetailedResponse<Classifiers> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Classifiers> response, IBMError error) =>
                 {
-                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "ListClassifiers result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "ListClassifiers result: {0}", response.Response);
                     listClassifiersResponse = response.Result;
                     Assert.IsNotNull(listClassifiersResponse);
                     Assert.IsNotNull(listClassifiersResponse._Classifiers);
                     Assert.IsTrue(listClassifiersResponse._Classifiers.Count > 0);
                     Assert.IsNull(error);
                 },
-                verbose: true,
-                customData: customData
+                verbose: true
             );
 
             while (listClassifiersResponse == null)
@@ -257,9 +248,9 @@ namespace IBM.Watson.Tests
                 Dictionary<string, FileStream> positiveExamples = new Dictionary<string, FileStream>();
                 positiveExamples.Add("turtles_positive_examples", fs);
                 service.UpdateClassifier(
-                    callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<Classifier> response, IBMError error) =>
                     {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "UpdateClassifier result: {0}", customResponseData["json"].ToString());
+                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "UpdateClassifier result: {0}", response.Response);
                         updateClassifierResponse = response.Result;
                         Assert.IsNotNull(updateClassifierResponse);
                         Assert.IsNotNull(updateClassifierResponse.Classes);
@@ -267,8 +258,7 @@ namespace IBM.Watson.Tests
                         Assert.IsNull(error);
                     },
                     classifierId: classifierId,
-                    positiveExamples: positiveExamples,
-                    customData: customData
+                    positiveExamples: positiveExamples
                 );
 
                 while (updateClassifierResponse == null)
@@ -298,7 +288,7 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetCoreMlModel...");
             byte[] getCoreMlModelResponse = null;
             service.GetCoreMlModel(
-                callback: (DetailedResponse<byte[]> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<byte[]> response, IBMError error) =>
                 {
                     getCoreMlModelResponse = response.Result;
                     Assert.IsNotNull(getCoreMlModelResponse);
@@ -311,8 +301,7 @@ namespace IBM.Watson.Tests
                         fs.Close();
                     }
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (getCoreMlModelResponse == null)
@@ -327,15 +316,14 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DeleteClassifier...");
             bool isComplete = false;
             service.DeleteClassifier(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DeleteClassifier result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DeleteClassifier result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 200);
                     Assert.IsNull(error);
                     isComplete = true;
                 },
-                classifierId: classifierId,
-                customData: customData
+                classifierId: classifierId
             );
 
             while (!isComplete)
@@ -350,15 +338,14 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DeleteUserData...");
             object deleteUserDataResponse = null;
             service.DeleteUserData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DeleteUserData result: {0}", response.Response);
                     deleteUserDataResponse = response.Result;
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "customerId",
-                customData: customData
+                customerId: "customerId"
             );
 
             while (deleteUserDataResponse == null)
@@ -377,7 +364,7 @@ namespace IBM.Watson.Tests
             try
             {
                 service.GetClassifier(
-                    callback: (DetailedResponse<Classifier> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                    callback: (DetailedResponse<Classifier> response, IBMError error) =>
                     {
                         getClassifierResponse = response.Result;
                         Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CheckClassifierStatus: {0}", getClassifierResponse.Status);
@@ -390,8 +377,7 @@ namespace IBM.Watson.Tests
                             Runnable.Run(CheckClassifierStatus());
                         }
                     },
-                    classifierId: classifierId,
-                    customData: customData
+                    classifierId: classifierId
                 );
             }
             catch

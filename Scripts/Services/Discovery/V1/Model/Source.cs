@@ -30,6 +30,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `salesforce` indicates the configuration is to connect to Salesforce.
         /// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
         /// -  `web_crawl` indicates the configuration is to perform a web page crawl.
+        /// -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
         /// </summary>
         public class TypeValue
         {
@@ -49,6 +50,10 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant WEB_CRAWL for web_crawl
             /// </summary>
             public const string WEB_CRAWL = "web_crawl";
+            /// <summary>
+            /// Constant CLOUD_OBJECT_STORAGE for cloud_object_storage
+            /// </summary>
+            public const string CLOUD_OBJECT_STORAGE = "cloud_object_storage";
             
         }
 
@@ -58,6 +63,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `salesforce` indicates the configuration is to connect to Salesforce.
         /// -  `sharepoint` indicates the configuration is to connect to Microsoft SharePoint Online.
         /// -  `web_crawl` indicates the configuration is to perform a web page crawl.
+        /// -  `cloud_object_storage` indicates the configuration is to connect to a cloud object store.
         /// Constants for possible values can be found using Source.TypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]

@@ -28,7 +28,7 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.Discovery.V1
 {
-    public class DiscoveryService : BaseService
+    public partial class DiscoveryService : BaseService
     {
         private const string serviceId = "discovery";
         private const string defaultUrl = "https://gateway.watsonplatform.net/discovery/api";
@@ -140,11 +140,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="description">Description of the environment. (optional)</param>
         /// <param name="size">Size of the environment. In the Lite plan the default and only accepted value is `LT`, in
         /// all other plans the default is `S`. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
-        public bool CreateEnvironment(Callback<ModelEnvironment> callback, string name, Dictionary<string, object> customData = null, string description = null, string size = null)
+        public bool CreateEnvironment(Callback<ModelEnvironment> callback, string name, string description = null, string size = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEnvironment`");
@@ -155,17 +152,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateEnvironment"))
             {
@@ -199,7 +194,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -210,14 +204,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -226,18 +213,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete environment.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteEnvironmentResponse" />DeleteEnvironmentResponse</returns>
-        public bool DeleteEnvironment(Callback<DeleteEnvironmentResponse> callback, string environmentId, Dictionary<string, object> customData = null)
+        public bool DeleteEnvironment(Callback<DeleteEnvironmentResponse> callback, string environmentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteEnvironment`");
@@ -248,17 +232,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteEnvironment"))
             {
@@ -281,7 +263,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteEnvironmentResponse> response = new DetailedResponse<DeleteEnvironmentResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteEnvironmentResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -292,14 +273,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -308,18 +282,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteEnvironmentResponse>)req).Callback != null)
-                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get environment info.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
-        public bool GetEnvironment(Callback<ModelEnvironment> callback, string environmentId, Dictionary<string, object> customData = null)
+        public bool GetEnvironment(Callback<ModelEnvironment> callback, string environmentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetEnvironment`");
@@ -330,17 +301,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetEnvironment"))
             {
@@ -363,7 +332,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -374,14 +342,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -390,7 +351,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List environments.
@@ -399,11 +360,8 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">Show only the environment with the given name. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListEnvironmentsResponse" />ListEnvironmentsResponse</returns>
-        public bool ListEnvironments(Callback<ListEnvironmentsResponse> callback, Dictionary<string, object> customData = null, string name = null)
+        public bool ListEnvironments(Callback<ListEnvironmentsResponse> callback, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListEnvironments`");
@@ -412,17 +370,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListEnvironments"))
             {
@@ -449,7 +405,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListEnvironmentsResponse> response = new DetailedResponse<ListEnvironmentsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListEnvironmentsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -460,14 +415,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListEnvironmentsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -476,7 +424,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListEnvironmentsResponse>)req).Callback != null)
-                ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List fields across collections.
@@ -486,11 +434,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
-        public bool ListFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, List<string> collectionIds, Dictionary<string, object> customData = null)
+        public bool ListFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, List<string> collectionIds)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListFields`");
@@ -503,17 +448,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListFields"))
             {
@@ -540,7 +483,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionFieldsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -551,14 +493,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -567,7 +502,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update an environment.
@@ -581,11 +516,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="description">Description of the environment. (optional)</param>
         /// <param name="size">Size that the environment should be increased to. Environment size cannot be modified
         /// when using a Lite plan. Environment size can only increased and not decreased. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
-        public bool UpdateEnvironment(Callback<ModelEnvironment> callback, string environmentId, Dictionary<string, object> customData = null, string name = null, string description = null, string size = null)
+        public bool UpdateEnvironment(Callback<ModelEnvironment> callback, string environmentId, string name = null, string description = null, string size = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEnvironment`");
@@ -596,17 +528,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateEnvironment"))
             {
@@ -640,7 +570,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            Dictionary<string, object> customData = ((RequestObject<ModelEnvironment>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -651,14 +580,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -667,7 +589,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add configuration.
@@ -691,11 +613,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
         /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
         /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, string name, Dictionary<string, object> customData = null, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
+        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, string name, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateConfiguration`");
@@ -708,17 +627,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateConfiguration"))
             {
@@ -758,7 +675,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -769,14 +685,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -785,7 +694,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a configuration.
@@ -798,11 +707,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="configurationId">The ID of the configuration.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteConfigurationResponse" />DeleteConfigurationResponse</returns>
-        public bool DeleteConfiguration(Callback<DeleteConfigurationResponse> callback, string environmentId, string configurationId, Dictionary<string, object> customData = null)
+        public bool DeleteConfiguration(Callback<DeleteConfigurationResponse> callback, string environmentId, string configurationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteConfiguration`");
@@ -815,17 +721,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteConfiguration"))
             {
@@ -848,7 +752,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteConfigurationResponse> response = new DetailedResponse<DeleteConfigurationResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteConfigurationResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -859,14 +762,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -875,7 +771,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteConfigurationResponse>)req).Callback != null)
-                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get configuration details.
@@ -883,11 +779,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="configurationId">The ID of the configuration.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool GetConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, Dictionary<string, object> customData = null)
+        public bool GetConfiguration(Callback<Configuration> callback, string environmentId, string configurationId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetConfiguration`");
@@ -900,17 +793,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetConfiguration"))
             {
@@ -933,7 +824,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -944,14 +834,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -960,7 +843,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List configurations.
@@ -970,11 +853,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">Find configurations with the given name. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListConfigurationsResponse" />ListConfigurationsResponse</returns>
-        public bool ListConfigurations(Callback<ListConfigurationsResponse> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
+        public bool ListConfigurations(Callback<ListConfigurationsResponse> callback, string environmentId, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListConfigurations`");
@@ -985,17 +865,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListConfigurations"))
             {
@@ -1022,7 +900,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListConfigurationsResponse> response = new DetailedResponse<ListConfigurationsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListConfigurationsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1033,14 +910,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListConfigurationsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1049,7 +919,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListConfigurationsResponse>)req).Callback != null)
-                ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a configuration.
@@ -1073,11 +943,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
         /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
         /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, string name, Dictionary<string, object> customData = null, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
+        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, string name, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateConfiguration`");
@@ -1092,17 +959,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateConfiguration"))
             {
@@ -1142,7 +1007,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            Dictionary<string, object> customData = ((RequestObject<Configuration>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1153,14 +1017,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1169,7 +1026,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Test configuration.
@@ -1200,11 +1057,8 @@ namespace IBM.Watson.Discovery.V1
         /// **configuration** form part is also provided (both are present at the same time), then the request will be
         /// rejected. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TestDocument" />TestDocument</returns>
-        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, Dictionary<string, object> customData = null, string configuration = null, System.IO.FileStream file = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
+        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.FileStream file = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TestConfigurationInEnvironment`");
@@ -1215,17 +1069,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "TestConfigurationInEnvironment"))
             {
@@ -1269,7 +1121,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnTestConfigurationInEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TestDocument> response = new DetailedResponse<TestDocument>();
-            Dictionary<string, object> customData = ((RequestObject<TestDocument>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1280,14 +1131,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TestDocument>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1296,7 +1140,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TestDocument>)req).Callback != null)
-                ((RequestObject<TestDocument>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TestDocument>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create a collection.
@@ -1309,11 +1153,8 @@ namespace IBM.Watson.Discovery.V1
         /// (optional)</param>
         /// <param name="language">The language of the documents stored in the collection, in the form of an ISO 639-1
         /// language code. (optional, default to en)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool CreateCollection(Callback<Collection> callback, string environmentId, string name, Dictionary<string, object> customData = null, string description = null, string configurationId = null, string language = null)
+        public bool CreateCollection(Callback<Collection> callback, string environmentId, string name, string description = null, string configurationId = null, string language = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCollection`");
@@ -1326,17 +1167,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateCollection"))
             {
@@ -1372,7 +1211,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1383,14 +1221,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1399,7 +1230,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a collection.
@@ -1407,11 +1238,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteCollectionResponse" />DeleteCollectionResponse</returns>
-        public bool DeleteCollection(Callback<DeleteCollectionResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool DeleteCollection(Callback<DeleteCollectionResponse> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
@@ -1424,17 +1252,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCollection"))
             {
@@ -1457,7 +1283,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteCollectionResponse> response = new DetailedResponse<DeleteCollectionResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteCollectionResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1468,14 +1293,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1484,7 +1302,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteCollectionResponse>)req).Callback != null)
-                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get collection details.
@@ -1492,11 +1310,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool GetCollection(Callback<Collection> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool GetCollection(Callback<Collection> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCollection`");
@@ -1509,17 +1324,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCollection"))
             {
@@ -1542,7 +1355,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1553,14 +1365,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1569,7 +1374,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List collection fields.
@@ -1579,11 +1384,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
-        public bool ListCollectionFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool ListCollectionFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCollectionFields`");
@@ -1596,17 +1398,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollectionFields"))
             {
@@ -1629,7 +1429,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCollectionFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionFieldsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1640,14 +1439,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1656,7 +1448,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List collections.
@@ -1666,11 +1458,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">Find collections with the given name. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ListCollectionsResponse" />ListCollectionsResponse</returns>
-        public bool ListCollections(Callback<ListCollectionsResponse> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
+        public bool ListCollections(Callback<ListCollectionsResponse> callback, string environmentId, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCollections`");
@@ -1681,17 +1470,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollections"))
             {
@@ -1718,7 +1505,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ListCollectionsResponse> response = new DetailedResponse<ListCollectionsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<ListCollectionsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1729,14 +1515,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ListCollectionsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1745,7 +1524,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ListCollectionsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a collection.
@@ -1757,11 +1536,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="description">A description of the collection. (optional)</param>
         /// <param name="configurationId">The ID of the configuration in which the collection is to be updated.
         /// (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name, Dictionary<string, object> customData = null, string description = null, string configurationId = null)
+        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name, string description = null, string configurationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
@@ -1774,17 +1550,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCollection"))
             {
@@ -1818,7 +1592,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            Dictionary<string, object> customData = ((RequestObject<Collection>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1829,14 +1602,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1845,7 +1611,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create or update expansion list.
@@ -1870,11 +1636,8 @@ namespace IBM.Watson.Discovery.V1
         ///  To create a uni-directional expansion, specify both an array of **input_terms** and an array of
         /// **expanded_terms**. When items in the **input_terms** array are present in a query, they are expanded using
         /// the items listed in the **expanded_terms** array.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Expansions" />Expansions</returns>
-        public bool CreateExpansions(Callback<Expansions> callback, string environmentId, string collectionId, List<Expansion> expansions, Dictionary<string, object> customData = null)
+        public bool CreateExpansions(Callback<Expansions> callback, string environmentId, string collectionId, List<Expansion> expansions)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExpansions`");
@@ -1889,17 +1652,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateExpansions"))
             {
@@ -1929,7 +1690,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
-            Dictionary<string, object> customData = ((RequestObject<Expansions>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1940,14 +1700,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -1956,7 +1709,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Expansions>)req).Callback != null)
-                ((RequestObject<Expansions>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create stopword list.
@@ -1967,11 +1720,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.FileStream stopwordFile, Dictionary<string, object> customData = null)
+        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.FileStream stopwordFile)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
@@ -1986,17 +1736,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateStopwordList"))
             {
@@ -2024,7 +1772,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2035,14 +1782,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2051,7 +1791,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create tokenization dictionary.
@@ -2064,11 +1804,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="tokenizationRules">An array of tokenization rules. Each rule contains, the original `text`
         /// string, component `tokens`, any alternate character set `readings`, and which `part_of_speech` the text is
         /// from. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool CreateTokenizationDictionary(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, List<TokenDictRule> tokenizationRules = null)
+        public bool CreateTokenizationDictionary(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, List<TokenDictRule> tokenizationRules = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateTokenizationDictionary`");
@@ -2081,17 +1818,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateTokenizationDictionary"))
             {
@@ -2121,7 +1856,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2132,14 +1866,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2148,7 +1875,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete the expansion list.
@@ -2159,11 +1886,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteExpansions(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool DeleteExpansions(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteExpansions`");
@@ -2176,17 +1900,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteExpansions"))
             {
@@ -2209,7 +1931,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2220,14 +1941,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2236,7 +1950,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a custom stopword list.
@@ -2247,11 +1961,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteStopwordList(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool DeleteStopwordList(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteStopwordList`");
@@ -2264,17 +1975,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteStopwordList"))
             {
@@ -2297,7 +2006,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2308,14 +2016,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2324,7 +2025,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete tokenization dictionary.
@@ -2334,11 +2035,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteTokenizationDictionary(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool DeleteTokenizationDictionary(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTokenizationDictionary`");
@@ -2351,17 +2049,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTokenizationDictionary"))
             {
@@ -2384,7 +2080,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2395,14 +2090,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2411,7 +2099,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get stopword list status.
@@ -2421,11 +2109,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool GetStopwordListStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool GetStopwordListStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetStopwordListStatus`");
@@ -2438,17 +2123,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetStopwordListStatus"))
             {
@@ -2471,7 +2154,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2482,14 +2164,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2498,7 +2173,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get tokenization dictionary status.
@@ -2508,11 +2183,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTokenizationDictionaryStatus`");
@@ -2525,17 +2197,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
             {
@@ -2558,7 +2228,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
-            Dictionary<string, object> customData = ((RequestObject<TokenDictStatusResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2569,14 +2238,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TokenDictStatusResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2585,7 +2247,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
-                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get the expansion list.
@@ -2596,11 +2258,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Expansions" />Expansions</returns>
-        public bool ListExpansions(Callback<Expansions> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool ListExpansions(Callback<Expansions> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListExpansions`");
@@ -2613,17 +2272,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListExpansions"))
             {
@@ -2646,7 +2303,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
-            Dictionary<string, object> customData = ((RequestObject<Expansions>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2657,14 +2313,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Expansions>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2673,7 +2322,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Expansions>)req).Callback != null)
-                ((RequestObject<Expansions>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a document.
@@ -2712,11 +2361,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
+        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddDocument`");
@@ -2729,17 +2375,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "AddDocument"))
             {
@@ -2771,7 +2415,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentAccepted> response = new DetailedResponse<DocumentAccepted>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentAccepted>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2782,14 +2425,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2798,7 +2434,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
-                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a document.
@@ -2810,11 +2446,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteDocumentResponse" />DeleteDocumentResponse</returns>
-        public bool DeleteDocument(Callback<DeleteDocumentResponse> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null)
+        public bool DeleteDocument(Callback<DeleteDocumentResponse> callback, string environmentId, string collectionId, string documentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
@@ -2829,17 +2462,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteDocument"))
             {
@@ -2862,7 +2493,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteDocumentResponse> response = new DetailedResponse<DeleteDocumentResponse>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteDocumentResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2873,14 +2503,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2889,7 +2512,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteDocumentResponse>)req).Callback != null)
-                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get document details.
@@ -2902,11 +2525,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
-        public bool GetDocumentStatus(Callback<DocumentStatus> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null)
+        public bool GetDocumentStatus(Callback<DocumentStatus> callback, string environmentId, string collectionId, string documentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetDocumentStatus`");
@@ -2921,17 +2541,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetDocumentStatus"))
             {
@@ -2954,7 +2572,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetDocumentStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentStatus> response = new DetailedResponse<DocumentStatus>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentStatus>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2965,14 +2582,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -2981,7 +2591,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentStatus>)req).Callback != null)
-                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a document.
@@ -3002,11 +2612,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, Dictionary<string, object> customData = null, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
+        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.FileStream file = null, string metadata = null, string fileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
@@ -3021,17 +2628,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateDocument"))
             {
@@ -3063,7 +2668,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DocumentAccepted> response = new DetailedResponse<DocumentAccepted>();
-            Dictionary<string, object> customData = ((RequestObject<DocumentAccepted>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3074,14 +2678,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DocumentAccepted>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3090,14 +2687,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
-                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Long environment queries.
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+        /// see the [Discovery service
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3160,11 +2758,8 @@ namespace IBM.Watson.Discovery.V1
         /// parameter. (optional)</param>
         /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
         /// default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
@@ -3175,17 +2770,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQuery"))
             {
@@ -3258,7 +2851,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3269,14 +2861,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3285,15 +2870,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryResponse>)req).Callback != null)
-                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Query multiple collection system notices.
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-        /// language.
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
+        /// for more details on the query language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3334,11 +2919,8 @@ namespace IBM.Watson.Discovery.V1
         /// subsequently applied and reduce the scope. (optional)</param>
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
-        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
+        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
@@ -3351,17 +2933,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQueryNotices"))
             {
@@ -3440,7 +3020,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryNoticesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3451,14 +3030,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3467,14 +3039,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
-                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Long collection queries.
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
+        /// see the [Discovery service
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3538,11 +3111,8 @@ namespace IBM.Watson.Discovery.V1
         /// parameter. (optional)</param>
         /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
         /// default to false)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Query`");
@@ -3555,17 +3125,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "Query"))
             {
@@ -3638,7 +3206,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3649,14 +3216,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3665,13 +3225,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryResponse>)req).Callback != null)
-                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Knowledge Graph entity query.
         ///
-        /// See the [Knowledge Graph
-        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
+        /// for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3686,11 +3246,8 @@ namespace IBM.Watson.Discovery.V1
         /// (optional)</param>
         /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
         /// maximum number of evidence items per query is 10,000. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
-        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
+        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryEntities`");
@@ -3703,17 +3260,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryEntities"))
             {
@@ -3751,7 +3306,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryEntitiesResponse> response = new DetailedResponse<QueryEntitiesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryEntitiesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3762,14 +3316,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3778,15 +3325,15 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryEntitiesResponse>)req).Callback != null)
-                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Query system notices.
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
-        /// language.
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
+        /// for more details on the query language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3835,11 +3382,8 @@ namespace IBM.Watson.Discovery.V1
         /// subsequently applied and reduce the scope. (optional)</param>
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
-        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
+        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryNotices`");
@@ -3852,17 +3396,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryNotices"))
             {
@@ -3953,7 +3495,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryNoticesResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3964,14 +3505,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -3980,13 +3514,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
-                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Knowledge Graph relationship query.
         ///
-        /// See the [Knowledge Graph
-        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
+        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
+        /// for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -4003,11 +3537,8 @@ namespace IBM.Watson.Discovery.V1
         /// (optional)</param>
         /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
         /// maximum number of evidence items per query is 10,000. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="QueryRelationsResponse" />QueryRelationsResponse</returns>
-        public bool QueryRelations(Callback<QueryRelationsResponse> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, List<QueryRelationsEntity> entities = null, QueryEntitiesContext context = null, string sort = null, QueryRelationsFilter filter = null, long? count = null, long? evidenceCount = null)
+        public bool QueryRelations(Callback<QueryRelationsResponse> callback, string environmentId, string collectionId, List<QueryRelationsEntity> entities = null, QueryEntitiesContext context = null, string sort = null, QueryRelationsFilter filter = null, long? count = null, long? evidenceCount = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryRelations`");
@@ -4020,17 +3551,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryRelations"))
             {
@@ -4070,7 +3599,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<QueryRelationsResponse> response = new DetailedResponse<QueryRelationsResponse>();
-            Dictionary<string, object> customData = ((RequestObject<QueryRelationsResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4081,14 +3609,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<QueryRelationsResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4097,7 +3618,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<QueryRelationsResponse>)req).Callback != null)
-                ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add query to training data.
@@ -4112,11 +3633,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="filter">The filter used on the collection before the **natural_language_query** is applied.
         /// (optional)</param>
         /// <param name="examples">Array of training examples. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
-        public bool AddTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null, string naturalLanguageQuery = null, string filter = null, List<TrainingExample> examples = null)
+        public bool AddTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string naturalLanguageQuery = null, string filter = null, List<TrainingExample> examples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddTrainingData`");
@@ -4129,17 +3647,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "AddTrainingData"))
             {
@@ -4173,7 +3689,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnAddTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingQuery>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4184,14 +3699,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4200,7 +3708,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
-                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add example to training data query.
@@ -4214,11 +3722,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="documentId">The document ID associated with this training example. (optional)</param>
         /// <param name="crossReference">The cross reference associated with this training example. (optional)</param>
         /// <param name="relevance">The relevance of the training example. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingExample" />TrainingExample</returns>
-        public bool CreateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null, string documentId = null, string crossReference = null, long? relevance = null)
+        public bool CreateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string documentId = null, string crossReference = null, long? relevance = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateTrainingExample`");
@@ -4233,17 +3738,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateTrainingExample"))
             {
@@ -4277,7 +3780,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4288,14 +3790,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4304,7 +3799,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete all training data.
@@ -4314,11 +3809,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteAllTrainingData(Callback<object> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool DeleteAllTrainingData(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteAllTrainingData`");
@@ -4331,17 +3823,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteAllTrainingData"))
             {
@@ -4364,7 +3854,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteAllTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4375,14 +3864,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4391,7 +3873,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete a training data query.
@@ -4402,11 +3884,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteTrainingData(Callback<object> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
+        public bool DeleteTrainingData(Callback<object> callback, string environmentId, string collectionId, string queryId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTrainingData`");
@@ -4421,17 +3900,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingData"))
             {
@@ -4454,7 +3931,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4465,14 +3941,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4481,7 +3950,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete example for training data query.
@@ -4493,11 +3962,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteTrainingExample(Callback<object> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null)
+        public bool DeleteTrainingExample(Callback<object> callback, string environmentId, string collectionId, string queryId, string exampleId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTrainingExample`");
@@ -4514,17 +3980,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingExample"))
             {
@@ -4547,7 +4011,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4558,14 +4021,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4574,7 +4030,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get details about a query.
@@ -4585,11 +4041,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
-        public bool GetTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
+        public bool GetTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string queryId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingData`");
@@ -4604,17 +4057,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingData"))
             {
@@ -4637,7 +4088,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingQuery>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4648,14 +4098,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4664,7 +4107,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
-                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get details for training data example.
@@ -4676,11 +4119,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingExample" />TrainingExample</returns>
-        public bool GetTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null)
+        public bool GetTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingExample`");
@@ -4697,17 +4137,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingExample"))
             {
@@ -4730,7 +4168,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4741,14 +4178,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4757,7 +4187,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List training data.
@@ -4767,11 +4197,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingDataSet" />TrainingDataSet</returns>
-        public bool ListTrainingData(Callback<TrainingDataSet> callback, string environmentId, string collectionId, Dictionary<string, object> customData = null)
+        public bool ListTrainingData(Callback<TrainingDataSet> callback, string environmentId, string collectionId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListTrainingData`");
@@ -4784,17 +4211,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingData"))
             {
@@ -4817,7 +4242,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingDataSet> response = new DetailedResponse<TrainingDataSet>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingDataSet>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4828,14 +4252,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4844,7 +4261,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingDataSet>)req).Callback != null)
-                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List examples for a training data query.
@@ -4855,11 +4272,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingExampleList" />TrainingExampleList</returns>
-        public bool ListTrainingExamples(Callback<TrainingExampleList> callback, string environmentId, string collectionId, string queryId, Dictionary<string, object> customData = null)
+        public bool ListTrainingExamples(Callback<TrainingExampleList> callback, string environmentId, string collectionId, string queryId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListTrainingExamples`");
@@ -4874,17 +4288,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingExamples"))
             {
@@ -4907,7 +4319,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListTrainingExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExampleList> response = new DetailedResponse<TrainingExampleList>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExampleList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4918,14 +4329,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -4934,7 +4338,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExampleList>)req).Callback != null)
-                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Change label or cross reference for example.
@@ -4948,11 +4352,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
         /// <param name="crossReference">The example to add. (optional)</param>
         /// <param name="relevance">The relevance value for this example. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="TrainingExample" />TrainingExample</returns>
-        public bool UpdateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, Dictionary<string, object> customData = null, string crossReference = null, long? relevance = null)
+        public bool UpdateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, string crossReference = null, long? relevance = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateTrainingExample`");
@@ -4969,17 +4370,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateTrainingExample"))
             {
@@ -5011,7 +4410,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            Dictionary<string, object> customData = ((RequestObject<TrainingExample>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5022,14 +4420,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5038,7 +4429,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -5048,15 +4439,12 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://console.bluemix.net/docs/services/discovery/information-security.html).
+        /// security](https://cloud.ibm.com/docs/services/discovery?topic=discovery-information-security#information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteUserData(Callback<object> callback, string customerId, Dictionary<string, object> customData = null)
+        public bool DeleteUserData(Callback<object> callback, string customerId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
@@ -5067,17 +4455,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteUserData"))
             {
@@ -5104,7 +4490,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
-            Dictionary<string, object> customData = ((RequestObject<object>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5115,14 +4500,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<object>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5131,7 +4509,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create event.
@@ -5142,11 +4520,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="type">The event type to be created.</param>
         /// <param name="data">Query event data object.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="CreateEventResponse" />CreateEventResponse</returns>
-        public bool CreateEvent(Callback<CreateEventResponse> callback, string type, EventData data, Dictionary<string, object> customData = null)
+        public bool CreateEvent(Callback<CreateEventResponse> callback, string type, EventData data)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEvent`");
@@ -5159,17 +4534,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateEvent"))
             {
@@ -5201,7 +4574,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CreateEventResponse> response = new DetailedResponse<CreateEventResponse>();
-            Dictionary<string, object> customData = ((RequestObject<CreateEventResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5212,14 +4584,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CreateEventResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5228,7 +4593,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<CreateEventResponse>)req).Callback != null)
-                ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Percentage of queries with an associated event.
@@ -5243,11 +4608,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MetricResponse" />MetricResponse</returns>
-        public bool GetMetricsEventRate(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        public bool GetMetricsEventRate(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsEventRate`");
@@ -5256,17 +4618,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsEventRate"))
             {
@@ -5301,7 +4661,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5312,14 +4671,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5328,7 +4680,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries over time.
@@ -5341,11 +4693,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MetricResponse" />MetricResponse</returns>
-        public bool GetMetricsQuery(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        public bool GetMetricsQuery(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQuery`");
@@ -5354,17 +4703,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQuery"))
             {
@@ -5399,7 +4746,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5410,14 +4756,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5426,7 +4765,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries with an event over time.
@@ -5441,11 +4780,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MetricResponse" />MetricResponse</returns>
-        public bool GetMetricsQueryEvent(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        public bool GetMetricsQueryEvent(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryEvent`");
@@ -5454,17 +4790,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryEvent"))
             {
@@ -5499,7 +4833,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5510,14 +4843,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5526,7 +4852,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries with no search results over time.
@@ -5540,11 +4866,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
         /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
         /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MetricResponse" />MetricResponse</returns>
-        public bool GetMetricsQueryNoResults(Callback<MetricResponse> callback, Dictionary<string, object> customData = null, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        public bool GetMetricsQueryNoResults(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryNoResults`");
@@ -5553,17 +4876,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryNoResults"))
             {
@@ -5598,7 +4919,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryNoResultsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5609,14 +4929,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5625,7 +4938,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Most frequent query tokens with an event.
@@ -5636,11 +4949,8 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="count">Number of results to return. (optional, default to 10)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="MetricTokenResponse" />MetricTokenResponse</returns>
-        public bool GetMetricsQueryTokenEvent(Callback<MetricTokenResponse> callback, Dictionary<string, object> customData = null, long? count = null)
+        public bool GetMetricsQueryTokenEvent(Callback<MetricTokenResponse> callback, long? count = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryTokenEvent`");
@@ -5649,17 +4959,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsQueryTokenEvent"))
             {
@@ -5686,7 +4994,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetMetricsQueryTokenEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<MetricTokenResponse> response = new DetailedResponse<MetricTokenResponse>();
-            Dictionary<string, object> customData = ((RequestObject<MetricTokenResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5697,14 +5004,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<MetricTokenResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5713,7 +5013,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<MetricTokenResponse>)req).Callback != null)
-                ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Search the query and event log.
@@ -5735,11 +5035,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
         /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
         /// sort direction if no prefix is specified. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
-        public bool QueryLog(Callback<LogQueryResponse> callback, Dictionary<string, object> customData = null, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null)
+        public bool QueryLog(Callback<LogQueryResponse> callback, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryLog`");
@@ -5748,17 +5045,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryLog"))
             {
@@ -5801,7 +5096,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<LogQueryResponse> response = new DetailedResponse<LogQueryResponse>();
-            Dictionary<string, object> customData = ((RequestObject<LogQueryResponse>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5812,14 +5106,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5828,7 +5115,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<LogQueryResponse>)req).Callback != null)
-                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create credentials.
@@ -5844,15 +5131,14 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
+        /// (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, Dictionary<string, object> customData = null, string sourceType = null, CredentialDetails credentialDetails = null)
+        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
@@ -5863,17 +5149,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateCredentials"))
             {
@@ -5905,7 +5189,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5916,14 +5199,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -5932,7 +5208,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete credentials.
@@ -5942,11 +5218,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="DeleteCredentials" />DeleteCredentials</returns>
-        public bool DeleteCredentials(Callback<DeleteCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null)
+        public bool DeleteCredentials(Callback<DeleteCredentials> callback, string environmentId, string credentialId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCredentials`");
@@ -5959,17 +5232,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCredentials"))
             {
@@ -5992,7 +5263,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<DeleteCredentials> response = new DetailedResponse<DeleteCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<DeleteCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6003,14 +5273,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<DeleteCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6019,7 +5282,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<DeleteCredentials>)req).Callback != null)
-                ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// View Credentials.
@@ -6032,11 +5295,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool GetCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null)
+        public bool GetCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCredentials`");
@@ -6049,17 +5309,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCredentials"))
             {
@@ -6082,7 +5340,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6093,14 +5350,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6109,7 +5359,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List credentials.
@@ -6120,11 +5370,8 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="CredentialsList" />CredentialsList</returns>
-        public bool ListCredentials(Callback<CredentialsList> callback, string environmentId, Dictionary<string, object> customData = null)
+        public bool ListCredentials(Callback<CredentialsList> callback, string environmentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCredentials`");
@@ -6135,17 +5382,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCredentials"))
             {
@@ -6168,7 +5413,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<CredentialsList> response = new DetailedResponse<CredentialsList>();
-            Dictionary<string, object> customData = ((RequestObject<CredentialsList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6179,14 +5423,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6195,7 +5432,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<CredentialsList>)req).Callback != null)
-                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update credentials.
@@ -6211,15 +5448,14 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
+        /// (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, Dictionary<string, object> customData = null, string sourceType = null, CredentialDetails credentialDetails = null)
+        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
@@ -6232,17 +5468,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCredentials"))
             {
@@ -6274,7 +5508,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnUpdateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            Dictionary<string, object> customData = ((RequestObject<ModelCredentials>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6285,14 +5518,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6301,7 +5527,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create Gateway.
@@ -6311,11 +5537,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">User-defined name. (optional)</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Gateway" />Gateway</returns>
-        public bool CreateGateway(Callback<Gateway> callback, string environmentId, Dictionary<string, object> customData = null, string name = null)
+        public bool CreateGateway(Callback<Gateway> callback, string environmentId, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateGateway`");
@@ -6326,17 +5549,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateGateway"))
             {
@@ -6366,7 +5587,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnCreateGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Gateway> response = new DetailedResponse<Gateway>();
-            Dictionary<string, object> customData = ((RequestObject<Gateway>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6377,14 +5597,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6393,7 +5606,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Gateway>)req).Callback != null)
-                ((RequestObject<Gateway>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete Gateway.
@@ -6403,11 +5616,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="gatewayId">The requested gateway ID.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="GatewayDelete" />GatewayDelete</returns>
-        public bool DeleteGateway(Callback<GatewayDelete> callback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
+        public bool DeleteGateway(Callback<GatewayDelete> callback, string environmentId, string gatewayId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteGateway`");
@@ -6420,17 +5630,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteGateway"))
             {
@@ -6453,7 +5661,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GatewayDelete> response = new DetailedResponse<GatewayDelete>();
-            Dictionary<string, object> customData = ((RequestObject<GatewayDelete>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6464,14 +5671,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6480,7 +5680,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<GatewayDelete>)req).Callback != null)
-                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List Gateway Details.
@@ -6490,11 +5690,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="gatewayId">The requested gateway ID.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="Gateway" />Gateway</returns>
-        public bool GetGateway(Callback<Gateway> callback, string environmentId, string gatewayId, Dictionary<string, object> customData = null)
+        public bool GetGateway(Callback<Gateway> callback, string environmentId, string gatewayId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetGateway`");
@@ -6507,17 +5704,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetGateway"))
             {
@@ -6540,7 +5735,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnGetGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<Gateway> response = new DetailedResponse<Gateway>();
-            Dictionary<string, object> customData = ((RequestObject<Gateway>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6551,14 +5745,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<Gateway>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6567,7 +5754,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<Gateway>)req).Callback != null)
-                ((RequestObject<Gateway>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List Gateways.
@@ -6576,11 +5763,8 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="customData">A Dictionary<string, object> of data that will be passed to the callback. The raw
-        /// json output from the REST call will be passed in this object as the value of the 'json'
-        /// key.</string></param>
         /// <returns><see cref="GatewayList" />GatewayList</returns>
-        public bool ListGateways(Callback<GatewayList> callback, string environmentId, Dictionary<string, object> customData = null)
+        public bool ListGateways(Callback<GatewayList> callback, string environmentId)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListGateways`");
@@ -6591,17 +5775,15 @@ namespace IBM.Watson.Discovery.V1
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification,
-                CustomData = customData == null ? new Dictionary<string, object>() : customData
+                DisableSslVerification = DisableSslVerification
             };
 
-            if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
-                foreach (KeyValuePair<string, string> kvp in req.CustomData[Constants.String.CUSTOM_REQUEST_HEADERS] as Dictionary<string, string>)
-                {
-                    req.Headers.Add(kvp.Key, kvp.Value);
-                }
+                req.Headers.Add(kvp.Key, kvp.Value);
             }
+
+            ClearCustomRequestHeaders();
 
             foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListGateways"))
             {
@@ -6624,7 +5806,6 @@ namespace IBM.Watson.Discovery.V1
         private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<GatewayList> response = new DetailedResponse<GatewayList>();
-            Dictionary<string, object> customData = ((RequestObject<GatewayList>)req).CustomData;
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -6635,14 +5816,7 @@ namespace IBM.Watson.Discovery.V1
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
                 response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
-                if (!customData.ContainsKey("json"))
-                {
-                    customData.Add("json", json);
-                }
-                else
-                {
-                    customData["json"] = json;
-                }
+                response.Response = json;
             }
             catch (Exception e)
             {
@@ -6651,7 +5825,7 @@ namespace IBM.Watson.Discovery.V1
             }
 
             if (((RequestObject<GatewayList>)req).Callback != null)
-                ((RequestObject<GatewayList>)req).Callback(response, resp.Error, customData);
+                ((RequestObject<GatewayList>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -83,15 +83,15 @@ namespace IBM.Watson.Examples
         }
 
 
-        private void OnProfile(DetailedResponse<Profile> response, IBMError error, Dictionary<string, object> customData)
+        private void OnProfile(DetailedResponse<Profile> response, IBMError error)
         {
-            Log.Debug("ExamplePersonaltyInsightsV3.OnProfile()", "Response: {0}", customData["json"].ToString());
+            Log.Debug("ExamplePersonaltyInsightsV3.OnProfile()", "Response: {0}", response.Response);
             profileTested = true;
         }
 
-        private void OnProfileAsCsv(DetailedResponse<MemoryStream> response, IBMError error, Dictionary<string, object> customData)
+        private void OnProfileAsCsv(DetailedResponse<MemoryStream> response, IBMError error)
         {
-            //Log.Debug("ExamplePersonaltyInsightsV3.OnProfile()", "Response: {0}", customData["json"].ToString());
+            //Log.Debug("ExamplePersonaltyInsightsV3.OnProfile()", "Response: {0}", response.Response);
             profileAsCsvTested = true;
         }
     }

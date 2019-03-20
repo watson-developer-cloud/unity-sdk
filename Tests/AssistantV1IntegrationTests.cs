@@ -31,8 +31,6 @@ namespace IBM.Watson.Tests
     {
         private AssistantService service;
         private string versionDate = "2019-02-13";
-        private Dictionary<string, object> customData;
-        private Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         private string workspaceId;
         private string createdWorkspaceName = "unity-sdk-example-workspace-delete";
         private string createdWorkspaceDescription = "A Workspace created by the Unity SDK Assistant example script. Please delete this.";
@@ -64,7 +62,6 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            customHeaders.Add("X-Watson-Test", "1");
         }
 
         [UnitySetUp]
@@ -82,8 +79,7 @@ namespace IBM.Watson.Tests
         [SetUp]
         public void TestSetup()
         {
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
         }
 
         [UnityTest, Order(0)]
@@ -95,7 +91,7 @@ namespace IBM.Watson.Tests
             JToken conversationId = null;
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -106,15 +102,13 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             JObject input = new JObject();
@@ -122,7 +116,7 @@ namespace IBM.Watson.Tests
             input.Add("text", "Are you open on Christmas?");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Are you open on Christmas?");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -137,15 +131,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -153,7 +145,7 @@ namespace IBM.Watson.Tests
             input.Add("text", "What are your hours?");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...What are your hours?");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -168,15 +160,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -184,7 +174,7 @@ namespace IBM.Watson.Tests
             input.Add("text", "I'd like to make an appointment for 12pm.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -199,15 +189,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -215,7 +203,7 @@ namespace IBM.Watson.Tests
             input.Add("text", "On Friday please.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...On Friday please.");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -230,15 +218,13 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
                 yield return null;
 
-            customData = new Dictionary<string, object>();
-            customData.Add(Constants.String.CUSTOM_REQUEST_HEADERS, customHeaders);
+            service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
             input = new JObject();
@@ -246,7 +232,7 @@ namespace IBM.Watson.Tests
             input.Add("text", "Yes.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Yes.");
             service.Message(
-                callback: (DetailedResponse<MessageResponse> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
@@ -261,8 +247,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 input: input,
                 context: context as JObject,
-                nodesVisitedDetails: true,
-                customData: customData
+                nodesVisitedDetails: true
             );
 
             while (messageResponse == null)
@@ -275,9 +260,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateWorkspace...");
             Workspace createWorkspaceResponse = null;
             service.CreateWorkspace(
-                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Workspace> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateWorkspace result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateWorkspace result: {0}", response.Response);
                     createWorkspaceResponse = response.Result;
                     workspaceId = createWorkspaceResponse.WorkspaceId;
                     Assert.IsNotNull(createWorkspaceResponse);
@@ -290,8 +275,7 @@ namespace IBM.Watson.Tests
                 name: createdWorkspaceName,
                 description: createdWorkspaceDescription,
                 language: createdWorkspaceLanguage,
-                learningOptOut: true,
-                customData: customData
+                learningOptOut: true
             );
 
             while (createWorkspaceResponse == null)
@@ -304,9 +288,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetWorkspace...");
             Workspace getWorkspaceResponse = null;
             service.GetWorkspace(
-                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Workspace> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetWorkspace result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetWorkspace result: {0}", response.Response);
                     getWorkspaceResponse = response.Result;
                     Assert.IsNotNull(getWorkspaceResponse);
                     Assert.IsTrue(getWorkspaceResponse.WorkspaceId == workspaceId);
@@ -318,8 +302,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 includeAudit: true,
-                sort: "-name",
-                customData: customData
+                sort: "-name"
             );
 
             while (getWorkspaceResponse == null)
@@ -332,9 +315,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListWorkspaces...");
             WorkspaceCollection listWorkspacesResponse = null;
             service.ListWorkspaces(
-                callback: (DetailedResponse<WorkspaceCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListWorkspaces result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListWorkspaces result: {0}", response.Response);
                     listWorkspacesResponse = response.Result;
                     Assert.IsNotNull(listWorkspacesResponse);
                     Assert.IsNotNull(listWorkspacesResponse.Workspaces);
@@ -344,8 +327,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-name",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listWorkspacesResponse == null)
@@ -358,9 +340,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateWorkspace...");
             Workspace updateWorkspaceResponse = null;
             service.UpdateWorkspace(
-                callback: (DetailedResponse<Workspace> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Workspace> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateWorkspace result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateWorkspace result: {0}", response.Response);
                     updateWorkspaceResponse = response.Result;
                     Assert.IsNotNull(updateWorkspaceResponse);
                     Assert.IsTrue(updateWorkspaceResponse.Name == updatedWorkspaceName);
@@ -372,8 +354,7 @@ namespace IBM.Watson.Tests
                 description: updatedWorkspaceDescription,
                 language: createdWorkspaceLanguage,
                 learningOptOut: true,
-                append: false,
-                customData: customData
+                append: false
             );
 
             while (updateWorkspaceResponse == null)
@@ -386,9 +367,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateIntent...");
             Intent createIntentResponse = null;
             service.CreateIntent(
-                callback: (DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Intent> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateIntent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateIntent result: {0}", response.Response);
                     createIntentResponse = response.Result;
                     Assert.IsNotNull(createIntentResponse);
                     Assert.IsTrue(createIntentResponse._Intent == createdIntentName);
@@ -397,8 +378,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 intent: createdIntentName,
-                description: createdIntentDescription,
-                customData: customData
+                description: createdIntentDescription
             );
 
             while (createIntentResponse == null)
@@ -411,9 +391,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetIntent...");
             Intent getIntentResponse = null;
             service.GetIntent(
-                callback: (DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Intent> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetIntent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetIntent result: {0}", response.Response);
                     getIntentResponse = response.Result;
                     Assert.IsNotNull(getIntentResponse);
                     Assert.IsTrue(getIntentResponse._Intent == createdIntentName);
@@ -423,8 +403,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: createdIntentName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getIntentResponse == null)
@@ -437,9 +416,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListIntents...");
             IntentCollection listIntentsResponse = null;
             service.ListIntents(
-                callback: (DetailedResponse<IntentCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<IntentCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListIntents result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListIntents result: {0}", response.Response);
                     listIntentsResponse = response.Result;
                     Assert.IsNotNull(listIntentsResponse);
                     Assert.IsNotNull(listIntentsResponse.Intents);
@@ -451,8 +430,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-name",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listIntentsResponse == null)
@@ -465,9 +443,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateIntent...");
             Intent updateIntentResponse = null;
             service.UpdateIntent(
-                callback: (DetailedResponse<Intent> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Intent> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateIntent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateIntent result: {0}", response.Response);
                     updateIntentResponse = response.Result;
                     Assert.IsNotNull(updateIntentResponse);
                     Assert.IsTrue(updateIntentResponse._Intent == updatedIntentName);
@@ -477,8 +455,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: createdIntentName,
                 newIntent: updatedIntentName,
-                newDescription: updatedIntentDescription,
-                customData: customData
+                newDescription: updatedIntentDescription
             );
 
             while (updateIntentResponse == null)
@@ -491,9 +468,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateExample...");
             Example createExampleResponse = null;
             service.CreateExample(
-                callback: (DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Example> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateExample result: {0}", response.Response);
                     createExampleResponse = response.Result;
                     Assert.IsNotNull(createExampleResponse);
                     Assert.IsTrue(createExampleResponse.Text == createdExampleText);
@@ -501,8 +478,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
-                text: createdExampleText,
-                customData: customData
+                text: createdExampleText
             );
 
             while (createExampleResponse == null)
@@ -515,9 +491,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetExample...");
             Example getExampleResponse = null;
             service.GetExample(
-                callback: (DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Example> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetExample result: {0}", response.Response);
                     getExampleResponse = response.Result;
                     Assert.IsNotNull(getExampleResponse);
                     Assert.IsTrue(getExampleResponse.Text == createdExampleText);
@@ -526,8 +502,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 text: createdExampleText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getExampleResponse == null)
@@ -540,9 +515,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListExamples...");
             ExampleCollection listExamplesResponse = null;
             service.ListExamples(
-                callback: (DetailedResponse<ExampleCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ExampleCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListExamples result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListExamples result: {0}", response.Response);
                     listExamplesResponse = response.Result;
                     Assert.IsNotNull(listExamplesResponse);
                     Assert.IsNotNull(listExamplesResponse.Examples);
@@ -554,8 +529,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-text",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listExamplesResponse == null)
@@ -568,9 +542,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateExample...");
             Example updateExampleResponse = null;
             service.UpdateExample(
-                callback: (DetailedResponse<Example> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Example> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateExample result: {0}", response.Response);
                     updateExampleResponse = response.Result;
                     Assert.IsNotNull(updateExampleResponse);
                     Assert.IsTrue(updateExampleResponse.Text == updatedExampleText);
@@ -579,8 +553,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 text: createdExampleText,
-                newText: updatedExampleText,
-                customData: customData
+                newText: updatedExampleText
             );
 
             while (updateExampleResponse == null)
@@ -593,17 +566,16 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateCounterexample...");
             Counterexample createCounterexampleResponse = null;
             service.CreateCounterexample(
-                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Counterexample> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateCounterexample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateCounterexample result: {0}", response.Response);
                     createCounterexampleResponse = response.Result;
                     Assert.IsNotNull(createCounterexampleResponse);
                     Assert.IsTrue(createCounterexampleResponse.Text == createdCounterExampleText);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                text: createdCounterExampleText,
-                customData: customData
+                text: createdCounterExampleText
             );
 
             while (createCounterexampleResponse == null)
@@ -616,9 +588,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetCounterexample...");
             Counterexample getCounterexampleResponse = null;
             service.GetCounterexample(
-                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Counterexample> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetCounterexample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetCounterexample result: {0}", response.Response);
                     getCounterexampleResponse = response.Result;
                     Assert.IsNotNull(getCounterexampleResponse);
                     Assert.IsTrue(getCounterexampleResponse.Text == createdCounterExampleText);
@@ -626,8 +598,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 text: createdCounterExampleText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getCounterexampleResponse == null)
@@ -640,9 +611,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListCounterexamples...");
             CounterexampleCollection listCounterexamplesResponse = null;
             service.ListCounterexamples(
-                callback: (DetailedResponse<CounterexampleCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<CounterexampleCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListCounterexamples result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListCounterexamples result: {0}", response.Response);
                     listCounterexamplesResponse = response.Result;
                     Assert.IsNotNull(listCounterexamplesResponse);
                     Assert.IsNotNull(listCounterexamplesResponse.Counterexamples);
@@ -653,8 +624,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-text",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listCounterexamplesResponse == null)
@@ -667,9 +637,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateCounterexample...");
             Counterexample updateCounterexampleResponse = null;
             service.UpdateCounterexample(
-                callback: (DetailedResponse<Counterexample> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Counterexample> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateCounterexample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateCounterexample result: {0}", response.Response);
                     updateCounterexampleResponse = response.Result;
                     Assert.IsNotNull(updateCounterexampleResponse);
                     Assert.IsTrue(updateCounterexampleResponse.Text == updatedCounterExampleText);
@@ -677,8 +647,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 text: createdCounterExampleText,
-                newText: updatedCounterExampleText,
-                customData: customData
+                newText: updatedCounterExampleText
             );
 
             while (updateCounterexampleResponse == null)
@@ -691,9 +660,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateEntity...");
             Entity createEntityResponse = null;
             service.CreateEntity(
-                callback: (DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Entity> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateEntity result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateEntity result: {0}", response.Response);
                     createEntityResponse = response.Result;
                     Assert.IsNotNull(createEntityResponse);
                     Assert.IsTrue(createEntityResponse._Entity == createdEntityName);
@@ -703,8 +672,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: createdEntityName,
                 description: createdEntityDescription,
-                fuzzyMatch: true,
-                customData: customData
+                fuzzyMatch: true
             );
 
             while (createEntityResponse == null)
@@ -717,9 +685,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetEntity...");
             Entity getEntityResponse = null;
             service.GetEntity(
-                callback: (DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Entity> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetEntity result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetEntity result: {0}", response.Response);
                     getEntityResponse = response.Result;
                     Assert.IsNotNull(getEntityResponse);
                     Assert.IsTrue(getEntityResponse._Entity == createdEntityName);
@@ -729,8 +697,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: createdEntityName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getEntityResponse == null)
@@ -743,9 +710,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListEntities...");
             EntityCollection listEntitiesResponse = null;
             service.ListEntities(
-                callback: (DetailedResponse<EntityCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<EntityCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListEntities result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListEntities result: {0}", response.Response);
                     listEntitiesResponse = response.Result;
                     Assert.IsNotNull(listEntitiesResponse);
                     Assert.IsNotNull(listEntitiesResponse.Entities);
@@ -757,8 +724,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-entity",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listEntitiesResponse == null)
@@ -771,9 +737,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateEntity...");
             Entity updateEntityResponse = null;
             service.UpdateEntity(
-                callback: (DetailedResponse<Entity> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Entity> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateEntity result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateEntity result: {0}", response.Response);
                     updateEntityResponse = response.Result;
                     Assert.IsNotNull(updateEntityResponse);
                     Assert.IsTrue(updateEntityResponse._Entity == updatedEntityName);
@@ -784,8 +750,7 @@ namespace IBM.Watson.Tests
                 entity: createdEntityName,
                 newEntity: updatedEntityName,
                 newDescription: updatedEntityDescription,
-                newFuzzyMatch: true,
-                customData: customData
+                newFuzzyMatch: true
             );
 
             while (updateEntityResponse == null)
@@ -798,9 +763,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListMentions...");
             EntityMentionCollection listMentionsResponse = null;
             service.ListMentions(
-                callback: (DetailedResponse<EntityMentionCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<EntityMentionCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListMentions result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListMentions result: {0}", response.Response);
                     listMentionsResponse = response.Result;
                     Assert.IsNotNull(listMentionsResponse);
                     Assert.IsNotNull(listMentionsResponse.Examples);
@@ -809,8 +774,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listMentionsResponse == null)
@@ -823,9 +787,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateValue...");
             Value createValueResponse = null;
             service.CreateValue(
-                callback: (DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Value> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateValue result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateValue result: {0}", response.Response);
                     createValueResponse = response.Result;
                     Assert.IsNotNull(createValueResponse);
                     Assert.IsTrue(createValueResponse._Value == createdValueText);
@@ -833,8 +797,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
-                value: createdValueText,
-                customData: customData
+                value: createdValueText
             );
 
             while (createValueResponse == null)
@@ -847,9 +810,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetValue...");
             Value getValueResponse = null;
             service.GetValue(
-                callback: (DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Value> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetValue result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetValue result: {0}", response.Response);
                     getValueResponse = response.Result;
                     Assert.IsNotNull(getValueResponse);
                     Assert.IsTrue(getValueResponse._Value == createdValueText);
@@ -859,8 +822,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: createdValueText,
                 export: true,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getValueResponse == null)
@@ -873,9 +835,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListValues...");
             ValueCollection listValuesResponse = null;
             service.ListValues(
-                callback: (DetailedResponse<ValueCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<ValueCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListValues result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListValues result: {0}", response.Response);
                     listValuesResponse = response.Result;
                     Assert.IsNotNull(listValuesResponse);
                     Assert.IsNotNull(listValuesResponse.Values);
@@ -888,8 +850,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-value",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listValuesResponse == null)
@@ -902,9 +863,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateValue...");
             Value updateValueResponse = null;
             service.UpdateValue(
-                callback: (DetailedResponse<Value> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Value> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateValue result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateValue result: {0}", response.Response);
                     updateValueResponse = response.Result;
                     Assert.IsNotNull(updateValueResponse);
                     Assert.IsTrue(updateValueResponse._Value == updatedValueText);
@@ -913,8 +874,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: createdValueText,
-                newValue: updatedValueText,
-                customData: customData
+                newValue: updatedValueText
             );
 
             while (updateValueResponse == null)
@@ -927,9 +887,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateSynonym...");
             Synonym createSynonymResponse = null;
             service.CreateSynonym(
-                callback: (DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Synonym> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateSynonym result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateSynonym result: {0}", response.Response);
                     createSynonymResponse = response.Result;
                     Assert.IsNotNull(createSynonymResponse);
                     Assert.IsTrue(createSynonymResponse._Synonym == createdSynonymText);
@@ -938,9 +898,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: updatedValueText,
-                synonym: createdSynonymText,
-                customData: customData
-
+                synonym: createdSynonymText
             );
 
             while (createSynonymResponse == null)
@@ -953,9 +911,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetSynonym...");
             Synonym getSynonymResponse = null;
             service.GetSynonym(
-                callback: (DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Synonym> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetSynonym result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetSynonym result: {0}", response.Response);
                     getSynonymResponse = response.Result;
                     Assert.IsNotNull(getSynonymResponse);
                     Assert.IsTrue(getSynonymResponse._Synonym == createdSynonymText);
@@ -965,8 +923,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 synonym: createdSynonymText,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getSynonymResponse == null)
@@ -979,9 +936,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListSynonyms...");
             SynonymCollection listSynonymsResponse = null;
             service.ListSynonyms(
-                callback: (DetailedResponse<SynonymCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<SynonymCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListSynonyms result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListSynonyms result: {0}", response.Response);
                     listSynonymsResponse = response.Result;
                     Assert.IsNotNull(listSynonymsResponse);
                     Assert.IsNotNull(listSynonymsResponse.Synonyms);
@@ -994,8 +951,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-synonym",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listSynonymsResponse == null)
@@ -1008,9 +964,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateSynonym...");
             Synonym updateSynonymResponse = null;
             service.UpdateSynonym(
-                callback: (DetailedResponse<Synonym> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<Synonym> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateSynonym result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateSynonym result: {0}", response.Response);
                     updateSynonymResponse = response.Result;
                     Assert.IsNotNull(updateSynonymResponse);
                     Assert.IsTrue(updateSynonymResponse._Synonym == updatedSynonymText);
@@ -1020,8 +976,7 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 synonym: createdSynonymText,
-                newSynonym: updatedSynonymText,
-                customData: customData
+                newSynonym: updatedSynonymText
             );
 
             while (updateSynonymResponse == null)
@@ -1034,9 +989,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateDialogNode...");
             DialogNode createDialogNodeResponse = null;
             service.CreateDialogNode(
-                callback: (DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DialogNode> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateDialogNode result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "CreateDialogNode result: {0}", response.Response);
                     createDialogNodeResponse = response.Result;
                     Assert.IsNotNull(createDialogNodeResponse);
                     Assert.IsTrue(createDialogNodeResponse._DialogNode == createdDialogNode);
@@ -1045,8 +1000,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
-                description: createdDialogNodeDescription,
-                customData: customData
+                description: createdDialogNodeDescription
             );
 
             while (createDialogNodeResponse == null)
@@ -1059,9 +1013,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetDialogNode...");
             DialogNode getDialogNodeResponse = null;
             service.GetDialogNode(
-                callback: (DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DialogNode> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "GetDialogNode result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "GetDialogNode result: {0}", response.Response);
                     getDialogNodeResponse = response.Result;
                     Assert.IsNotNull(getDialogNodeResponse);
                     Assert.IsTrue(getDialogNodeResponse._DialogNode == createdDialogNode);
@@ -1070,8 +1024,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (getDialogNodeResponse == null)
@@ -1084,9 +1037,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListDialogNodes...");
             DialogNodeCollection listDialogNodesResponse = null;
             service.ListDialogNodes(
-                callback: (DetailedResponse<DialogNodeCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DialogNodeCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListDialogNodes result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListDialogNodes result: {0}", response.Response);
                     listDialogNodesResponse = response.Result;
                     Assert.IsNotNull(listDialogNodesResponse);
                     Assert.IsNotNull(listDialogNodesResponse.DialogNodes);
@@ -1097,8 +1050,7 @@ namespace IBM.Watson.Tests
                 pageLimit: 1,
                 includeCount: true,
                 sort: "-dialog_node",
-                includeAudit: true,
-                customData: customData
+                includeAudit: true
             );
 
             while (listDialogNodesResponse == null)
@@ -1111,9 +1063,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to UpdateDialogNode...");
             DialogNode updateDialogNodeResponse = null;
             service.UpdateDialogNode(
-                callback: (DetailedResponse<DialogNode> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<DialogNode> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateDialogNode result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "UpdateDialogNode result: {0}", response.Response);
                     updateDialogNodeResponse = response.Result;
                     Assert.IsNotNull(updateDialogNodeResponse);
                     Assert.IsTrue(updateDialogNodeResponse._DialogNode == updatedDialogNode);
@@ -1123,8 +1075,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 dialogNode: createdDialogNode,
                 newDialogNode: updatedDialogNode,
-                newDescription: updatedDialogNodeDescription,
-                customData: customData
+                newDescription: updatedDialogNodeDescription
             );
 
             while (updateDialogNodeResponse == null)
@@ -1137,16 +1088,15 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListAllLogs...");
             LogCollection listAllLogsResponse = null;
             service.ListAllLogs(
-                callback: (DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<LogCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListAllLogs result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListAllLogs result: {0}", response.Response);
                     listAllLogsResponse = response.Result;
                     Assert.IsNotNull(listAllLogsResponse);
                     Assert.IsNotNull(listAllLogsResponse.Logs);
                     Assert.IsNull(error);
                 },
-                filter: "(language::en,request.context.metadata.deployment::deployment_1)",
-                customData: customData
+                filter: "(language::en,request.context.metadata.deployment::deployment_1)"
             );
 
             while (listAllLogsResponse == null)
@@ -1159,9 +1109,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListLogs...");
             LogCollection listLogsResponse = null;
             service.ListLogs(
-                callback: (DetailedResponse<LogCollection> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<LogCollection> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "ListLogs result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "ListLogs result: {0}", response.Response);
                     listLogsResponse = response.Result;
                     Assert.IsNotNull(listLogsResponse);
                     Assert.IsNotNull(listLogsResponse.Logs);
@@ -1169,8 +1119,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 filter: "(language::en,request.context.metadata.deployment::deployment_1)",
-                pageLimit: 1,
-                customData: customData
+                pageLimit: 1
             );
 
             while (listLogsResponse == null)
@@ -1183,15 +1132,14 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteUserData...");
             object deleteUserDataResponse = null;
             service.DeleteUserData(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteUserData result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteUserData result: {0}", response.Response);
                     deleteUserDataResponse = response.Result;
                     Assert.IsNotNull(deleteUserDataResponse);
                     Assert.IsNull(error);
                 },
-                customerId: "test-customer-id",
-                customData: customData
+                customerId: "test-customer-id"
             );
 
             while (deleteUserDataResponse == null)
@@ -1205,16 +1153,15 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteDialogNode...");
             object deleteDialogNodeResponse = null;
             service.DeleteDialogNode(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteDialogNode result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteDialogNode result: {0}", response.Response);
                     deleteDialogNodeResponse = response.Result;
                     Assert.IsNotNull(deleteDialogNodeResponse);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                dialogNode: updatedDialogNode,
-                customData: customData
+                dialogNode: updatedDialogNode
             );
 
             while (deleteDialogNodeResponse == null)
@@ -1227,9 +1174,9 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteSynonym...");
             object deleteSynonymResponse = null;
             service.DeleteSynonym(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteSynonym result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteSynonym result: {0}", response.Response);
                     deleteSynonymResponse = response.Result;
                     Assert.IsNotNull(deleteSynonymResponse);
                     Assert.IsNull(error);
@@ -1237,8 +1184,7 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
                 value: updatedValueText,
-                synonym: updatedSynonymText,
-                customData: customData
+                synonym: updatedSynonymText
             );
 
             while (deleteSynonymResponse == null)
@@ -1251,17 +1197,16 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteValue...");
             object deleteValueResponse = null;
             service.DeleteValue(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteValue result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteValue result: {0}", response.Response);
                     deleteValueResponse = response.Result;
                     Assert.IsNotNull(deleteValueResponse);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
                 entity: updatedEntityName,
-                value: updatedValueText,
-                customData: customData
+                value: updatedValueText
             );
 
             while (deleteValueResponse == null)
@@ -1274,16 +1219,15 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteEntity...");
             object deleteEntityResponse = null;
             service.DeleteEntity(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteEntity result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteEntity result: {0}", response.Response);
                     deleteEntityResponse = response.Result;
                     Assert.IsNotNull(deleteEntityResponse);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                entity: updatedEntityName,
-                customData: customData
+                entity: updatedEntityName
             );
 
             while (deleteEntityResponse == null)
@@ -1296,16 +1240,15 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteCounterexample...");
             object deleteCounterexampleResponse = null;
             service.DeleteCounterexample(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteCounterexample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteCounterexample result: {0}", response.Response);
                     deleteCounterexampleResponse = response.Result;
                     Assert.IsNotNull(deleteCounterexampleResponse);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                text: updatedCounterExampleText,
-                customData: customData
+                text: updatedCounterExampleText
             );
 
             while (deleteCounterexampleResponse == null)
@@ -1318,17 +1261,16 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteExample...");
             object deleteExampleResponse = null;
             service.DeleteExample(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteExample result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteExample result: {0}", response.Response);
                     deleteExampleResponse = response.Result;
                     Assert.IsNotNull(deleteExampleResponse);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
-                text: updatedExampleText,
-                customData: customData
+                text: updatedExampleText
             );
 
             while (deleteExampleResponse == null)
@@ -1341,16 +1283,15 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteIntent...");
             object deleteIntentResponse = null;
             service.DeleteIntent(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteIntent result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteIntent result: {0}", response.Response);
                     deleteIntentResponse = response.Result;
                     Assert.IsNotNull(response.Result);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
-                intent: updatedIntentName,
-                customData: customData
+                intent: updatedIntentName
             );
 
             while (deleteIntentResponse == null)
@@ -1364,15 +1305,14 @@ namespace IBM.Watson.Tests
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to DeleteWorkspace...");
             object deleteWorkspaceResponse = null;
             service.DeleteWorkspace(
-                callback: (DetailedResponse<object> response, IBMError error, Dictionary<string, object> customResponseData) =>
+                callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteWorkspace result: {0}", customResponseData["json"].ToString());
+                    Log.Debug("AssistantServiceV1IntegrationTests", "DeleteWorkspace result: {0}", response.Response);
                     deleteWorkspaceResponse = response.Result;
                     Assert.IsNotNull(deleteWorkspaceResponse);
                     Assert.IsNull(error);
                 },
-                workspaceId: workspaceId,
-                customData: customData
+                workspaceId: workspaceId
             );
 
             while (deleteWorkspaceResponse == null)

@@ -118,7 +118,7 @@ namespace IBM.Watson.Examples
             Log.Debug("ExampleToneAnalyzerV3.Examples()", "Examples complete!");
         }
 
-        private void OnTone(DetailedResponse<ToneAnalysis> response, IBMError error, Dictionary<string, object> customData)
+        private void OnTone(DetailedResponse<ToneAnalysis> response, IBMError error)
         {
             if (error != null)
             {
@@ -126,13 +126,13 @@ namespace IBM.Watson.Examples
             }
             else
             {
-                Log.Debug("ExampleToneAnalyzerV3.OnTone()", "{0}", customData["json"].ToString());
+                Log.Debug("ExampleToneAnalyzerV3.OnTone()", "{0}", response.Response);
             }
 
             toneTested = true;
         }
 
-        private void OnToneChat(DetailedResponse<UtteranceAnalyses> response, IBMError error, Dictionary<string, object> customData)
+        private void OnToneChat(DetailedResponse<UtteranceAnalyses> response, IBMError error)
         {
             if (error != null)
             {
@@ -140,7 +140,7 @@ namespace IBM.Watson.Examples
             }
             else
             {
-                Log.Debug("ExampleToneAnalyzerV3.OnToneChat()", "{0}", customData["json"].ToString());
+                Log.Debug("ExampleToneAnalyzerV3.OnToneChat()", "{0}", response.Response);
             }
 
             toneChatTested = true;
