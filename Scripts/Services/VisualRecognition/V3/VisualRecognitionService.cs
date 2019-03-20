@@ -363,8 +363,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the new classifier. Encode special characters in UTF-8.</param>
-        /// <param name="positiveExamples">A .zip file of images that depict the visual subject of a class in the new
-        /// classifier. You can include more than one positive example file in a call.
+        /// <param name="positiveExamples">A dictionary that contains the value for each classname. The value is a .zip
+        /// file of images that depict the visual subject of a class in the new classifier. You can include more than
+        /// one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
         /// `goldenretriever_positive_examples` creates the class **goldenretriever**.
@@ -423,7 +424,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file.zip", "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Key + ".zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
@@ -591,16 +592,19 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             response.StatusCode = resp.HttpResponseCode;
 
-            try
+            if (resp.Success)
             {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
+                try
+                {
+                    string json = Encoding.UTF8.GetString(resp.Data);
+                    response.Result = JsonConvert.DeserializeObject<Classifier>(json);
+                    response.Response = json;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
@@ -695,9 +699,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <param name="positiveExamples">A .zip file of images that depict the visual subject of a class in the
-        /// classifier. The positive examples create or update classes in the classifier. You can include more than one
-        /// positive example file in a call.
+        /// <param name="positiveExamples">A dictionary that contains the value for each classname. The value is a .zip
+        /// file of images that depict the visual subject of a class in the classifier. The positive examples create or
+        /// update classes in the classifier. You can include more than one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
         /// `goldenretriever_positive_examples` creates the class `goldenretriever`.
@@ -746,7 +750,7 @@ namespace IBM.Watson.VisualRecognition.V3
                 foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, "file.zip", "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Key + ".zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
