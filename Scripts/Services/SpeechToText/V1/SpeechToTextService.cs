@@ -4030,11 +4030,17 @@ namespace IBM.Watson.SpeechToText.V1
         /// * `application/zip` for a **.zip** file
         /// * `application/gzip` for a **.tar.gz** file.
         ///
-        /// All audio files contained in the archive must have the same audio format. Use the `Contained-Content-Type`
-        /// parameter to specify the format of the contained audio files. The parameter accepts all of the audio formats
-        /// supported for use with speech recognition and with the `Content-Type` header, including the `rate`,
-        /// `channels`, and `endianness` parameters that are used with some formats. The default contained audio format
-        /// is `audio/wav`.
+        /// When you add an archive-type resource, the `Contained-Content-Type` header is optional depending on the
+        /// format of the files that you are adding:
+        /// * For audio files of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`, you must use the
+        /// `Contained-Content-Type` header to specify the format of the contained audio files. Include the `rate`,
+        /// `channels`, and `endianness` parameters where necessary. In this case, all audio files contained in the
+        /// archive file must have the same audio format.
+        /// * For audio files of all other types, you can omit the `Contained-Content-Type` header. In this case, the
+        /// audio files contained in the archive file can have any of the formats not listed in the previous bullet. The
+        /// audio files do not need to have the same format.
+        ///
+        /// Do not use the `Contained-Content-Type` header when adding an audio-type resource.
         ///
         /// ### Naming restrictions for embedded audio files
         ///
@@ -4056,11 +4062,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// * Do not use the name of an audio resource that has already been added to the custom model.</param>
         /// <param name="audioResource">The audio resource that is to be added to the custom acoustic model, an
         /// individual audio file or an archive file.</param>
-        /// <param name="containedContentType">For an archive-type resource, specifies the format of the audio files
-        /// that are contained in the archive file. The parameter accepts all of the audio formats that are supported
-        /// for use with speech recognition, including the `rate`, `channels`, and `endianness` parameters that are used
-        /// with some formats. For more information, see **Content types for audio-type resources** in the method
-        /// description. (optional, default to audio/wav)</param>
+        /// <param name="containedContentType">**For an archive-type resource,** specify the format of the audio files
+        /// that are contained in the archive file if they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or
+        /// `audio/mulaw`. Include the `rate`, `channels`, and `endianness` parameters where necessary. In this case,
+        /// all audio files that are contained in the archive file must be of the indicated type.
+        ///
+        /// For all other audio formats, you can omit the header. In this case, the audio files can be of multiple types
+        /// as long as they are not of the types listed in the previous paragraph.
+        ///
+        /// The parameter accepts all of the audio formats that are supported for use with speech recognition. For more
+        /// information, see **Content types for audio-type resources** in the method description.
+        ///
+        /// **For an audio-type resource,** omit the header. (optional)</param>
         /// <param name="allowOverwrite">If `true`, the specified audio resource overwrites an existing audio resource
         /// with the same name. If `false`, the request fails if an audio resource with the same name already exists.
         /// The parameter has no effect if an audio resource with the same name does not already exist. (optional,

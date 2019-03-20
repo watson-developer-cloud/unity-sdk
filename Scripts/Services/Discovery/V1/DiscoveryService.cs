@@ -4640,11 +4640,11 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(startTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(endTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4725,11 +4725,11 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(startTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(endTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4812,11 +4812,11 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(startTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(endTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4898,11 +4898,11 @@ namespace IBM.Watson.Discovery.V1
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(startTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = Cloud.SDK.Utilities.Utility.NullableDateTimeToString(endTime, "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");;
             }
             if (!string.IsNullOrEmpty(resultType))
             {

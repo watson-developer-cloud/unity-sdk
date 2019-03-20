@@ -374,14 +374,13 @@ namespace IBM.Watson.VisualRecognition.V3
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
         ///
         /// Encode special characters in the file name in UTF-8.</param>
-        /// <param name="positiveExamplesFilename">The filename for positiveExamples.</param>
         /// <param name="negativeExamples">A .zip file of images that do not depict the visual subject of any of the
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
         /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.MemoryStream> positiveExamples, string positiveExamplesFilename, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.MemoryStream> positiveExamples, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -391,8 +390,6 @@ namespace IBM.Watson.VisualRecognition.V3
                 throw new ArgumentNullException("`positiveExamples` is required for `CreateClassifier`");
             if (positiveExamples.Count == 0)
                 throw new ArgumentException("`positiveExamples` must contain at least one dictionary entry");
-            if (string.IsNullOrEmpty(positiveExamplesFilename))
-                throw new ArgumentNullException("`positiveExamplesFilename` is required for `CreateClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -592,19 +589,16 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             response.StatusCode = resp.HttpResponseCode;
 
-            if (resp.Success)
+            try
             {
-                try
-                {
-                    string json = Encoding.UTF8.GetString(resp.Data);
-                    response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                    response.Response = json;
-                }
-                catch (Exception e)
-                {
-                    Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
-                    resp.Success = false;
-                }
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Classifier>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
@@ -710,14 +704,13 @@ namespace IBM.Watson.VisualRecognition.V3
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
-        /// <param name="positiveExamplesFilename">The filename for positiveExamples. (optional)</param>
         /// <param name="negativeExamples">A .zip file of images that do not depict the visual subject of any of the
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
         /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.MemoryStream> positiveExamples = null, string positiveExamplesFilename = null, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.MemoryStream> positiveExamples = null, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
