@@ -1260,7 +1260,9 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(getMetricsEventRateResponse.Aggregations);
                     Assert.IsNull(error);
                 },
-                resultType: "document"
+                resultType: "document",
+                startTime: new DateTime(2019, 1, 1),
+                endTime: DateTime.Today
             );
 
             while (getMetricsEventRateResponse == null)
