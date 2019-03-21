@@ -161,7 +161,7 @@ private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IB
 ### Username and password
 ```cs
 using IBM.Watson.Assistant.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
+using IBM.Cloud.SDK.Utilities;
 
 void Start()
 {
