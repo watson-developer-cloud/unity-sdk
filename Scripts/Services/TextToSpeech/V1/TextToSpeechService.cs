@@ -270,8 +270,9 @@ namespace IBM.Watson.TextToSpeech.V1
         /// language for the input text on the specified voice. Use a voice that matches the language of the input text.
         ///
         ///
-        /// The service returns the synthesized audio stream as an array of bytes. You can pass a maximum of 5 KB of
-        /// text to the service.
+        /// The method accepts a maximum of 5 KB of input text in the body of the request, and 8 KB for the URL and
+        /// headers. The 5 KB limit includes any SSML tags that you specify. The service returns the synthesized audio
+        /// stream as an array of bytes.
         ///
         /// **See also:** [The HTTP interface](https://cloud.ibm.com/docs/services/text-to-speech/http.html).
         ///
