@@ -20,9 +20,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// ModelLog.
+    /// LogExport.
     /// </summary>
-    public class ModelLog
+    public class LogExport
     {
         /// <summary>
         /// A request sent to the workspace, including the user input and context.

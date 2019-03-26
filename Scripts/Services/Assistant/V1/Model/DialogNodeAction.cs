@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -64,7 +63,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// A map of key/value pairs to be provided to the action.
         /// </summary>
         [JsonProperty("parameters", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Parameters { get; set; }
+        public object Parameters { get; set; }
         /// <summary>
         /// The location in the dialog context where the result of the action is stored.
         /// </summary>

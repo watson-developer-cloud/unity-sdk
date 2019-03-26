@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// Query event data object.
     /// </summary>
-    public class EventData
+    public class CreateEventResponseData
     {
         /// <summary>
         /// The **environment_id** associated with the query that the event is associated with.

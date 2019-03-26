@@ -26,12 +26,12 @@ namespace IBM.Watson.Discovery.V1.Model
     public class HtmlSettings
     {
         /// <summary>
-        /// Array of HTML tags that are excluded completely.
+        /// Gets or Sets ExcludeTagsCompletely
         /// </summary>
         [JsonProperty("exclude_tags_completely", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> ExcludeTagsCompletely { get; set; }
         /// <summary>
-        /// Array of HTML tags which are excluded but still retain content.
+        /// Gets or Sets ExcludeTagsKeepContent
         /// </summary>
         [JsonProperty("exclude_tags_keep_content", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> ExcludeTagsKeepContent { get; set; }
@@ -46,12 +46,12 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("exclude_content", NullValueHandling = NullValueHandling.Ignore)]
         public XPathPatterns ExcludeContent { get; set; }
         /// <summary>
-        /// An array of HTML tag attributes to keep in the converted document.
+        /// Gets or Sets KeepTagAttributes
         /// </summary>
         [JsonProperty("keep_tag_attributes", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> KeepTagAttributes { get; set; }
         /// <summary>
-        /// Array of HTML tag attributes to exclude.
+        /// Gets or Sets ExcludeTagAttributes
         /// </summary>
         [JsonProperty("exclude_tag_attributes", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> ExcludeTagAttributes { get; set; }

@@ -36,7 +36,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("event_type", NullValueHandling = NullValueHandling.Ignore)]
         public string EventType { get; set; }
         /// <summary>
-        /// Array of metric aggregation query results.
+        /// Gets or Sets Results
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public List<MetricAggregationResult> Results { get; set; }

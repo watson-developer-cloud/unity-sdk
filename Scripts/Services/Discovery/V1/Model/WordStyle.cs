@@ -26,12 +26,12 @@ namespace IBM.Watson.Discovery.V1.Model
     public class WordStyle
     {
         /// <summary>
-        /// HTML head level that content matching this style is tagged with.
+        /// Gets or Sets Level
         /// </summary>
         [JsonProperty("level", NullValueHandling = NullValueHandling.Ignore)]
         public long? Level { get; set; }
         /// <summary>
-        /// Array of word style names to convert.
+        /// Gets or Sets Names
         /// </summary>
         [JsonProperty("names", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Names { get; set; }

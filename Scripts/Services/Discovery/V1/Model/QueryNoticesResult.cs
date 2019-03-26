@@ -69,14 +69,14 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Metadata of the document.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Metadata { get; set; }
+        public object Metadata { get; set; }
         /// <summary>
         /// The collection ID of the collection containing the document for this result.
         /// </summary>
         [JsonProperty("collection_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CollectionId { get; set; }
         /// <summary>
-        /// Metadata of a query result.
+        /// Metadata of the query result.
         /// </summary>
         [JsonProperty("result_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public QueryResultMetadata ResultMetadata { get; set; }

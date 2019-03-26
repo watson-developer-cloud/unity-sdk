@@ -18,14 +18,13 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// DialogNode.
+    /// CreateDialogNode.
     /// </summary>
-    public class DialogNode
+    public class CreateDialogNode
     {
         /// <summary>
         /// How the dialog node is processed.
@@ -165,31 +164,31 @@ namespace IBM.Watson.Assistant.V1.Model
 
         /// <summary>
         /// How the dialog node is processed.
-        /// Constants for possible values can be found using DialogNode.NodeTypeValue
+        /// Constants for possible values can be found using CreateDialogNode.NodeTypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string NodeType { get; set; }
         /// <summary>
         /// How an `event_handler` node is processed.
-        /// Constants for possible values can be found using DialogNode.EventNameValue
+        /// Constants for possible values can be found using CreateDialogNode.EventNameValue
         /// </summary>
         [JsonProperty("event_name", NullValueHandling = NullValueHandling.Ignore)]
         public string EventName { get; set; }
         /// <summary>
         /// Whether this top-level dialog node can be digressed into.
-        /// Constants for possible values can be found using DialogNode.DigressInValue
+        /// Constants for possible values can be found using CreateDialogNode.DigressInValue
         /// </summary>
         [JsonProperty("digress_in", NullValueHandling = NullValueHandling.Ignore)]
         public string DigressIn { get; set; }
         /// <summary>
         /// Whether this dialog node can be returned to after a digression.
-        /// Constants for possible values can be found using DialogNode.DigressOutValue
+        /// Constants for possible values can be found using CreateDialogNode.DigressOutValue
         /// </summary>
         [JsonProperty("digress_out", NullValueHandling = NullValueHandling.Ignore)]
         public string DigressOut { get; set; }
         /// <summary>
         /// Whether the user can digress to top-level nodes while filling out slots.
-        /// Constants for possible values can be found using DialogNode.DigressOutSlotsValue
+        /// Constants for possible values can be found using CreateDialogNode.DigressOutSlotsValue
         /// </summary>
         [JsonProperty("digress_out_slots", NullValueHandling = NullValueHandling.Ignore)]
         public string DigressOutSlots { get; set; }
@@ -199,7 +198,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// - It must be no longer than 1024 characters.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
-        public string DialogNodeId { get; set; }
+        public string DialogNode { get; set; }
         /// <summary>
         /// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters,
         /// and it must be no longer than 128 characters.
@@ -244,16 +243,6 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("next_step", NullValueHandling = NullValueHandling.Ignore)]
         public DialogNodeNextStep NextStep { get; set; }
         /// <summary>
-        /// The timestamp for creation of the dialog node.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the most recent update to the dialog node.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
-        /// <summary>
         /// An array of objects describing any actions to be invoked by the dialog node.
         /// </summary>
         [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
@@ -265,11 +254,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }
-        /// <summary>
-        /// For internal use only.
-        /// </summary>
-        [JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Disabled { get; set; }
         /// <summary>
         /// The location in the dialog context where output is stored.
         /// </summary>

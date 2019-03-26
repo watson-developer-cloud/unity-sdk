@@ -17,44 +17,49 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// A term from the request that was identified as an entity.
+    /// EntityExport.
     /// </summary>
-    public class RuntimeEntity
+    public class EntityExport
     {
         /// <summary>
-        /// An entity detected in the input.
+        /// The name of the entity.
         /// </summary>
         [JsonProperty("entity", NullValueHandling = NullValueHandling.Ignore)]
-        public string Entity { get; set; }
+        public string EntityName { get; set; }
         /// <summary>
-        /// An array of zero-based character offsets that indicate where the detected entity values begin and end in the
-        /// input text.
+        /// The timestamp for creation of the entity.
         /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public List<long?> Location { get; set; }
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
         /// <summary>
-        /// The term in the input text that was recognized as an entity value.
+        /// The timestamp for the last update to the entity.
         /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
         /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the entity.
+        /// The description of the entity.
         /// </summary>
-        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Confidence { get; set; }
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
         /// <summary>
-        /// Any metadata for the entity.
+        /// Any metadata related to the entity.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
         public object Metadata { get; set; }
         /// <summary>
-        /// The recognized capture groups for the entity, as defined by the entity pattern.
+        /// Whether fuzzy matching is used for the entity.
         /// </summary>
-        [JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
-        public List<CaptureGroup> Groups { get; set; }
+        [JsonProperty("fuzzy_match", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? FuzzyMatch { get; set; }
+        /// <summary>
+        /// An array objects describing the entity values.
+        /// </summary>
+        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ValueExport> Values { get; set; }
     }
 }

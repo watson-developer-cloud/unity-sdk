@@ -88,17 +88,19 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("language", NullValueHandling = NullValueHandling.Ignore)]
         public string Language { get; set; }
         /// <summary>
-        /// Gets or Sets DocumentCounts
+        /// The object providing information about the documents in the collection. Present only when retrieving details
+        /// of a collection.
         /// </summary>
         [JsonProperty("document_counts", NullValueHandling = NullValueHandling.Ignore)]
         public DocumentCounts DocumentCounts { get; set; }
         /// <summary>
-        /// Summary of the disk usage statistics for this collection.
+        /// The object providing information about the disk usage of the collection. Present only when retrieving
+        /// details of a collection.
         /// </summary>
         [JsonProperty("disk_usage", NullValueHandling = NullValueHandling.Ignore)]
         public CollectionDiskUsage DiskUsage { get; set; }
         /// <summary>
-        /// Gets or Sets TrainingStatus
+        /// Provides information about the status of relevance training for collection.
         /// </summary>
         [JsonProperty("training_status", NullValueHandling = NullValueHandling.Ignore)]
         public TrainingStatus TrainingStatus { get; set; }

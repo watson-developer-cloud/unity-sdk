@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -27,7 +26,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class CreateValue
     {
         /// <summary>
-        /// Specifies the type of entity value.
+        /// Specifies the type of value.
         /// </summary>
         public class ValueTypeValue
         {
@@ -43,7 +42,7 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// Specifies the type of entity value.
+        /// Specifies the type of value.
         /// Constants for possible values can be found using CreateValue.ValueTypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
@@ -60,10 +59,10 @@ namespace IBM.Watson.Assistant.V1.Model
         /// Any metadata related to the entity value.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Metadata { get; set; }
+        public object Metadata { get; set; }
         /// <summary>
-        /// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the
-        /// value type), but not both. A synonym must conform to the following resrictions:
+        /// An array containing any synonyms for the entity value. You can provide either synonyms or patterns (as
+        /// indicated by **type**), but not both. A synonym must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters.
@@ -71,22 +70,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("synonyms", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Synonyms { get; set; }
         /// <summary>
-        /// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the
-        /// value type), but not both. A pattern is a regular expression no longer than 512 characters. For more
+        /// An array of patterns for the entity value. You can provide either synonyms or patterns (as indicated by
+        /// **type**), but not both. A pattern is a regular expression no longer than 512 characters. For more
         /// information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
         /// </summary>
         [JsonProperty("patterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Patterns { get; set; }
-        /// <summary>
-        /// The timestamp for creation of the object.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the most recent update to the object.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
     }
 }

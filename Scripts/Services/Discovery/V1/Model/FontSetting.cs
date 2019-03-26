@@ -25,32 +25,32 @@ namespace IBM.Watson.Discovery.V1.Model
     public class FontSetting
     {
         /// <summary>
-        /// The HTML heading level that any content with the matching font will be converted to.
+        /// Gets or Sets Level
         /// </summary>
         [JsonProperty("level", NullValueHandling = NullValueHandling.Ignore)]
         public long? Level { get; set; }
         /// <summary>
-        /// The minimum size of the font to match.
+        /// Gets or Sets MinSize
         /// </summary>
         [JsonProperty("min_size", NullValueHandling = NullValueHandling.Ignore)]
         public long? MinSize { get; set; }
         /// <summary>
-        /// The maximum size of the font to match.
+        /// Gets or Sets MaxSize
         /// </summary>
         [JsonProperty("max_size", NullValueHandling = NullValueHandling.Ignore)]
         public long? MaxSize { get; set; }
         /// <summary>
-        /// When `true`, the font is matched if it is bold.
+        /// Gets or Sets Bold
         /// </summary>
         [JsonProperty("bold", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Bold { get; set; }
         /// <summary>
-        /// When `true`, the font is matched if it is italic.
+        /// Gets or Sets Italic
         /// </summary>
         [JsonProperty("italic", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Italic { get; set; }
         /// <summary>
-        /// The name of the font.
+        /// Gets or Sets Name
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }

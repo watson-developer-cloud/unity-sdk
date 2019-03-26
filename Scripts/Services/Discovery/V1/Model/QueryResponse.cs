@@ -27,27 +27,27 @@ namespace IBM.Watson.Discovery.V1.Model
     public class QueryResponse
     {
         /// <summary>
-        /// The number of matching results for the query.
+        /// Gets or Sets MatchingResults
         /// </summary>
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// Array of document results for the query.
+        /// Gets or Sets Results
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public List<JObject> Results { get; set; }
         /// <summary>
-        /// Array of aggregation results for the query.
+        /// Gets or Sets Aggregations
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }
         /// <summary>
-        /// Array of passage results for the query.
+        /// Gets or Sets Passages
         /// </summary>
         [JsonProperty("passages", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryPassages> Passages { get; set; }
         /// <summary>
-        /// The number of duplicate results removed.
+        /// Gets or Sets DuplicatesRemoved
         /// </summary>
         [JsonProperty("duplicates_removed", NullValueHandling = NullValueHandling.Ignore)]
         public long? DuplicatesRemoved { get; set; }

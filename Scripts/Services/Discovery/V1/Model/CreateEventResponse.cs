@@ -46,6 +46,6 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Query event data object.
         /// </summary>
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
-        public EventData Data { get; set; }
+        public CreateEventResponseData Data { get; set; }
     }
 }

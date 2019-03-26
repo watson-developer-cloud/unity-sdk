@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// A recognized capture group for a pattern-based entity.
+    /// CaptureGroup.
     /// </summary>
     public class CaptureGroup
     {

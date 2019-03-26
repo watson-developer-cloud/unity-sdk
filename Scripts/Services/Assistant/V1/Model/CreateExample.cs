@@ -18,22 +18,25 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// An object specifying the sentiment extraction enrichment and related parameters.
+    /// CreateExample.
     /// </summary>
-    public class NluEnrichmentSentiment
+    public class CreateExample
     {
         /// <summary>
-        /// When `true`, sentiment analysis is performed on the entire field.
+        /// The text of a user input example. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
+        /// - It must be no longer than 1024 characters.
         /// </summary>
-        [JsonProperty("document", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Document { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
         /// <summary>
-        /// A comma-separated list of target strings that will have any associated sentiment analyzed.
+        /// An array of contextual entity mentions.
         /// </summary>
-        [JsonProperty("targets", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Targets { get; set; }
+        [JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Mentions> Mentions { get; set; }
     }
 }

@@ -608,13 +608,12 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">The name of the configuration.</param>
         /// <param name="description">The description of the configuration, if available. (optional)</param>
-        /// <param name="conversions">Document conversion settings. (optional)</param>
+        /// <param name="conversions">The document conversion settings for the configuration. (optional)</param>
         /// <param name="enrichments">An array of document enrichment settings for the configuration. (optional)</param>
-        /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
-        /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
+        /// <param name="normalizations">An array of JSON normalization operations. (optional)</param>
         /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
         /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, string name, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
+        public bool CreateConfiguration(Callback<Configuration> callback, string environmentId, string name, string description = null, Conversions conversions = null, object enrichments = null, object normalizations = null, Source source = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateConfiguration`");
@@ -653,9 +652,9 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["description"] = description;
             if (conversions != null)
                 bodyObject["conversions"] = JToken.FromObject(conversions);
-            if (enrichments != null && enrichments.Count > 0)
+            if (enrichments != null)
                 bodyObject["enrichments"] = JToken.FromObject(enrichments);
-            if (normalizations != null && normalizations.Count > 0)
+            if (normalizations != null)
                 bodyObject["normalizations"] = JToken.FromObject(normalizations);
             if (source != null)
                 bodyObject["source"] = JToken.FromObject(source);
@@ -938,13 +937,12 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="configurationId">The ID of the configuration.</param>
         /// <param name="name">The name of the configuration.</param>
         /// <param name="description">The description of the configuration, if available. (optional)</param>
-        /// <param name="conversions">Document conversion settings. (optional)</param>
+        /// <param name="conversions">The document conversion settings for the configuration. (optional)</param>
         /// <param name="enrichments">An array of document enrichment settings for the configuration. (optional)</param>
-        /// <param name="normalizations">Defines operations that can be used to transform the final output JSON into a
-        /// normalized form. Operations are executed in the order that they appear in the array. (optional)</param>
+        /// <param name="normalizations">An array of JSON normalization operations. (optional)</param>
         /// <param name="source">Object containing source parameters for the configuration. (optional)</param>
         /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, string name, string description = null, Conversions conversions = null, List<Enrichment> enrichments = null, List<NormalizationOperation> normalizations = null, Source source = null)
+        public bool UpdateConfiguration(Callback<Configuration> callback, string environmentId, string configurationId, string name, string description = null, Conversions conversions = null, object enrichments = null, object normalizations = null, Source source = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateConfiguration`");
@@ -985,9 +983,9 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["description"] = description;
             if (conversions != null)
                 bodyObject["conversions"] = JToken.FromObject(conversions);
-            if (enrichments != null && enrichments.Count > 0)
+            if (enrichments != null)
                 bodyObject["enrichments"] = JToken.FromObject(enrichments);
-            if (normalizations != null && normalizations.Count > 0)
+            if (normalizations != null)
                 bodyObject["normalizations"] = JToken.FromObject(normalizations);
             if (source != null)
                 bodyObject["source"] = JToken.FromObject(source);
@@ -2700,8 +2698,7 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
+        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -2738,7 +2735,7 @@ namespace IBM.Watson.Discovery.V1
         /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
         /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
         /// (optional)</param>
-        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
+        /// <param name="deduplicate">When `true` and used with a Watson Discovery News collection, duplicate results
         /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
         /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
         /// to false)</param>
@@ -2882,8 +2879,8 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
-        /// for more details on the query language.
+        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+        /// language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3051,8 +3048,7 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// Complex queries might be too long for a standard method query. By using this method, you can construct
         /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
+        /// see the [Discovery service documentation](https://console.bluemix.net/docs/services/discovery/using.html).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3090,7 +3086,7 @@ namespace IBM.Watson.Discovery.V1
         /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
         /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
         /// (optional)</param>
-        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
+        /// <param name="deduplicate">When `true` and used with a Watson Discovery News collection, duplicate results
         /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
         /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
         /// to false)</param>
@@ -3234,8 +3230,8 @@ namespace IBM.Watson.Discovery.V1
         /// <summary>
         /// Knowledge Graph entity query.
         ///
-        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
-        /// for more details.
+        /// See the [Knowledge Graph
+        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3336,8 +3332,8 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
         /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
-        /// for more details on the query language.
+        /// documentation](https://console.bluemix.net/docs/services/discovery/using.html) for more details on the query
+        /// language.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3523,8 +3519,8 @@ namespace IBM.Watson.Discovery.V1
         /// <summary>
         /// Knowledge Graph relationship query.
         ///
-        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
-        /// for more details.
+        /// See the [Knowledge Graph
+        /// documentation](https://console.bluemix.net/docs/services/discovery/building-kg.html) for more details.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -3536,7 +3532,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="sort">The sorting method for the relationships, can be `score` or `frequency`. `frequency` is
         /// the number of unique times each entity is identified. The default is `score`. This parameter cannot be used
         /// in the same query as the **bias** parameter. (optional)</param>
-        /// <param name="filter"> (optional)</param>
+        /// <param name="filter">Filters to apply to the relationship query. (optional)</param>
         /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
         /// (optional)</param>
         /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
@@ -3633,10 +3629,9 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="naturalLanguageQuery">The natural text query for the new training query. (optional)</param>
-        /// <param name="filter">The filter used on the collection before the **natural_language_query** is applied.
-        /// (optional)</param>
-        /// <param name="examples">Array of training examples. (optional)</param>
+        /// <param name="naturalLanguageQuery"> (optional)</param>
+        /// <param name="filter"> (optional)</param>
+        /// <param name="examples"> (optional)</param>
         /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
         public bool AddTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string naturalLanguageQuery = null, string filter = null, List<TrainingExample> examples = null)
         {
@@ -3723,9 +3718,9 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="documentId">The document ID associated with this training example. (optional)</param>
-        /// <param name="crossReference">The cross reference associated with this training example. (optional)</param>
-        /// <param name="relevance">The relevance of the training example. (optional)</param>
+        /// <param name="documentId"> (optional)</param>
+        /// <param name="crossReference"> (optional)</param>
+        /// <param name="relevance"> (optional)</param>
         /// <returns><see cref="TrainingExample" />TrainingExample</returns>
         public bool CreateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string documentId = null, string crossReference = null, long? relevance = null)
         {
@@ -4354,8 +4349,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="queryId">The ID of the query used for training.</param>
         /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <param name="crossReference">The example to add. (optional)</param>
-        /// <param name="relevance">The relevance value for this example. (optional)</param>
+        /// <param name="crossReference"> (optional)</param>
+        /// <param name="relevance"> (optional)</param>
         /// <returns><see cref="TrainingExample" />TrainingExample</returns>
         public bool UpdateTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId, string crossReference = null, long? relevance = null)
         {
@@ -4443,7 +4438,7 @@ namespace IBM.Watson.Discovery.V1
         ///
         /// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/discovery?topic=discovery-information-security#information-security).
+        /// security](https://console.bluemix.net/docs/services/discovery/information-security.html).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -4523,9 +4518,9 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="type">The event type to be created.</param>
-        /// <param name="data">Query event data object.</param>
+        /// <param name="data">Data object used to create a query event.</param>
         /// <returns><see cref="CreateEventResponse" />CreateEventResponse</returns>
-        public bool CreateEvent(Callback<CreateEventResponse> callback, string type, EventData data)
+        public bool CreateEvent(Callback<CreateEventResponse> callback, string type, CreateEventObjectData data)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEvent`");
@@ -5135,14 +5130,12 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
-        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-        /// (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null)
+        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialsCredentialDetails credentialDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
@@ -5452,14 +5445,12 @@ namespace IBM.Watson.Discovery.V1
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
         /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
-        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-        /// (optional)</param>
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl. (optional)</param>
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null)
+        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialsCredentialDetails credentialDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");

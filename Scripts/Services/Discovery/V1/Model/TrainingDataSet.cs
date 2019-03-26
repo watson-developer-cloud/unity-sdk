@@ -26,17 +26,17 @@ namespace IBM.Watson.Discovery.V1.Model
     public class TrainingDataSet
     {
         /// <summary>
-        /// The environment id associated with this training data set.
+        /// Gets or Sets EnvironmentId
         /// </summary>
         [JsonProperty("environment_id", NullValueHandling = NullValueHandling.Ignore)]
         public string EnvironmentId { get; set; }
         /// <summary>
-        /// The collection id associated with this training data set.
+        /// Gets or Sets CollectionId
         /// </summary>
         [JsonProperty("collection_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CollectionId { get; set; }
         /// <summary>
-        /// Array of training queries.
+        /// Gets or Sets Queries
         /// </summary>
         [JsonProperty("queries", NullValueHandling = NullValueHandling.Ignore)]
         public List<TrainingQuery> Queries { get; set; }

@@ -15,19 +15,26 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// An object specifiying the concepts enrichment and related parameters.
+    /// Object containing result information that was returned by the query used to create this log entry. Only returned
+    /// with logs of type `query`.
     /// </summary>
-    public class NluEnrichmentConcepts
+    public class LogQueryResponseResultDocumentResults
     {
         /// <summary>
-        /// The maximum number of concepts enrichments to extact from each instance of the specified field.
+        /// Gets or Sets Results
         /// </summary>
-        [JsonProperty("limit", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Limit { get; set; }
+        [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
+        public List<LogQueryResponseResultDocumentsResult> Results { get; set; }
+        /// <summary>
+        /// The number of results returned in the query associate with this log.
+        /// </summary>
+        [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Count { get; set; }
     }
 }

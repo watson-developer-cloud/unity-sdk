@@ -27,10 +27,10 @@ namespace IBM.Watson.Assistant.V1.Model
     public class MessageResponse
     {
         /// <summary>
-        /// An input object that includes the input text.
+        /// The text of the user input.
         /// </summary>
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Input { get; set; }
+        public MessageInput Input { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
@@ -61,6 +61,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of objects describing any actions requested by the dialog node.
         /// </summary>
         [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual List<DialogNodeAction> Actions { get; private set; }
+        public List<DialogNodeAction> Actions { get; set; }
     }
 }

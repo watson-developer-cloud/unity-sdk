@@ -26,47 +26,47 @@ namespace IBM.Watson.Discovery.V1.Model
     public class TrainingStatus
     {
         /// <summary>
-        /// The total number of training examples uploaded to this collection.
+        /// Gets or Sets TotalExamples
         /// </summary>
         [JsonProperty("total_examples", NullValueHandling = NullValueHandling.Ignore)]
         public long? TotalExamples { get; set; }
         /// <summary>
-        /// When `true`, the collection has been successfully trained.
+        /// Gets or Sets Available
         /// </summary>
         [JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Available { get; set; }
         /// <summary>
-        /// When `true`, the collection is currently processing training.
+        /// Gets or Sets Processing
         /// </summary>
         [JsonProperty("processing", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Processing { get; set; }
         /// <summary>
-        /// When `true`, the collection has a sufficent amount of queries added for training to occur.
+        /// Gets or Sets MinimumQueriesAdded
         /// </summary>
         [JsonProperty("minimum_queries_added", NullValueHandling = NullValueHandling.Ignore)]
         public bool? MinimumQueriesAdded { get; set; }
         /// <summary>
-        /// When `true`, the collection has a sufficent amount of examples added for training to occur.
+        /// Gets or Sets MinimumExamplesAdded
         /// </summary>
         [JsonProperty("minimum_examples_added", NullValueHandling = NullValueHandling.Ignore)]
         public bool? MinimumExamplesAdded { get; set; }
         /// <summary>
-        /// When `true`, the collection has a sufficent amount of diversity in labeled results for training to occur.
+        /// Gets or Sets SufficientLabelDiversity
         /// </summary>
         [JsonProperty("sufficient_label_diversity", NullValueHandling = NullValueHandling.Ignore)]
         public bool? SufficientLabelDiversity { get; set; }
         /// <summary>
-        /// The number of notices associated with this data set.
+        /// Gets or Sets Notices
         /// </summary>
         [JsonProperty("notices", NullValueHandling = NullValueHandling.Ignore)]
         public long? Notices { get; set; }
         /// <summary>
-        /// The timestamp of when the collection was successfully trained.
+        /// Gets or Sets SuccessfullyTrained
         /// </summary>
         [JsonProperty("successfully_trained", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? SuccessfullyTrained { get; set; }
         /// <summary>
-        /// The timestamp of when the data was uploaded.
+        /// Gets or Sets DataUpdated
         /// </summary>
         [JsonProperty("data_updated", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? DataUpdated { get; set; }

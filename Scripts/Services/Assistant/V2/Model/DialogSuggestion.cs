@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
@@ -42,6 +41,6 @@ namespace IBM.Watson.Assistant.V2.Model
         /// corresponding option.
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Output { get; set; }
+        public object Output { get; set; }
     }
 }

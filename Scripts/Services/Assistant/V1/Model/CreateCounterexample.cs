@@ -15,25 +15,23 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// An object specifying the emotion detection enrichment and related parameters.
+    /// CreateCounterexample.
     /// </summary>
-    public class NluEnrichmentEmotion
+    public class CreateCounterexample
     {
         /// <summary>
-        /// When `true`, emotion detection is performed on the entire field.
+        /// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
+        ///
+        /// - It cannot contain carriage return, newline, or tab characters
+        /// - It cannot consist of only whitespace characters
+        /// - It must be no longer than 1024 characters.
         /// </summary>
-        [JsonProperty("document", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Document { get; set; }
-        /// <summary>
-        /// A comma-separated list of target strings that will have any associated emotions detected.
-        /// </summary>
-        [JsonProperty("targets", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Targets { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
     }
 }

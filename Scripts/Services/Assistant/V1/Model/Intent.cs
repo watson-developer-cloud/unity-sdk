@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 
@@ -27,33 +26,24 @@ namespace IBM.Watson.Assistant.V1.Model
     public class Intent
     {
         /// <summary>
-        /// The name of the intent. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
-        /// - It cannot begin with the reserved prefix `sys-`.
-        /// - It must be no longer than 128 characters.
+        /// The name of the intent.
         /// </summary>
         [JsonProperty("intent", NullValueHandling = NullValueHandling.Ignore)]
-        public string _Intent { get; set; }
+        public string IntentName { get; set; }
         /// <summary>
-        /// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and
-        /// it must be no longer than 128 characters.
-        /// </summary>
-        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; set; }
-        /// <summary>
-        /// The timestamp for creation of the object.
+        /// The timestamp for creation of the intent.
         /// </summary>
         [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Created { get; private set; }
         /// <summary>
-        /// The timestamp for the most recent update to the object.
+        /// The timestamp for the last update to the intent.
         /// </summary>
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public virtual DateTime? Updated { get; private set; }
         /// <summary>
-        /// An array of user input examples for the intent.
+        /// The description of the intent.
         /// </summary>
-        [JsonProperty("examples", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Example> Examples { get; set; }
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; set; }
     }
 }

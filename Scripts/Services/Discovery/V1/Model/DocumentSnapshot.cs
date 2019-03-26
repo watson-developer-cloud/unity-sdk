@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -26,7 +25,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class DocumentSnapshot
     {
         /// <summary>
-        /// The step in the document conversion process that the snapshot object represents.
+        /// Gets or Sets Step
         /// </summary>
         public class StepValue
         {
@@ -58,15 +57,15 @@ namespace IBM.Watson.Discovery.V1.Model
         }
 
         /// <summary>
-        /// The step in the document conversion process that the snapshot object represents.
+        /// Gets or Sets Step
         /// Constants for possible values can be found using DocumentSnapshot.StepValue
         /// </summary>
         [JsonProperty("step", NullValueHandling = NullValueHandling.Ignore)]
         public string Step { get; set; }
         /// <summary>
-        /// Snapshot of the conversion.
+        /// Gets or Sets Snapshot
         /// </summary>
         [JsonProperty("snapshot", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Snapshot { get; set; }
+        public object Snapshot { get; set; }
     }
 }

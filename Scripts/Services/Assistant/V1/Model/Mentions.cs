@@ -15,21 +15,26 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// An object specifying the relations enrichment and related parameters.
+    /// A mention of a contextual entity.
     /// </summary>
-    public class NluEnrichmentRelations
+    public class Mentions
     {
         /// <summary>
-        /// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with
-        /// relationship extraction. May be a custom model provided by Watson Knowledge Studio, the public model for use
-        /// with Knowledge Graph `en-news`, the default is`en-news`.
+        /// The name of the entity.
         /// </summary>
-        [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
-        public string Model { get; set; }
+        [JsonProperty("entity", NullValueHandling = NullValueHandling.Ignore)]
+        public string Entity { get; set; }
+        /// <summary>
+        /// An array of zero-based character offsets that indicate where the entity mentions begin and end in the input
+        /// text.
+        /// </summary>
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public List<long?> Location { get; set; }
     }
 }
