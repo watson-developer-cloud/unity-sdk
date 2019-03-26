@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.CompareComply.V1.Model
@@ -37,7 +36,7 @@ namespace IBM.Watson.CompareComply.V1.Model
         /// respectfully, in the input document.
         /// </summary>
         [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Location { get; set; }
+        public object Location { get; set; }
         /// <summary>
         /// The textual contents of this cell from the input document without associated markup content.
         /// </summary>
