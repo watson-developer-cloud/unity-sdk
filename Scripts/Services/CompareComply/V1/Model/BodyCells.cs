@@ -26,8 +26,7 @@ namespace IBM.Watson.CompareComply.V1.Model
     public class BodyCells
     {
         /// <summary>
-        /// A string value in the format `columnHeader-x-y`, where `x` and `y` are the begin and end offsets of this
-        /// column header cell in the input document.
+        /// The unique ID of the cell in the current table.
         /// </summary>
         [JsonProperty("cell_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CellId { get; set; }
@@ -63,37 +62,35 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("column_index_end", NullValueHandling = NullValueHandling.Ignore)]
         public long? ColumnIndexEnd { get; set; }
         /// <summary>
-        /// An array of values, each being the `id` value of a row header that is applicable to this body cell.
+        /// Gets or Sets RowHeaderIds
         /// </summary>
         [JsonProperty("row_header_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> RowHeaderIds { get; set; }
+        public List<RowHeaderIds> RowHeaderIds { get; set; }
         /// <summary>
-        /// An array of values, each being the `text` value of a row header that is applicable to this body cell.
+        /// Gets or Sets RowHeaderTexts
         /// </summary>
         [JsonProperty("row_header_texts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> RowHeaderTexts { get; set; }
+        public List<RowHeaderTexts> RowHeaderTexts { get; set; }
         /// <summary>
-        /// If you provide customization input, the normalized version of the row header texts according to the
-        /// customization; otherwise, the same value as `row_header_texts`.
+        /// Gets or Sets RowHeaderTextsNormalized
         /// </summary>
         [JsonProperty("row_header_texts_normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> RowHeaderTextsNormalized { get; set; }
+        public List<RowHeaderTextsNormalized> RowHeaderTextsNormalized { get; set; }
         /// <summary>
-        /// An array of values, each being the `id` value of a column header that is applicable to the current cell.
+        /// Gets or Sets ColumnHeaderIds
         /// </summary>
         [JsonProperty("column_header_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> ColumnHeaderIds { get; set; }
+        public List<ColumnHeaderIds> ColumnHeaderIds { get; set; }
         /// <summary>
-        /// An array of values, each being the `text` value of a column header that is applicable to the current cell.
+        /// Gets or Sets ColumnHeaderTexts
         /// </summary>
         [JsonProperty("column_header_texts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> ColumnHeaderTexts { get; set; }
+        public List<ColumnHeaderTexts> ColumnHeaderTexts { get; set; }
         /// <summary>
-        /// If you provide customization input, the normalized version of the column header texts according to the
-        /// customization; otherwise, the same value as `column_header_texts`.
+        /// Gets or Sets ColumnHeaderTextsNormalized
         /// </summary>
         [JsonProperty("column_header_texts_normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> ColumnHeaderTextsNormalized { get; set; }
+        public List<ColumnHeaderTextsNormalized> ColumnHeaderTextsNormalized { get; set; }
         /// <summary>
         /// Gets or Sets Attributes
         /// </summary>
