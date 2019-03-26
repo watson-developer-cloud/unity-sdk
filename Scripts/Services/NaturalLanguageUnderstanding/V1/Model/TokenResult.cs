@@ -26,8 +26,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     public class TokenResult
     {
         /// <summary>
-        /// The part of speech of the token. See https://universaldependencies.org/u/pos/ for descriptions of the
-        /// values.
+        /// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+        /// tags](https://universaldependencies.org/u/pos/).
         /// </summary>
         public class PartOfSpeechValue
         {
@@ -103,8 +103,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         }
 
         /// <summary>
-        /// The part of speech of the token. See https://universaldependencies.org/u/pos/ for descriptions of the
-        /// values.
+        /// The part of speech of the token. For descriptions of the values, see [Universal Dependencies POS
+        /// tags](https://universaldependencies.org/u/pos/).
         /// Constants for possible values can be found using TokenResult.PartOfSpeechValue
         /// </summary>
         [JsonProperty("part_of_speech", NullValueHandling = NullValueHandling.Ignore)]

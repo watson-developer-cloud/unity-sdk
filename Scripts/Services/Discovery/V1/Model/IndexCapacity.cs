@@ -39,10 +39,5 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("collections", NullValueHandling = NullValueHandling.Ignore)]
         public CollectionUsage Collections { get; set; }
-        /// <summary>
-        /// **Deprecated**: Summary of the memory usage statistics for this environment.
-        /// </summary>
-        [JsonProperty("memory_usage", NullValueHandling = NullValueHandling.Ignore)]
-        public MemoryUsage MemoryUsage { get; set; }
     }
 }

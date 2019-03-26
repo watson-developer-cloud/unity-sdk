@@ -38,6 +38,9 @@ namespace IBM.Watson.Discovery.V1.Model
         public string DestinationField { get; set; }
         /// <summary>
         /// Field to be enriched.
+        ///
+        /// Arrays can be specified as the **source_field** if the **enrichment** service for this enrichment is set to
+        /// `natural_language_undstanding`.
         /// </summary>
         [JsonProperty("source_field", NullValueHandling = NullValueHandling.Ignore)]
         public string SourceField { get; set; }
@@ -55,11 +58,7 @@ namespace IBM.Watson.Discovery.V1.Model
         ///  When using `elements` the **options** object must contain Element Classification options. Additionally,
         /// when using the `elements` enrichment the configuration specified and files ingested must meet all the
         /// criteria specified in [the
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification)
-        ///
-        ///
-        ///
-        ///  Previous API versions also supported `alchemy_language`.
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification).
         /// </summary>
         [JsonProperty("enrichment", NullValueHandling = NullValueHandling.Ignore)]
         public string EnrichmentName { get; set; }

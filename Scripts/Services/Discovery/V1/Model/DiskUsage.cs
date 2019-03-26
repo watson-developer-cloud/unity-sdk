@@ -34,25 +34,5 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("maximum_allowed_bytes", NullValueHandling = NullValueHandling.Ignore)]
         public virtual long? MaximumAllowedBytes { get; private set; }
-        /// <summary>
-        /// **Deprecated**: Total number of bytes available in the environment's disk capacity.
-        /// </summary>
-        [JsonProperty("total_bytes", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual long? TotalBytes { get; private set; }
-        /// <summary>
-        /// **Deprecated**: Amount of disk capacity used, in KB or GB format.
-        /// </summary>
-        [JsonProperty("used", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string Used { get; private set; }
-        /// <summary>
-        /// **Deprecated**: Total amount of the environment's disk capacity, in KB or GB format.
-        /// </summary>
-        [JsonProperty("total", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string Total { get; private set; }
-        /// <summary>
-        /// **Deprecated**: Percentage of the environment's disk capacity that is being used.
-        /// </summary>
-        [JsonProperty("percent_used", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual double? PercentUsed { get; private set; }
     }
 }

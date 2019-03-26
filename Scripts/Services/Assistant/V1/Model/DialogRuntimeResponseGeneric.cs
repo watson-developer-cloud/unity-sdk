@@ -140,6 +140,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string Topic { get; private set; }
         /// <summary>
+        /// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated
+        /// using the value of the dialog node's **user_label** property.
+        /// </summary>
+        [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
+        public string DialogNode { get; set; }
+        /// <summary>
         /// An array of objects describing the possible matching dialog nodes from which the user can choose.
         ///
         /// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for

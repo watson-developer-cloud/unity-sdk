@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
@@ -100,16 +99,6 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("configuration_id", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string ConfigurationId { get; private set; }
-        /// <summary>
-        /// The creation date of the document in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// Date of the most recent document update, in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
         /// <summary>
         /// Description of the document status.
         /// </summary>
