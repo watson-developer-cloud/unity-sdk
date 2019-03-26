@@ -30,7 +30,7 @@ namespace IBM.Watson.CompareComply.V1
 {
     public partial class CompareComplyService : BaseService
     {
-        private const string serviceId = "compare-comply";
+        private const string serviceId = "compare_comply";
         private const string defaultUrl = "https://gateway.watsonplatform.net/compare-comply/api";
 
         #region Credentials

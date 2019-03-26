@@ -30,7 +30,7 @@ namespace IBM.Watson.Assistant.V2
 {
     public partial class AssistantService : BaseService
     {
-        private const string serviceId = "conversation";
+        private const string serviceId = "assistant";
         private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
 
         #region Credentials

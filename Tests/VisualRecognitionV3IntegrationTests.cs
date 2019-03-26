@@ -113,7 +113,6 @@ namespace IBM.Watson.Tests
                                 name: classifierName,
                                 positiveExamples: positiveExamples,
                                 negativeExamples: ms1,
-                                positiveExamplesFilename: Path.GetFileName(giraffePositiveExamplesFilepath),
                                 negativeExamplesFilename: Path.GetFileName(negativeExamplesFilepath)
                             );
 

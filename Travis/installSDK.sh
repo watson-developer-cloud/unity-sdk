@@ -1,17 +1,20 @@
 #! /bin/sh
 project="unity-sdk-travis"
 
-echo "Attempting to install credentials"
-git clone https://$CREDENTIALS_GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credentials.git Travis/sdk-credentials/
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+  echo "Attempting to install credentials"
+  git clone https://$CREDENTIALS_GITHUB_TOKEN@github.ibm.com/germanatt/sdk-credentials.git Travis/sdk-credentials/
 
-if [ $? = 0 ] ; then
-  echo "Credentials install SUCCEEDED! Exited with $?"
-  export IBM_CREDENTIALS_FILE=$(pwd)/Travis/sdk-credentials/ibm-credentials.env
+  if [ $? = 0 ] ; then
+    echo "Credentials install SUCCEEDED! Exited with $?"
+    export IBM_CREDENTIALS_FILE=$(pwd)/Travis/sdk-credentials/ibm-credentials.env
+  else
+    echo "Credentials install FAILED! Exited with $?"
+    exit 1
+  fi
 else
-  echo "Credentials install FAILED! Exited with $?"
-  exit 1
+  echo "This is a pull request - do not attempt to install credentials"
 fi
-
 
 echo "Attempting to install IBM Watson SDK for Unity into the test project..."
 mkdir -p Travis/UnityTestProject/Assets/Watson/
