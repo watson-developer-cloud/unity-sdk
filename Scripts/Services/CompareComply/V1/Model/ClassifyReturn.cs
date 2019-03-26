@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// The analysis of objects returned by the `/v1/element_classification` method.
+    /// The analysis of objects returned by the **Element classification** method.
     /// </summary>
     public class ClassifyReturn
     {
@@ -31,8 +31,8 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("document", NullValueHandling = NullValueHandling.Ignore)]
         public Document Document { get; set; }
         /// <summary>
-        /// The analysis model used to classify the input document. For the `/v1/element_classification` method, the
-        /// only valid value is `contracts`.
+        /// The analysis model used to classify the input document. For the **Element classification** method, the only
+        /// valid value is `contracts`.
         /// </summary>
         [JsonProperty("model_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ModelId { get; set; }
@@ -62,19 +62,25 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("parties", NullValueHandling = NullValueHandling.Ignore)]
         public List<Parties> Parties { get; set; }
         /// <summary>
-        /// The effective dates of the input document.
+        /// The date or dates on which the document becomes effective.
         /// </summary>
         [JsonProperty("effective_dates", NullValueHandling = NullValueHandling.Ignore)]
         public List<EffectiveDates> EffectiveDates { get; set; }
         /// <summary>
-        /// The monetary amounts identified in the input document.
+        /// The monetary amounts that identify the total amount of the contract that needs to be paid from one party to
+        /// another.
         /// </summary>
         [JsonProperty("contract_amounts", NullValueHandling = NullValueHandling.Ignore)]
         public List<ContractAmts> ContractAmounts { get; set; }
         /// <summary>
-        /// The input document's termination dates.
+        /// The date or dates on which the document is to be terminated.
         /// </summary>
         [JsonProperty("termination_dates", NullValueHandling = NullValueHandling.Ignore)]
         public List<TerminationDates> TerminationDates { get; set; }
+        /// <summary>
+        /// The document's contract type or types as declared in the document.
+        /// </summary>
+        [JsonProperty("contract_type", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ContractType> ContractType { get; set; }
     }
 }

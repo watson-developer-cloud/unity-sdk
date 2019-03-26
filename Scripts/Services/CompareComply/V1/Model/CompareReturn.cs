@@ -26,6 +26,17 @@ namespace IBM.Watson.CompareComply.V1.Model
     public class CompareReturn
     {
         /// <summary>
+        /// The analysis model used to compare the input documents. For the **Compare two documents** method, the only
+        /// valid value is `contracts`.
+        /// </summary>
+        [JsonProperty("model_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string ModelId { get; set; }
+        /// <summary>
+        /// The version of the analysis model identified by the value of the `model_id` key.
+        /// </summary>
+        [JsonProperty("model_version", NullValueHandling = NullValueHandling.Ignore)]
+        public string ModelVersion { get; set; }
+        /// <summary>
         /// Information about the documents being compared.
         /// </summary>
         [JsonProperty("documents", NullValueHandling = NullValueHandling.Ignore)]
@@ -40,16 +51,5 @@ namespace IBM.Watson.CompareComply.V1.Model
         /// </summary>
         [JsonProperty("unaligned_elements", NullValueHandling = NullValueHandling.Ignore)]
         public List<UnalignedElement> UnalignedElements { get; set; }
-        /// <summary>
-        /// The analysis model used to classify the input document. For the `/v1/element_classification` method, the
-        /// only valid value is `contracts`.
-        /// </summary>
-        [JsonProperty("model_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string ModelId { get; set; }
-        /// <summary>
-        /// The version of the analysis model identified by the value of the `model_id` key.
-        /// </summary>
-        [JsonProperty("model_version", NullValueHandling = NullValueHandling.Ignore)]
-        public string ModelVersion { get; set; }
     }
 }
