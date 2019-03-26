@@ -1,3 +1,3 @@
 [submodule "Core"]
 	path = Core
-	url = git@github.com:mediumTaj/IBM.Cloud.SDK.Unity.git
+	url = git@github.com:IBM/unity-sdk-core.git
