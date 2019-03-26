@@ -131,7 +131,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// returned with logs of type `query`.
         /// </summary>
         [JsonProperty("document_results", NullValueHandling = NullValueHandling.Ignore)]
-        public LogQueryResponseResultDocumentResults DocumentResults { get; set; }
+        public LogQueryResponseResultDocuments DocumentResults { get; set; }
         /// <summary>
         /// Date that the log result was created. Returned in `YYYY-MM-DDThh:mm:ssZ` format.
         /// </summary>

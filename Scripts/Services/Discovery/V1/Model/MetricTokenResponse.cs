@@ -26,7 +26,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class MetricTokenResponse
     {
         /// <summary>
-        /// Gets or Sets Aggregations
+        /// Array of metric token aggregations.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<MetricTokenAggregation> Aggregations { get; set; }

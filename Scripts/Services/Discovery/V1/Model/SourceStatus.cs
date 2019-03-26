@@ -31,9 +31,8 @@ namespace IBM.Watson.Discovery.V1.Model
         ///
         /// -  `running` indicates that a crawl to fetch more documents is in progress.
         /// -  `complete` indicates that the crawl has completed with no errors.
-        /// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be
-        /// checked by using the **notices** query method.
-        /// -  `stopped` indicates that the crawl has stopped but is not complete.
+        /// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when
+        /// possible.
         /// </summary>
         public class StatusValue
         {
@@ -46,17 +45,13 @@ namespace IBM.Watson.Discovery.V1.Model
             /// </summary>
             public const string COMPLETE = "complete";
             /// <summary>
-            /// Constant COMPLETE_WITH_NOTICES for complete_with_notices
-            /// </summary>
-            public const string COMPLETE_WITH_NOTICES = "complete_with_notices";
-            /// <summary>
-            /// Constant STOPPED for stopped
-            /// </summary>
-            public const string STOPPED = "stopped";
-            /// <summary>
             /// Constant NOT_CONFIGURED for not_configured
             /// </summary>
             public const string NOT_CONFIGURED = "not_configured";
+            /// <summary>
+            /// Constant QUEUED for queued
+            /// </summary>
+            public const string QUEUED = "queued";
             
         }
 
@@ -66,9 +61,8 @@ namespace IBM.Watson.Discovery.V1.Model
         ///
         /// -  `running` indicates that a crawl to fetch more documents is in progress.
         /// -  `complete` indicates that the crawl has completed with no errors.
-        /// -  `complete_with_notices` indicates that some notices were generated during the crawl. Notices can be
-        /// checked by using the **notices** query method.
-        /// -  `stopped` indicates that the crawl has stopped but is not complete.
+        /// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when
+        /// possible.
         /// Constants for possible values can be found using SourceStatus.StatusValue
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]

@@ -115,7 +115,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// details about the voice. Specify a customization ID to obtain information for that custom voice model of the
         /// specified voice. To list information about all available voices, use the **List voices** method.
         ///
-        /// **See also:** [Specifying a voice](https://cloud.ibm.com/docs/services/text-to-speech/http.html#voices).
+        /// **See also:** [Listing a specific
+        /// voice](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoice).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="voice">The voice for which information is to be returned.</param>
@@ -197,7 +198,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// and other details about the voice. To see information about a specific voice, use the **Get a voice**
         /// method.
         ///
-        /// **See also:** [Specifying a voice](https://cloud.ibm.com/docs/services/text-to-speech/http.html#voices).
+        /// **See also:** [Listing all available
+        /// voices](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoices).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <returns><see cref="Voices" />Voices</returns>
@@ -268,11 +270,11 @@ namespace IBM.Watson.TextToSpeech.V1
         /// language for the input text on the specified voice. Use a voice that matches the language of the input text.
         ///
         ///
-        /// The service returns the synthesized audio stream as an array of bytes. You can pass a maximum of 5 KB of
-        /// text to the service.
+        /// The method accepts a maximum of 5 KB of input text in the body of the request, and 8 KB for the URL and
+        /// headers. The 5 KB limit includes any SSML tags that you specify. The service returns the synthesized audio
+        /// stream as an array of bytes.
         ///
-        /// **See also:** [Synthesizing text to
-        /// audio](https://cloud.ibm.com/docs/services/text-to-speech/http.html#synthesize).
+        /// **See also:** [The HTTP interface](https://cloud.ibm.com/docs/services/text-to-speech/http.html).
         ///
         /// ### Audio formats (accept types)
         ///
@@ -330,8 +332,7 @@ namespace IBM.Watson.TextToSpeech.V1
         ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
         ///
         /// For more information about specifying an audio format, including additional details about some of the
-        /// formats, see [Specifying an audio
-        /// format](https://cloud.ibm.com/docs/services/text-to-speech/http.html#format).
+        /// formats, see [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech/audio-formats.html).
         ///
         /// ### Warning messages
         ///

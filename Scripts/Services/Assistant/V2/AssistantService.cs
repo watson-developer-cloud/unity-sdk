@@ -135,7 +135,7 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <returns><see cref="SessionResponse" />SessionResponse</returns>
@@ -210,7 +210,7 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
@@ -290,12 +290,14 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
         /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
-        /// [documentation](https://console.bluemix.net/docs/services/assistant/create-assistant.html#creating-assistants).
+        /// [documentation](https://console.bluemix.net/docs/services/assistant/assistant-add.html#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
         /// <param name="input">An input object that includes the input text. (optional)</param>
-        /// <param name="context">State information for the conversation. (optional)</param>
+        /// <param name="context">State information for the conversation. The context is stored by the assistant on a
+        /// per-session basis. You can use this property to set or modify context variables, which can also be accessed
+        /// by dialog nodes. (optional)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
         public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageInput input = null, MessageContext context = null)
         {

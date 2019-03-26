@@ -20,12 +20,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information that can be shared by all skills within the Assistant.
+    /// Information that is shared by all skills used by the Assistant.
     /// </summary>
     public class MessageContextGlobal
     {
         /// <summary>
-        /// Properties that are shared by all skills used by the assistant.
+        /// Built-in system properties that apply to all skills used by the assistant.
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextGlobalSystem System { get; set; }

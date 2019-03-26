@@ -136,22 +136,22 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="input">An input object that includes the input text. (optional)</param>
-        /// <param name="alternateIntents">Whether to return more than one intent. Set to `true` to return all matching
-        /// intents. (optional, default to false)</param>
-        /// <param name="context">State information for the conversation. To maintain state, include the context from
-        /// the previous response. (optional)</param>
-        /// <param name="entities">Entities to use when evaluating the message. Include entities from the previous
-        /// response to continue using those entities rather than detecting entities in the new input.
-        /// (optional)</param>
         /// <param name="intents">Intents to use when evaluating the user input. Include intents from the previous
         /// response to continue using those intents rather than trying to recognize intents in the new input.
         /// (optional)</param>
+        /// <param name="entities">Entities to use when evaluating the message. Include entities from the previous
+        /// response to continue using those entities rather than detecting entities in the new input.
+        /// (optional)</param>
+        /// <param name="alternateIntents">Whether to return more than one intent. A value of `true` indicates that all
+        /// matching intents are returned. (optional, default to false)</param>
+        /// <param name="context">State information for the conversation. To maintain state, include the context from
+        /// the previous response. (optional)</param>
         /// <param name="output">An output object that includes the response to the user, the dialog nodes that were
         /// triggered, and messages from the log. (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, JObject input = null, bool? alternateIntents = null, JObject context = null, List<JObject> entities = null, List<JObject> intents = null, JObject output = null, bool? nodesVisitedDetails = null)
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, JObject input = null, List<JObject> intents = null, List<JObject> entities = null, bool? alternateIntents = null, JObject context = null, JObject output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -188,14 +188,14 @@ namespace IBM.Watson.Assistant.V1
             JObject bodyObject = new JObject();
             if (input != null)
                 bodyObject["input"] = JToken.FromObject(input);
+            if (intents != null && intents.Count > 0)
+                bodyObject["intents"] = JToken.FromObject(intents);
+            if (entities != null && entities.Count > 0)
+                bodyObject["entities"] = JToken.FromObject(entities);
             if (alternateIntents != null)
                 bodyObject["alternate_intents"] = JToken.FromObject(alternateIntents);
             if (context != null)
                 bodyObject["context"] = JToken.FromObject(context);
-            if (entities != null && entities.Count > 0)
-                bodyObject["entities"] = JToken.FromObject(entities);
-            if (intents != null && intents.Count > 0)
-                bodyObject["intents"] = JToken.FromObject(intents);
             if (output != null)
                 bodyObject["output"] = JToken.FromObject(output);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
@@ -249,18 +249,19 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
+        /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
+        /// data is not to be used. (optional, default to false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
-        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
-        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
-        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
-        /// false)</param>
-        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -295,6 +296,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
@@ -303,12 +310,6 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (learningOptOut != null)
-                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
-            if (systemSettings != null)
-                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
@@ -437,15 +438,15 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="sort">Indicates how the returned workspace data will be sorted. This parameter is valid only if
         /// **export**=`true`. Specify `sort=stable` to sort all workspace objects by unique identifier, in ascending
         /// alphabetical order. (optional)</param>
-        /// <returns><see cref="WorkspaceExport" />WorkspaceExport</returns>
-        public bool GetWorkspace(Callback<WorkspaceExport> callback, string workspaceId, bool? export = null, bool? includeAudit = null, string sort = null)
+        /// <returns><see cref="Workspace" />Workspace</returns>
+        public bool GetWorkspace(Callback<Workspace> callback, string workspaceId, bool? export = null, bool? includeAudit = null, string sort = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `GetWorkspace`");
 
-            RequestObject<WorkspaceExport> req = new RequestObject<WorkspaceExport>
+            RequestObject<Workspace> req = new RequestObject<Workspace>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -491,7 +492,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<WorkspaceExport> response = new DetailedResponse<WorkspaceExport>();
+            DetailedResponse<Workspace> response = new DetailedResponse<Workspace>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -501,7 +502,7 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<WorkspaceExport>(json);
+                response.Result = JsonConvert.DeserializeObject<Workspace>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -510,8 +511,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<WorkspaceExport>)req).Callback != null)
-                ((RequestObject<WorkspaceExport>)req).Callback(response, resp.Error);
+            if (((RequestObject<Workspace>)req).Callback != null)
+                ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List workspaces.
@@ -626,16 +627,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
+        /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
+        /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
+        /// data is not to be used. (optional, default to false)</param>
+        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
-        /// <param name="entities">An array of objects defining the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects defining the nodes in the dialog. (optional)</param>
+        /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
-        /// <param name="learningOptOut">Whether training data from the workspace can be used by IBM for general service
-        /// improvements. `true` indicates that workspace training data is not to be used. (optional, default to
-        /// false)</param>
-        /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the workspace. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data includes **entities** and
@@ -645,7 +647,7 @@ namespace IBM.Watson.Assistant.V1
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<CreateDialogNode> dialogNodes = null, List<CreateCounterexample> counterexamples = null, object metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, bool? append = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -686,6 +688,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (learningOptOut != null)
+                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
+            if (systemSettings != null)
+                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
@@ -694,12 +702,6 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (learningOptOut != null)
-                bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
-            if (systemSettings != null)
-                bodyObject["system_settings"] = JToken.FromObject(systemSettings);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
@@ -754,7 +756,7 @@ namespace IBM.Watson.Assistant.V1
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="examples">An array of user input examples for the intent. (optional)</param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<CreateExample> examples = null)
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateIntent`");
@@ -922,8 +924,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="IntentExport" />IntentExport</returns>
-        public bool GetIntent(Callback<IntentExport> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetIntent`");
@@ -932,7 +934,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `GetIntent`");
 
-            RequestObject<IntentExport> req = new RequestObject<IntentExport>
+            RequestObject<Intent> req = new RequestObject<Intent>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -974,7 +976,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<IntentExport> response = new DetailedResponse<IntentExport>();
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -984,7 +986,7 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<IntentExport>(json);
+                response.Result = JsonConvert.DeserializeObject<Intent>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -993,8 +995,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<IntentExport>)req).Callback != null)
-                ((RequestObject<IntentExport>)req).Callback(response, resp.Error);
+            if (((RequestObject<Intent>)req).Callback != null)
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List intents.
@@ -1120,10 +1122,11 @@ namespace IBM.Watson.Assistant.V1
         /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
         /// - It cannot begin with the reserved prefix `sys-`.
         /// - It must be no longer than 128 characters. (optional)</param>
-        /// <param name="newDescription">The description of the intent. (optional)</param>
+        /// <param name="newDescription">The description of the intent. This string cannot contain carriage return,
+        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<CreateExample> newExamples = null)
+        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateIntent`");
@@ -1216,7 +1219,7 @@ namespace IBM.Watson.Assistant.V1
         /// - It must be no longer than 1024 characters.</param>
         /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mentions> mentions = null)
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExample`");
@@ -1578,7 +1581,7 @@ namespace IBM.Watson.Assistant.V1
         /// - It must be no longer than 1024 characters. (optional)</param>
         /// <param name="newMentions">An array of contextual entity mentions. (optional)</param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mentions> newMentions = null)
+        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mention> newMentions = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateExample`");
@@ -2015,7 +2018,11 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <param name="newText">The text of a user input counterexample. (optional)</param>
+        /// <param name="newText">The text of a user input marked as irrelevant input. This string must conform to the
+        /// following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters
+        /// - It cannot consist of only whitespace characters
+        /// - It must be no longer than 1024 characters. (optional)</param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
         public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, string newText = null)
         {
@@ -2106,11 +2113,11 @@ namespace IBM.Watson.Assistant.V1
         /// entity that you want to enable. (Any entity content specified with the request is ignored.).</param>
         /// <param name="description">The description of the entity. This string cannot contain carriage return,
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
-        /// <param name="metadata">Any metadata related to the value. (optional)</param>
-        /// <param name="values">An array of objects describing the entity values. (optional)</param>
+        /// <param name="metadata">Any metadata related to the entity. (optional)</param>
         /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
+        /// <param name="values">An array of objects describing the entity values. (optional)</param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, object metadata = null, List<CreateValue> values = null, bool? fuzzyMatch = null)
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEntity`");
@@ -2149,10 +2156,10 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (values != null && values.Count > 0)
-                bodyObject["values"] = JToken.FromObject(values);
             if (fuzzyMatch != null)
                 bodyObject["fuzzy_match"] = JToken.FromObject(fuzzyMatch);
+            if (values != null && values.Count > 0)
+                bodyObject["values"] = JToken.FromObject(values);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateEntityResponse;
@@ -2282,8 +2289,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="EntityExport" />EntityExport</returns>
-        public bool GetEntity(Callback<EntityExport> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetEntity`");
@@ -2292,7 +2299,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `GetEntity`");
 
-            RequestObject<EntityExport> req = new RequestObject<EntityExport>
+            RequestObject<Entity> req = new RequestObject<Entity>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -2334,7 +2341,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<EntityExport> response = new DetailedResponse<EntityExport>();
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2344,7 +2351,7 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<EntityExport>(json);
+                response.Result = JsonConvert.DeserializeObject<Entity>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -2353,8 +2360,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<EntityExport>)req).Callback != null)
-                ((RequestObject<EntityExport>)req).Callback(response, resp.Error);
+            if (((RequestObject<Entity>)req).Callback != null)
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entities.
@@ -2484,9 +2491,9 @@ namespace IBM.Watson.Assistant.V1
         /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
         /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
-        /// <param name="newValues">An array of entity values. (optional)</param>
+        /// <param name="newValues">An array of objects describing the entity values. (optional)</param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, string newEntity = null, string newDescription = null, object newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
+        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEntity`");
@@ -2657,7 +2664,7 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Add entity value.
+        /// Create entity value.
         ///
         /// Create a new value for an entity.
         ///
@@ -2671,20 +2678,19 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters.</param>
         /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="synonyms">An array containing any synonyms for the entity value. You can provide either
-        /// synonyms or patterns (as indicated by **type**), but not both. A synonym must conform to the following
-        /// restrictions:
+        /// <param name="valueType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="synonyms">An array of synonyms for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="patterns">An array of patterns for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// <param name="patterns">An array of patterns for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
         /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
-        /// <param name="valueType">Specifies the type of value. (optional, default to synonyms)</param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, object metadata = null, List<string> synonyms = null, List<string> patterns = null, string valueType = null)
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateValue`");
@@ -2723,12 +2729,12 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["value"] = value;
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (!string.IsNullOrEmpty(valueType))
+                bodyObject["type"] = valueType;
             if (synonyms != null && synonyms.Count > 0)
                 bodyObject["synonyms"] = JToken.FromObject(synonyms);
             if (patterns != null && patterns.Count > 0)
                 bodyObject["patterns"] = JToken.FromObject(patterns);
-            if (!string.IsNullOrEmpty(valueType))
-                bodyObject["type"] = valueType;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateValueResponse;
@@ -2861,8 +2867,8 @@ namespace IBM.Watson.Assistant.V1
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
-        /// <returns><see cref="ValueExport" />ValueExport</returns>
-        public bool GetValue(Callback<ValueExport> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null)
+        /// <returns><see cref="Value" />Value</returns>
+        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetValue`");
@@ -2873,7 +2879,7 @@ namespace IBM.Watson.Assistant.V1
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `GetValue`");
 
-            RequestObject<ValueExport> req = new RequestObject<ValueExport>
+            RequestObject<Value> req = new RequestObject<Value>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -2915,7 +2921,7 @@ namespace IBM.Watson.Assistant.V1
 
         private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ValueExport> response = new DetailedResponse<ValueExport>();
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2925,7 +2931,7 @@ namespace IBM.Watson.Assistant.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ValueExport>(json);
+                response.Result = JsonConvert.DeserializeObject<Value>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -2934,8 +2940,8 @@ namespace IBM.Watson.Assistant.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<ValueExport>)req).Callback != null)
-                ((RequestObject<ValueExport>)req).Callback(response, resp.Error);
+            if (((RequestObject<Value>)req).Callback != null)
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity values.
@@ -3066,19 +3072,19 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="newValueType">Specifies the type of value. (optional, default to synonyms)</param>
-        /// <param name="newSynonyms">An array of synonyms for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A synonym must conform to the following resrictions:
+        /// <param name="newValueType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="newSynonyms">An array of synonyms for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
         /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="newPatterns">An array of patterns for the entity value. You can provide either synonyms or
-        /// patterns (as indicated by **type**), but not both. A pattern is a regular expression no longer than 512
+        /// <param name="newPatterns">An array of patterns for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
         /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#creating-entities).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
         /// (optional)</param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, object newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateValue`");
@@ -3161,7 +3167,7 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Add entity value synonym.
+        /// Create entity value synonym.
         ///
         /// Add a new synonym to an entity value.
         ///
@@ -3639,16 +3645,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="conditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// (optional)</param>
-        /// <param name="parent">The ID of the parent dialog node. (optional)</param>
-        /// <param name="previousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="parent">The ID of the parent dialog node. This property is omitted if the dialog node has no
+        /// parent. (optional)</param>
+        /// <param name="previousSibling">The ID of the previous sibling dialog node. This property is omitted if the
+        /// dialog node has no previous sibling. (optional)</param>
         /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
-        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// output, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="context">The context for the dialog node. (optional)</param>
         /// <param name="metadata">The metadata for the dialog node. (optional)</param>
         /// <param name="nextStep">The next step to execute following this dialog node. (optional)</param>
-        /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
-        /// (optional)</param>
         /// <param name="title">The alias used to identify the dialog node. This string must conform to the following
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
@@ -3656,6 +3663,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="nodeType">How the dialog node is processed. (optional)</param>
         /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="variable">The location in the dialog context where output is stored. (optional)</param>
+        /// <param name="actions">An array of objects describing any actions to be invoked by the dialog node.
+        /// (optional)</param>
         /// <param name="digressIn">Whether this top-level dialog node can be digressed into. (optional)</param>
         /// <param name="digressOut">Whether this dialog node can be returned to after a digression. (optional)</param>
         /// <param name="digressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
@@ -3663,7 +3672,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. This string must be no longer than 512 characters. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, object context = null, object metadata = null, DialogNodeNextStep nextStep = null, List<DialogNodeAction> actions = null, string title = null, string nodeType = null, string eventName = null, string variable = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3714,8 +3723,6 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (nextStep != null)
                 bodyObject["next_step"] = JToken.FromObject(nextStep);
-            if (actions != null && actions.Count > 0)
-                bodyObject["actions"] = JToken.FromObject(actions);
             if (!string.IsNullOrEmpty(title))
                 bodyObject["title"] = title;
             if (!string.IsNullOrEmpty(nodeType))
@@ -3724,6 +3731,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["event_name"] = eventName;
             if (!string.IsNullOrEmpty(variable))
                 bodyObject["variable"] = variable;
+            if (actions != null && actions.Count > 0)
+                bodyObject["actions"] = JToken.FromObject(actions);
             if (!string.IsNullOrEmpty(digressIn))
                 bodyObject["digress_in"] = digressIn;
             if (!string.IsNullOrEmpty(digressOut))
@@ -4046,10 +4055,13 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// (optional)</param>
-        /// <param name="newParent">The ID of the parent dialog node. (optional)</param>
-        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. (optional)</param>
+        /// <param name="newParent">The ID of the parent dialog node. This property is omitted if the dialog node has no
+        /// parent. (optional)</param>
+        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. This property is omitted if the
+        /// dialog node has no previous sibling. (optional)</param>
         /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
-        /// output, see the [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#complex).
+        /// output, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="newContext">The context for the dialog node. (optional)</param>
         /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
@@ -4071,7 +4083,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. This string must be no longer than 512 characters. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, object newContext = null, object newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4189,7 +4201,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id`
         /// or `request.context.metadata.deployment`. For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).</param>
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
         /// request_timestamp)</param>
@@ -4290,7 +4302,7 @@ namespace IBM.Watson.Assistant.V1
         /// request_timestamp)</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-query-syntax).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
         /// (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>

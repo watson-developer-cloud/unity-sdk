@@ -90,5 +90,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("sentiment", NullValueHandling = NullValueHandling.Ignore)]
         public SentimentResult Sentiment { get; set; }
+        /// <summary>
+        /// Tokens and sentences returned from syntax analysis.
+        /// </summary>
+        [JsonProperty("syntax", NullValueHandling = NullValueHandling.Ignore)]
+        public SyntaxResult Syntax { get; set; }
     }
 }

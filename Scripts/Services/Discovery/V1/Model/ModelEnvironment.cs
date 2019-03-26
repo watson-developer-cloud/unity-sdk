@@ -154,7 +154,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("index_capacity", NullValueHandling = NullValueHandling.Ignore)]
         public IndexCapacity IndexCapacity { get; set; }
         /// <summary>
-        /// Information about Continuous Relevancy Training for this environment.
+        /// Information about the Continuous Relevancy Training for this environment.
         /// </summary>
         [JsonProperty("search_status", NullValueHandling = NullValueHandling.Ignore)]
         public SearchStatus SearchStatus { get; set; }

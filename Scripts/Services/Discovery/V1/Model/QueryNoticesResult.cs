@@ -61,25 +61,25 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }
         /// <summary>
-        /// *Deprecated* This field is now part of the **result_metadata** object.
-        /// </summary>
-        [JsonProperty("score", NullValueHandling = NullValueHandling.Ignore)]
-        public double? Score { get; set; }
-        /// <summary>
         /// Metadata of the document.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public object Metadata { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
         /// <summary>
         /// The collection ID of the collection containing the document for this result.
         /// </summary>
         [JsonProperty("collection_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CollectionId { get; set; }
         /// <summary>
-        /// Metadata of the query result.
+        /// Metadata of a query result.
         /// </summary>
         [JsonProperty("result_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public QueryResultMetadata ResultMetadata { get; set; }
+        /// <summary>
+        /// Automatically extracted result title.
+        /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; set; }
         /// <summary>
         /// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the
         /// source document.

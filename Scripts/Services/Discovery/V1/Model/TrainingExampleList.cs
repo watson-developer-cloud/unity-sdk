@@ -26,7 +26,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class TrainingExampleList
     {
         /// <summary>
-        /// Gets or Sets Examples
+        /// Array of training examples.
         /// </summary>
         [JsonProperty("examples", NullValueHandling = NullValueHandling.Ignore)]
         public List<TrainingExample> Examples { get; set; }

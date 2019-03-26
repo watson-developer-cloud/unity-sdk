@@ -267,11 +267,10 @@ namespace IBM.Watson.SpeechToText.V1
         /// ### Streaming mode
         ///
         ///  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header
-        /// to `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if
-        /// the service receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The
-        /// server also closes the connection (status code 400) if no speech is detected for `inactivity_timeout`
-        /// seconds of audio (not processing time); use the `inactivity_timeout` parameter to change the default of 30
-        /// seconds.
+        /// to `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408)
+        /// if it does not receive at least 15 seconds of audio (including silence) in any 30-second period. The service
+        /// also closes the connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of
+        /// streaming audio; use the `inactivity_timeout` parameter to change the default of 30 seconds.
         ///
         /// **See also:**
         /// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -288,6 +287,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// Where indicated, the format that you specify must include the sampling rate and can optionally include the
         /// number of channels and the endianness of the audio.
+        /// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (**Required.** Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -335,14 +335,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// used with the recognition request. The base model of the specified custom language model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom language model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         ///
         /// **Note:** Use this parameter instead of the deprecated `customization_id` parameter. (optional)</param>
         /// <param name="acousticCustomizationId">The customization ID (GUID) of a custom acoustic model that is to be
         /// used with the recognition request. The base model of the specified custom acoustic model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom acoustic model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom). (optional)</param>
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input). (optional)</param>
         /// <param name="baseModelVersion">The version of the specified base model that is to be used with recognition
         /// request. Multiple versions of a base model can exist when a model is updated for internal improvements. The
         /// parameter is intended primarily for use with custom models that have been upgraded for a new base model. The
@@ -361,12 +361,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain
         /// phrases.
         ///
-        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         /// (optional)</param>
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
-        /// submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
-        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See
-        /// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts). (optional)</param>
+        /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
+        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
+        /// (optional)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -380,7 +381,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
         /// (optional)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -429,7 +431,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the
         /// custom language model for which the grammar is defined. The service recognizes only strings that are
         /// recognized by the specified grammar; it does not recognize other custom words from the model's words
-        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html). (optional)</param>
+        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
+        /// (optional)</param>
         /// <param name="redaction">If `true`, the service redacts, or masks, numeric data from final transcripts. The
         /// feature redacts any number that has three or more consecutive digits by replacing each digit with an `X`
         /// character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the
@@ -773,21 +776,20 @@ namespace IBM.Watson.SpeechToText.V1
         /// * `user_token`
         /// * `results_ttl`
         ///
-        /// You can pass a maximum of 100 MB and a minimum of 100 bytes of audio with a request. The service
-        /// automatically detects the endianness of the incoming audio and, for audio that includes multiple channels,
-        /// downmixes the audio to one-channel mono during transcoding. The method returns only final results; to enable
-        /// interim results, use the WebSocket API.
+        /// You can pass a maximum of 1 GB and a minimum of 100 bytes of audio with a request. The service automatically
+        /// detects the endianness of the incoming audio and, for audio that includes multiple channels, downmixes the
+        /// audio to one-channel mono during transcoding. The method returns only final results; to enable interim
+        /// results, use the WebSocket API.
         ///
         /// **See also:** [Creating a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#create).
         ///
         /// ### Streaming mode
         ///
         ///  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header
-        /// to `chunked` to use streaming mode. In streaming mode, the server closes the connection (status code 408) if
-        /// the service receives no data chunk for 30 seconds and it has no audio to transcribe for 30 seconds. The
-        /// server also closes the connection (status code 400) if no speech is detected for `inactivity_timeout`
-        /// seconds of audio (not processing time); use the `inactivity_timeout` parameter to change the default of 30
-        /// seconds.
+        /// to `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408)
+        /// if it does not receive at least 15 seconds of audio (including silence) in any 30-second period. The service
+        /// also closes the connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of
+        /// streaming audio; use the `inactivity_timeout` parameter to change the default of 30 seconds.
         ///
         /// **See also:**
         /// * [Audio transmission](https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission)
@@ -804,6 +806,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// Where indicated, the format that you specify must include the sampling rate and can optionally include the
         /// number of channels and the endianness of the audio.
+        /// * `audio/alaw` (**Required.** Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (**Required.** Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -867,14 +870,14 @@ namespace IBM.Watson.SpeechToText.V1
         /// used with the recognition request. The base model of the specified custom language model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom language model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         ///
         /// **Note:** Use this parameter instead of the deprecated `customization_id` parameter. (optional)</param>
         /// <param name="acousticCustomizationId">The customization ID (GUID) of a custom acoustic model that is to be
         /// used with the recognition request. The base model of the specified custom acoustic model must match the
         /// model specified with the `model` parameter. You must make the request with credentials for the instance of
         /// the service that owns the custom model. By default, no custom acoustic model is used. See [Custom
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom). (optional)</param>
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input). (optional)</param>
         /// <param name="baseModelVersion">The version of the specified base model that is to be used with recognition
         /// request. Multiple versions of a base model can exist when a model is updated for internal improvements. The
         /// parameter is intended primarily for use with custom models that have been upgraded for a new base model. The
@@ -893,12 +896,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// accuracy of phrases from the custom model's domain, but it can negatively affect performance on non-domain
         /// phrases.
         ///
-        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom).
+        /// See [Custom models](https://cloud.ibm.com/docs/services/speech-to-text/input.html#custom-input).
         /// (optional)</param>
         /// <param name="inactivityTimeout">The time in seconds after which, if only silence (no speech) is detected in
-        /// submitted audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
-        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See
-        /// [Timeouts](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts). (optional)</param>
+        /// streaming audio, the connection is closed with a 400 error. The parameter is useful for stopping audio
+        /// submission from a live microphone when a user simply walks away. Use `-1` for infinity. See [Inactivity
+        /// timeout](https://cloud.ibm.com/docs/services/speech-to-text/input.html#timeouts-inactivity).
+        /// (optional)</param>
         /// <param name="keywords">An array of keyword strings to spot in the audio. Each keyword string can include one
         /// or more string tokens. Keywords are spotted only in the final results, not in interim hypotheses. If you
         /// specify any keywords, you must also specify a keywords threshold. You can spot a maximum of 1000 keywords.
@@ -912,7 +916,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// spotting](https://cloud.ibm.com/docs/services/speech-to-text/output.html#keyword_spotting).
         /// (optional)</param>
         /// <param name="maxAlternatives">The maximum number of alternative transcripts that the service is to return.
-        /// By default, the service returns a single transcript. See [Maximum
+        /// By default, the service returns a single transcript. If you specify a value of `0`, the service uses the
+        /// default value, `1`. See [Maximum
         /// alternatives](https://cloud.ibm.com/docs/services/speech-to-text/output.html#max_alternatives).
         /// (optional)</param>
         /// <param name="wordAlternativesThreshold">A confidence value that is the lower bound for identifying a
@@ -961,7 +966,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the
         /// custom language model for which the grammar is defined. The service recognizes only strings that are
         /// recognized by the specified grammar; it does not recognize other custom words from the model's words
-        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html). (optional)</param>
+        /// resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/input.html#grammars-input).
+        /// (optional)</param>
         /// <param name="redaction">If `true`, the service redacts, or masks, numeric data from final transcripts. The
         /// feature redacts any number that has three or more consecutive digits by replacing each digit with an `X`
         /// character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the
@@ -1144,7 +1150,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// time to live for the results expires. You must use credentials for the instance of the service that owns a
         /// job to delete it.
         ///
-        /// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete).
+        /// **See also:** [Deleting a job](https://cloud.ibm.com/docs/services/speech-to-text/async.html#delete-async).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="id">The identifier of the asynchronous job that is to be used for the request. You must make
@@ -1411,7 +1417,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials are used to create it.
         ///
         /// **See also:** [Create a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#createModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">A user-defined name for the new custom language model. Use a name that is unique among
@@ -1521,7 +1527,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// instance of the service that owns a model to delete it.
         ///
         /// **See also:** [Deleting a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#deleteModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
@@ -1597,7 +1603,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// service that owns a model to list information about it.
         ///
         /// **See also:** [Listing custom language
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
@@ -1675,7 +1681,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// owns a model to list information about it.
         ///
         /// **See also:** [Listing custom language
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#listModels-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
@@ -1755,7 +1761,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// re-created. You must use credentials for the instance of the service that owns a model to reset it.
         ///
         /// **See also:** [Resetting a custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-models.html#resetModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
@@ -1851,7 +1857,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// must fix.
         ///
         /// **See also:** [Train the custom language
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/language-create.html#trainModel-language).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom language model that is to be used
@@ -3325,7 +3331,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials are used to create it.
         ///
         /// **See also:** [Create a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#createModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">A user-defined name for the new custom acoustic model. Use a name that is unique among
@@ -3423,7 +3429,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// instance of the service that owns a model to delete it.
         ///
         /// **See also:** [Deleting a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#deleteModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
@@ -3499,7 +3505,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// service that owns a model to list information about it.
         ///
         /// **See also:** [Listing custom acoustic
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
@@ -3577,7 +3583,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// owns a model to list information about it.
         ///
         /// **See also:** [Listing custom acoustic
-        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels).
+        /// models](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#listModels-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
@@ -3657,7 +3663,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// credentials for the instance of the service that owns a model to reset it.
         ///
         /// **See also:** [Resetting a custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-models.html#resetModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
@@ -3762,7 +3768,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// custom models must be based on the same version of the same base model.
         ///
         /// **See also:** [Train the custom acoustic
-        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel).
+        /// model](https://cloud.ibm.com/docs/services/speech-to-text/acoustic-create.html#trainModel-acoustic).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom acoustic model that is to be used
@@ -3991,6 +3997,7 @@ namespace IBM.Watson.SpeechToText.V1
         ///  You can add an individual audio file in any format that the service supports for speech recognition. For an
         /// audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio
         /// file, including specifying the sampling rate, channels, and endianness where indicated.
+        /// * `audio/alaw` (Specify the sampling rate (`rate`) of the audio.)
         /// * `audio/basic` (Use only with narrowband models.)
         /// * `audio/flac`
         /// * `audio/g729` (Use only with narrowband models.)
@@ -4023,11 +4030,17 @@ namespace IBM.Watson.SpeechToText.V1
         /// * `application/zip` for a **.zip** file
         /// * `application/gzip` for a **.tar.gz** file.
         ///
-        /// All audio files contained in the archive must have the same audio format. Use the `Contained-Content-Type`
-        /// parameter to specify the format of the contained audio files. The parameter accepts all of the audio formats
-        /// supported for use with speech recognition and with the `Content-Type` header, including the `rate`,
-        /// `channels`, and `endianness` parameters that are used with some formats. The default contained audio format
-        /// is `audio/wav`.
+        /// When you add an archive-type resource, the `Contained-Content-Type` header is optional depending on the
+        /// format of the files that you are adding:
+        /// * For audio files of type `audio/alaw`, `audio/basic`, `audio/l16`, or `audio/mulaw`, you must use the
+        /// `Contained-Content-Type` header to specify the format of the contained audio files. Include the `rate`,
+        /// `channels`, and `endianness` parameters where necessary. In this case, all audio files contained in the
+        /// archive file must have the same audio format.
+        /// * For audio files of all other types, you can omit the `Contained-Content-Type` header. In this case, the
+        /// audio files contained in the archive file can have any of the formats not listed in the previous bullet. The
+        /// audio files do not need to have the same format.
+        ///
+        /// Do not use the `Contained-Content-Type` header when adding an audio-type resource.
         ///
         /// ### Naming restrictions for embedded audio files
         ///
@@ -4049,11 +4062,18 @@ namespace IBM.Watson.SpeechToText.V1
         /// * Do not use the name of an audio resource that has already been added to the custom model.</param>
         /// <param name="audioResource">The audio resource that is to be added to the custom acoustic model, an
         /// individual audio file or an archive file.</param>
-        /// <param name="containedContentType">For an archive-type resource, specifies the format of the audio files
-        /// that are contained in the archive file. The parameter accepts all of the audio formats that are supported
-        /// for use with speech recognition, including the `rate`, `channels`, and `endianness` parameters that are used
-        /// with some formats. For more information, see **Content types for audio-type resources** in the method
-        /// description. (optional, default to audio/wav)</param>
+        /// <param name="containedContentType">**For an archive-type resource,** specify the format of the audio files
+        /// that are contained in the archive file if they are of type `audio/alaw`, `audio/basic`, `audio/l16`, or
+        /// `audio/mulaw`. Include the `rate`, `channels`, and `endianness` parameters where necessary. In this case,
+        /// all audio files that are contained in the archive file must be of the indicated type.
+        ///
+        /// For all other audio formats, you can omit the header. In this case, the audio files can be of multiple types
+        /// as long as they are not of the types listed in the previous paragraph.
+        ///
+        /// The parameter accepts all of the audio formats that are supported for use with speech recognition. For more
+        /// information, see **Content types for audio-type resources** in the method description.
+        ///
+        /// **For an audio-type resource,** omit the header. (optional)</param>
         /// <param name="allowOverwrite">If `true`, the specified audio resource overwrites an existing audio resource
         /// with the same name. If `false`, the request fails if an audio resource with the same name already exists.
         /// The parameter has no effect if an audio resource with the same name does not already exist. (optional,

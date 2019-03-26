@@ -31,7 +31,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
         /// <summary>
-        /// Gets or Sets Results
+        /// Array of aggregation results.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public List<AggregationResult> Results { get; set; }

@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -40,9 +41,19 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
         /// An array of user input examples for the intent.
         /// </summary>
         [JsonProperty("examples", NullValueHandling = NullValueHandling.Ignore)]
-        public List<CreateExample> Examples { get; set; }
+        public List<Example> Examples { get; set; }
     }
 }

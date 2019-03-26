@@ -30,7 +30,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("documents", NullValueHandling = NullValueHandling.Ignore)]
         public EnvironmentDocuments Documents { get; set; }
         /// <summary>
-        /// Summary of the disk usage of the environment.
+        /// Summary of the disk usage statistics for the environment.
         /// </summary>
         [JsonProperty("disk_usage", NullValueHandling = NullValueHandling.Ignore)]
         public DiskUsage DiskUsage { get; set; }
@@ -39,10 +39,5 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("collections", NullValueHandling = NullValueHandling.Ignore)]
         public CollectionUsage Collections { get; set; }
-        /// <summary>
-        /// **Deprecated**: Summary of the memory usage of the environment.
-        /// </summary>
-        [JsonProperty("memory_usage", NullValueHandling = NullValueHandling.Ignore)]
-        public MemoryUsage MemoryUsage { get; set; }
     }
 }
