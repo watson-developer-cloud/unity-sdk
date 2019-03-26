@@ -15,29 +15,25 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// SemanticRolesAction.
+    /// The extracted object from the sentence.
     /// </summary>
-    public class SemanticRolesAction
+    public class SemanticRolesResultObject
     {
         /// <summary>
-        /// Analyzed text that corresponds to the action.
+        /// Object text.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
-        /// normalized version of the action.
+        /// An array of extracted keywords.
         /// </summary>
-        [JsonProperty("normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public string Normalized { get; set; }
-        /// <summary>
-        /// Gets or Sets Verb
-        /// </summary>
-        [JsonProperty("verb", NullValueHandling = NullValueHandling.Ignore)]
-        public SemanticRolesVerb Verb { get; set; }
+        [JsonProperty("keywords", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SemanticRolesKeyword> Keywords { get; set; }
     }
 }

@@ -137,13 +137,14 @@ namespace IBM.Watson.VisualRecognition.V3
         /// non-ASCII characters.
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
+        /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
         /// <param name="url">The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel
         /// density is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224
         /// pixels. The maximum image size is 10 MB.
         ///
         /// You can also include images with the **images_file** parameter. (optional)</param>
         /// <param name="threshold">The minimum score a class must have to be displayed in the response. Set the
-        /// threshold to `0.0` to return all identified classes. (optional, default to 0.5)</param>
+        /// threshold to `0.0` to return all identified classes. (optional)</param>
         /// <param name="owners">The categories of classifiers to apply. The **classifier_ids** parameter overrides
         /// **owners**, so make sure that **classifier_ids** is empty.
         /// - Use `IBM` to classify against the `default` general classifier. You get the same result if both
@@ -163,7 +164,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
-        public bool Classify(Callback<ClassifiedImages> callback, System.IO.FileStream imagesFile = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool Classify(Callback<ClassifiedImages> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
@@ -191,7 +192,7 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
-                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFilename, imagesFileContentType);
             }
             if (!string.IsNullOrEmpty(url))
             {
@@ -269,6 +270,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// UTF-8 encoding if it encounters non-ASCII characters.
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
+        /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
         /// <param name="url">The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum
         /// recommended pixel density is 32X32 pixels, but the service tends to perform better with images that are at
         /// least 224 x 224 pixels. The maximum image size is 10 MB. Redirects are followed, so you can use a shortened
@@ -279,7 +281,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// (optional, default to en)</param>
         /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
-        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.FileStream imagesFile = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DetectFaces`");
@@ -307,7 +309,7 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
-                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFile.Name, imagesFileContentType);
+                req.Forms["images_file"] = new RESTConnector.Form(imagesFile, imagesFilename, imagesFileContentType);
             }
             if (!string.IsNullOrEmpty(url))
             {
@@ -361,8 +363,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the new classifier. Encode special characters in UTF-8.</param>
-        /// <param name="positiveExamples">A .zip file of images that depict the visual subject of a class in the new
-        /// classifier. You can include more than one positive example file in a call.
+        /// <param name="positiveExamples">A dictionary that contains the value for each classname. The value is a .zip
+        /// file of images that depict the visual subject of a class in the new classifier. You can include more than
+        /// one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
         /// `goldenretriever_positive_examples` creates the class **goldenretriever**.
@@ -371,12 +374,14 @@ namespace IBM.Watson.VisualRecognition.V3
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
         ///
         /// Encode special characters in the file name in UTF-8.</param>
+        /// <param name="positiveExamplesFilename">The filename for positiveExamples.</param>
         /// <param name="negativeExamples">A .zip file of images that do not depict the visual subject of any of the
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
+        /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.FileStream> positiveExamples, System.IO.FileStream negativeExamples = null)
+        public bool CreateClassifier(Callback<Classifier> callback, string name, Dictionary<string, System.IO.MemoryStream> positiveExamples, string positiveExamplesFilename, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
@@ -386,6 +391,8 @@ namespace IBM.Watson.VisualRecognition.V3
                 throw new ArgumentNullException("`positiveExamples` is required for `CreateClassifier`");
             if (positiveExamples.Count == 0)
                 throw new ArgumentException("`positiveExamples` must contain at least one dictionary entry");
+            if (string.IsNullOrEmpty(positiveExamplesFilename))
+                throw new ArgumentNullException("`positiveExamplesFilename` is required for `CreateClassifier`");
 
             RequestObject<Classifier> req = new RequestObject<Classifier>
             {
@@ -414,15 +421,15 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
-                foreach (KeyValuePair<string, System.IO.FileStream> entry in positiveExamples)
+                foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Key + ".zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
             {
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
             }
 
             req.OnResponse = OnCreateClassifierResponse;
@@ -585,16 +592,19 @@ namespace IBM.Watson.VisualRecognition.V3
             }
             response.StatusCode = resp.HttpResponseCode;
 
-            try
+            if (resp.Success)
             {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Classifier>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
+                try
+                {
+                    string json = Encoding.UTF8.GetString(resp.Data);
+                    response.Result = JsonConvert.DeserializeObject<Classifier>(json);
+                    response.Response = json;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("VisualRecognitionService.OnGetClassifierResponse()", "Exception: {0}", e.ToString());
+                    resp.Success = false;
+                }
             }
 
             if (((RequestObject<Classifier>)req).Callback != null)
@@ -689,9 +699,9 @@ namespace IBM.Watson.VisualRecognition.V3
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
-        /// <param name="positiveExamples">A .zip file of images that depict the visual subject of a class in the
-        /// classifier. The positive examples create or update classes in the classifier. You can include more than one
-        /// positive example file in a call.
+        /// <param name="positiveExamples">A dictionary that contains the value for each classname. The value is a .zip
+        /// file of images that depict the visual subject of a class in the classifier. The positive examples create or
+        /// update classes in the classifier. You can include more than one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
         /// `goldenretriever_positive_examples` creates the class `goldenretriever`.
@@ -700,12 +710,14 @@ namespace IBM.Watson.VisualRecognition.V3
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
+        /// <param name="positiveExamplesFilename">The filename for positiveExamples. (optional)</param>
         /// <param name="negativeExamples">A .zip file of images that do not depict the visual subject of any of the
         /// classes of the new classifier. Must contain a minimum of 10 images.
         ///
         /// Encode special characters in the file name in UTF-8. (optional)</param>
+        /// <param name="negativeExamplesFilename">The filename for negativeExamples. (optional)</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.FileStream> positiveExamples = null, System.IO.FileStream negativeExamples = null)
+        public bool UpdateClassifier(Callback<Classifier> callback, string classifierId, Dictionary<string, System.IO.MemoryStream> positiveExamples = null, string positiveExamplesFilename = null, System.IO.MemoryStream negativeExamples = null, string negativeExamplesFilename = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
@@ -735,15 +747,15 @@ namespace IBM.Watson.VisualRecognition.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
-                foreach (KeyValuePair<string, System.IO.FileStream> entry in positiveExamples)
+                foreach (KeyValuePair<string, System.IO.MemoryStream> entry in positiveExamples)
                 {
                     var partName = string.Format("{0}_positive_examples", entry.Key);
-                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Value.Name, "application/octet-stream");
+                    req.Forms[partName] = new RESTConnector.Form(entry.Value, entry.Key + ".zip", "application/octet-stream");
                 }
             }
             if (negativeExamples != null)
             {
-                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamples.Name, "application/octet-stream");
+                req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
             }
 
             req.OnResponse = OnUpdateClassifierResponse;

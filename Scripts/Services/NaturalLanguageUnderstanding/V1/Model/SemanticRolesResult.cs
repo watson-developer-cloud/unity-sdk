@@ -33,16 +33,16 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// The extracted subject from the sentence.
         /// </summary>
         [JsonProperty("subject", NullValueHandling = NullValueHandling.Ignore)]
-        public SemanticRolesSubject Subject { get; set; }
+        public SemanticRolesResultSubject Subject { get; set; }
         /// <summary>
         /// The extracted action from the sentence.
         /// </summary>
         [JsonProperty("action", NullValueHandling = NullValueHandling.Ignore)]
-        public SemanticRolesAction Action { get; set; }
+        public SemanticRolesResultAction Action { get; set; }
         /// <summary>
         /// The extracted object from the sentence.
         /// </summary>
         [JsonProperty("object", NullValueHandling = NullValueHandling.Ignore)]
-        public SemanticRolesObject _Object { get; set; }
+        public SemanticRolesResultObject _Object { get; set; }
     }
 }

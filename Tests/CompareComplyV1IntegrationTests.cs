@@ -79,22 +79,27 @@ namespace IBM.Watson.Tests
             HTMLReturn convertToHtmlResponse = null;
             using (FileStream fs = File.OpenRead(contractAFilepath))
             {
-                service.ConvertToHtml(
-                    callback: (DetailedResponse<HTMLReturn> response, IBMError error) =>
-                    {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ConvertToHtml result: {0}", response.Response);
-                        convertToHtmlResponse = response.Result;
-                        Assert.IsNotNull(convertToHtmlResponse);
-                        Assert.IsNotNull(convertToHtmlResponse.Html);
-                        Assert.IsNull(error);
-                    },
-                    file: fs,
-                    modelId: "contracts",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.ConvertToHtml(
+                        callback: (DetailedResponse<HTMLReturn> response, IBMError error) =>
+                        {
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "ConvertToHtml result: {0}", response.Response);
+                            convertToHtmlResponse = response.Result;
+                            Assert.IsNotNull(convertToHtmlResponse);
+                            Assert.IsNotNull(convertToHtmlResponse.Html);
+                            Assert.IsNull(error);
+                        },
+                        file: ms,
+                        filename: "contract_A.pdf",
+                        modelId: "contracts",
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
+                    );
 
-                while (convertToHtmlResponse == null)
-                    yield return null;
+                    while (convertToHtmlResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
@@ -107,22 +112,26 @@ namespace IBM.Watson.Tests
             ClassifyReturn classifyElementsResponse = null;
             using (FileStream fs = File.OpenRead(contractAFilepath))
             {
-                service.ClassifyElements(
-                    callback: (DetailedResponse<ClassifyReturn> response, IBMError error) =>
-                    {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", response.Response);
-                        classifyElementsResponse = response.Result;
-                        Assert.IsNotNull(classifyElementsResponse);
-                        Assert.IsNotNull(classifyElementsResponse.Elements);
-                        Assert.IsNull(error);
-                    },
-                    file: fs,
-                    modelId: "contracts",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.ClassifyElements(
+                        callback: (DetailedResponse<ClassifyReturn> response, IBMError error) =>
+                        {
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", response.Response);
+                            classifyElementsResponse = response.Result;
+                            Assert.IsNotNull(classifyElementsResponse);
+                            Assert.IsNotNull(classifyElementsResponse.Elements);
+                            Assert.IsNull(error);
+                        },
+                        file: ms,
+                        modelId: "contracts",
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
+                    );
 
-                while (classifyElementsResponse == null)
-                    yield return null;
+                    while (classifyElementsResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
@@ -135,22 +144,26 @@ namespace IBM.Watson.Tests
             TableReturn extractTablesResponse = null;
             using (FileStream fs = File.OpenRead(tableFilepath))
             {
-                service.ExtractTables(
-                    callback: (DetailedResponse<TableReturn> response, IBMError error) =>
-                    {
-                        Log.Debug("CompareComplyServiceV1IntegrationTests", "ExtractTables result: {0}", response.Response);
-                        extractTablesResponse = response.Result;
-                        Assert.IsNotNull(extractTablesResponse);
-                        Assert.IsNotNull(extractTablesResponse.Tables);
-                        Assert.IsNull(error);
-                    },
-                    file: fs,
-                    modelId: "tables",
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.ExtractTables(
+                        callback: (DetailedResponse<TableReturn> response, IBMError error) =>
+                        {
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "ExtractTables result: {0}", response.Response);
+                            extractTablesResponse = response.Result;
+                            Assert.IsNotNull(extractTablesResponse);
+                            Assert.IsNotNull(extractTablesResponse.Tables);
+                            Assert.IsNull(error);
+                        },
+                        file: ms,
+                        modelId: "tables",
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
+                    );
 
-                while (extractTablesResponse == null)
-                    yield return null;
+                    while (extractTablesResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
@@ -165,26 +178,34 @@ namespace IBM.Watson.Tests
             {
                 using (FileStream fs1 = File.OpenRead(contractBFilepath))
                 {
-                    service.CompareDocuments(
-                        callback: (DetailedResponse<CompareReturn> response, IBMError error) =>
+                    using (MemoryStream ms0 = new MemoryStream())
+                    {
+                        using (MemoryStream ms1 = new MemoryStream())
                         {
-                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CompareDocuments result: {0}", response.Response);
-                            compareDocumentsResponse = response.Result;
-                            Assert.IsNotNull(compareDocumentsResponse);
-                            Assert.IsNotNull(compareDocumentsResponse.Documents);
-                            Assert.IsNull(error);
-                        },
-                        file1: fs0,
-                        file2: fs1,
-                        file1Label: "Contract A",
-                        file2Label: "Contract B",
-                        modelId: "contracts",
-                        file1ContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
-                        file2ContentType: Utility.GetMimeType(Path.GetExtension(contractBFilepath))
-                    );
+                            fs0.CopyTo(ms0);
+                            fs1.CopyTo(ms1);
+                            service.CompareDocuments(
+                            callback: (DetailedResponse<CompareReturn> response, IBMError error) =>
+                            {
+                                Log.Debug("CompareComplyServiceV1IntegrationTests", "CompareDocuments result: {0}", response.Response);
+                                compareDocumentsResponse = response.Result;
+                                Assert.IsNotNull(compareDocumentsResponse);
+                                Assert.IsNotNull(compareDocumentsResponse.Documents);
+                                Assert.IsNull(error);
+                            },
+                            file1: ms0,
+                            file2: ms1,
+                            file1Label: "Contract A",
+                            file2Label: "Contract B",
+                            modelId: "contracts",
+                            file1ContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
+                            file2ContentType: Utility.GetMimeType(Path.GetExtension(contractBFilepath))
+                        );
 
-                    while (compareDocumentsResponse == null)
-                        yield return null;
+                            while (compareDocumentsResponse == null)
+                                yield return null;
+                        }
+                    }
                 }
             }
         }
@@ -374,25 +395,35 @@ namespace IBM.Watson.Tests
             {
                 using (FileStream fsOutput = File.OpenRead(objectStorageCredentialsOutputFilepath))
                 {
-                    service.CreateBatch(
-                        callback: (DetailedResponse<BatchStatus> response, IBMError error) =>
+                    using (MemoryStream msInput = new MemoryStream())
+                    {
+                        using (MemoryStream msOutput = new MemoryStream())
                         {
-                            Log.Debug("CompareComplyServiceV1IntegrationTests", "CreateBatch result: {0}", response.Response);
-                            createBatchResponse = response.Result;
-                            createdBatchId = createBatchResponse.BatchId;
-                            Assert.IsNotNull(createBatchResponse);
-                            Assert.IsNotNull(createdBatchId);
-                            Assert.IsNull(error);
-                        },
-                        function: "html_conversion",
-                        inputCredentialsFile: fsInput,
-                        inputBucketLocation: "us-south",
-                        inputBucketName: "compare-comply-integration-test-bucket-input",
-                        outputCredentialsFile: fsOutput,
-                        outputBucketLocation: "us-south",
-                        outputBucketName: "compare-comply-integration-test-bucket-output",
-                        modelId: "contracts"
-                    );
+                            fsInput.CopyTo(msInput);
+                            fsOutput.CopyTo(msOutput);
+                            service.CreateBatch(
+                            callback: (DetailedResponse<BatchStatus> response, IBMError error) =>
+                            {
+                                Log.Debug("CompareComplyServiceV1IntegrationTests", "CreateBatch result: {0}", response.Response);
+                                createBatchResponse = response.Result;
+                                createdBatchId = createBatchResponse.BatchId;
+                                Assert.IsNotNull(createBatchResponse);
+                                Assert.IsNotNull(createdBatchId);
+                                Assert.IsNull(error);
+                            },
+                            function: "html_conversion",
+                            inputCredentialsFile: msInput,
+                            inputBucketLocation: "us-south",
+                            inputBucketName: "compare-comply-integration-test-bucket-input",
+                            outputCredentialsFile: msOutput,
+                            outputBucketLocation: "us-south",
+                            outputBucketName: "compare-comply-integration-test-bucket-output",
+                            modelId: "contracts"
+                        );
+                        }
+                    }
+
+
                 }
             }
             while (createBatchResponse == null)

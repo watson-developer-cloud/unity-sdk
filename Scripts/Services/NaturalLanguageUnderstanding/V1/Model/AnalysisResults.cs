@@ -44,7 +44,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// API usage information for the request.
         /// </summary>
         [JsonProperty("usage", NullValueHandling = NullValueHandling.Ignore)]
-        public Usage Usage { get; set; }
+        public AnalysisResultsUsage Usage { get; set; }
         /// <summary>
         /// The general concepts referenced or alluded to in the analyzed text.
         /// </summary>
@@ -74,7 +74,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// Webpage metadata, such as the author and the title of the page.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public MetadataResult Metadata { get; set; }
+        public AnalysisResultsMetadata Metadata { get; set; }
         /// <summary>
         /// The relationships between entities in the content.
         /// </summary>

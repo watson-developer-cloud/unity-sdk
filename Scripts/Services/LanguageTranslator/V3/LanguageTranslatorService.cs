@@ -390,7 +390,7 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// letters, numbers, dashes, underscores, spaces and apostrophes. The maximum length is 32 characters.
         /// (optional)</param>
         /// <returns><see cref="TranslationModel" />TranslationModel</returns>
-        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.FileStream forcedGlossary = null, System.IO.FileStream parallelCorpus = null, string name = null)
+        public bool CreateModel(Callback<TranslationModel> callback, string baseModelId, System.IO.MemoryStream forcedGlossary = null, System.IO.MemoryStream parallelCorpus = null, string name = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateModel`");
@@ -420,11 +420,11 @@ namespace IBM.Watson.LanguageTranslator.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (forcedGlossary != null)
             {
-                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, forcedGlossary.Name, "application/octet-stream");
+                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, null, "application/octet-stream");
             }
             if (parallelCorpus != null)
             {
-                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, parallelCorpus.Name, "application/octet-stream");
+                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, null, "application/octet-stream");
             }
             if (!string.IsNullOrEmpty(baseModelId))
             {

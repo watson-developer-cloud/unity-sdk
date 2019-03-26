@@ -78,15 +78,66 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
         }
 
-        #region Classify
+        #region CreateClassifier
         [UnityTest, Order(0)]
+        public IEnumerator TestCreateClassifier()
+        {
+            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to CreateClassifier...");
+            Classifier createClassifierResponse = null;
+            using (FileStream fs0 = File.OpenRead(giraffePositiveExamplesFilepath))
+            {
+                using (FileStream fs1 = File.OpenRead(negativeExamplesFilepath))
+                {
+                    using (MemoryStream ms0 = new MemoryStream())
+                    {
+                        using (MemoryStream ms1 = new MemoryStream())
+                        {
+                            fs0.CopyTo(ms0);
+                            fs1.CopyTo(ms1);
+                            Dictionary<string, MemoryStream> positiveExamples = new Dictionary<string, MemoryStream>();
+                            positiveExamples.Add("giraffe", ms0);
+                            service.CreateClassifier(
+                                callback: (DetailedResponse<Classifier> response, IBMError error) =>
+                                {
+                                    Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CreateClassifier result: {0}", response.Response);
+                                    createClassifierResponse = response.Result;
+                                    classifierId = createClassifierResponse.ClassifierId;
+                                    Assert.IsNotNull(createClassifierResponse);
+                                    Assert.IsNotNull(classifierId);
+                                    Assert.IsTrue(createClassifierResponse.Name == classifierName);
+                                    Assert.IsNotNull(createClassifierResponse.Classes);
+                                    Assert.IsTrue(createClassifierResponse.Classes.Count > 0);
+                                    Assert.IsTrue(createClassifierResponse.Classes[0].ClassName == "giraffe");
+                                    Assert.IsNull(error);
+                                },
+                                name: classifierName,
+                                positiveExamples: positiveExamples,
+                                negativeExamples: ms1,
+                                positiveExamplesFilename: Path.GetFileName(giraffePositiveExamplesFilepath),
+                                negativeExamplesFilename: Path.GetFileName(negativeExamplesFilepath)
+                            );
+
+                            while (createClassifierResponse == null)
+                                yield return null;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Classify
+        [UnityTest, Order(1)]
         public IEnumerator TestClassify()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to Classify...");
             ClassifiedImages classifyResponse = null;
             using (FileStream fs = File.OpenRead(turtleImageFilepath))
             {
-                service.Classify(
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.Classify(
                     callback: (DetailedResponse<ClassifiedImages> response, IBMError error) =>
                     {
                         Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Classify result: {0}", response.Response);
@@ -98,78 +149,47 @@ namespace IBM.Watson.Tests
                         Assert.IsTrue(classifyResponse.Images[0].Classifiers.Count > 0);
                         Assert.IsNull(error);
                     },
-                    imagesFile: fs,
-                    imagesFileContentType: turtleImageContentType
+                    imagesFile: ms,
+                    imagesFileContentType: turtleImageContentType,
+                    imagesFilename: Path.GetFileName(turtleImageFilepath)
                 );
 
-                while (classifyResponse == null)
-                    yield return null;
+                    while (classifyResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
 
         #region DetectFaces
-        [UnityTest, Order(1)]
+        [UnityTest, Order(2)]
         public IEnumerator TestDetectFaces()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DetectFaces...");
             DetectedFaces detectFacesResponse = null;
             using (FileStream fs = File.OpenRead(obamaImageFilepath))
             {
-                service.DetectFaces(
-                    callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
-                    {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
-                        detectFacesResponse = response.Result;
-                        Assert.IsNotNull(detectFacesResponse);
-                        Assert.IsNotNull(detectFacesResponse.Images);
-                        Assert.IsTrue(detectFacesResponse.Images.Count > 0);
-                        Assert.IsNotNull(detectFacesResponse.Images[0].Faces);
-                        Assert.IsTrue(detectFacesResponse.Images[0].Faces.Count > 0);
-                        Assert.IsNull(error);
-                    },
-                    imagesFile: fs,
-                    imagesFileContentType: obamaImageContentType
-                );
-
-                while (detectFacesResponse == null)
-                    yield return null;
-            }
-        }
-        #endregion
-
-        #region CreateClassifier
-        [UnityTest, Order(2)]
-        public IEnumerator TestCreateClassifier()
-        {
-            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to CreateClassifier...");
-            Classifier createClassifierResponse = null;
-            using (FileStream fs0 = File.OpenRead(giraffePositiveExamplesFilepath))
-            {
-                using (FileStream fs1 = File.OpenRead(negativeExamplesFilepath))
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    Dictionary<string, FileStream> positiveExamples = new Dictionary<string, FileStream>();
-                    positiveExamples.Add("giraffe_positive_examples", fs0);
-                    service.CreateClassifier(
-                        callback: (DetailedResponse<Classifier> response, IBMError error) =>
+                    fs.CopyTo(ms);
+                    service.DetectFaces(
+                        callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
                         {
-                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "CreateClassifier result: {0}", response.Response);
-                            createClassifierResponse = response.Result;
-                            classifierId = createClassifierResponse.ClassifierId;
-                            Assert.IsNotNull(createClassifierResponse);
-                            Assert.IsNotNull(classifierId);
-                            Assert.IsTrue(createClassifierResponse.Name == classifierName);
-                            Assert.IsNotNull(createClassifierResponse.Classes);
-                            Assert.IsTrue(createClassifierResponse.Classes.Count > 0);
-                            Assert.IsTrue(createClassifierResponse.Classes[0].ClassName == "giraffe");
+                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
+                            detectFacesResponse = response.Result;
+                            Assert.IsNotNull(detectFacesResponse);
+                            Assert.IsNotNull(detectFacesResponse.Images);
+                            Assert.IsTrue(detectFacesResponse.Images.Count > 0);
+                            Assert.IsNotNull(detectFacesResponse.Images[0].Faces);
+                            Assert.IsTrue(detectFacesResponse.Images[0].Faces.Count > 0);
                             Assert.IsNull(error);
                         },
-                        name: classifierName,
-                        positiveExamples: positiveExamples,
-                        negativeExamples: fs1
+                        imagesFile: ms,
+                        imagesFileContentType: obamaImageContentType,
+                        imagesFilename: Path.GetFileName(obamaImageFilepath)
                     );
 
-                    while (createClassifierResponse == null)
+                    while (detectFacesResponse == null)
                         yield return null;
                 }
             }
@@ -244,25 +264,29 @@ namespace IBM.Watson.Tests
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to UpdateClassifier...");
             using (FileStream fs = File.OpenRead(turtlePositiveExamplesFilepath))
             {
-                Classifier updateClassifierResponse = null;
-                Dictionary<string, FileStream> positiveExamples = new Dictionary<string, FileStream>();
-                positiveExamples.Add("turtles_positive_examples", fs);
-                service.UpdateClassifier(
-                    callback: (DetailedResponse<Classifier> response, IBMError error) =>
-                    {
-                        Log.Debug("VisualRecognitionServiceV3IntegrationTests", "UpdateClassifier result: {0}", response.Response);
-                        updateClassifierResponse = response.Result;
-                        Assert.IsNotNull(updateClassifierResponse);
-                        Assert.IsNotNull(updateClassifierResponse.Classes);
-                        Assert.IsTrue(updateClassifierResponse.Classes.Count > 0);
-                        Assert.IsNull(error);
-                    },
-                    classifierId: classifierId,
-                    positiveExamples: positiveExamples
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    Classifier updateClassifierResponse = null;
+                    Dictionary<string, MemoryStream> positiveExamples = new Dictionary<string, MemoryStream>();
+                    positiveExamples.Add("turtles_positive_examples", ms);
+                    service.UpdateClassifier(
+                        callback: (DetailedResponse<Classifier> response, IBMError error) =>
+                        {
+                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "UpdateClassifier result: {0}", response.Response);
+                            updateClassifierResponse = response.Result;
+                            Assert.IsNotNull(updateClassifierResponse);
+                            Assert.IsNotNull(updateClassifierResponse.Classes);
+                            Assert.IsTrue(updateClassifierResponse.Classes.Count > 0);
+                            Assert.IsNull(error);
+                        },
+                        classifierId: classifierId,
+                        positiveExamples: positiveExamples
+                    );
 
-                while (updateClassifierResponse == null)
-                    yield return null;
+                    while (updateClassifierResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion

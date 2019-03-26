@@ -21,15 +21,20 @@ using Newtonsoft.Json;
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// SemanticRolesObject.
+    /// The extracted subject from the sentence.
     /// </summary>
-    public class SemanticRolesObject
+    public class SemanticRolesResultSubject
     {
         /// <summary>
-        /// Object text.
+        /// Text that corresponds to the subject role.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
+        /// <summary>
+        /// An array of extracted entities.
+        /// </summary>
+        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SemanticRolesEntity> Entities { get; set; }
         /// <summary>
         /// An array of extracted keywords.
         /// </summary>

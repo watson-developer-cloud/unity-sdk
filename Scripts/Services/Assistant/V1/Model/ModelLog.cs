@@ -28,7 +28,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// A request sent to the workspace, including the user input and context.
         /// </summary>
         [JsonProperty("request", NullValueHandling = NullValueHandling.Ignore)]
-        public BaseMessage Request { get; set; }
+        public MessageRequest Request { get; set; }
         /// <summary>
         /// The response sent by the workspace, including the output text, detected intents and entities, and context.
         /// </summary>

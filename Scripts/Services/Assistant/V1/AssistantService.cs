@@ -136,9 +136,12 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="input">An input object that includes the input text. (optional)</param>
-        /// <param name="intents">An array of intents recognized in the user input, sorted in descending order of
-        /// confidence. (optional)</param>
-        /// <param name="entities">An array of entities identified in the user input. (optional)</param>
+        /// <param name="intents">Intents to use when evaluating the user input. Include intents from the previous
+        /// response to continue using those intents rather than trying to recognize intents in the new input.
+        /// (optional)</param>
+        /// <param name="entities">Entities to use when evaluating the message. Include entities from the previous
+        /// response to continue using those entities rather than detecting entities in the new input.
+        /// (optional)</param>
         /// <param name="alternateIntents">Whether to return more than one intent. A value of `true` indicates that all
         /// matching intents are returned. (optional, default to false)</param>
         /// <param name="context">State information for the conversation. To maintain state, include the context from
@@ -519,8 +522,7 @@ namespace IBM.Watson.Assistant.V1
         /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned workspaces will be sorted. To reverse the sort order,
@@ -1009,8 +1011,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned intents will be sorted. To reverse the sort order, prefix
@@ -1468,8 +1469,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned examples will be sorted. To reverse the sort order,
@@ -1915,8 +1915,7 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned counterexamples will be sorted. To reverse the sort
@@ -2377,8 +2376,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned entities will be sorted. To reverse the sort order,
@@ -2958,8 +2956,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned entity values will be sorted. To reverse the sort order,
@@ -3442,8 +3439,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned entity value synonyms will be sorted. To reverse the sort
@@ -3949,8 +3945,7 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
         /// default to false)</param>
         /// <param name="sort">The attribute by which returned dialog nodes will be sorted. To reverse the sort order,
@@ -4210,8 +4205,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
         /// request_timestamp)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>
         public bool ListAllLogs(Callback<LogCollection> callback, string filter, string sort = null, long? pageLimit = null, string cursor = null)
@@ -4310,8 +4304,7 @@ namespace IBM.Watson.Assistant.V1
         /// For more information, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
         /// (optional)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional, default to
-        /// 100)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>
         public bool ListLogs(Callback<LogCollection> callback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)

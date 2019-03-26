@@ -21,10 +21,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// The authors, publication date, title, prominent page image, and RSS/ATOM feeds of the webpage. Supports URL and
-    /// HTML input types.
+    /// Webpage metadata, such as the author and the title of the page.
     /// </summary>
-    public class MetadataResult
+    public class AnalysisResultsMetadata
     {
         /// <summary>
         /// The authors of the document.

@@ -163,24 +163,32 @@ namespace IBM.Watson.Tests
             {
                 using (FileStream fs1 = File.OpenRead(classifierDataFilePath))
                 {
-                    service.CreateClassifier(
-                    callback: (DetailedResponse<Classifier> response, IBMError error) =>
+                    using (MemoryStream ms0 = new MemoryStream())
                     {
-                        Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "CreateClassifier result: {0}", response.Response);
-                        createClassifierResponse = response.Result;
-                        createdClassifierId = createClassifierResponse.ClassifierId;
-                        Assert.IsNotNull(createClassifierResponse);
-                        Assert.IsNotNull(createdClassifierId);
-                        Assert.IsTrue(createClassifierResponse.Name == "unity-classifier-delete");
-                        Assert.IsTrue(createClassifierResponse.Language == "en");
-                        Assert.IsNull(error);
-                    },
-                    metadata: fs0,
-                    trainingData: fs1
-                );
+                        using (MemoryStream ms1 = new MemoryStream())
+                        {
+                            fs0.CopyTo(ms0);
+                            fs1.CopyTo(ms1);
+                            service.CreateClassifier(
+                                callback: (DetailedResponse<Classifier> response, IBMError error) =>
+                                {
+                                    Log.Debug("NaturalLanguageClassifierServiceV1IntegrationTests", "CreateClassifier result: {0}", response.Response);
+                                    createClassifierResponse = response.Result;
+                                    createdClassifierId = createClassifierResponse.ClassifierId;
+                                    Assert.IsNotNull(createClassifierResponse);
+                                    Assert.IsNotNull(createdClassifierId);
+                                    Assert.IsTrue(createClassifierResponse.Name == "unity-classifier-delete");
+                                    Assert.IsTrue(createClassifierResponse.Language == "en");
+                                    Assert.IsNull(error);
+                                },
+                                metadata: ms0,
+                                trainingData: ms1
+                            );
 
-                    while (createClassifierResponse == null)
-                        yield return null;
+                            while (createClassifierResponse == null)
+                                yield return null;
+                        }
+                    }
                 }
             }
         }

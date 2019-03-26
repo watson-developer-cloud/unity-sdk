@@ -314,24 +314,29 @@ namespace IBM.Watson.Tests
             TestDocument testConfigurationInEnvironmentResponse = null;
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
-                service.TestConfigurationInEnvironment(
-                    callback: (DetailedResponse<TestDocument> response, IBMError error) =>
-                    {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", response.Response);
-                        testConfigurationInEnvironmentResponse = response.Result;
-                        Assert.IsNotNull(testConfigurationInEnvironmentResponse);
-                        Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
-                        Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
-                        Assert.IsNull(error);
-                    },
-                    environmentId: environmentId,
-                    configurationId: createdConfigurationId,
-                    file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.TestConfigurationInEnvironment(
+                        callback: (DetailedResponse<TestDocument> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", response.Response);
+                            testConfigurationInEnvironmentResponse = response.Result;
+                            Assert.IsNotNull(testConfigurationInEnvironmentResponse);
+                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
+                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
+                            Assert.IsNull(error);
+                        },
+                        environmentId: environmentId,
+                        configurationId: createdConfigurationId,
+                        file: ms,
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
+                    );
 
-                while (testConfigurationInEnvironmentResponse == null)
-                    yield return null;
+                    while (testConfigurationInEnvironmentResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
@@ -582,23 +587,28 @@ namespace IBM.Watson.Tests
             TokenDictStatusResponse createStopwordListResponse = null;
             using (FileStream fs = File.OpenRead(stopwordsFilePath))
             {
-                service.CreateStopwordList(
-                    callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
-                    {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateStopwordList result: {0}", response.Response);
-                        createStopwordListResponse = response.Result;
-                        Assert.IsNotNull(createStopwordListResponse);
-                        Assert.IsNotNull(createStopwordListResponse.Status);
-                        Assert.IsTrue(createStopwordListResponse.Type == "stopwords");
-                        Assert.IsNull(error);
-                    },
-                    environmentId: environmentId,
-                    collectionId: collectionId,
-                    stopwordFile: fs
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.CreateStopwordList(
+                        callback: (DetailedResponse<TokenDictStatusResponse> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV1IntegrationTests", "CreateStopwordList result: {0}", response.Response);
+                            createStopwordListResponse = response.Result;
+                            Assert.IsNotNull(createStopwordListResponse);
+                            Assert.IsNotNull(createStopwordListResponse.Status);
+                            Assert.IsTrue(createStopwordListResponse.Type == "stopwords");
+                            Assert.IsNull(error);
+                        },
+                        environmentId: environmentId,
+                        collectionId: collectionId,
+                        stopwordFile: ms,
+                        stopwordFilename: Path.GetFileName(stopwordsFilePath)
+                    );
 
-                while (createStopwordListResponse == null)
-                    yield return null;
+                    while (createStopwordListResponse == null)
+                        yield return null;
+                }
             }
 
             isStopwordsListReady = false;
@@ -749,24 +759,29 @@ namespace IBM.Watson.Tests
             DocumentAccepted addDocumentResponse = null;
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
-                service.AddDocument(
-                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
-                    {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", response.Response);
-                        addDocumentResponse = response.Result;
-                        addedDocumentId = addDocumentResponse.DocumentId;
-                        Assert.IsNotNull(addDocumentResponse);
-                        Assert.IsNotNull(addedDocumentId);
-                        Assert.IsNull(error);
-                    },
-                    environmentId: environmentId,
-                    collectionId: collectionId,
-                    file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.AddDocument(
+                        callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", response.Response);
+                            addDocumentResponse = response.Result;
+                            addedDocumentId = addDocumentResponse.DocumentId;
+                            Assert.IsNotNull(addDocumentResponse);
+                            Assert.IsNotNull(addedDocumentId);
+                            Assert.IsNull(error);
+                        },
+                        environmentId: environmentId,
+                        collectionId: collectionId,
+                        file: ms,
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
+                    );
 
-                while (addDocumentResponse == null)
-                    yield return null;
+                    while (addDocumentResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
@@ -804,24 +819,29 @@ namespace IBM.Watson.Tests
             DocumentAccepted updateDocumentResponse = null;
             using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
             {
-                service.UpdateDocument(
-                    callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
-                    {
-                        Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", response.Response);
-                        updateDocumentResponse = response.Result;
-                        Assert.IsNotNull(updateDocumentResponse);
-                        Assert.IsTrue(updateDocumentResponse.DocumentId == addedDocumentId);
-                        Assert.IsNull(error);
-                    },
-                    environmentId: environmentId,
-                    collectionId: collectionId,
-                    documentId: addedDocumentId,
-                    file: fs,
-                    fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath))
-                );
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.UpdateDocument(
+                        callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV1IntegrationTests", "UpdateDocument result: {0}", response.Response);
+                            updateDocumentResponse = response.Result;
+                            Assert.IsNotNull(updateDocumentResponse);
+                            Assert.IsTrue(updateDocumentResponse.DocumentId == addedDocumentId);
+                            Assert.IsNull(error);
+                        },
+                        environmentId: environmentId,
+                        collectionId: collectionId,
+                        documentId: addedDocumentId,
+                        file: ms,
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
+                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
+                    );
 
-                while (updateDocumentResponse == null)
-                    yield return null;
+                    while (updateDocumentResponse == null)
+                        yield return null;
+                }
             }
         }
         #endregion
