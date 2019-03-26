@@ -134,13 +134,13 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The document to convert.</param>
         /// <param name="filename">The filename for file.</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
         /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
         /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
         /// batch-processing requests. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="HTMLReturn" />HTMLReturn</returns>
-        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.MemoryStream file, string filename, string model = null, string fileContentType = null)
+        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.MemoryStream file, string filename, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ConvertToHtml`");
@@ -221,13 +221,13 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The document to classify.</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
         /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
         /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
         /// batch-processing requests. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="ClassifyReturn" />ClassifyReturn</returns>
-        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.MemoryStream file, string model = null, string fileContentType = null)
+        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.MemoryStream file, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyElements`");
@@ -306,13 +306,13 @@ namespace IBM.Watson.CompareComply.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file">The document on which to run table extraction.</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
         /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
         /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
         /// batch-processing requests. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="TableReturn" />TableReturn</returns>
-        public bool ExtractTables(Callback<TableReturn> callback, System.IO.MemoryStream file, string model = null, string fileContentType = null)
+        public bool ExtractTables(Callback<TableReturn> callback, System.IO.MemoryStream file, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ExtractTables`");
@@ -392,16 +392,16 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="file1">The first document to compare.</param>
         /// <param name="file2">The second document to compare.</param>
+        /// <param name="file1ContentType">The content type of file1. (optional)</param>
+        /// <param name="file2ContentType">The content type of file2. (optional)</param>
         /// <param name="file1Label">A text label for the first document. (optional, default to file_1)</param>
         /// <param name="file2Label">A text label for the second document. (optional, default to file_2)</param>
         /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
         /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
         /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
         /// batch-processing requests. (optional)</param>
-        /// <param name="file1ContentType">The content type of file1. (optional)</param>
-        /// <param name="file2ContentType">The content type of file2. (optional)</param>
         /// <returns><see cref="CompareReturn" />CompareReturn</returns>
-        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.MemoryStream file1, System.IO.MemoryStream file2, string file1Label = null, string file2Label = null, string model = null, string file1ContentType = null, string file2ContentType = null)
+        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.MemoryStream file1, System.IO.MemoryStream file2, string file1ContentType = null, string file2ContentType = null, string file1Label = null, string file2Label = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CompareDocuments`");

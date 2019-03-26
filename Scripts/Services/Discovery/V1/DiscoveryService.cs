@@ -1045,6 +1045,7 @@ namespace IBM.Watson.Discovery.V1
         /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -1058,9 +1059,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="configurationId">The ID of the configuration to use to process the document. If the
         /// **configuration** form part is also provided (both are present at the same time), then the request will be
         /// rejected. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="TestDocument" />TestDocument</returns>
-        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
+        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null, string step = null, string configurationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TestConfigurationInEnvironment`");
@@ -2363,6 +2363,7 @@ namespace IBM.Watson.Discovery.V1
         /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2370,9 +2371,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
+        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddDocument`");
@@ -2620,6 +2620,7 @@ namespace IBM.Watson.Discovery.V1
         /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2627,9 +2628,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
+        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
