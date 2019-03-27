@@ -220,7 +220,7 @@ namespace IBM.Watson.DeveloperCloud.Services.VisualRecognition.v3
             ClassifyReq req = new ClassifyReq();
             req.SuccessCallback = successCallback;
             req.FailCallback = failCallback;
-            req.HttpMethod = UnityWebRequest.kHttpVerbGET;
+            req.HttpMethod = UnityWebRequest.kHttpVerbPOST;
             req.DisableSslVerification = DisableSslVerification;
             req.CustomData = customData == null ? new Dictionary<string, object>() : customData;
             if (req.CustomData.ContainsKey(Constants.String.CUSTOM_REQUEST_HEADERS))
