@@ -121,6 +121,7 @@ namespace IBM.Watson.Tests
                             Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", response.Response);
                             classifyElementsResponse = response.Result;
                             Assert.IsNotNull(classifyElementsResponse);
+                            //Assert.IsNotNull(classifyElementsResponse.ContractType);
                             Assert.IsNotNull(classifyElementsResponse.Elements);
                             Assert.IsNull(error);
                         },
@@ -154,6 +155,20 @@ namespace IBM.Watson.Tests
                             extractTablesResponse = response.Result;
                             Assert.IsNotNull(extractTablesResponse);
                             Assert.IsNotNull(extractTablesResponse.Tables);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized.Count > 0);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].KeyValuePairs);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].KeyValuePairs.Count > 0);
                             Assert.IsNull(error);
                         },
                         file: ms,
