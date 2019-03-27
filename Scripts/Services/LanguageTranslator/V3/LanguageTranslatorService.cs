@@ -420,11 +420,11 @@ namespace IBM.Watson.LanguageTranslator.V3
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (forcedGlossary != null)
             {
-                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, null, "application/octet-stream");
+                req.Forms["forced_glossary"] = new RESTConnector.Form(forcedGlossary, "filename", "application/octet-stream");
             }
             if (parallelCorpus != null)
             {
-                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, null, "application/octet-stream");
+                req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, "filename", "application/octet-stream");
             }
             if (!string.IsNullOrEmpty(baseModelId))
             {

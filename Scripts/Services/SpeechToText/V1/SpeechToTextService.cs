@@ -2136,7 +2136,7 @@ namespace IBM.Watson.SpeechToText.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (corpusFile != null)
             {
-                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, null, "text/plain");
+                req.Forms["corpus_file"] = new RESTConnector.Form(corpusFile, "filename", "text/plain");
             }
             if (allowOverwrite != null)
             {

@@ -257,7 +257,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, null, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
             }
             if (!string.IsNullOrEmpty(model))
             {
@@ -342,7 +342,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, null, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
             }
             if (!string.IsNullOrEmpty(model))
             {
@@ -433,11 +433,11 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file1 != null)
             {
-                req.Forms["file_1"] = new RESTConnector.Form(file1, null, file1ContentType);
+                req.Forms["file_1"] = new RESTConnector.Form(file1, "filename", file1ContentType);
             }
             if (file2 != null)
             {
-                req.Forms["file_2"] = new RESTConnector.Form(file2, null, file2ContentType);
+                req.Forms["file_2"] = new RESTConnector.Form(file2, "filename", file2ContentType);
             }
             if (!string.IsNullOrEmpty(file1Label))
             {
@@ -976,7 +976,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (inputCredentialsFile != null)
             {
-                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, null, "application/json");
+                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, "filename", "application/json");
             }
             if (!string.IsNullOrEmpty(inputBucketLocation))
             {
@@ -988,7 +988,7 @@ namespace IBM.Watson.CompareComply.V1
             }
             if (outputCredentialsFile != null)
             {
-                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, null, "application/json");
+                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, "filename", "application/json");
             }
             if (!string.IsNullOrEmpty(outputBucketLocation))
             {
