@@ -1,0 +1,17 @@
+{
+    "name": "IBM.Watson.Tests",
+  "references": [
+    "WatsonUnitySDK",
+    "IBM.Cloud.SDK"
+  ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

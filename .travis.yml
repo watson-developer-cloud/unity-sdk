@@ -9,15 +9,18 @@ rvm:
 cache:
   directories:
     - ./Unity
+git:
+  submodules: false
 before_install:
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+- sed -i -e 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init --recursive
 - chmod a+x ./Travis/installUnity.sh
 - npm install -g npm@6.x
 install:
 - pip install bumpversion
 - ./Travis/installUnity.sh
 - npm install @semantic-release/exec
-- npm install @semantic-release/git
-- npm install @semantic-release/changelog
 before_script:
 - chmod a+x ./Travis/createProject.sh
 - chmod a+x ./Travis/installSDK.sh
@@ -28,7 +31,6 @@ script:
 - ./Travis/installSDK.sh
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
-- git reset --hard
 deploy:
   - provider: script
     skip_cleanup: true

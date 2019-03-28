@@ -1,0 +1,6 @@
+﻿{
+  "name": "WatsonUnitySDK",
+  "references": [
+    "IBM.Cloud.SDK"
+  ]
+}
