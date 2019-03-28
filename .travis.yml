@@ -29,6 +29,10 @@ before_script:
 script:
 - ./Travis/createProject.sh
 - ./Travis/installSDK.sh
+- cd Core
+- git clean -f -d
+- cd ../
+- git reset --hard
 # - ./Travis/runTests.sh
 # - ./Travis/build.sh
 deploy:
