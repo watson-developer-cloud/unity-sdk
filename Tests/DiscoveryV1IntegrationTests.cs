@@ -206,6 +206,22 @@ namespace IBM.Watson.Tests
         public IEnumerator TestCreateConfiguration()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateConfiguration...");
+            Source source = new Source()
+            {
+                Options = new SourceOptions()
+                {
+                    CrawlAllBuckets = true,
+                    Buckets = new List<SourceOptionsBuckets>()
+                    {
+                        new SourceOptionsBuckets()
+                        {
+                            Limit = 10,
+                            Name = "bucket"
+                        }
+                    }
+                }
+            };
+
             Configuration createConfigurationResponse = null;
             service.CreateConfiguration(
                 callback: (DetailedResponse<Configuration> response, IBMError error) =>
@@ -217,11 +233,17 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(createConfigurationResponse.ConfigurationId);
                     Assert.IsTrue(createConfigurationResponse.Name == createdConfigurationName);
                     Assert.IsTrue(createConfigurationResponse.Description == createdConfigurationDescription);
+                    Assert.IsTrue(createConfigurationResponse.Source.Options.CrawlAllBuckets);
+                    Assert.IsNotNull(createConfigurationResponse.Source.Options.Buckets);
+                    Assert.IsTrue(createConfigurationResponse.Source.Options.Buckets.Count > 0);
+                    Assert.IsTrue(createConfigurationResponse.Source.Options.Buckets[0].Name == "bucket");
+                    Assert.IsTrue(createConfigurationResponse.Source.Options.Buckets[0].Limit == 10);
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
                 name: createdConfigurationName,
-                description: createdConfigurationDescription
+                description: createdConfigurationDescription,
+                source: source
             );
 
             while (createConfigurationResponse == null)

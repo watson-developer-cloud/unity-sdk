@@ -73,6 +73,15 @@ namespace IBM.Watson.Tests
                 Categories = new CategoriesOptions()
                 {
                     Limit = 10
+                },
+                Syntax = new SyntaxOptions()
+                {
+                    Sentences = true,
+                    Tokens = new SyntaxOptionsTokens()
+                    {
+                        PartOfSpeech = true,
+                        Lemma = true
+                    }
                 }
             };
 
@@ -82,6 +91,7 @@ namespace IBM.Watson.Tests
                     Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Analyze result: {0}", response.Response);
                     analyzeResponse = response.Result;
                     Assert.IsNotNull(analyzeResponse);
+                    Assert.IsNotNull(analyzeResponse.Syntax);
                     Assert.IsNull(error);
                 },
                 features: features,

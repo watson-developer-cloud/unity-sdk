@@ -25,8 +25,7 @@ namespace IBM.Watson.CompareComply.V1.Model
     public class RowHeaders
     {
         /// <summary>
-        /// A string value in the format `rowHeader-x-y`, where `x` and `y` are the begin and end offsets of this row
-        /// header cell in the input document.
+        /// The unique ID of the cell in the current table.
         /// </summary>
         [JsonProperty("cell_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CellId { get; set; }

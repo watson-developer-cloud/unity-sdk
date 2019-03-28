@@ -319,11 +319,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (metadata != null)
             {
-                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, null, "application/json");
+                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, "filename", "application/json");
             }
             if (trainingData != null)
             {
-                req.Forms["training_data"] = new RESTConnector.Form(trainingData, null, "text/csv");
+                req.Forms["training_data"] = new RESTConnector.Form(trainingData, "filename", "text/csv");
             }
 
             req.OnResponse = OnCreateClassifierResponse;

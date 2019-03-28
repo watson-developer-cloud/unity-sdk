@@ -79,7 +79,7 @@ namespace IBM.Watson.Tests
         }
 
         #region CreateClassifier
-        [UnityTest, Order(0)]
+        //[UnityTest, Order(0)]
         public IEnumerator TestCreateClassifier()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to CreateClassifier...");
@@ -196,7 +196,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetClassifier
-        [UnityTest, Order(3)]
+        //[UnityTest, Order(3)]
         public IEnumerator TestGetClassifier()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetClassifier...");
@@ -243,7 +243,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region WaitForClassifier
-        [UnityTest, Order(5)]
+        //[UnityTest, Order(5)]
         [Timeout(int.MaxValue)]
         public IEnumerator WaitForClassifier()
         {
@@ -257,7 +257,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region UpdateClassifier
-        [UnityTest, Order(6)]
+        //[UnityTest, Order(6)]
         public IEnumerator TestUpdateClassifier()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to UpdateClassifier...");
@@ -291,7 +291,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region WaitForClassifier
-        [UnityTest, Order(7)]
+        //[UnityTest, Order(7)]
         [Timeout(int.MaxValue)]
         public IEnumerator WaitForClassifier2()
         {
@@ -305,7 +305,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetCoreMlModel
-        [UnityTest, Order(8)]
+        //[UnityTest, Order(8)]
         public IEnumerator TestGetCoreMlModel()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to GetCoreMlModel...");
@@ -333,7 +333,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region DeleteClassifier
-        [UnityTest, Order(98)]
+        //[UnityTest, Order(98)]
         public IEnumerator TestDeleteClassifier()
         {
             Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DeleteClassifier...");

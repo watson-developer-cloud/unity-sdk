@@ -17,22 +17,18 @@
 
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Summary of the disk usage statistics for the environment.
+    /// If you provide customization input, the normalized version of the row header texts according to the
+    /// customization; otherwise, the same value as `row_header_texts`.
     /// </summary>
-    public class DiskUsage
+    public class RowHeaderTextsNormalized
     {
         /// <summary>
-        /// Number of bytes within the environment's disk capacity that are currently used to store data.
+        /// The normalized version of a row header text.
         /// </summary>
-        [JsonProperty("used_bytes", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual long? UsedBytes { get; private set; }
-        /// <summary>
-        /// Total number of bytes available in the environment's disk capacity.
-        /// </summary>
-        [JsonProperty("maximum_allowed_bytes", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual long? MaximumAllowedBytes { get; private set; }
+        [JsonProperty("text_normalized", NullValueHandling = NullValueHandling.Ignore)]
+        public string TextNormalized { get; set; }
     }
 }

@@ -93,7 +93,7 @@ namespace IBM.Watson.Tests
                         },
                         file: ms,
                         filename: "contract_A.pdf",
-                        modelId: "contracts",
+                        model: "contracts",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                     );
 
@@ -121,11 +121,12 @@ namespace IBM.Watson.Tests
                             Log.Debug("CompareComplyServiceV1IntegrationTests", "ClassifyElements result: {0}", response.Response);
                             classifyElementsResponse = response.Result;
                             Assert.IsNotNull(classifyElementsResponse);
+                            //Assert.IsNotNull(classifyElementsResponse.ContractType);
                             Assert.IsNotNull(classifyElementsResponse.Elements);
                             Assert.IsNull(error);
                         },
                         file: ms,
-                        modelId: "contracts",
+                        model: "contracts",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                     );
 
@@ -154,10 +155,24 @@ namespace IBM.Watson.Tests
                             extractTablesResponse = response.Result;
                             Assert.IsNotNull(extractTablesResponse);
                             Assert.IsNotNull(extractTablesResponse.Tables);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts.Count > 0);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized.Count > 0);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].KeyValuePairs);
+                            //Assert.IsTrue(extractTablesResponse.Tables[0].KeyValuePairs.Count > 0);
                             Assert.IsNull(error);
                         },
                         file: ms,
-                        modelId: "tables",
+                        model: "tables",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
                     );
 
@@ -197,7 +212,7 @@ namespace IBM.Watson.Tests
                             file2: ms1,
                             file1Label: "Contract A",
                             file2Label: "Contract B",
-                            modelId: "contracts",
+                            model: "contracts",
                             file1ContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath)),
                             file2ContentType: Utility.GetMimeType(Path.GetExtension(contractBFilepath))
                         );
@@ -352,7 +367,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 feedbackId: createdFeedbackId,
-                modelId: "contracts"
+                model: "contracts"
             );
 
             while (getFeedbackResponse == null)
@@ -418,7 +433,7 @@ namespace IBM.Watson.Tests
                             outputCredentialsFile: msOutput,
                             outputBucketLocation: "us-south",
                             outputBucketName: "compare-comply-integration-test-bucket-output",
-                            modelId: "contracts"
+                            model: "contracts"
                         );
                         }
                     }
@@ -493,7 +508,7 @@ namespace IBM.Watson.Tests
                 },
                 batchId: createdBatchId,
                 action: "rescan",
-                modelId: "contracts"
+                model: "contracts"
             );
 
             while (updateBatchResponse == null)
@@ -518,7 +533,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 feedbackId: createdFeedbackId,
-                modelId: "contracts"
+                model: "contracts"
             );
 
             while (deleteFeedbackResponse == null)

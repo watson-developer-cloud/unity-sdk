@@ -17,22 +17,28 @@
 
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Summary of the disk usage statistics for the environment.
+    /// A key in a key-value pair.
     /// </summary>
-    public class DiskUsage
+    public class Key
     {
         /// <summary>
-        /// Number of bytes within the environment's disk capacity that are currently used to store data.
+        /// The unique ID of the key in the table.
         /// </summary>
-        [JsonProperty("used_bytes", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual long? UsedBytes { get; private set; }
+        [JsonProperty("cell_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string CellId { get; set; }
         /// <summary>
-        /// Total number of bytes available in the environment's disk capacity.
+        /// The numeric location of the identified element in the document, represented with two integers labeled
+        /// `begin` and `end`.
         /// </summary>
-        [JsonProperty("maximum_allowed_bytes", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual long? MaximumAllowedBytes { get; private set; }
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public Location Location { get; set; }
+        /// <summary>
+        /// The text content of the table cell without HTML markup.
+        /// </summary>
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
     }
 }

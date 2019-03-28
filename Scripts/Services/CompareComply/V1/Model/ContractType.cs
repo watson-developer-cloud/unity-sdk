@@ -20,54 +20,38 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// List of document attributes.
+    /// The contract type identified in the input document.
     /// </summary>
-    public class Attribute
+    public class ContractType
     {
         /// <summary>
-        /// The type of attribute.
+        /// The confidence level in the identification of the termination date.
         /// </summary>
-        public class TypeValue
+        public class ConfidenceLevelValue
         {
             /// <summary>
-            /// Constant CURRENCY for Currency
+            /// Constant HIGH for High
             /// </summary>
-            public const string CURRENCY = "Currency";
+            public const string HIGH = "High";
             /// <summary>
-            /// Constant DATETIME for DateTime
+            /// Constant MEDIUM for Medium
             /// </summary>
-            public const string DATETIME = "DateTime";
+            public const string MEDIUM = "Medium";
             /// <summary>
-            /// Constant DURATION for Duration
+            /// Constant LOW for Low
             /// </summary>
-            public const string DURATION = "Duration";
-            /// <summary>
-            /// Constant LOCATION for Location
-            /// </summary>
-            public const string LOCATION = "Location";
-            /// <summary>
-            /// Constant ORGANIZATION for Organization
-            /// </summary>
-            public const string ORGANIZATION = "Organization";
-            /// <summary>
-            /// Constant PERCENTAGE for Percentage
-            /// </summary>
-            public const string PERCENTAGE = "Percentage";
-            /// <summary>
-            /// Constant PERSON for Person
-            /// </summary>
-            public const string PERSON = "Person";
+            public const string LOW = "Low";
             
         }
 
         /// <summary>
-        /// The type of attribute.
-        /// Constants for possible values can be found using Attribute.TypeValue
+        /// The confidence level in the identification of the termination date.
+        /// Constants for possible values can be found using ContractType.ConfidenceLevelValue
         /// </summary>
-        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public string Type { get; set; }
+        [JsonProperty("confidence_level", NullValueHandling = NullValueHandling.Ignore)]
+        public string ConfidenceLevel { get; set; }
         /// <summary>
-        /// The text associated with the attribute.
+        /// The contract type.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }

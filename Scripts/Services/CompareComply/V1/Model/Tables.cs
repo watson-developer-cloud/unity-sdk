@@ -59,6 +59,11 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("column_headers", NullValueHandling = NullValueHandling.Ignore)]
         public List<ColumnHeaders> ColumnHeaders { get; set; }
         /// <summary>
+        /// An array of key-value pairs identified in the current table.
+        /// </summary>
+        [JsonProperty("key_value_pairs", NullValueHandling = NullValueHandling.Ignore)]
+        public List<KeyValuePair> KeyValuePairs { get; set; }
+        /// <summary>
         /// An array of cells that are neither table header nor column header nor row header cells, of the current table
         /// with corresponding row and column header associations.
         /// </summary>

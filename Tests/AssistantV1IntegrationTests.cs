@@ -85,7 +85,7 @@ namespace IBM.Watson.Tests
         [UnityTest, Order(0)]
         public IEnumerator TestMessage()
         {
-            workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
+            workspaceId = Environment.GetEnvironmentVariable("ASSISTANT_WORKSPACE_ID");
             JToken context = null;
             MessageResponse messageResponse = null;
             JToken conversationId = null;

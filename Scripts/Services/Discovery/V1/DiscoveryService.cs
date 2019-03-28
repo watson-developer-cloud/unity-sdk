@@ -1041,9 +1041,11 @@ namespace IBM.Watson.Discovery.V1
         /// (both are present at the same time), then request is rejected. The maximum supported configuration size is 1
         /// MB. Configuration parts larger than 1 MB are rejected.
         /// See the `GET /configurations/{configuration_id}` operation for an example configuration. (optional)</param>
-        /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
-        /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -1057,9 +1059,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="configurationId">The ID of the configuration to use to process the document. If the
         /// **configuration** form part is also provided (both are present at the same time), then the request will be
         /// rejected. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="TestDocument" />TestDocument</returns>
-        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string step = null, string configurationId = null, string fileContentType = null)
+        public bool TestConfigurationInEnvironment(Callback<TestDocument> callback, string environmentId, string configuration = null, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null, string step = null, string configurationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TestConfigurationInEnvironment`");
@@ -2350,14 +2351,19 @@ namespace IBM.Watson.Discovery.V1
         ///   * Fields with empty name values after normalization are filtered out before indexing.
         ///
         ///   * Fields containing the following characters after normalization are filtered out before indexing: `#` and
-        /// `,`.
+        /// `,`
+        ///
+        ///  **Note:** Documents can be added with a specific **document_id** by using the
+        /// **_/v1/environments/{environment_id}/collections/{collection_id}/documents** method.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
-        /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2365,9 +2371,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
+        public bool AddDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddDocument`");
@@ -2601,15 +2606,21 @@ namespace IBM.Watson.Discovery.V1
         /// <summary>
         /// Update a document.
         ///
-        /// Replace an existing document. Starts ingesting a document with optional metadata.
+        /// Replace an existing document or add a document with a specified **document_id**. Starts ingesting a document
+        /// with optional metadata.
+        ///
+        /// **Note:** When uploading a new document with this method it automatically replaces any document stored with
+        /// the same **document_id** if it exists.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
-        /// <param name="file">The content of the document to ingest. The maximum supported file size is 50 megabytes.
-        /// Files larger than 50 megabytes is rejected. (optional)</param>
+        /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
         /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
         /// MB. Metadata parts larger than 1 MB are rejected.
@@ -2617,9 +2628,8 @@ namespace IBM.Watson.Discovery.V1
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
-        /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <returns><see cref="DocumentAccepted" />DocumentAccepted</returns>
-        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.MemoryStream file = null, string filename = null, string metadata = null, string fileContentType = null)
+        public bool UpdateDocument(Callback<DocumentAccepted> callback, string environmentId, string collectionId, string documentId, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
@@ -2901,11 +2911,13 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
         /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
         /// aggregations, see the Query reference. (optional)</param>
-        /// <param name="count">Number of results to return. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
         /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
+        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
         /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
         /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
         /// sort direction if no prefix is specified. (optional)</param>
@@ -3357,11 +3369,13 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
         /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
         /// aggregations, see the Query reference. (optional)</param>
-        /// <param name="count">Number of results to return. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
         /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
+        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
         /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
         /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
         /// sort direction if no prefix is specified. (optional)</param>
@@ -4952,7 +4966,8 @@ namespace IBM.Watson.Discovery.V1
         /// an individual word or unigram within the query string.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="count">Number of results to return. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
         /// <returns><see cref="MetricTokenResponse" />MetricTokenResponse</returns>
         public bool GetMetricsQueryTokenEvent(Callback<MetricTokenResponse> callback, long? count = null)
         {
@@ -5033,9 +5048,11 @@ namespace IBM.Watson.Discovery.V1
         /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
         /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
         /// (optional)</param>
-        /// <param name="count">Number of results to return. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
+        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
         /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
         /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
         /// sort direction if no prefix is specified. (optional)</param>

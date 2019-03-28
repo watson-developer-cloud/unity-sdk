@@ -138,6 +138,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
         /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
+        /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <param name="url">The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel
         /// density is 32X32 pixels, but the service tends to perform better with images that are at least 224 x 224
         /// pixels. The maximum image size is 10 MB.
@@ -162,9 +163,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// - `explicit`: Evaluates whether the image might be pornographic. (optional)</param>
         /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
         /// (optional, default to en)</param>
-        /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="ClassifiedImages" />ClassifiedImages</returns>
-        public bool Classify(Callback<ClassifiedImages> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool Classify(Callback<ClassifiedImages> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string imagesFileContentType = null, string url = null, float? threshold = null, List<string> owners = null, List<string> classifierIds = null, string acceptLanguage = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
@@ -271,6 +271,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// You can also include an image with the **url** parameter. (optional)</param>
         /// <param name="imagesFilename">The filename for imagesFile. (optional)</param>
+        /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <param name="url">The URL of an image to analyze. Must be in .gif, .jpg, .png, or .tif format. The minimum
         /// recommended pixel density is 32X32 pixels, but the service tends to perform better with images that are at
         /// least 224 x 224 pixels. The maximum image size is 10 MB. Redirects are followed, so you can use a shortened
@@ -279,9 +280,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// You can also include images with the **images_file** parameter. (optional)</param>
         /// <param name="acceptLanguage">The desired language of parts of the response. See the response for details.
         /// (optional, default to en)</param>
-        /// <param name="imagesFileContentType">The content type of imagesFile. (optional)</param>
         /// <returns><see cref="DetectedFaces" />DetectedFaces</returns>
-        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string url = null, string acceptLanguage = null, string imagesFileContentType = null)
+        public bool DetectFaces(Callback<DetectedFaces> callback, System.IO.MemoryStream imagesFile = null, string imagesFilename = null, string imagesFileContentType = null, string url = null, string acceptLanguage = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DetectFaces`");

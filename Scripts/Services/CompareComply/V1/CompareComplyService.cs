@@ -127,20 +127,20 @@ namespace IBM.Watson.CompareComply.V1
         }
 
         /// <summary>
-        /// Convert file to HTML.
+        /// Convert document to HTML.
         ///
-        /// Convert an uploaded file to HTML.
+        /// Converts a document to HTML.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="file">The file to convert.</param>
+        /// <param name="file">The document to convert.</param>
         /// <param name="filename">The filename for file.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="HTMLReturn" />HTMLReturn</returns>
-        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.MemoryStream file, string filename, string modelId = null, string fileContentType = null)
+        public bool ConvertToHtml(Callback<HTMLReturn> callback, System.IO.MemoryStream file, string filename, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ConvertToHtml`");
@@ -174,9 +174,9 @@ namespace IBM.Watson.CompareComply.V1
             {
                 req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnConvertToHtmlResponse;
@@ -217,17 +217,17 @@ namespace IBM.Watson.CompareComply.V1
         /// <summary>
         /// Classify the elements of a document.
         ///
-        /// Analyze an uploaded file's structural and semantic elements.
+        /// Analyzes the structural and semantic elements of a document.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="file">The file to classify.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="file">The document to classify.</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="ClassifyReturn" />ClassifyReturn</returns>
-        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.MemoryStream file, string modelId = null, string fileContentType = null)
+        public bool ClassifyElements(Callback<ClassifyReturn> callback, System.IO.MemoryStream file, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyElements`");
@@ -257,11 +257,11 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, null, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnClassifyElementsResponse;
@@ -302,17 +302,17 @@ namespace IBM.Watson.CompareComply.V1
         /// <summary>
         /// Extract a document's tables.
         ///
-        /// Extract and analyze an uploaded file's tables.
+        /// Analyzes the tables in a document.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="file">The file on which to run table extraction.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="file">The document on which to run table extraction.</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="TableReturn" />TableReturn</returns>
-        public bool ExtractTables(Callback<TableReturn> callback, System.IO.MemoryStream file, string modelId = null, string fileContentType = null)
+        public bool ExtractTables(Callback<TableReturn> callback, System.IO.MemoryStream file, string fileContentType = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ExtractTables`");
@@ -342,11 +342,11 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
-                req.Forms["file"] = new RESTConnector.Form(file, null, fileContentType);
+                req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnExtractTablesResponse;
@@ -387,21 +387,21 @@ namespace IBM.Watson.CompareComply.V1
         /// <summary>
         /// Compare two documents.
         ///
-        /// Compare two uploaded input files. Uploaded files must be in the same file format.
+        /// Compares two input documents. Documents must be in the same format.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="file1">The first file to compare.</param>
-        /// <param name="file2">The second file to compare.</param>
-        /// <param name="file1Label">A text label for the first file. (optional, default to file_1)</param>
-        /// <param name="file2Label">A text label for the second file. (optional, default to file_2)</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="file1">The first document to compare.</param>
+        /// <param name="file2">The second document to compare.</param>
         /// <param name="file1ContentType">The content type of file1. (optional)</param>
         /// <param name="file2ContentType">The content type of file2. (optional)</param>
+        /// <param name="file1Label">A text label for the first document. (optional, default to file_1)</param>
+        /// <param name="file2Label">A text label for the second document. (optional, default to file_2)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="CompareReturn" />CompareReturn</returns>
-        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.MemoryStream file1, System.IO.MemoryStream file2, string file1Label = null, string file2Label = null, string modelId = null, string file1ContentType = null, string file2ContentType = null)
+        public bool CompareDocuments(Callback<CompareReturn> callback, System.IO.MemoryStream file1, System.IO.MemoryStream file2, string file1ContentType = null, string file2ContentType = null, string file1Label = null, string file2Label = null, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CompareDocuments`");
@@ -433,11 +433,11 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file1 != null)
             {
-                req.Forms["file_1"] = new RESTConnector.Form(file1, null, file1ContentType);
+                req.Forms["file_1"] = new RESTConnector.Form(file1, "filename", file1ContentType);
             }
             if (file2 != null)
             {
-                req.Forms["file_2"] = new RESTConnector.Form(file2, null, file2ContentType);
+                req.Forms["file_2"] = new RESTConnector.Form(file2, "filename", file2ContentType);
             }
             if (!string.IsNullOrEmpty(file1Label))
             {
@@ -447,9 +447,9 @@ namespace IBM.Watson.CompareComply.V1
             {
                 req.Parameters["file_2_label"] = file2Label;
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnCompareDocumentsResponse;
@@ -575,16 +575,18 @@ namespace IBM.Watson.CompareComply.V1
                 ((RequestObject<FeedbackReturn>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Deletes a specified feedback entry.
+        /// Delete a specified feedback entry.
+        ///
+        /// Deletes a feedback entry with a specified `feedback_id`.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="feedbackId">A string that specifies the feedback entry to be deleted from the document.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="FeedbackDeleted" />FeedbackDeleted</returns>
-        public bool DeleteFeedback(Callback<FeedbackDeleted> callback, string feedbackId, string modelId = null)
+        public bool DeleteFeedback(Callback<FeedbackDeleted> callback, string feedbackId, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteFeedback`");
@@ -611,9 +613,9 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnDeleteFeedbackResponse;
@@ -653,15 +655,17 @@ namespace IBM.Watson.CompareComply.V1
         }
         /// <summary>
         /// List a specified feedback entry.
+        ///
+        /// Lists a feedback entry with a specified `feedback_id`.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="feedbackId">A string that specifies the feedback entry to be included in the output.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="GetFeedback" />GetFeedback</returns>
-        public bool GetFeedback(Callback<GetFeedback> callback, string feedbackId, string modelId = null)
+        public bool GetFeedback(Callback<GetFeedback> callback, string feedbackId, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetFeedback`");
@@ -688,9 +692,9 @@ namespace IBM.Watson.CompareComply.V1
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnGetFeedbackResponse;
@@ -729,7 +733,9 @@ namespace IBM.Watson.CompareComply.V1
                 ((RequestObject<GetFeedback>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List the feedback in documents.
+        /// List the feedback in a document.
+        ///
+        /// Lists the feedback in a document.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="feedbackType">An optional string that filters the output to include only feedback with the
@@ -923,12 +929,12 @@ namespace IBM.Watson.CompareComply.V1
         /// listed on the **Endpoint** tab of your Cloud Object Storage instance; for example, `us-geo`, `eu-geo`, or
         /// `ap-geo`.</param>
         /// <param name="outputBucketName">The name of the Cloud Object Storage output bucket.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.MemoryStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.MemoryStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, string modelId = null)
+        public bool CreateBatch(Callback<BatchStatus> callback, string function, System.IO.MemoryStream inputCredentialsFile, string inputBucketLocation, string inputBucketName, System.IO.MemoryStream outputCredentialsFile, string outputBucketLocation, string outputBucketName, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateBatch`");
@@ -970,7 +976,7 @@ namespace IBM.Watson.CompareComply.V1
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (inputCredentialsFile != null)
             {
-                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, null, "application/json");
+                req.Forms["input_credentials_file"] = new RESTConnector.Form(inputCredentialsFile, "filename", "application/json");
             }
             if (!string.IsNullOrEmpty(inputBucketLocation))
             {
@@ -982,7 +988,7 @@ namespace IBM.Watson.CompareComply.V1
             }
             if (outputCredentialsFile != null)
             {
-                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, null, "application/json");
+                req.Forms["output_credentials_file"] = new RESTConnector.Form(outputCredentialsFile, "filename", "application/json");
             }
             if (!string.IsNullOrEmpty(outputBucketLocation))
             {
@@ -996,9 +1002,9 @@ namespace IBM.Watson.CompareComply.V1
             {
                 req.Parameters["function"] = function;
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnCreateBatchResponse;
@@ -1037,12 +1043,12 @@ namespace IBM.Watson.CompareComply.V1
                 ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Get information about a specific batch-processing request.
+        /// Get information about a specific batch-processing job.
         ///
-        /// Get information about a batch-processing request with a specified ID.
+        /// Gets information about a batch-processing job with a specified ID.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="batchId">The ID of the batch-processing request whose information you want to retrieve.</param>
+        /// <param name="batchId">The ID of the batch-processing job whose information you want to retrieve.</param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
         public bool GetBatch(Callback<BatchStatus> callback, string batchId)
         {
@@ -1110,7 +1116,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <summary>
         /// List submitted batch-processing jobs.
         ///
-        /// List the batch-processing jobs submitted by users.
+        /// Lists batch-processing jobs submitted by users.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <returns><see cref="Batches" />Batches</returns>
@@ -1176,20 +1182,20 @@ namespace IBM.Watson.CompareComply.V1
                 ((RequestObject<Batches>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Update a pending or active batch-processing request.
+        /// Update a pending or active batch-processing job.
         ///
-        /// Update a pending or active batch-processing request. You can rescan the input bucket to check for new
-        /// documents or cancel a request.
+        /// Updates a pending or active batch-processing job. You can rescan the input bucket to check for new documents
+        /// or cancel a job.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="batchId">The ID of the batch-processing request you want to update.</param>
-        /// <param name="action">The action you want to perform on the specified batch-processing request.</param>
-        /// <param name="modelId">The analysis model to be used by the service. For the `/v1/element_classification` and
-        /// `/v1/comparison` methods, the default is `contracts`. For the `/v1/tables` method, the default is `tables`.
-        /// These defaults apply to the standalone methods as well as to the methods' use in batch-processing requests.
-        /// (optional)</param>
+        /// <param name="batchId">The ID of the batch-processing job you want to update.</param>
+        /// <param name="action">The action you want to perform on the specified batch-processing job.</param>
+        /// <param name="model">The analysis model to be used by the service. For the **Element classification** and
+        /// **Compare two documents** methods, the default is `contracts`. For the **Extract tables** method, the
+        /// default is `tables`. These defaults apply to the standalone methods as well as to the methods' use in
+        /// batch-processing requests. (optional)</param>
         /// <returns><see cref="BatchStatus" />BatchStatus</returns>
-        public bool UpdateBatch(Callback<BatchStatus> callback, string batchId, string action, string modelId = null)
+        public bool UpdateBatch(Callback<BatchStatus> callback, string batchId, string action, string model = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateBatch`");
@@ -1222,9 +1228,9 @@ namespace IBM.Watson.CompareComply.V1
             {
                 req.Parameters["action"] = action;
             }
-            if (!string.IsNullOrEmpty(modelId))
+            if (!string.IsNullOrEmpty(model))
             {
-                req.Parameters["model_id"] = modelId;
+                req.Parameters["model"] = model;
             }
 
             req.OnResponse = OnUpdateBatchResponse;

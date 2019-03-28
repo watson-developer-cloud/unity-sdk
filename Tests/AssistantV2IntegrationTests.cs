@@ -47,7 +47,7 @@ namespace IBM.Watson.Tests
             while (!service.Credentials.HasIamTokenData())
                 yield return null;
 
-            assistantId = Environment.GetEnvironmentVariable("CONVERSATION_ASSISTANT_ID");
+            assistantId = Environment.GetEnvironmentVariable("ASSISTANT_ASSISTANT_ID");
             string sessionId = null;
 
             SessionResponse createSessionResponse = null;

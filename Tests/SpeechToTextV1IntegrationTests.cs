@@ -954,6 +954,7 @@ namespace IBM.Watson.Tests
                     getAudioResponse = response.Result;
                     Assert.IsNotNull(getAudioResponse);
                     Assert.IsTrue(getAudioResponse.Name == acousticResourceName);
+                    Assert.IsTrue(getAudioResponse.Duration is long?);
                     Assert.IsNull(error);
                 },
                 customizationId: acousticModelCustomizationId,
@@ -979,6 +980,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(listAudioResponse);
                     Assert.IsNotNull(listAudioResponse.Audio);
                     Assert.IsTrue(listAudioResponse.Audio.Count > 0);
+                    Assert.IsTrue(listAudioResponse.Audio[0].Duration is long?);
                     Assert.IsNull(error);
                 },
                 customizationId: acousticModelCustomizationId

@@ -43,5 +43,11 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Output { get; set; }
+        /// <summary>
+        /// The ID of the dialog node that the **label** property is taken from. The **label** property is populated
+        /// using the value of the dialog node's **user_label** property.
+        /// </summary>
+        [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
+        public string DialogNode { get; set; }
     }
 }

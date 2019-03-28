@@ -138,7 +138,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// - Metadata
         /// - Relations
         /// - Semantic roles
-        /// - Sentiment.
+        /// - Sentiment
+        /// - Syntax (Experimental).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="features">Specific features to analyze the document for.</param>
