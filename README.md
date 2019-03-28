@@ -32,14 +32,21 @@ Ensure that you have the following prerequisites:
 
 ## Configuring Unity
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The IBM Watson SDK for Unity does not support Unity Web Player.
-* If using Unity 2018.2 or later you'll need to set Scripting Runtime Version and Api Compatibility Level in Build Settings to .NET 4.x equivalent. We need to access security options to enable TLS 1.2. 
+* If using Unity 2018.2 or later you'll need to set **Scripting Runtime Version** and **Api Compatibility Level** in Build Settings to **.NET 4.x equivalent**. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release].
 
 ### Installing the SDK source into your Unity project
-1. Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
-2. Using the command line, from the sdk directory run `git submodule init` and `git submodule update` to get the correct commit of the SDK core.
+Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
+
+The SDK depends on the [IBM Unity SDK Core](https://github.com/IBM/unity-sdk-core/) which is added to the SDK as a submodule. Use git to initalize and update the submodule.
+
+```bash
+$ cd [watson-unity-sdk-directory]
+$ git submodule init
+$ git submodule update
+```
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
@@ -67,19 +74,19 @@ The credentials for each service contain either a `username`, `password` and end
 
 ## Watson Services
 To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
-* [Assistant V1](/Scripts/Services/Assistant/v1)
-* [Assistant V2](/Scripts/Services/Assistant/v2)
-* [Compare Comply V1](/Scripts/Services/CompareComply/v1)
-* [Conversation](/Scripts/Services/Conversation/v1) (deprecated - Use Assistant V1 or Assistant V2)
-* [Discovery](/Scripts/Services/Discovery/v1)
-* [Language Translator V3](/Scripts/Services/LanguageTranslator/v3)
-* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/v2)
-* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/v1)
-* [Personality Insights](/Scripts/Services/PersonalityInsights/v3)
-* [Speech to Text](/Scripts/Services/SpeechToText/v1)
-* [Text to Speech](/Scripts/Services/TextToSpeech/v1)
-* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/v3)
-* [Visual Recognition](/Scripts/Services/VisualRecognition/v3)
+* [Assistant V1](/Scripts/Services/Assistant/V1)
+* [Assistant V2](/Scripts/Services/Assistant/V2)
+* [Compare Comply V1](/Scripts/Services/CompareComply/V1)
+* [Conversation](/Scripts/Services/Conversation/V1) (deprecated - Use Assistant V1 or Assistant V2)
+* [Discovery](/Scripts/Services/Discovery/V1)
+* [Language Translator V3](/Scripts/Services/LanguageTranslator/V3)
+* [Natural Language Classifier](/Scripts/Services/NaturalLanguageClassifier/V2)
+* [Natural Language Understanding](/Scripts/Services/NaturalLanguageUnderstanding/V1)
+* [Personality Insights](/Scripts/Services/PersonalityInsights/V3)
+* [Speech to Text](/Scripts/Services/SpeechToText/V1)
+* [Text to Speech](/Scripts/Services/TextToSpeech/V1)
+* [Tone Analyzer](/Scripts/Services/ToneAnalyzer/V3)
+* [Visual Recognition](/Scripts/Services/VisualRecognition/V3)
 
 ## Authentication
 Watson services are migrating to token-based Identity and Access Management (IAM) authentication.
@@ -119,13 +126,13 @@ IEnumerator TokenExample()
     };
 
     //  Create credentials using the IAM token options
-    _credentials = new Credentials(iamTokenOptions, "<service-url>");
-    while (!_credentials.HasIamTokenData())
+    credentials = new Credentials(iamTokenOptions, "<service-url>");
+    while (!credentials.HasIamTokenData())
         yield return null;
 
-    _assistant = new Assistant(_credentials);
-    _assistant.VersionDate = "2018-02-16";
-    _assistant.ListWorkspaces(OnListWorkspaces);
+    assistant = new Assistant(credentials);
+    assistant.VersionDate = "2019-03-28";
+    assistant.ListWorkspaces(OnListWorkspaces);
 }
 
 private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
@@ -145,11 +152,11 @@ void TokenExample()
     };
 
     //  Create credentials using the IAM token options
-     _credentials = new Credentials(iamTokenOptions, "<service-url");
+    credentials = new Credentials(iamTokenOptions, "<service-url");
 
-    _assistant = new Assistant(_credentials);
-    _assistant.VersionDate = "2018-02-16";
-    _assistant.ListWorkspaces(OnListWorkspaces);
+    assistant = new Assistant(credentials);
+    assistant.VersionDate = "2018-02-16";
+    assistant.ListWorkspaces(OnListWorkspaces);
 }
 
 private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
@@ -166,17 +173,17 @@ using IBM.Cloud.SDK.Utilities;
 void Start()
 {
     Credentials credentials = new Credentials(<username>, <password>, <url>);
-    Assistant _assistant = new Assistant(credentials);
+    Assistant assistant = new Assistant(credentials);
 }
 ```
 
 ## Callbacks
-Success callbacks are required. You can specify the return type in the callback.  
+A success callback is required. You can specify the return type in the callback.  
 ```cs
 private void Example()
 {
     //  Call with sepcific callbacks
-    assistant.Message(OnMessage, _workspaceId);
+    assistant.Message(OnMessage, workspaceId);
     discovery.GetEnvironments(OnGetEnvironments);
 }
 
@@ -206,6 +213,45 @@ private void Example()
 private void OnSuccess<T>(DetailedResponse<T> resp, IBMError error)
 {
     Log.Debug("ExampleCallback.OnSuccess()", "Response received: {0}", resp.Response);
+}
+```
+
+You can also use an anonymous callback
+```cs
+private void Example()
+{
+    assistant.ListWorkspaces(
+        callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
+        {
+            Log.Debug("xampleCallback.OnSuccess()", "ListWorkspaces result: {0}", response.Response);
+        },
+        pageLimit: 1,
+        includeCount: true,
+        sort: "-name",
+        includeAudit: true
+    );
+}
+```
+
+You can check the `error` response to see if there was an error in the call.
+```cs
+private void Example()
+{
+    //  Call with sepcific callbacks
+    assistant.Message(OnMessage, workspaceId);
+}
+
+//  OnMessage callback
+private void OnMessage(DetailedResponse<JObject> resp, IBMError error)
+{
+    if(error == null)
+    {
+        Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", resp.Response);
+    }
+    else
+    {
+        Log.Debug("ExampleCallback.OnMessage()", "Error received: {0}, {1}, {3}", error.StatusCode, error.ErrorMessage, error.Response);
+    }
 }
 ```
 
