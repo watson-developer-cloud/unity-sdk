@@ -15,7 +15,7 @@ before_install:
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 # - sed -i -e 's/git@github.com:/https:\/\/github.com\//' .gitmodules
 # - git submodule update --init --recursive
-# - chmod a+x ./Travis/installUnity.sh
+- chmod a+x ./Travis/installUnity.sh
 - npm install -g npm@6.x
 install:
 - pip install bumpversion
@@ -23,15 +23,15 @@ install:
 - npm install @semantic-release/changelog
 - npm install @semantic-release/git
 - npm install @semantic-release/github
-# - ./Travis/installUnity.sh
+- ./Travis/installUnity.sh
 before_script:
-# - chmod a+x ./Travis/createProject.sh
-# - chmod a+x ./Travis/installSDK.sh
+- chmod a+x ./Travis/createProject.sh
+- chmod a+x ./Travis/installSDK.sh
 # - chmod a+x ./Travis/runTests.sh
 # - chmod a+x ./Travis/build.sh
 script:
-# - ./Travis/createProject.sh
-# - ./Travis/installSDK.sh
+- ./Travis/createProject.sh
+- ./Travis/installSDK.sh
 # - cd Core
 # - git clean -f -d
 # - cd ../
