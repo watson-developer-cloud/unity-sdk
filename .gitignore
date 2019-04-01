@@ -80,3 +80,4 @@ Docs/publishing-release.md.meta
 */MRefBuilder.config.meta
 node_modules
 package-lock.json
+package-lock.json.meta

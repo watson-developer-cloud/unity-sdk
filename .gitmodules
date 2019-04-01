@@ -1,3 +1,0 @@
-[submodule "Core"]
-	path = Core
-	url = git@github.com:IBM/unity-sdk-core.git
