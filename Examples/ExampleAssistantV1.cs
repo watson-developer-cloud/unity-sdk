@@ -211,7 +211,7 @@ namespace IBM.Watson.Examples
             while (!createExampleTested)
                 yield return null;
             //  Get Example
-            service.GetExample(callback: OnGetExample, workspaceId: createdWorkspaceId, intent: updatedIntent, createdExample);
+            service.GetExample(callback: OnGetExample, workspaceId: createdWorkspaceId, intent: updatedIntent, text: createdExample);
             while (!getExampleTested)
                 yield return null;
             //  Update Examples
@@ -229,7 +229,7 @@ namespace IBM.Watson.Examples
             while (!createEntityTested)
                 yield return null;
             //  Get Entity
-            service.GetEntity(callback: OnGetEntity, workspaceId: createdWorkspaceId, createdEntity);
+            service.GetEntity(callback: OnGetEntity, workspaceId: createdWorkspaceId, entity: createdEntity);
             while (!getEntityTested)
                 yield return null;
             //  Update Entities
@@ -305,7 +305,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             //  List All Logs
             var filter = "(language::en,request.context.metadata.deployment::deployment_1)";
-            service.ListAllLogs(callback: OnListAllLogs, filter);
+            service.ListAllLogs(callback: OnListAllLogs, filter: filter);
             while (!listAllLogsTested)
                 yield return null;
 
@@ -318,7 +318,7 @@ namespace IBM.Watson.Examples
             while (!createCounterexampleTested)
                 yield return null;
             //  Get Counterexample
-            service.GetCounterexample(callback: OnGetCounterexample, workspaceId: createdWorkspaceId, createdCounterExampleText);
+            service.GetCounterexample(callback: OnGetCounterexample, workspaceId: createdWorkspaceId, text: createdCounterExampleText);
             while (!getCounterexampleTested)
                 yield return null;
             //  Update Counterexamples
@@ -328,15 +328,15 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             //  Delete Counterexample
-            service.DeleteCounterexample(callback: OnDeleteCounterexample, workspaceId: createdWorkspaceId, updatedCounterExampleText);
+            service.DeleteCounterexample(callback: OnDeleteCounterexample, workspaceId: createdWorkspaceId, text: updatedCounterExampleText);
             while (!deleteCounterexampleTested)
                 yield return null;
             //  Delete Dialog Node
-            service.DeleteDialogNode(callback: OnDeleteDialogNode, workspaceId: createdWorkspaceId, updatedDialogNodeName);
+            service.DeleteDialogNode(callback: OnDeleteDialogNode, workspaceId: createdWorkspaceId, dialogNode:  updatedDialogNodeName);
             while (!deleteDialogNodeTested)
                 yield return null;
             //  Delete Synonym
-            service.DeleteSynonym(callback: OnDeleteSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, updatedSynonym);
+            service.DeleteSynonym(callback: OnDeleteSynonym, workspaceId: createdWorkspaceId, entity: updatedEntity, value: updatedValue, synonym: updatedSynonym);
             while (!deleteSynonymTested)
                 yield return null;
             //  Delete Value
@@ -348,7 +348,7 @@ namespace IBM.Watson.Examples
             while (!deleteEntityTested)
                 yield return null;
             //  Delete Example
-            service.DeleteExample(callback: OnDeleteExample, workspaceId: createdWorkspaceId, intent: updatedIntent, updatedExample);
+            service.DeleteExample(callback: OnDeleteExample, workspaceId: createdWorkspaceId, intent: updatedIntent, text: updatedExample);
             while (!deleteExampleTested)
                 yield return null;
             //  Delete Intent
@@ -665,7 +665,7 @@ namespace IBM.Watson.Examples
             foreach (Workspace workspace in response.Result.Workspaces)
             {
                 if (workspace.Name.Contains("unity"))
-                    service.DeleteWorkspace(callback: OnDeleteWorkspace, workspace.WorkspaceId);
+                    service.DeleteWorkspace(callback: OnDeleteWorkspace, workspaceId: workspace.WorkspaceId);
             }
 
             listWorkspacesTested = true;
