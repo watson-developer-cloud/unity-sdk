@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-04-01)
+
+
+### Bug Fixes
+
+* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
+
+
+### Features
+
+* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
+
 # [3.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v2.15.3...v3.0.0) (2019-03-29)
 
 
