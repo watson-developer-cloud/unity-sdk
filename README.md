@@ -35,18 +35,10 @@ Ensure that you have the following prerequisites:
 * If using Unity 2018.2 or later you'll need to set **Scripting Runtime Version** and **Api Compatibility Level** in Build Settings to **.NET 4.x equivalent**. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the latest SDK release by clicking [here][latest_release].
+You can get the latest SDK release by clicking [here][latest_release_sdk]. You will also need to download the latest release of the IBM Unity SDK Core by clicking [here][latest_release_core]
 
 ### Installing the SDK source into your Unity project
-Move the **`unity-sdk`** directory into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson`_.
-
-The SDK depends on the [IBM Unity SDK Core](https://github.com/IBM/unity-sdk-core/) which is added to the SDK as a submodule. Use git to initalize and update the submodule.
-
-```bash
-$ cd [watson-unity-sdk-directory]
-$ git submodule init
-$ git submodule update
-```
+Move the **`unity-sdk`** and **`unity-sdk-core`** directories into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson` and the Core directory from `unity-sdk-core` to `IBMSdkCore`_.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
@@ -326,7 +318,8 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
-[latest_release]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
+[latest_release_sdk]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
+[latest_release_core: https://github.com/IBM/unity-sdk-core/releases/latest
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/
 [ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
