@@ -20,7 +20,7 @@ echo "Attempting to install IBM Watson SDK for Unity into the test project..."
 mkdir -p Travis/UnityTestProject/Assets/Watson/
 mkdir -p Travis/UnityTestProject/Assets/IBMSdkCore/
 git clone -b $TRAVIS_BRANCH https://github.com/watson-developer-cloud/unity-sdk.git Travis/UnityTestProject/Assets/Watson/
-git clone -b $TRAVIS_BRANCH https://github.com/IBM/unity-sdk-core.git Travis/UnityTestProject/Assets/IBMSdkCore/
+git clone https://github.com/IBM/unity-sdk-core.git Travis/UnityTestProject/Assets/IBMSdkCore/
 
 if [ $? = 0 ] ; then
   echo "WDC Unity SDK install SUCCEEDED! Exited with $?"
