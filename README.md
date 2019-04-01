@@ -107,6 +107,10 @@ You supply either an IAM service **API key** or an **access token**:
 
 #### Supplying the IAM API key
 ```cs
+Credentials credentials;
+AssistantService assistant;
+string versionDate = "<service-version-date>";
+
 IEnumerator TokenExample()
 {
     //  Create IAM token options and supply the apikey. IamUrl is the URL used to get the 
@@ -122,9 +126,11 @@ IEnumerator TokenExample()
     while (!credentials.HasIamTokenData())
         yield return null;
 
-    assistant = new Assistant(credentials);
-    assistant.VersionDate = "2019-03-28";
-    assistant.ListWorkspaces(OnListWorkspaces);
+    assistant = new AssistantService(
+        versionDate: versionDate, 
+        credentials: credentials
+    );
+    assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
 private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
@@ -135,6 +141,10 @@ private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IB
 
 #### Supplying the access token
 ```cs
+Credentials credentials;
+AssistantService assistant;
+string versionDate = "<service-version-date>";
+
 void TokenExample()
 {
     //  Create IAM token options and supply the access token.
@@ -144,11 +154,13 @@ void TokenExample()
     };
 
     //  Create credentials using the IAM token options
-    credentials = new Credentials(iamTokenOptions, "<service-url");
+    credentials = new Credentials(iamTokenOptions, "<service-url>");
 
-    assistant = new Assistant(credentials);
-    assistant.VersionDate = "2018-02-16";
-    assistant.ListWorkspaces(OnListWorkspaces);
+    assistant = new AssistantService(
+        versionDate: versionDate,
+        credentials: credentials
+    );
+    assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
 private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IBMError error)
@@ -159,46 +171,96 @@ private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IB
 
 ### Username and password
 ```cs
-using IBM.Watson.Assistant.v1;
-using IBM.Cloud.SDK.Utilities;
+Credentials credentials;
+AssistantService assistant;
+string versionDate = "<service-version-date>";
 
-void Start()
+void UsernamePasswordExample()
 {
-    Credentials credentials = new Credentials(<username>, <password>, <url>);
-    Assistant assistant = new Assistant(credentials);
+    Credentials credentials = new Credentials("<username>", "<password>", "<url>");
+    assistant = new AssistantService(
+        versionDate: versionDate,
+        credentials: credentials
+    );
 }
 ```
 
 ## Callbacks
 A success callback is required. You can specify the return type in the callback.  
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
+DiscoveryService discovery;
+string discoveryVersionDate = "<discovery-version-date>";
+Credentials discoveryCredentials;
+
 private void Example()
 {
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
+    discovery = new DiscoveryService(
+        versionDate: discoveryVersionDate,
+        credentials: discoveryCredentials
+    );
+
     //  Call with sepcific callbacks
-    assistant.Message(OnMessage, workspaceId);
-    discovery.GetEnvironments(OnGetEnvironments);
+    assistant.Message(
+        callback: OnMessage, 
+        workspaceId: workspaceId
+    );
+
+    discovery.ListEnvironments(
+        callback: OnGetEnvironments
+    );
 }
 
-//  OnMessage callback
-private void OnMessage(DetailedResponse<JObject> resp, IBMError error)
+private void OnMessage(DetailedResponse<MessageResponse> response, IBMError error)
 {
-    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", resp.Response);
+    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", response.Response);
 }
 
-//  OnGetEnvironments callback
-private void OnGetEnvironments(DetailedResponse<GetEnvironmentsResponse> resp, IBMError error)
+private void OnGetEnvironments(DetailedResponse<ListEnvironmentsResponse> response, IBMError error)
 {
-    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", resp.Response);
+    Log.Debug("ExampleCallback.OnGetEnvironments()", "Response received: {0}", response.Response);
 }
 ```
 
 Since the success callback signature is generic and the failure callback always has the same signature, you can use a single set of callbacks to handle multiple calls.
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
+DiscoveryService discovery;
+string discoveryVersionDate = "<discovery-version-date>";
+Credentials discoveryCredentials;
+
 private void Example()
 {
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
     //  Call with generic callbacks
-    assistant.Message(OnSuccess, "<workspace-id>", "");
-    discovery.GetEnvironments(OnSuccess);
+    JObject input = new JObject();
+    input.Add("text", "");
+    assistant.Message(
+        callback: OnSuccess, 
+        workspaceId: workspaceId,
+        input: input
+    );
+
+    discovery.ListEnvironments(
+        callback: OnSuccess
+    );
 }
 
 //  Generic success callback
@@ -210,12 +272,22 @@ private void OnSuccess<T>(DetailedResponse<T> resp, IBMError error)
 
 You can also use an anonymous callback
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
 private void Example()
 {
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
     assistant.ListWorkspaces(
         callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
         {
-            Log.Debug("xampleCallback.OnSuccess()", "ListWorkspaces result: {0}", response.Response);
+            Log.Debug("ExampleCallback.OnSuccess()", "ListWorkspaces result: {0}", response.Response);
         },
         pageLimit: 1,
         includeCount: true,
@@ -227,18 +299,26 @@ private void Example()
 
 You can check the `error` response to see if there was an error in the call.
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
 private void Example()
 {
-    //  Call with sepcific callbacks
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
     assistant.Message(OnMessage, workspaceId);
 }
 
-//  OnMessage callback
-private void OnMessage(DetailedResponse<JObject> resp, IBMError error)
+private void OnMessage(DetailedResponse<MessageResponse> response, IBMError error)
 {
-    if(error == null)
+    if (error == null)
     {
-        Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", resp.Response);
+        Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", response.Response);
     }
     else
     {
@@ -251,10 +331,26 @@ private void OnMessage(DetailedResponse<JObject> resp, IBMError error)
 You can send custom request headers by adding them to the service.
 
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
 void Example()
 {
-    assistant.AddHeader("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
+    //  Add custom header to the REST call
+    assistant.WithHeader("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
     assistant.Message(OnSuccess, "<workspace-id>");
+}
+
+private void OnSuccess(DetailedResponse<MessageResponse> response, IBMError error)
+{
+    Log.Debug("ExampleCallback.OnMessage()", "Response received: {0}", response.Response);
 }
 ```
 
@@ -262,15 +358,25 @@ void Example()
 You can get response headers in the `headers` object in the DetailedResponse.
 
 ```cs
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
+
 void Example()
 {
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
     assistant.Message(OnMessage, "<workspace-id>");
 }
 
-private void OnMessage(DetailedResponse<JOBject> resp, IBMError error)
+private void OnMessage(DetailedResponse<MessageResponse> response, IBMError error)
 {
     //  List all headers in the response headers object
-    foreach (KeyValuePair<string, string> kvp in resp.Headers)
+    foreach (KeyValuePair<string, object> kvp in response.Headers)
     {
         Log.Debug("ExampleCustomHeader.OnMessage()", "{0}: {1}", kvp.Key, kvp.Value);
     }
@@ -283,13 +389,22 @@ Watson services have upgraded their hosts to TLS 1.2. The US South region has a 
 ## Disabling SSL verification
 You can disable SSL verifciation when making a service call.
 ```cs
-//  Create credential and instantiate service
-Credentials credentials = new Credentials(<username>, <password>, <service-url>);
+AssistantService assistant;
+string assistantVersionDate = "<assistant-version-date>";
+Credentials assistantCredentials;
+string workspaceId = "<workspaceId>";
 
-credentials.DisableSslVerification = true;
-_service = new Assistant(credentials);
-_service.VersionDate = <version-date>;
-_service.DisableSslVerification = true;
+void Example()
+{
+    credentials.DisableSslVerification = true;
+    assistant = new AssistantService(
+        versionDate: assistantVersionDate,
+        credentials: assistantCredentials
+    );
+
+    //  disable ssl verification
+    assistant.DisableSslVerification = true;
+}
 ```
 
 ## IBM Cloud Private
