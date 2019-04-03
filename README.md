@@ -35,7 +35,7 @@ Ensure that you have the following prerequisites:
 * If using Unity 2018.2 or later you'll need to set **Scripting Runtime Version** and **Api Compatibility Level** in Build Settings to **.NET 4.x equivalent**. We need to access security options to enable TLS 1.2. 
 
 ## Getting the Watson SDK and adding it to Unity
-You can get the latest SDK release by clicking [here][latest_release_sdk]. You will also need to download the latest release of the IBM Unity SDK Core by clicking [here][latest_release_core]
+You can get the latest SDK release by clicking [here][latest_release_sdk]. **You will also need to download the latest release of the IBM Unity SDK Core by clicking [here][latest_release_core].**
 
 ### Installing the SDK source into your Unity project
 Move the **`unity-sdk`** and **`unity-sdk-core`** directories into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson` and the Core directory from `unity-sdk-core` to `IBMSdkCore`_.
