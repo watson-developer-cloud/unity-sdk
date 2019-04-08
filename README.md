@@ -475,6 +475,9 @@ This library is licensed under Apache 2.0. Full license text is available in [LI
 ## Contributing
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
+## Featured projects
+We'd love to highlight cool open-source projects that use this SDK! If you'd like to get your project added to the list, feel free to make an issue linking us to it.
+
 [wdc]: https://www.ibm.com/watson/developer/
 [wdc_unity_sdk]: https://github.com/watson-developer-cloud/unity-sdk
 [latest_release_sdk]: https://github.com/watson-developer-cloud/unity-sdk/releases/latest
