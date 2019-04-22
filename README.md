@@ -47,12 +47,12 @@ To create instances of Watson services and their credentials, follow the steps b
 
 1. Determine which services to configure.
 1. If you have configured the services already, complete the following steps. Otherwise, go to step 3.
-    1. Log in to IBM Cloud at https://console.bluemix.net.
+    1. Log in to IBM Cloud at https://cloud.ibm.com.
     1. Click the service you would like to use.
     1. Click **Service credentials**.
     1. Click **View credentials** to access your credentials.
 1. If you need to configure the services that you want to use, complete the following steps.
-    1. Log in to IBM Cloud at https://console.bluemix.net.
+    1. Log in to IBM Cloud at https://cloud.ibm.com.
     1. Click the **Create service** button.
     1. Under **Watson**, select which service you would like to create an instance of and click that service.
     1. Give the service and credential a name. Select a plan and click the **Create** button on the bottom.
