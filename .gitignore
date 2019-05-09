@@ -81,3 +81,6 @@ Docs/publishing-release.md.meta
 node_modules
 package-lock.json
 package-lock.json.meta
+
+.pre-commit-config.yaml
+.secrets.baseline
