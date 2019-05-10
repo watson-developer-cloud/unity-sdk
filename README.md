@@ -103,7 +103,7 @@ Some services use token-based Identity and Access Management (IAM) authenticatio
 You supply either an IAM service **API key** or an **access token**:
 
 - Use the API key to have the SDK manage the lifecycle of the access token. The SDK requests an access token, ensures that the access token is valid, and refreshes it if necessary.
-- Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://console.bluemix.net/docs/services/watson/getting-started-iam.html). If you want to switch to API key, in a coroutine, override your stored IAM credentials with an IAM API key and yield until the credentials object `HasIamTokenData()` returns `true`.
+- Use the access token if you want to manage the lifecycle yourself. For details, see [Authenticating with IAM tokens](https://cloud.ibm.com/docs/services/watson?topic=watson-iam). If you want to switch to API key, in a coroutine, override your stored IAM credentials with an IAM API key and yield until the credentials object `HasIamTokenData()` returns `true`.
 
 #### Supplying the IAM API key
 ```cs
@@ -114,7 +114,7 @@ string versionDate = "<service-version-date>";
 IEnumerator TokenExample()
 {
     //  Create IAM token options and supply the apikey. IamUrl is the URL used to get the 
-    //  authorization token using the IamApiKey. It defaults to https://iam.bluemix.net/identity/token
+    //  authorization token using the IamApiKey. It defaults to https://iam.cloud.ibm.com/identity/token
     TokenOptions iamTokenOptions = new TokenOptions()
     {
         IamApiKey = "<iam-api-key>",
@@ -484,5 +484,5 @@ We'd love to highlight cool open-source projects that use this SDK! If you'd lik
 [latest_release_core]: https://github.com/IBM/unity-sdk-core/releases/latest
 [get_unity]: https://unity3d.com/get-unity
 [documentation]: https://watson-developer-cloud.github.io/unity-sdk/
-[ibm-cloud-onboarding]: http://console.bluemix.net/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
-[watson-dashboard]: https://console.bluemix.net/dashboard/apps?category=watson
+[ibm-cloud-onboarding]: https://cloud.ibm.com/registration?target=/developer/watson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Unity
+[watson-dashboard]: https://cloud.ibm.com/
