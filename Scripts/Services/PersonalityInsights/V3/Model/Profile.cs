@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.PersonalityInsights.V3.Model
 {
     /// <summary>
-    /// Profile.
+    /// The personality profile that the service generated for the input content.
     /// </summary>
     public class Profile
     {
@@ -101,8 +101,8 @@ namespace IBM.Watson.PersonalityInsights.V3.Model
         [JsonProperty("consumption_preferences", NullValueHandling = NullValueHandling.Ignore)]
         public List<ConsumptionPreferencesCategory> ConsumptionPreferences { get; set; }
         /// <summary>
-        /// Warning messages associated with the input text submitted with the request. The array is empty if the input
-        /// generated no warnings.
+        /// An array of warning messages that are associated with the input text for the request. The array is empty if
+        /// the input generated no warnings.
         /// </summary>
         [JsonProperty("warnings", NullValueHandling = NullValueHandling.Ignore)]
         public List<Warning> Warnings { get; set; }

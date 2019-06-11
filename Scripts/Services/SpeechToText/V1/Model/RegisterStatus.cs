@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// RegisterStatus.
+    /// Information about a request to register a callback for asynchronous speech recognition.
     /// </summary>
     public class RegisterStatus
     {

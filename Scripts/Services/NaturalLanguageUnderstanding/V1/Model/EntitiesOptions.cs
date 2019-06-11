@@ -21,7 +21,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
     /// Identifies people, cities, organizations, and other entities in the content. See [Entity types and
-    /// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding/entity-types.html).
+    /// subtypes](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-entity-types).
     ///
     /// Supported languages: English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Swedish.
     /// Arabic, Chinese, and Dutch are supported only through custom models.
@@ -39,7 +39,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         [JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Mentions { get; set; }
         /// <summary>
-        /// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
+        /// Enter a [custom
+        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID to override the standard entity detection model.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]

@@ -22,7 +22,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     /// <summary>
     /// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo`
     /// relation might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-    /// types](https://cloud.ibm.com/docs/services/natural-language-understanding/relations.html).
+    /// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
     ///
     /// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
     /// Portuguese custom models are also supported.
@@ -30,7 +30,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     public class RelationsOptions
     {
         /// <summary>
-        /// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
+        /// Enter a [custom
+        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID to override the default model.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]

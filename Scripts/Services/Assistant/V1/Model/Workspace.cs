@@ -61,14 +61,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// The name of the workspace. This string cannot contain carriage return, newline, or tab characters, and it
-        /// must be no longer than 64 characters.
+        /// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
-        /// The description of the workspace. This string cannot contain carriage return, newline, or tab characters,
-        /// and it must be no longer than 128 characters.
+        /// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }

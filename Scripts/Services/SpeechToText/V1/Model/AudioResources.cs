@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// AudioResources.
+    /// Information about the audio resources from a custom acoustic model.
     /// </summary>
     public class AudioResources
     {

@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Translation.
+    /// Information about the translation for the specified text.
     /// </summary>
     public class Translation
     {
@@ -29,78 +29,78 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// intonation for the word. You can create only a single entry, with or without a single part of speech, for
         /// any word; you cannot create multiple entries with different parts of speech for the same word. For more
         /// information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
         /// </summary>
         public class PartOfSpeechValue
         {
-            /// <summary>
-            /// Constant JOSI for Josi
-            /// </summary>
-            public const string JOSI = "Josi";
-            /// <summary>
-            /// Constant MESI for Mesi
-            /// </summary>
-            public const string MESI = "Mesi";
-            /// <summary>
-            /// Constant KIGO for Kigo
-            /// </summary>
-            public const string KIGO = "Kigo";
-            /// <summary>
-            /// Constant GOBI for Gobi
-            /// </summary>
-            public const string GOBI = "Gobi";
             /// <summary>
             /// Constant DOSI for Dosi
             /// </summary>
             public const string DOSI = "Dosi";
             /// <summary>
-            /// Constant JODO for Jodo
-            /// </summary>
-            public const string JODO = "Jodo";
-            /// <summary>
-            /// Constant KOYU for Koyu
-            /// </summary>
-            public const string KOYU = "Koyu";
-            /// <summary>
-            /// Constant STBI for Stbi
-            /// </summary>
-            public const string STBI = "Stbi";
-            /// <summary>
-            /// Constant SUJI for Suji
-            /// </summary>
-            public const string SUJI = "Suji";
-            /// <summary>
-            /// Constant KEDO for Kedo
-            /// </summary>
-            public const string KEDO = "Kedo";
-            /// <summary>
             /// Constant FUKU for Fuku
             /// </summary>
             public const string FUKU = "Fuku";
             /// <summary>
-            /// Constant KEYO for Keyo
+            /// Constant GOBI for Gobi
             /// </summary>
-            public const string KEYO = "Keyo";
+            public const string GOBI = "Gobi";
             /// <summary>
-            /// Constant STTO for Stto
+            /// Constant HOKA for Hoka
             /// </summary>
-            public const string STTO = "Stto";
+            public const string HOKA = "Hoka";
             /// <summary>
-            /// Constant RETA for Reta
+            /// Constant JODO for Jodo
             /// </summary>
-            public const string RETA = "Reta";
+            public const string JODO = "Jodo";
             /// <summary>
-            /// Constant STZO for Stzo
+            /// Constant JOSI for Josi
             /// </summary>
-            public const string STZO = "Stzo";
+            public const string JOSI = "Josi";
             /// <summary>
             /// Constant KATO for Kato
             /// </summary>
             public const string KATO = "Kato";
             /// <summary>
-            /// Constant HOKA for Hoka
+            /// Constant KEDO for Kedo
             /// </summary>
-            public const string HOKA = "Hoka";
+            public const string KEDO = "Kedo";
+            /// <summary>
+            /// Constant KEYO for Keyo
+            /// </summary>
+            public const string KEYO = "Keyo";
+            /// <summary>
+            /// Constant KIGO for Kigo
+            /// </summary>
+            public const string KIGO = "Kigo";
+            /// <summary>
+            /// Constant KOYU for Koyu
+            /// </summary>
+            public const string KOYU = "Koyu";
+            /// <summary>
+            /// Constant MESI for Mesi
+            /// </summary>
+            public const string MESI = "Mesi";
+            /// <summary>
+            /// Constant RETA for Reta
+            /// </summary>
+            public const string RETA = "Reta";
+            /// <summary>
+            /// Constant STBI for Stbi
+            /// </summary>
+            public const string STBI = "Stbi";
+            /// <summary>
+            /// Constant STTO for Stto
+            /// </summary>
+            public const string STTO = "Stto";
+            /// <summary>
+            /// Constant STZO for Stzo
+            /// </summary>
+            public const string STZO = "Stzo";
+            /// <summary>
+            /// Constant SUJI for Suji
+            /// </summary>
+            public const string SUJI = "Suji";
             
         }
 
@@ -109,7 +109,7 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// intonation for the word. You can create only a single entry, with or without a single part of speech, for
         /// any word; you cannot create multiple entries with different parts of speech for the same word. For more
         /// information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes).
+        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
         /// Constants for possible values can be found using Translation.PartOfSpeechValue
         /// </summary>
         [JsonProperty("part_of_speech", NullValueHandling = NullValueHandling.Ignore)]

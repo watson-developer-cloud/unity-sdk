@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// UtteranceAnalyses.
+    /// The results of the analysis for the utterances of the input content.
     /// </summary>
     public class UtteranceAnalyses
     {

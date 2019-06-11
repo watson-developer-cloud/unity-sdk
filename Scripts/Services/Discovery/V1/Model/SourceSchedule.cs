@@ -27,6 +27,8 @@ namespace IBM.Watson.Discovery.V1.Model
         /// <summary>
         /// The crawl schedule in the specified **time_zone**.
         ///
+        /// -  `five_minutes`: Runs every five minutes.
+        /// -  `hourly`: Runs every hour.
         /// -  `daily`: Runs every day between 00:00 and 06:00.
         /// -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
         /// -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.
@@ -45,12 +47,22 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant MONTHLY for monthly
             /// </summary>
             public const string MONTHLY = "monthly";
+            /// <summary>
+            /// Constant FIVE_MINUTES for five_minutes
+            /// </summary>
+            public const string FIVE_MINUTES = "five_minutes";
+            /// <summary>
+            /// Constant HOURLY for hourly
+            /// </summary>
+            public const string HOURLY = "hourly";
             
         }
 
         /// <summary>
         /// The crawl schedule in the specified **time_zone**.
         ///
+        /// -  `five_minutes`: Runs every five minutes.
+        /// -  `hourly`: Runs every hour.
         /// -  `daily`: Runs every day between 00:00 and 06:00.
         /// -  `weekly`: Runs every week on Sunday between 00:00 and 06:00.
         /// -  `monthly`: Runs the on the first Sunday of every month between 00:00 and 06:00.

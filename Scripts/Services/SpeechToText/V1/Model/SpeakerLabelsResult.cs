@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// SpeakerLabelsResult.
+    /// Information about the speakers from speech recognition results.
     /// </summary>
     public class SpeakerLabelsResult
     {

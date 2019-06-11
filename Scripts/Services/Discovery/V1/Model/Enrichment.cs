@@ -69,7 +69,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("ignore_downstream_errors", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IgnoreDownstreamErrors { get; set; }
         /// <summary>
-        /// An object representing the configuration options to use for the `elements` enrichment.
+        /// Options which are specific to a particular enrichment.
         /// </summary>
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public EnrichmentOptions Options { get; set; }

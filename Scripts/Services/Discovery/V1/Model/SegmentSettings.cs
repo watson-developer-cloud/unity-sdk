@@ -33,9 +33,21 @@ namespace IBM.Watson.Discovery.V1.Model
         /// <summary>
         /// Defines the heading level that splits into document segments. Valid values are h1, h2, h3, h4, h5, h6. The
         /// content of the header field that the segmentation splits at is used as the **title** field for that
-        /// segmented result.
+        /// segmented result. Only valid if used with a collection that has **enabled** set to `false` in the
+        /// **smart_document_understanding** object.
         /// </summary>
         [JsonProperty("selector_tags", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> SelectorTags { get; set; }
+        /// <summary>
+        /// Defines the annotated smart document understanding fields that the document is split on. The content of the
+        /// annotated field that the segmentation splits at is used as the **title** field for that segmented result.
+        /// For example, if the field `sub-title` is specified, when a document is uploaded each time the smart
+        /// documement understanding conversion encounters a field of type `sub-title` the document is split at that
+        /// point and the content of the field used as the title of the remaining content. Thnis split is performed for
+        /// all instances of the listed fields in the uploaded document. Only valid if used with a collection that has
+        /// **enabled** set to `true` in the **smart_document_understanding** object.
+        /// </summary>
+        [JsonProperty("annotated_fields", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> AnnotatedFields { get; set; }
     }
 }

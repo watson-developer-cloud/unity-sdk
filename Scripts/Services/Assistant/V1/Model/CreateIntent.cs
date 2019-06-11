@@ -30,13 +30,11 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The name of the intent. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
         /// - It cannot begin with the reserved prefix `sys-`.
-        /// - It must be no longer than 128 characters.
         /// </summary>
         [JsonProperty("intent", NullValueHandling = NullValueHandling.Ignore)]
         public string Intent { get; set; }
         /// <summary>
-        /// The description of the intent. This string cannot contain carriage return, newline, or tab characters, and
-        /// it must be no longer than 128 characters.
+        /// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }

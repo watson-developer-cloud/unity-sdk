@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// RecognitionJob.
+    /// Information about a current asynchronous speech recognition job.
     /// </summary>
     public class RecognitionJob
     {

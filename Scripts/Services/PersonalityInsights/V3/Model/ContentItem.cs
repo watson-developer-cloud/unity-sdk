@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.PersonalityInsights.V3.Model
 {
     /// <summary>
-    /// ContentItem.
+    /// An input content item that the service is to analyze.
     /// </summary>
     public class ContentItem
     {

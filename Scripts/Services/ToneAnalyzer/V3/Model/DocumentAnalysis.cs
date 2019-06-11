@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
+    /// The results of the analysis for the full input content.
     /// </summary>
     public class DocumentAnalysis
     {
