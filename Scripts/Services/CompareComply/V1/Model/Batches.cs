@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// The results of a successful `GET /v1/batches` request.
+    /// The results of a successful **List Batches** request.
     /// </summary>
     public class Batches
     {

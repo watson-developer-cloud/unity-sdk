@@ -252,10 +252,10 @@ namespace IBM.Watson.VisualRecognition.V3
         /// **Important:** On April 2, 2018, the identity information in the response to calls to the Face model was
         /// removed. The identity information refers to the `name` of the person, `score`, and `type_hierarchy`
         /// knowledge graph. For details about the enhanced Face model, see the [Release
-        /// notes](https://cloud.ibm.com/docs/services/visual-recognition/release-notes.html#2april2018).
+        /// notes](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-release-notes#2april2018).
         ///
         /// Analyze and get data about faces in images. Responses can include estimated age and gender. This feature
-        /// uses a built-in model, so no training is necessary. The Detect faces method does not support general
+        /// uses a built-in model, so no training is necessary. The **Detect faces** method does not support general
         /// biometric facial recognition.
         ///
         /// Supported image formats include .gif, .jpg, .png, and .tif. The maximum image size is 10 MB. The minimum
@@ -465,22 +465,21 @@ namespace IBM.Watson.VisualRecognition.V3
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete a classifier.
+        /// Retrieve a list of classifiers.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="classifierId">The ID of the classifier.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteClassifier(Callback<object> callback, string classifierId)
+        /// <param name="verbose">Specify `true` to return details about the classifiers. Omit this parameter to return
+        /// a brief list of classifiers. (optional)</param>
+        /// <returns><see cref="Classifiers" />Classifiers</returns>
+        public bool ListClassifiers(Callback<Classifiers> callback, bool? verbose = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
-            if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
+                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
 
-            RequestObject<object> req = new RequestObject<object>
+            RequestObject<Classifiers> req = new RequestObject<Classifiers>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -491,16 +490,20 @@ namespace IBM.Watson.VisualRecognition.V3
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
+            if (verbose != null)
+            {
+                req.Parameters["verbose"] = (bool)verbose ? "true" : "false";
+            }
 
-            req.OnResponse = OnDeleteClassifierResponse;
+            req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/classifiers");
             if (connector == null)
             {
                 return false;
@@ -509,9 +512,9 @@ namespace IBM.Watson.VisualRecognition.V3
             return connector.Send(req);
         }
 
-        private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<object> response = new DetailedResponse<object>();
+            DetailedResponse<Classifiers> response = new DetailedResponse<Classifiers>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -521,17 +524,17 @@ namespace IBM.Watson.VisualRecognition.V3
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Result = JsonConvert.DeserializeObject<Classifiers>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("VisualRecognitionService.OnDeleteClassifierResponse()", "Exception: {0}", e.ToString());
+                Log.Error("VisualRecognitionService.OnListClassifiersResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
+            if (((RequestObject<Classifiers>)req).Callback != null)
+                ((RequestObject<Classifiers>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Retrieve classifier details.
@@ -605,84 +608,12 @@ namespace IBM.Watson.VisualRecognition.V3
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Retrieve a list of classifiers.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="verbose">Specify `true` to return details about the classifiers. Omit this parameter to return
-        /// a brief list of classifiers. (optional)</param>
-        /// <returns><see cref="Classifiers" />Classifiers</returns>
-        public bool ListClassifiers(Callback<Classifiers> callback, bool? verbose = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
-
-            RequestObject<Classifiers> req = new RequestObject<Classifiers>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "ListClassifiers"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (verbose != null)
-            {
-                req.Parameters["verbose"] = (bool)verbose ? "true" : "false";
-            }
-
-            req.OnResponse = OnListClassifiersResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/classifiers");
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Classifiers> response = new DetailedResponse<Classifiers>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Classifiers>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("VisualRecognitionService.OnListClassifiersResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Classifiers>)req).Callback != null)
-                ((RequestObject<Classifiers>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Update a classifier.
         ///
         /// Update a custom classifier by adding new positive or negative classes or by adding new images to existing
         /// classes. You must supply at least one set of positive or negative examples. For details, see [Updating
         /// custom
-        /// classifiers](https://cloud.ibm.com/docs/services/visual-recognition/customizing.html#updating-custom-classifiers).
+        /// classifiers](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-customizing#updating-custom-classifiers).
         ///
         /// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
         /// and class names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -787,6 +718,75 @@ namespace IBM.Watson.VisualRecognition.V3
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Delete a classifier.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="classifierId">The ID of the classifier.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteClassifier(Callback<object> callback, string classifierId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
+            if (string.IsNullOrEmpty(classifierId))
+                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V3", "DeleteClassifier"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteClassifierResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}", classifierId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnDeleteClassifierResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Retrieve a Core ML model of a classifier.
         ///
         /// Download a Core ML model file (.mlmodel) of a custom classifier that returns <tt>"core_ml_enabled":
@@ -856,7 +856,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/visual-recognition/information-security.html).
+        /// security](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>

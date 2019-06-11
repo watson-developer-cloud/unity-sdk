@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// The results of a successful `GET /v1/feedback` request.
+    /// The results of a successful **List Feedback** request for all feedback.
     /// </summary>
     public class FeedbackList
     {

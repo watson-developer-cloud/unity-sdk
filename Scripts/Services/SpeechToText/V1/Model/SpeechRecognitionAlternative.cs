@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// SpeechRecognitionAlternative.
+    /// An alternative transcript from speech recognition results.
     /// </summary>
     public class SpeechRecognitionAlternative
     {

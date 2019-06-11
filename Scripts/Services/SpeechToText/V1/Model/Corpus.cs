@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// Corpus.
+    /// Information about a corpus from a custom language model.
     /// </summary>
     public class Corpus
     {

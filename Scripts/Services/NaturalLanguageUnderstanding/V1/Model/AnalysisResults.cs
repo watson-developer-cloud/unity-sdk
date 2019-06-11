@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// Analysis results for each requested feature.
+    /// Results of the analysis, organized by feature.
     /// </summary>
     public class AnalysisResults
     {

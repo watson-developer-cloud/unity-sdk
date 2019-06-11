@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.PersonalityInsights.V3.Model
 {
     /// <summary>
-    /// Warning.
+    /// A warning message that is associated with the input content.
     /// </summary>
     public class Warning
     {

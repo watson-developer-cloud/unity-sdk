@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// VoiceModels.
+    /// Information about existing custom voice models.
     /// </summary>
     public class VoiceModels
     {

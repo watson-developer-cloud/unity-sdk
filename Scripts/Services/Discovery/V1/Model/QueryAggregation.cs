@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// An aggregation produced by the Discovery service to analyze the input provided.
+    /// An aggregation produced by  Discovery to analyze the input provided.
     /// </summary>
     public class QueryAggregation
     {
@@ -41,7 +41,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// Aggregations returned by the Discovery service.
+        /// Aggregations returned by Discovery.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }

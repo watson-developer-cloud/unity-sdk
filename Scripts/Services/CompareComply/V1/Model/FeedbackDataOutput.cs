@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Information returned from the `POST /v1/feedback` method.
+    /// Information returned from the **Add Feedback** method.
     /// </summary>
     public class FeedbackDataOutput
     {

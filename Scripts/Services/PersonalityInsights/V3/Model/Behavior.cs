@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.PersonalityInsights.V3.Model
 {
     /// <summary>
-    /// Behavior.
+    /// The temporal behavior for the input content.
     /// </summary>
     public class Behavior
     {

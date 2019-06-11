@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// SpeechRecognitionResults.
+    /// The complete results for a speech recognition request.
     /// </summary>
     public class SpeechRecognitionResults
     {
@@ -48,6 +48,16 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// </summary>
         [JsonProperty("speaker_labels", NullValueHandling = NullValueHandling.Ignore)]
         public List<SpeakerLabelsResult> SpeakerLabels { get; set; }
+        /// <summary>
+        /// If processing metrics are requested, information about the service's processing of the input audio.
+        /// </summary>
+        [JsonProperty("processing_metrics", NullValueHandling = NullValueHandling.Ignore)]
+        public ProcessingMetrics ProcessingMetrics { get; set; }
+        /// <summary>
+        /// If audio metrics are requested, information about the signal characteristics of the input audio.
+        /// </summary>
+        [JsonProperty("audio_metrics", NullValueHandling = NullValueHandling.Ignore)]
+        public AudioMetrics AudioMetrics { get; set; }
         /// <summary>
         /// An array of warning messages associated with the request:
         /// * Warnings for invalid parameters or fields can include a descriptive message and a list of invalid argument

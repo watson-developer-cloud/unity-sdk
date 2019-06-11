@@ -216,144 +216,6 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete environment.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="DeleteEnvironmentResponse" />DeleteEnvironmentResponse</returns>
-        public bool DeleteEnvironment(Callback<DeleteEnvironmentResponse> callback, string environmentId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteEnvironment`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteEnvironment`");
-
-            RequestObject<DeleteEnvironmentResponse> req = new RequestObject<DeleteEnvironmentResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteEnvironment"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteEnvironmentResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<DeleteEnvironmentResponse> response = new DetailedResponse<DeleteEnvironmentResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteEnvironmentResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<DeleteEnvironmentResponse>)req).Callback != null)
-                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get environment info.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
-        public bool GetEnvironment(Callback<ModelEnvironment> callback, string environmentId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetEnvironment`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetEnvironment`");
-
-            RequestObject<ModelEnvironment> req = new RequestObject<ModelEnvironment>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetEnvironment"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnGetEnvironmentResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnGetEnvironmentResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<ModelEnvironment>)req).Callback != null)
-                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// List environments.
         ///
         /// List existing environments for the service instance.
@@ -427,24 +289,19 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List fields across collections.
-        ///
-        /// Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
+        /// Get environment info.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
-        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
-        public bool ListFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, List<string> collectionIds)
+        /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
+        public bool GetEnvironment(Callback<ModelEnvironment> callback, string environmentId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListFields`");
+                throw new ArgumentNullException("`callback` is required for `GetEnvironment`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListFields`");
-            if (collectionIds == null)
-                throw new ArgumentNullException("`collectionIds` is required for `ListFields`");
+                throw new ArgumentNullException("`environmentId` is required for `GetEnvironment`");
 
-            RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
+            RequestObject<ModelEnvironment> req = new RequestObject<ModelEnvironment>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -458,20 +315,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListFields"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetEnvironment"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            if (collectionIds != null && collectionIds.Count > 0)
-            {
-                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
-            }
 
-            req.OnResponse = OnListFieldsResponse;
+            req.OnResponse = OnGetEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/fields", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
             if (connector == null)
             {
                 return false;
@@ -480,9 +333,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnListFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
+            DetailedResponse<ModelEnvironment> response = new DetailedResponse<ModelEnvironment>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -492,17 +345,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<ModelEnvironment>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnListFieldsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnGetEnvironmentResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<ModelEnvironment>)req).Callback != null)
+                ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update an environment.
@@ -590,6 +443,153 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
                 ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete environment.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <returns><see cref="DeleteEnvironmentResponse" />DeleteEnvironmentResponse</returns>
+        public bool DeleteEnvironment(Callback<DeleteEnvironmentResponse> callback, string environmentId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteEnvironment`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `DeleteEnvironment`");
+
+            RequestObject<DeleteEnvironmentResponse> req = new RequestObject<DeleteEnvironmentResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteEnvironment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteEnvironmentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DeleteEnvironmentResponse> response = new DetailedResponse<DeleteEnvironmentResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DeleteEnvironmentResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteEnvironmentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DeleteEnvironmentResponse>)req).Callback != null)
+                ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List fields across collections.
+        ///
+        /// Gets a list of the unique fields (and their types) stored in the indexes of the specified collections.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
+        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
+        public bool ListFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, List<string> collectionIds)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListFields`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListFields`");
+            if (collectionIds == null)
+                throw new ArgumentNullException("`collectionIds` is required for `ListFields`");
+
+            RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListFields"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
+
+            req.OnResponse = OnListFieldsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/fields", environmentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListFieldsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add configuration.
@@ -697,155 +697,6 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete a configuration.
-        ///
-        /// The deletion is performed unconditionally. A configuration deletion request succeeds even if the
-        /// configuration is referenced by a collection or document ingestion. However, documents that have already been
-        /// submitted for processing continue to use the deleted configuration. Documents are always processed with a
-        /// snapshot of the configuration as it existed at the time the document was submitted.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="configurationId">The ID of the configuration.</param>
-        /// <returns><see cref="DeleteConfigurationResponse" />DeleteConfigurationResponse</returns>
-        public bool DeleteConfiguration(Callback<DeleteConfigurationResponse> callback, string environmentId, string configurationId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteConfiguration`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteConfiguration`");
-            if (string.IsNullOrEmpty(configurationId))
-                throw new ArgumentNullException("`configurationId` is required for `DeleteConfiguration`");
-
-            RequestObject<DeleteConfigurationResponse> req = new RequestObject<DeleteConfigurationResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteConfiguration"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteConfigurationResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<DeleteConfigurationResponse> response = new DetailedResponse<DeleteConfigurationResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteConfigurationResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<DeleteConfigurationResponse>)req).Callback != null)
-                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get configuration details.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="configurationId">The ID of the configuration.</param>
-        /// <returns><see cref="Configuration" />Configuration</returns>
-        public bool GetConfiguration(Callback<Configuration> callback, string environmentId, string configurationId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetConfiguration`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetConfiguration`");
-            if (string.IsNullOrEmpty(configurationId))
-                throw new ArgumentNullException("`configurationId` is required for `GetConfiguration`");
-
-            RequestObject<Configuration> req = new RequestObject<Configuration>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetConfiguration"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnGetConfigurationResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Configuration>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnGetConfigurationResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Configuration>)req).Callback != null)
-                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// List configurations.
         ///
         /// Lists existing configurations for the service instance.
@@ -920,6 +771,78 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<ListConfigurationsResponse>)req).Callback != null)
                 ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get configuration details.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="configurationId">The ID of the configuration.</param>
+        /// <returns><see cref="Configuration" />Configuration</returns>
+        public bool GetConfiguration(Callback<Configuration> callback, string environmentId, string configurationId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetConfiguration`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetConfiguration`");
+            if (string.IsNullOrEmpty(configurationId))
+                throw new ArgumentNullException("`configurationId` is required for `GetConfiguration`");
+
+            RequestObject<Configuration> req = new RequestObject<Configuration>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetConfigurationResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Configuration> response = new DetailedResponse<Configuration>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Configuration>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetConfigurationResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Configuration>)req).Callback != null)
+                ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a configuration.
@@ -1029,10 +952,90 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Delete a configuration.
+        ///
+        /// The deletion is performed unconditionally. A configuration deletion request succeeds even if the
+        /// configuration is referenced by a collection or document ingestion. However, documents that have already been
+        /// submitted for processing continue to use the deleted configuration. Documents are always processed with a
+        /// snapshot of the configuration as it existed at the time the document was submitted.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="configurationId">The ID of the configuration.</param>
+        /// <returns><see cref="DeleteConfigurationResponse" />DeleteConfigurationResponse</returns>
+        public bool DeleteConfiguration(Callback<DeleteConfigurationResponse> callback, string environmentId, string configurationId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteConfiguration`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `DeleteConfiguration`");
+            if (string.IsNullOrEmpty(configurationId))
+                throw new ArgumentNullException("`configurationId` is required for `DeleteConfiguration`");
+
+            RequestObject<DeleteConfigurationResponse> req = new RequestObject<DeleteConfigurationResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteConfiguration"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteConfigurationResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DeleteConfigurationResponse> response = new DetailedResponse<DeleteConfigurationResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DeleteConfigurationResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteConfigurationResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DeleteConfigurationResponse>)req).Callback != null)
+                ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Test configuration.
         ///
-        /// Runs a sample document through the default or your configuration and returns diagnostic information designed
-        /// to help you understand how the document was processed. The document is not added to the index.
+        /// **Deprecated** This method is no longer supported and is scheduled to be removed from service on July 31st
+        /// 2019.
+        ///
+        ///  Runs a sample document through the default or your configuration and returns diagnostic information
+        /// designed to help you understand how the document was processed. The document is not added to the index.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -1046,9 +1049,8 @@ namespace IBM.Watson.Discovery.V1
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
-        /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
-        /// MB. Metadata parts larger than 1 MB are rejected.
+        /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
+        /// rejected.
         /// Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
@@ -1235,224 +1237,6 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete a collection.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="DeleteCollectionResponse" />DeleteCollectionResponse</returns>
-        public bool DeleteCollection(Callback<DeleteCollectionResponse> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteCollection`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteCollection`");
-
-            RequestObject<DeleteCollectionResponse> req = new RequestObject<DeleteCollectionResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCollection"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteCollectionResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<DeleteCollectionResponse> response = new DetailedResponse<DeleteCollectionResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteCollectionResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<DeleteCollectionResponse>)req).Callback != null)
-                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get collection details.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="Collection" />Collection</returns>
-        public bool GetCollection(Callback<Collection> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetCollection`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetCollection`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `GetCollection`");
-
-            RequestObject<Collection> req = new RequestObject<Collection>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCollection"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnGetCollectionResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Collection> response = new DetailedResponse<Collection>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Collection>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnGetCollectionResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Collection>)req).Callback != null)
-                ((RequestObject<Collection>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// List collection fields.
-        ///
-        /// Gets a list of the unique fields (and their types) stored in the index.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
-        public bool ListCollectionFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListCollectionFields`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListCollectionFields`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `ListCollectionFields`");
-
-            RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollectionFields"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnListCollectionFieldsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListCollectionFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnListCollectionFieldsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
-                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// List collections.
         ///
         /// Lists existing collections for the service instance.
@@ -1527,6 +1311,78 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<ListCollectionsResponse>)req).Callback != null)
                 ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get collection details.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="Collection" />Collection</returns>
+        public bool GetCollection(Callback<Collection> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetCollection`");
+
+            RequestObject<Collection> req = new RequestObject<Collection>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetCollectionResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Collection> response = new DetailedResponse<Collection>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Collection>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Collection>)req).Callback != null)
+                ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Update a collection.
@@ -1614,6 +1470,227 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete a collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="DeleteCollectionResponse" />DeleteCollectionResponse</returns>
+        public bool DeleteCollection(Callback<DeleteCollectionResponse> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteCollection`");
+
+            RequestObject<DeleteCollectionResponse> req = new RequestObject<DeleteCollectionResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteCollectionResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DeleteCollectionResponse> response = new DetailedResponse<DeleteCollectionResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DeleteCollectionResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DeleteCollectionResponse>)req).Callback != null)
+                ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List collection fields.
+        ///
+        /// Gets a list of the unique fields (and their types) stored in the index.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="ListCollectionFieldsResponse" />ListCollectionFieldsResponse</returns>
+        public bool ListCollectionFields(Callback<ListCollectionFieldsResponse> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListCollectionFields`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListCollectionFields`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `ListCollectionFields`");
+
+            RequestObject<ListCollectionFieldsResponse> req = new RequestObject<ListCollectionFieldsResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCollectionFields"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListCollectionFieldsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListCollectionFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ListCollectionFieldsResponse> response = new DetailedResponse<ListCollectionFieldsResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ListCollectionFieldsResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListCollectionFieldsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
+                ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get the expansion list.
+        ///
+        /// Returns the current expansion list for the specified collection. If an expansion list is not specified, an
+        /// object with empty expansion arrays is returned.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="Expansions" />Expansions</returns>
+        public bool ListExpansions(Callback<Expansions> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListExpansions`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListExpansions`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `ListExpansions`");
+
+            RequestObject<Expansions> req = new RequestObject<Expansions>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListExpansions"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListExpansionsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Expansions>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListExpansionsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Expansions>)req).Callback != null)
+                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create or update expansion list.
@@ -1714,33 +1791,28 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create stopword list.
+        /// Delete the expansion list.
         ///
-        /// Upload a custom stopword list to use with the specified collection.
+        /// Remove the expansion information for this collection. The expansion list must be deleted to disable query
+        /// expansion for a collection.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
-        /// <param name="stopwordFilename">The filename for stopwordFile.</param>
-        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.MemoryStream stopwordFile, string stopwordFilename)
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteExpansions(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
+                throw new ArgumentNullException("`callback` is required for `DeleteExpansions`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `CreateStopwordList`");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteExpansions`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `CreateStopwordList`");
-            if (stopwordFile == null)
-                throw new ArgumentNullException("`stopwordFile` is required for `CreateStopwordList`");
-            if (string.IsNullOrEmpty(stopwordFilename))
-                throw new ArgumentNullException("`stopwordFilename` is required for `CreateStopwordList`");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteExpansions`");
 
-            RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
+            RequestObject<object> req = new RequestObject<object>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -1751,21 +1823,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateStopwordList"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteExpansions"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            req.Forms = new Dictionary<string, RESTConnector.Form>();
-            if (stopwordFile != null)
-            {
-                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFilename, "application/octet-stream");
-            }
 
-            req.OnResponse = OnCreateStopwordListResponse;
+            req.OnResponse = OnDeleteExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
@@ -1774,7 +1841,81 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteExpansionsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get tokenization dictionary status.
+        ///
+        /// Returns the current status of the tokenization dictionary for the specified collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
+        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTokenizationDictionaryStatus`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetTokenizationDictionaryStatus`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetTokenizationDictionaryStatus`");
+
+            RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -1791,7 +1932,7 @@ namespace IBM.Watson.Discovery.V1
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnCreateStopwordListResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnGetTokenizationDictionaryStatusResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -1881,156 +2022,6 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete the expansion list.
-        ///
-        /// Remove the expansion information for this collection. The expansion list must be deleted to disable query
-        /// expansion for a collection.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteExpansions(Callback<object> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteExpansions`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteExpansions`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteExpansions`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteExpansions"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteExpansionsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteExpansionsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete a custom stopword list.
-        ///
-        /// Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list
-        /// is used for the collection.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteStopwordList(Callback<object> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteStopwordList`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteStopwordList`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteStopwordList`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteStopwordList"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteStopwordListResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteStopwordListResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete tokenization dictionary.
@@ -2181,27 +2172,33 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Get tokenization dictionary status.
+        /// Create stopword list.
         ///
-        /// Returns the current status of the tokenization dictionary for the specified collection.
+        /// Upload a custom stopword list to use with the specified collection.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="stopwordFile">The content of the stopword list to ingest.</param>
+        /// <param name="stopwordFilename">The filename for stopwordFile.</param>
         /// <returns><see cref="TokenDictStatusResponse" />TokenDictStatusResponse</returns>
-        public bool GetTokenizationDictionaryStatus(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId)
+        public bool CreateStopwordList(Callback<TokenDictStatusResponse> callback, string environmentId, string collectionId, System.IO.MemoryStream stopwordFile, string stopwordFilename)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetTokenizationDictionaryStatus`");
+                throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetTokenizationDictionaryStatus`");
+                throw new ArgumentNullException("`environmentId` is required for `CreateStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `GetTokenizationDictionaryStatus`");
+                throw new ArgumentNullException("`collectionId` is required for `CreateStopwordList`");
+            if (stopwordFile == null)
+                throw new ArgumentNullException("`stopwordFile` is required for `CreateStopwordList`");
+            if (string.IsNullOrEmpty(stopwordFilename))
+                throw new ArgumentNullException("`stopwordFilename` is required for `CreateStopwordList`");
 
             RequestObject<TokenDictStatusResponse> req = new RequestObject<TokenDictStatusResponse>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -2212,16 +2209,21 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTokenizationDictionaryStatus"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "CreateStopwordList"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if (stopwordFile != null)
+            {
+                req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFilename, "application/octet-stream");
+            }
 
-            req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
+            req.OnResponse = OnCreateStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
@@ -2230,7 +2232,7 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<TokenDictStatusResponse> response = new DetailedResponse<TokenDictStatusResponse>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -2247,7 +2249,7 @@ namespace IBM.Watson.Discovery.V1
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnGetTokenizationDictionaryStatusResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnCreateStopwordListResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -2255,28 +2257,28 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Get the expansion list.
+        /// Delete a custom stopword list.
         ///
-        /// Returns the current expansion list for the specified collection. If an expansion list is not specified, an
-        /// object with empty expansion arrays is returned.
+        /// Delete a custom stopword list from the collection. After a custom stopword list is deleted, the default list
+        /// is used for the collection.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="Expansions" />Expansions</returns>
-        public bool ListExpansions(Callback<Expansions> callback, string environmentId, string collectionId)
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteStopwordList(Callback<object> callback, string environmentId, string collectionId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListExpansions`");
+                throw new ArgumentNullException("`callback` is required for `DeleteStopwordList`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListExpansions`");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `ListExpansions`");
+                throw new ArgumentNullException("`collectionId` is required for `DeleteStopwordList`");
 
-            RequestObject<Expansions> req = new RequestObject<Expansions>
+            RequestObject<object> req = new RequestObject<object>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -2287,16 +2289,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListExpansions"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteStopwordList"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnListExpansionsResponse;
+            req.OnResponse = OnDeleteStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
@@ -2305,9 +2307,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<Expansions> response = new DetailedResponse<Expansions>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2317,17 +2319,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Expansions>(json);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnListExpansionsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnDeleteStopwordListResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<Expansions>)req).Callback != null)
-                ((RequestObject<Expansions>)req).Callback(response, resp.Error);
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add a document.
@@ -2364,9 +2366,8 @@ namespace IBM.Watson.Discovery.V1
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
-        /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
-        /// MB. Metadata parts larger than 1 MB are rejected.
+        /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
+        /// rejected.
         /// Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
@@ -2445,84 +2446,6 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
                 ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete a document.
-        ///
-        /// If the given document ID is invalid, or if the document is not found, then the a success response is
-        /// returned (HTTP status code `200`) with the status set to 'deleted'.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="documentId">The ID of the document.</param>
-        /// <returns><see cref="DeleteDocumentResponse" />DeleteDocumentResponse</returns>
-        public bool DeleteDocument(Callback<DeleteDocumentResponse> callback, string environmentId, string collectionId, string documentId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteDocument`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteDocument`");
-            if (string.IsNullOrEmpty(documentId))
-                throw new ArgumentNullException("`documentId` is required for `DeleteDocument`");
-
-            RequestObject<DeleteDocumentResponse> req = new RequestObject<DeleteDocumentResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteDocument"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteDocumentResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<DeleteDocumentResponse> response = new DetailedResponse<DeleteDocumentResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteDocumentResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<DeleteDocumentResponse>)req).Callback != null)
-                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get document details.
@@ -2621,9 +2544,8 @@ namespace IBM.Watson.Discovery.V1
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
-        /// <param name="metadata">If you're using the Data Crawler to upload your documents, you can test a document
-        /// against the type of metadata that the Data Crawler might send. The maximum supported metadata file size is 1
-        /// MB. Metadata parts larger than 1 MB are rejected.
+        /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
+        /// rejected.
         /// Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
@@ -2706,85 +2628,31 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Long environment queries.
+        /// Delete a document.
         ///
-        /// Complex queries might be too long for a standard method query. By using this method, you can construct
-        /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
+        /// If the given document ID is invalid, or if the document is not found, then the a success response is
+        /// returned (HTTP status code `200`) with the status set to 'deleted'.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
-        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
-        /// (optional)</param>
-        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
-        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
-        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-        /// (optional)</param>
-        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
-        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
-        /// the same time. (optional)</param>
-        /// <param name="passages">A passages query that returns the most relevant passages from the results.
-        /// (optional)</param>
-        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
-        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
-        /// aggregations, see the Query reference. (optional)</param>
-        /// <param name="count">Number of results to return. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
-        /// (optional)</param>
-        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
-        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
-        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
-        /// sort direction if no prefix is specified. This parameter cannot be used in the same query as the **bias**
-        /// parameter. (optional)</param>
-        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
-        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
-        /// false)</param>
-        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
-        /// parameter not specified, then all top-level fields are included. (optional)</param>
-        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
-        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
-        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
-        /// (optional)</param>
-        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
-        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
-        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
-        /// to false)</param>
-        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
-        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
-        /// considered. This parameter is currently Beta functionality. (optional)</param>
-        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against. Required when
-        /// querying multiple collections, invalid when performing a single collection query. (optional)</param>
-        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
-        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
-        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
-        ///
-        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
-        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
-        /// subsequently applied and reduce the scope. (optional)</param>
-        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
-        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <param name="bias">Field which the returned results will be biased against. The specified field must be
-        /// either a **date** or **number** format. When a **date** type field is specified returned results are biased
-        /// towards field values closer to the current date. When a **number** type field is specified, returned results
-        /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
-        /// parameter. (optional)</param>
-        /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
-        /// default to false)</param>
-        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="documentId">The ID of the document.</param>
+        /// <returns><see cref="DeleteDocumentResponse" />DeleteDocumentResponse</returns>
+        public bool DeleteDocument(Callback<DeleteDocumentResponse> callback, string environmentId, string collectionId, string documentId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
+                throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `FederatedQuery`");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteDocument`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteDocument`");
+            if (string.IsNullOrEmpty(documentId))
+                throw new ArgumentNullException("`documentId` is required for `DeleteDocument`");
 
-            RequestObject<QueryResponse> req = new RequestObject<QueryResponse>
+            RequestObject<DeleteDocumentResponse> req = new RequestObject<DeleteDocumentResponse>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -2795,66 +2663,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQuery"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteDocument"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
 
-            if (loggingOptOut != null)
-            {
-                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
-            }
+            req.OnResponse = OnDeleteDocumentResponse;
 
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(filter))
-                bodyObject["filter"] = filter;
-            if (!string.IsNullOrEmpty(query))
-                bodyObject["query"] = query;
-            if (!string.IsNullOrEmpty(naturalLanguageQuery))
-                bodyObject["natural_language_query"] = naturalLanguageQuery;
-            if (passages != null)
-                bodyObject["passages"] = JToken.FromObject(passages);
-            if (!string.IsNullOrEmpty(aggregation))
-                bodyObject["aggregation"] = aggregation;
-            if (count != null)
-                bodyObject["count"] = JToken.FromObject(count);
-            if (!string.IsNullOrEmpty(returnFields))
-                bodyObject["return"] = returnFields;
-            if (offset != null)
-                bodyObject["offset"] = JToken.FromObject(offset);
-            if (!string.IsNullOrEmpty(sort))
-                bodyObject["sort"] = sort;
-            if (highlight != null)
-                bodyObject["highlight"] = JToken.FromObject(highlight);
-            if (!string.IsNullOrEmpty(passagesFields))
-                bodyObject["passages.fields"] = passagesFields;
-            if (passagesCount != null)
-                bodyObject["passages.count"] = JToken.FromObject(passagesCount);
-            if (passagesCharacters != null)
-                bodyObject["passages.characters"] = JToken.FromObject(passagesCharacters);
-            if (deduplicate != null)
-                bodyObject["deduplicate"] = JToken.FromObject(deduplicate);
-            if (!string.IsNullOrEmpty(deduplicateField))
-                bodyObject["deduplicate.field"] = deduplicateField;
-            if (!string.IsNullOrEmpty(collectionIds))
-                bodyObject["collection_ids"] = collectionIds;
-            if (similar != null)
-                bodyObject["similar"] = JToken.FromObject(similar);
-            if (!string.IsNullOrEmpty(similarDocumentIds))
-                bodyObject["similar.document_ids"] = similarDocumentIds;
-            if (!string.IsNullOrEmpty(similarFields))
-                bodyObject["similar.fields"] = similarFields;
-            if (!string.IsNullOrEmpty(bias))
-                bodyObject["bias"] = bias;
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnFederatedQueryResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
             if (connector == null)
             {
                 return false;
@@ -2863,9 +2681,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
+            DetailedResponse<DeleteDocumentResponse> response = new DetailedResponse<DeleteDocumentResponse>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -2875,195 +2693,22 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<DeleteDocumentResponse>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnFederatedQueryResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnDeleteDocumentResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<QueryResponse>)req).Callback != null)
-                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<DeleteDocumentResponse>)req).Callback != null)
+                ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Query multiple collection system notices.
+        /// Query a collection.
         ///
-        /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
-        /// when ingesting documents and performing relevance training. See the [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
-        /// for more details on the query language.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
-        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
-        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
-        /// (optional)</param>
-        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
-        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
-        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-        /// (optional)</param>
-        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
-        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
-        /// the same time. (optional)</param>
-        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
-        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
-        /// aggregations, see the Query reference. (optional)</param>
-        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
-        /// together in any one query is **10000**. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
-        /// (optional)</param>
-        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
-        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
-        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
-        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
-        /// sort direction if no prefix is specified. (optional)</param>
-        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
-        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
-        /// false)</param>
-        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
-        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
-        /// considered. This parameter is currently Beta functionality. (optional)</param>
-        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
-        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
-        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
-        ///
-        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
-        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
-        /// subsequently applied and reduce the scope. (optional)</param>
-        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
-        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
-        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
-        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `FederatedQueryNotices`");
-            if (collectionIds == null)
-                throw new ArgumentNullException("`collectionIds` is required for `FederatedQueryNotices`");
-
-            RequestObject<QueryNoticesResponse> req = new RequestObject<QueryNoticesResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQueryNotices"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (collectionIds != null && collectionIds.Count > 0)
-            {
-                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
-            }
-            if (!string.IsNullOrEmpty(filter))
-            {
-                req.Parameters["filter"] = filter;
-            }
-            if (!string.IsNullOrEmpty(query))
-            {
-                req.Parameters["query"] = query;
-            }
-            if (!string.IsNullOrEmpty(naturalLanguageQuery))
-            {
-                req.Parameters["natural_language_query"] = naturalLanguageQuery;
-            }
-            if (!string.IsNullOrEmpty(aggregation))
-            {
-                req.Parameters["aggregation"] = aggregation;
-            }
-            if (count != null)
-            {
-                req.Parameters["count"] = count;
-            }
-            if (returnFields != null && returnFields.Count > 0)
-            {
-                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
-            }
-            if (offset != null)
-            {
-                req.Parameters["offset"] = offset;
-            }
-            if (sort != null && sort.Count > 0)
-            {
-                req.Parameters["sort"] = string.Join(",", sort.ToArray());
-            }
-            if (highlight != null)
-            {
-                req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
-            }
-            if (!string.IsNullOrEmpty(deduplicateField))
-            {
-                req.Parameters["deduplicate.field"] = deduplicateField;
-            }
-            if (similar != null)
-            {
-                req.Parameters["similar"] = (bool)similar ? "true" : "false";
-            }
-            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
-            {
-                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
-            }
-            if (similarFields != null && similarFields.Count > 0)
-            {
-                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
-            }
-
-            req.OnResponse = OnFederatedQueryNoticesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/notices", environmentId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnFederatedQueryNoticesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
-                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Long collection queries.
-        ///
-        /// Complex queries might be too long for a standard method query. By using this method, you can construct
-        /// longer queries. However, these queries may take longer to complete than the standard method. For details,
-        /// see the [Discovery service
+        /// By using this method, you can construct long queries. For details, see the [Discovery
         /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
@@ -3074,11 +2719,9 @@ namespace IBM.Watson.Discovery.V1
         /// (optional)</param>
         /// <param name="query">A query search returns all documents in your data set with full enrichments and full
         /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
-        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-        /// (optional)</param>
+        /// relevant search results. (optional)</param>
         /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
-        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
-        /// the same time. (optional)</param>
+        /// training data and natural language understanding. (optional)</param>
         /// <param name="passages">A passages query that returns the most relevant passages from the results.
         /// (optional)</param>
         /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
@@ -3244,110 +2887,10 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Knowledge Graph entity query.
-        ///
-        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
-        /// for more details.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="feature">The entity query feature to perform. Supported features are `disambiguate` and
-        /// `similar_entities`. (optional)</param>
-        /// <param name="entity">A text string that appears within the entity text field. (optional)</param>
-        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
-        /// association. For example, if you wanted to query the city of London in England your query would look for
-        /// `London` with the context of `England`. (optional)</param>
-        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
-        /// (optional)</param>
-        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
-        /// maximum number of evidence items per query is 10,000. (optional)</param>
-        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
-        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `QueryEntities`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `QueryEntities`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `QueryEntities`");
-
-            RequestObject<QueryEntitiesResponse> req = new RequestObject<QueryEntitiesResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryEntities"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(feature))
-                bodyObject["feature"] = feature;
-            if (entity != null)
-                bodyObject["entity"] = JToken.FromObject(entity);
-            if (context != null)
-                bodyObject["context"] = JToken.FromObject(context);
-            if (count != null)
-                bodyObject["count"] = JToken.FromObject(count);
-            if (evidenceCount != null)
-                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnQueryEntitiesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<QueryEntitiesResponse> response = new DetailedResponse<QueryEntitiesResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnQueryEntitiesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<QueryEntitiesResponse>)req).Callback != null)
-                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Query system notices.
         ///
         /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
-        /// when ingesting documents and performing relevance training. See the [Discovery service
+        /// when ingesting documents and performing relevance training. See the [Discovery
         /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
         /// for more details on the query language.
         /// </summary>
@@ -3358,12 +2901,9 @@ namespace IBM.Watson.Discovery.V1
         /// searches are better for metadata-type searches and for assessing the concepts in the data set.
         /// (optional)</param>
         /// <param name="query">A query search returns all documents in your data set with full enrichments and full
-        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
-        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-        /// (optional)</param>
+        /// text, but with the most relevant documents listed first. (optional)</param>
         /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
-        /// training data and natural language understanding. You cannot use **natural_language_query** and **query** at
-        /// the same time. (optional)</param>
+        /// training data and natural language understanding. (optional)</param>
         /// <param name="passages">A passages query that returns the most relevant passages from the results.
         /// (optional)</param>
         /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
@@ -3535,6 +3075,453 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Query multiple collections.
+        ///
+        /// By using this method, you can construct long queries that search multiple collection. For details, see the
+        /// [Discovery
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts).
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
+        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
+        /// (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
+        /// relevant search results. (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. (optional)</param>
+        /// <param name="passages">A passages query that returns the most relevant passages from the results.
+        /// (optional)</param>
+        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
+        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
+        /// aggregations, see the Query reference. (optional)</param>
+        /// <param name="count">Number of results to return. (optional)</param>
+        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
+        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. This parameter cannot be used in the same query as the **bias**
+        /// parameter. (optional)</param>
+        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
+        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
+        /// false)</param>
+        /// <param name="passagesFields">A comma-separated list of fields that passages are drawn from. If this
+        /// parameter not specified, then all top-level fields are included. (optional)</param>
+        /// <param name="passagesCount">The maximum number of passages to return. The search returns fewer passages if
+        /// the requested total is not found. The default is `10`. The maximum is `100`. (optional)</param>
+        /// <param name="passagesCharacters">The approximate number of characters that any one passage will have.
+        /// (optional)</param>
+        /// <param name="deduplicate">When `true`, and used with a Watson Discovery News collection, duplicate results
+        /// (based on the contents of the **title** field) are removed. Duplicate comparison is limited to the current
+        /// query only; **offset** is not considered. This parameter is currently Beta functionality. (optional, default
+        /// to false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against. Required when
+        /// querying multiple collections, invalid when performing a single collection query. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
+        ///
+        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
+        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
+        /// subsequently applied and reduce the scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
+        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
+        /// <param name="bias">Field which the returned results will be biased against. The specified field must be
+        /// either a **date** or **number** format. When a **date** type field is specified returned results are biased
+        /// towards field values closer to the current date. When a **number** type field is specified, returned results
+        /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
+        /// parameter. (optional)</param>
+        /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
+        /// default to false)</param>
+        /// <returns><see cref="QueryResponse" />QueryResponse</returns>
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `FederatedQuery`");
+
+            RequestObject<QueryResponse> req = new RequestObject<QueryResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQuery"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            if (loggingOptOut != null)
+            {
+                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
+            }
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(filter))
+                bodyObject["filter"] = filter;
+            if (!string.IsNullOrEmpty(query))
+                bodyObject["query"] = query;
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+                bodyObject["natural_language_query"] = naturalLanguageQuery;
+            if (passages != null)
+                bodyObject["passages"] = JToken.FromObject(passages);
+            if (!string.IsNullOrEmpty(aggregation))
+                bodyObject["aggregation"] = aggregation;
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (!string.IsNullOrEmpty(returnFields))
+                bodyObject["return"] = returnFields;
+            if (offset != null)
+                bodyObject["offset"] = JToken.FromObject(offset);
+            if (!string.IsNullOrEmpty(sort))
+                bodyObject["sort"] = sort;
+            if (highlight != null)
+                bodyObject["highlight"] = JToken.FromObject(highlight);
+            if (!string.IsNullOrEmpty(passagesFields))
+                bodyObject["passages.fields"] = passagesFields;
+            if (passagesCount != null)
+                bodyObject["passages.count"] = JToken.FromObject(passagesCount);
+            if (passagesCharacters != null)
+                bodyObject["passages.characters"] = JToken.FromObject(passagesCharacters);
+            if (deduplicate != null)
+                bodyObject["deduplicate"] = JToken.FromObject(deduplicate);
+            if (!string.IsNullOrEmpty(deduplicateField))
+                bodyObject["deduplicate.field"] = deduplicateField;
+            if (!string.IsNullOrEmpty(collectionIds))
+                bodyObject["collection_ids"] = collectionIds;
+            if (similar != null)
+                bodyObject["similar"] = JToken.FromObject(similar);
+            if (!string.IsNullOrEmpty(similarDocumentIds))
+                bodyObject["similar.document_ids"] = similarDocumentIds;
+            if (!string.IsNullOrEmpty(similarFields))
+                bodyObject["similar.fields"] = similarFields;
+            if (!string.IsNullOrEmpty(bias))
+                bodyObject["bias"] = bias;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnFederatedQueryResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<QueryResponse> response = new DetailedResponse<QueryResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<QueryResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnFederatedQueryResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<QueryResponse>)req).Callback != null)
+                ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Query multiple collection system notices.
+        ///
+        /// Queries for notices (errors or warnings) that might have been generated by the system. Notices are generated
+        /// when ingesting documents and performing relevance training. See the [Discovery
+        /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-query-concepts#query-concepts)
+        /// for more details on the query language.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
+        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
+        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
+        /// (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. (optional)</param>
+        /// <param name="naturalLanguageQuery">A natural language query that returns relevant documents by utilizing
+        /// training data and natural language understanding. (optional)</param>
+        /// <param name="aggregation">An aggregation search that returns an exact answer by combining query search with
+        /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
+        /// aggregations, see the Query reference. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
+        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
+        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
+        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <param name="highlight">When true, a highlight field is returned for each result which contains the fields
+        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
+        /// false)</param>
+        /// <param name="deduplicateField">When specified, duplicate results based on the field specified are removed
+        /// from the returned results. Duplicate comparison is limited to the current query only, **offset** is not
+        /// considered. This parameter is currently Beta functionality. (optional)</param>
+        /// <param name="similar">When `true`, results are returned based on their similarity to the document IDs
+        /// specified in the **similar.document_ids** parameter. (optional, default to false)</param>
+        /// <param name="similarDocumentIds">A comma-separated list of document IDs to find similar documents.
+        ///
+        /// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity
+        /// search with the natural language query. Other query parameters, such as **filter** and **query**, are
+        /// subsequently applied and reduce the scope. (optional)</param>
+        /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
+        /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
+        /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
+        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `FederatedQueryNotices`");
+            if (collectionIds == null)
+                throw new ArgumentNullException("`collectionIds` is required for `FederatedQueryNotices`");
+
+            RequestObject<QueryNoticesResponse> req = new RequestObject<QueryNoticesResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "FederatedQueryNotices"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (collectionIds != null && collectionIds.Count > 0)
+            {
+                req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
+            }
+            if (!string.IsNullOrEmpty(filter))
+            {
+                req.Parameters["filter"] = filter;
+            }
+            if (!string.IsNullOrEmpty(query))
+            {
+                req.Parameters["query"] = query;
+            }
+            if (!string.IsNullOrEmpty(naturalLanguageQuery))
+            {
+                req.Parameters["natural_language_query"] = naturalLanguageQuery;
+            }
+            if (!string.IsNullOrEmpty(aggregation))
+            {
+                req.Parameters["aggregation"] = aggregation;
+            }
+            if (count != null)
+            {
+                req.Parameters["count"] = count;
+            }
+            if (returnFields != null && returnFields.Count > 0)
+            {
+                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+            }
+            if (offset != null)
+            {
+                req.Parameters["offset"] = offset;
+            }
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
+            }
+            if (highlight != null)
+            {
+                req.Parameters["highlight"] = (bool)highlight ? "true" : "false";
+            }
+            if (!string.IsNullOrEmpty(deduplicateField))
+            {
+                req.Parameters["deduplicate.field"] = deduplicateField;
+            }
+            if (similar != null)
+            {
+                req.Parameters["similar"] = (bool)similar ? "true" : "false";
+            }
+            if (similarDocumentIds != null && similarDocumentIds.Count > 0)
+            {
+                req.Parameters["similar.document_ids"] = string.Join(",", similarDocumentIds.ToArray());
+            }
+            if (similarFields != null && similarFields.Count > 0)
+            {
+                req.Parameters["similar.fields"] = string.Join(",", similarFields.ToArray());
+            }
+
+            req.OnResponse = OnFederatedQueryNoticesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/notices", environmentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<QueryNoticesResponse> response = new DetailedResponse<QueryNoticesResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<QueryNoticesResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnFederatedQueryNoticesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
+                ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Knowledge Graph entity query.
+        ///
+        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
+        /// for more details.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="feature">The entity query feature to perform. Supported features are `disambiguate` and
+        /// `similar_entities`. (optional)</param>
+        /// <param name="entity">A text string that appears within the entity text field. (optional)</param>
+        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
+        /// association. For example, if you wanted to query the city of London in England your query would look for
+        /// `London` with the context of `England`. (optional)</param>
+        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
+        /// (optional)</param>
+        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
+        /// maximum number of evidence items per query is 10,000. (optional)</param>
+        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
+        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `QueryEntities`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `QueryEntities`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `QueryEntities`");
+
+            RequestObject<QueryEntitiesResponse> req = new RequestObject<QueryEntitiesResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryEntities"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(feature))
+                bodyObject["feature"] = feature;
+            if (entity != null)
+                bodyObject["entity"] = JToken.FromObject(entity);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            if (count != null)
+                bodyObject["count"] = JToken.FromObject(count);
+            if (evidenceCount != null)
+                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnQueryEntitiesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<QueryEntitiesResponse> response = new DetailedResponse<QueryEntitiesResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnQueryEntitiesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<QueryEntitiesResponse>)req).Callback != null)
+                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Knowledge Graph relationship query.
         ///
         /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
@@ -3639,6 +3626,80 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// List training data.
+        ///
+        /// Lists the training data for the specified collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="TrainingDataSet" />TrainingDataSet</returns>
+        public bool ListTrainingData(Callback<TrainingDataSet> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListTrainingData`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListTrainingData`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `ListTrainingData`");
+
+            RequestObject<TrainingDataSet> req = new RequestObject<TrainingDataSet>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListTrainingDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TrainingDataSet> response = new DetailedResponse<TrainingDataSet>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListTrainingDataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TrainingDataSet>)req).Callback != null)
+                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Add query to training data.
         ///
         /// Adds a query to the training data for this collection. The query can contain a filter and natural language
@@ -3727,6 +3788,311 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
                 ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete all training data.
+        ///
+        /// Deletes all training data from a collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteAllTrainingData(Callback<object> callback, string environmentId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteAllTrainingData`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `DeleteAllTrainingData`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteAllTrainingData`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteAllTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteAllTrainingDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteAllTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteAllTrainingDataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get details about a query.
+        ///
+        /// Gets details for a specific training data query, including the query string and all examples.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="queryId">The ID of the query used for training.</param>
+        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
+        public bool GetTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string queryId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTrainingData`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetTrainingData`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetTrainingData`");
+            if (string.IsNullOrEmpty(queryId))
+                throw new ArgumentNullException("`queryId` is required for `GetTrainingData`");
+
+            RequestObject<TrainingQuery> req = new RequestObject<TrainingQuery>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetTrainingDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetTrainingDataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TrainingQuery>)req).Callback != null)
+                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete a training data query.
+        ///
+        /// Removes the training data query and all associated examples from the training data set.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="queryId">The ID of the query used for training.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteTrainingData(Callback<object> callback, string environmentId, string collectionId, string queryId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteTrainingData`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingData`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteTrainingData`");
+            if (string.IsNullOrEmpty(queryId))
+                throw new ArgumentNullException("`queryId` is required for `DeleteTrainingData`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteTrainingDataResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteTrainingDataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List examples for a training data query.
+        ///
+        /// List all examples for this training data query.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="queryId">The ID of the query used for training.</param>
+        /// <returns><see cref="TrainingExampleList" />TrainingExampleList</returns>
+        public bool ListTrainingExamples(Callback<TrainingExampleList> callback, string environmentId, string collectionId, string queryId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListTrainingExamples`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListTrainingExamples`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `ListTrainingExamples`");
+            if (string.IsNullOrEmpty(queryId))
+                throw new ArgumentNullException("`queryId` is required for `ListTrainingExamples`");
+
+            RequestObject<TrainingExampleList> req = new RequestObject<TrainingExampleList>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingExamples"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListTrainingExamplesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListTrainingExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TrainingExampleList> response = new DetailedResponse<TrainingExampleList>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListTrainingExamplesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TrainingExampleList>)req).Callback != null)
+                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Add example to training data query.
@@ -3820,157 +4186,6 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete all training data.
-        ///
-        /// Deletes all training data from a collection.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteAllTrainingData(Callback<object> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteAllTrainingData`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteAllTrainingData`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteAllTrainingData`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteAllTrainingData"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteAllTrainingDataResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteAllTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteAllTrainingDataResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete a training data query.
-        ///
-        /// Removes the training data query and all associated examples from the training data set.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteTrainingData(Callback<object> callback, string environmentId, string collectionId, string queryId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteTrainingData`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingData`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `DeleteTrainingData`");
-            if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("`queryId` is required for `DeleteTrainingData`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteTrainingData"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteTrainingDataResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteTrainingDataResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Delete example for training data query.
         ///
         /// Deletes the example document with the given ID from the training data query.
@@ -4049,314 +4264,6 @@ namespace IBM.Watson.Discovery.V1
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get details about a query.
-        ///
-        /// Gets details for a specific training data query, including the query string and all examples.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="TrainingQuery" />TrainingQuery</returns>
-        public bool GetTrainingData(Callback<TrainingQuery> callback, string environmentId, string collectionId, string queryId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetTrainingData`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetTrainingData`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `GetTrainingData`");
-            if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("`queryId` is required for `GetTrainingData`");
-
-            RequestObject<TrainingQuery> req = new RequestObject<TrainingQuery>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingData"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnGetTrainingDataResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<TrainingQuery> response = new DetailedResponse<TrainingQuery>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingQuery>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnGetTrainingDataResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<TrainingQuery>)req).Callback != null)
-                ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get details for training data example.
-        ///
-        /// Gets the details for this training example.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="queryId">The ID of the query used for training.</param>
-        /// <param name="exampleId">The ID of the document as it is indexed.</param>
-        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
-        public bool GetTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetTrainingExample`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetTrainingExample`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `GetTrainingExample`");
-            if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("`queryId` is required for `GetTrainingExample`");
-            if (string.IsNullOrEmpty(exampleId))
-                throw new ArgumentNullException("`exampleId` is required for `GetTrainingExample`");
-
-            RequestObject<TrainingExample> req = new RequestObject<TrainingExample>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingExample"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnGetTrainingExampleResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnGetTrainingExampleResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<TrainingExample>)req).Callback != null)
-                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// List training data.
-        ///
-        /// Lists the training data for the specified collection.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <returns><see cref="TrainingDataSet" />TrainingDataSet</returns>
-        public bool ListTrainingData(Callback<TrainingDataSet> callback, string environmentId, string collectionId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListTrainingData`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListTrainingData`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `ListTrainingData`");
-
-            RequestObject<TrainingDataSet> req = new RequestObject<TrainingDataSet>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingData"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnListTrainingDataResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<TrainingDataSet> response = new DetailedResponse<TrainingDataSet>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingDataSet>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnListTrainingDataResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<TrainingDataSet>)req).Callback != null)
-                ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// List examples for a training data query.
-        ///
-        /// List all examples for this training data query.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="queryId">The ID of the query used for training.</param>
-        /// <returns><see cref="TrainingExampleList" />TrainingExampleList</returns>
-        public bool ListTrainingExamples(Callback<TrainingExampleList> callback, string environmentId, string collectionId, string queryId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListTrainingExamples`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListTrainingExamples`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `ListTrainingExamples`");
-            if (string.IsNullOrEmpty(queryId))
-                throw new ArgumentNullException("`queryId` is required for `ListTrainingExamples`");
-
-            RequestObject<TrainingExampleList> req = new RequestObject<TrainingExampleList>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListTrainingExamples"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnListTrainingExamplesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListTrainingExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<TrainingExampleList> response = new DetailedResponse<TrainingExampleList>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingExampleList>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnListTrainingExamplesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<TrainingExampleList>)req).Callback != null)
-                ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Change label or cross reference for example.
@@ -4443,6 +4350,86 @@ namespace IBM.Watson.Discovery.V1
             catch (Exception e)
             {
                 Log.Error("DiscoveryService.OnUpdateTrainingExampleResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TrainingExample>)req).Callback != null)
+                ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get details for training data example.
+        ///
+        /// Gets the details for this training example.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="queryId">The ID of the query used for training.</param>
+        /// <param name="exampleId">The ID of the document as it is indexed.</param>
+        /// <returns><see cref="TrainingExample" />TrainingExample</returns>
+        public bool GetTrainingExample(Callback<TrainingExample> callback, string environmentId, string collectionId, string queryId, string exampleId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTrainingExample`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetTrainingExample`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetTrainingExample`");
+            if (string.IsNullOrEmpty(queryId))
+                throw new ArgumentNullException("`queryId` is required for `GetTrainingExample`");
+            if (string.IsNullOrEmpty(exampleId))
+                throw new ArgumentNullException("`exampleId` is required for `GetTrainingExample`");
+
+            RequestObject<TrainingExample> req = new RequestObject<TrainingExample>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetTrainingExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetTrainingExampleResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TrainingExample> response = new DetailedResponse<TrainingExample>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TrainingExample>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetTrainingExampleResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -4614,25 +4601,32 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Percentage of queries with an associated event.
+        /// Search the query and event log.
         ///
-        /// The percentage of queries using the **natural_language_query** parameter that have a corresponding "click"
-        /// event over a specified time window.  This metric requires having integrated event tracking in your
-        /// application using the **Events** API.
+        /// Searches the query and event log to find query sessions that match the specified criteria. Searching the
+        /// **logs** endpoint uses the standard Discovery query syntax for the parameters that are supported.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
-        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
-        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
-        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
-        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
-        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
-        public bool GetMetricsEventRate(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
+        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
+        /// (optional)</param>
+        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
+        /// text, but with the most relevant documents listed first. (optional)</param>
+        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
+        /// together in any one query is **10000**. (optional)</param>
+        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
+        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
+        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
+        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
+        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
+        /// sort direction if no prefix is specified. (optional)</param>
+        /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
+        public bool QueryLog(Callback<LogQueryResponse> callback, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetMetricsEventRate`");
+                throw new ArgumentNullException("`callback` is required for `QueryLog`");
 
-            RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
+            RequestObject<LogQueryResponse> req = new RequestObject<LogQueryResponse>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -4646,28 +4640,36 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsEventRate"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryLog"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            if (startTime != null)
+            if (!string.IsNullOrEmpty(filter))
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["filter"] = filter;
             }
-            if (endTime != null)
+            if (!string.IsNullOrEmpty(query))
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["query"] = query;
             }
-            if (!string.IsNullOrEmpty(resultType))
+            if (count != null)
             {
-                req.Parameters["result_type"] = resultType;
+                req.Parameters["count"] = count;
+            }
+            if (offset != null)
+            {
+                req.Parameters["offset"] = offset;
+            }
+            if (sort != null && sort.Count > 0)
+            {
+                req.Parameters["sort"] = string.Join(",", sort.ToArray());
             }
 
-            req.OnResponse = OnGetMetricsEventRateResponse;
+            req.OnResponse = OnQueryLogResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/event_rate");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
             if (connector == null)
             {
                 return false;
@@ -4676,9 +4678,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
+            DetailedResponse<LogQueryResponse> response = new DetailedResponse<LogQueryResponse>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -4688,17 +4690,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnGetMetricsEventRateResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnQueryLogResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<MetricResponse>)req).Callback != null)
-                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<LogQueryResponse>)req).Callback != null)
+                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Number of queries over time.
@@ -4959,6 +4961,93 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Percentage of queries with an associated event.
+        ///
+        /// The percentage of queries using the **natural_language_query** parameter that have a corresponding "click"
+        /// event over a specified time window.  This metric requires having integrated event tracking in your
+        /// application using the **Events** API.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="startTime">Metric is computed from data recorded after this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="endTime">Metric is computed from data recorded before this timestamp; must be in
+        /// `YYYY-MM-DDThh:mm:ssZ` format. (optional)</param>
+        /// <param name="resultType">The type of result to consider when calculating the metric. (optional)</param>
+        /// <returns><see cref="MetricResponse" />MetricResponse</returns>
+        public bool GetMetricsEventRate(Callback<MetricResponse> callback, DateTime? startTime = null, DateTime? endTime = null, string resultType = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetMetricsEventRate`");
+
+            RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetMetricsEventRate"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (startTime != null)
+            {
+                req.Parameters["start_time"] = startTime;
+            }
+            if (endTime != null)
+            {
+                req.Parameters["end_time"] = endTime;
+            }
+            if (!string.IsNullOrEmpty(resultType))
+            {
+                req.Parameters["result_type"] = resultType;
+            }
+
+            req.OnResponse = OnGetMetricsEventRateResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/event_rate");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<MetricResponse> response = new DetailedResponse<MetricResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<MetricResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetMetricsEventRateResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<MetricResponse>)req).Callback != null)
+                ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Most frequent query tokens with an event.
         ///
         /// The most frequent query tokens parsed from the **natural_language_query** parameter and their corresponding
@@ -5035,34 +5124,23 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Search the query and event log.
+        /// List credentials.
         ///
-        /// Searches the query and event log to find query sessions that match the specified criteria. Searching the
-        /// **logs** endpoint uses the standard Discovery query syntax for the parameters that are supported.
+        /// List all the source credentials that have been created for this service instance.
+        ///
+        ///  **Note:**  All credentials are sent over an encrypted connection and encrypted at rest.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
-        /// searches are better for metadata-type searches and for assessing the concepts in the data set.
-        /// (optional)</param>
-        /// <param name="query">A query search returns all documents in your data set with full enrichments and full
-        /// text, but with the most relevant documents listed first. Use a query search when you want to find the most
-        /// relevant search results. You cannot use **natural_language_query** and **query** at the same time.
-        /// (optional)</param>
-        /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
-        /// together in any one query is **10000**. (optional)</param>
-        /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
-        /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
-        /// **count** and **offset** values together in any one query is **10000**. (optional)</param>
-        /// <param name="sort">A comma-separated list of fields in the document to sort on. You can optionally specify a
-        /// sort direction by prefixing the field with `-` for descending or `+` for ascending. Ascending is the default
-        /// sort direction if no prefix is specified. (optional)</param>
-        /// <returns><see cref="LogQueryResponse" />LogQueryResponse</returns>
-        public bool QueryLog(Callback<LogQueryResponse> callback, string filter = null, string query = null, long? count = null, long? offset = null, List<string> sort = null)
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <returns><see cref="CredentialsList" />CredentialsList</returns>
+        public bool ListCredentials(Callback<CredentialsList> callback, string environmentId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `QueryLog`");
+                throw new ArgumentNullException("`callback` is required for `ListCredentials`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `ListCredentials`");
 
-            RequestObject<LogQueryResponse> req = new RequestObject<LogQueryResponse>
+            RequestObject<CredentialsList> req = new RequestObject<CredentialsList>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -5076,36 +5154,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryLog"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCredentials"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(filter))
-            {
-                req.Parameters["filter"] = filter;
-            }
-            if (!string.IsNullOrEmpty(query))
-            {
-                req.Parameters["query"] = query;
-            }
-            if (count != null)
-            {
-                req.Parameters["count"] = count;
-            }
-            if (offset != null)
-            {
-                req.Parameters["offset"] = offset;
-            }
-            if (sort != null && sort.Count > 0)
-            {
-                req.Parameters["sort"] = string.Join(",", sort.ToArray());
-            }
 
-            req.OnResponse = OnQueryLogResponse;
+            req.OnResponse = OnListCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials", environmentId));
             if (connector == null)
             {
                 return false;
@@ -5114,9 +5172,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<LogQueryResponse> response = new DetailedResponse<LogQueryResponse>();
+            DetailedResponse<CredentialsList> response = new DetailedResponse<CredentialsList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5126,17 +5184,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<LogQueryResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnQueryLogResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnListCredentialsResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<LogQueryResponse>)req).Callback != null)
-                ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<CredentialsList>)req).Callback != null)
+                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create credentials.
@@ -5158,8 +5216,12 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
+        /// <param name="status">The current status of this set of credentials. `connected` indicates that the
+        /// credentials are available to use with the source configuration of a collection. `invalid` refers to the
+        /// credentials (for example, the password provided has expired) and must be corrected before they can be used
+        /// with a collection. (optional)</param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null)
+        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null, string status = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
@@ -5194,6 +5256,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["source_type"] = sourceType;
             if (credentialDetails != null)
                 bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
+            if (!string.IsNullOrEmpty(status))
+                bodyObject["status"] = status;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCredentialsResponse;
@@ -5225,6 +5289,184 @@ namespace IBM.Watson.Discovery.V1
             catch (Exception e)
             {
                 Log.Error("DiscoveryService.OnCreateCredentialsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ModelCredentials>)req).Callback != null)
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// View Credentials.
+        ///
+        /// Returns details about the specified credentials.
+        ///
+        ///  **Note:** Secure credential information such as a password or SSH key is never returned and must be
+        /// obtained from the source system.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
+        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        public bool GetCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetCredentials`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `GetCredentials`");
+            if (string.IsNullOrEmpty(credentialId))
+                throw new ArgumentNullException("`credentialId` is required for `GetCredentials`");
+
+            RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetCredentialsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetCredentialsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ModelCredentials>)req).Callback != null)
+                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Update credentials.
+        ///
+        /// Updates an existing set of source credentials.
+        ///
+        /// **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
+        /// <param name="sourceType">The source that this credentials object connects to.
+        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
+        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
+        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
+        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
+        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
+        /// (optional)</param>
+        /// <param name="credentialDetails">Object containing details of the stored credentials.
+        ///
+        /// Obtain credentials for your source from the administrator of the source. (optional)</param>
+        /// <param name="status">The current status of this set of credentials. `connected` indicates that the
+        /// credentials are available to use with the source configuration of a collection. `invalid` refers to the
+        /// credentials (for example, the password provided has expired) and must be corrected before they can be used
+        /// with a collection. (optional)</param>
+        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
+        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null, string status = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
+            if (string.IsNullOrEmpty(environmentId))
+                throw new ArgumentNullException("`environmentId` is required for `UpdateCredentials`");
+            if (string.IsNullOrEmpty(credentialId))
+                throw new ArgumentNullException("`credentialId` is required for `UpdateCredentials`");
+
+            RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPUT,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCredentials"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(sourceType))
+                bodyObject["source_type"] = sourceType;
+            if (credentialDetails != null)
+                bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
+            if (!string.IsNullOrEmpty(status))
+                bodyObject["status"] = status;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnUpdateCredentialsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnUpdateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnUpdateCredentialsResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -5306,27 +5548,21 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// View Credentials.
+        /// List Gateways.
         ///
-        /// Returns details about the specified credentials.
-        ///
-        ///  **Note:** Secure credential information such as a password or SSH key is never returned and must be
-        /// obtained from the source system.
+        /// List the currently configured gateways.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool GetCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId)
+        /// <returns><see cref="GatewayList" />GatewayList</returns>
+        public bool ListGateways(Callback<GatewayList> callback, string environmentId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetCredentials`");
+                throw new ArgumentNullException("`callback` is required for `ListGateways`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `GetCredentials`");
-            if (string.IsNullOrEmpty(credentialId))
-                throw new ArgumentNullException("`credentialId` is required for `GetCredentials`");
+                throw new ArgumentNullException("`environmentId` is required for `ListGateways`");
 
-            RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
+            RequestObject<GatewayList> req = new RequestObject<GatewayList>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -5340,16 +5576,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetCredentials"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListGateways"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnGetCredentialsResponse;
+            req.OnResponse = OnListGatewaysResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
             {
                 return false;
@@ -5358,9 +5594,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnGetCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
+            DetailedResponse<GatewayList> response = new DetailedResponse<GatewayList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5370,185 +5606,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
+                response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnGetCredentialsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnListGatewaysResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// List credentials.
-        ///
-        /// List all the source credentials that have been created for this service instance.
-        ///
-        ///  **Note:**  All credentials are sent over an encrypted connection and encrypted at rest.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="CredentialsList" />CredentialsList</returns>
-        public bool ListCredentials(Callback<CredentialsList> callback, string environmentId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListCredentials`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListCredentials`");
-
-            RequestObject<CredentialsList> req = new RequestObject<CredentialsList>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListCredentials"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnListCredentialsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials", environmentId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<CredentialsList> response = new DetailedResponse<CredentialsList>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<CredentialsList>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnListCredentialsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<CredentialsList>)req).Callback != null)
-                ((RequestObject<CredentialsList>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Update credentials.
-        ///
-        /// Updates an existing set of source credentials.
-        ///
-        /// **Note:** All credentials are sent over an encrypted connection and encrypted at rest.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="credentialId">The unique identifier for a set of source credentials.</param>
-        /// <param name="sourceType">The source that this credentials object connects to.
-        /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
-        /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
-        /// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
-        /// -  `web_crawl` indicates the credentials are used to perform a web crawl.
-        /// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-        /// (optional)</param>
-        /// <param name="credentialDetails">Object containing details of the stored credentials.
-        ///
-        /// Obtain credentials for your source from the administrator of the source. (optional)</param>
-        /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `UpdateCredentials`");
-            if (string.IsNullOrEmpty(credentialId))
-                throw new ArgumentNullException("`credentialId` is required for `UpdateCredentials`");
-
-            RequestObject<ModelCredentials> req = new RequestObject<ModelCredentials>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPUT,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "UpdateCredentials"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(sourceType))
-                bodyObject["source_type"] = sourceType;
-            if (credentialDetails != null)
-                bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnUpdateCredentialsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnUpdateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<ModelCredentials> response = new DetailedResponse<ModelCredentials>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ModelCredentials>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnUpdateCredentialsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<ModelCredentials>)req).Callback != null)
-                ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
+            if (((RequestObject<GatewayList>)req).Callback != null)
+                ((RequestObject<GatewayList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create Gateway.
@@ -5630,80 +5698,6 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete Gateway.
-        ///
-        /// Delete the specified gateway configuration.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="gatewayId">The requested gateway ID.</param>
-        /// <returns><see cref="GatewayDelete" />GatewayDelete</returns>
-        public bool DeleteGateway(Callback<GatewayDelete> callback, string environmentId, string gatewayId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteGateway`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `DeleteGateway`");
-            if (string.IsNullOrEmpty(gatewayId))
-                throw new ArgumentNullException("`gatewayId` is required for `DeleteGateway`");
-
-            RequestObject<GatewayDelete> req = new RequestObject<GatewayDelete>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteGateway"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteGatewayResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<GatewayDelete> response = new DetailedResponse<GatewayDelete>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnDeleteGatewayResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<GatewayDelete>)req).Callback != null)
-                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// List Gateway Details.
         ///
         /// List information about the specified gateway.
@@ -5778,24 +5772,27 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List Gateways.
+        /// Delete Gateway.
         ///
-        /// List the currently configured gateways.
+        /// Delete the specified gateway configuration.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <returns><see cref="GatewayList" />GatewayList</returns>
-        public bool ListGateways(Callback<GatewayList> callback, string environmentId)
+        /// <param name="gatewayId">The requested gateway ID.</param>
+        /// <returns><see cref="GatewayDelete" />GatewayDelete</returns>
+        public bool DeleteGateway(Callback<GatewayDelete> callback, string environmentId, string gatewayId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListGateways`");
+                throw new ArgumentNullException("`callback` is required for `DeleteGateway`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `ListGateways`");
+                throw new ArgumentNullException("`environmentId` is required for `DeleteGateway`");
+            if (string.IsNullOrEmpty(gatewayId))
+                throw new ArgumentNullException("`gatewayId` is required for `DeleteGateway`");
 
-            RequestObject<GatewayList> req = new RequestObject<GatewayList>
+            RequestObject<GatewayDelete> req = new RequestObject<GatewayDelete>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -5806,16 +5803,16 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "ListGateways"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "DeleteGateway"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnListGatewaysResponse;
+            req.OnResponse = OnDeleteGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)
             {
                 return false;
@@ -5824,9 +5821,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<GatewayList> response = new DetailedResponse<GatewayList>();
+            DetailedResponse<GatewayDelete> response = new DetailedResponse<GatewayDelete>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -5836,17 +5833,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<GatewayList>(json);
+                response.Result = JsonConvert.DeserializeObject<GatewayDelete>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnListGatewaysResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnDeleteGatewayResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<GatewayList>)req).Callback != null)
-                ((RequestObject<GatewayList>)req).Callback(response, resp.Error);
+            if (((RequestObject<GatewayDelete>)req).Callback != null)
+                ((RequestObject<GatewayDelete>)req).Callback(response, resp.Error);
         }
     }
 }

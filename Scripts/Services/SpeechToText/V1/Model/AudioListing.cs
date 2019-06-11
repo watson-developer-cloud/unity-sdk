@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// AudioListing.
+    /// Information about an audio resource from a custom acoustic model.
     /// </summary>
     public class AudioListing
     {

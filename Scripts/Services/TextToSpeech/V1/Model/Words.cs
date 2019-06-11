@@ -21,7 +21,10 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Words.
+    /// For the **Add custom words** method, one or more words that are to be added or updated for the custom voice
+    /// model and the translation for each specified word.
+    ///
+    /// For the **List custom words** method, the words and their translations from the custom voice model.
     /// </summary>
     public class Words
     {

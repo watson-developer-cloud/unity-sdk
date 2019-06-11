@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneCategory.
+    /// The category for a tone from the input content.
     /// </summary>
     public class ToneCategory
     {

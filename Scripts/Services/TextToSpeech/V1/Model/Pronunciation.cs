@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Pronunciation.
+    /// The pronunciation of the specified text.
     /// </summary>
     public class Pronunciation
     {

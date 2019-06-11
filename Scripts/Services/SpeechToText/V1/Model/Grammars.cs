@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// Grammars.
+    /// Information about the grammars from a custom language model.
     /// </summary>
     public class Grammars
     {

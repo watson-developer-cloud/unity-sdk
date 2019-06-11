@@ -27,12 +27,19 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     public class CategoriesOptions
     {
         /// <summary>
+        /// Set this to `true` to return explanations for each categorization. **This is available only for English
+        /// categories.**.
+        /// </summary>
+        [JsonProperty("explanation", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Explanation { get; set; }
+        /// <summary>
         /// Maximum number of categories to return.
         /// </summary>
         [JsonProperty("limit", NullValueHandling = NullValueHandling.Ignore)]
         public long? Limit { get; set; }
         /// <summary>
-        /// Enter a [custom model](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html)
+        /// Enter a [custom
+        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID to override the standard categories model.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]

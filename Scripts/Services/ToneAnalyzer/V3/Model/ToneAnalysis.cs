@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneAnalysis.
+    /// The tone analysis results for the input from the general-purpose endpoint.
     /// </summary>
     public class ToneAnalysis
     {
         /// <summary>
-        /// An object of type `DocumentAnalysis` that provides the results of the analysis for the full input document.
+        /// The results of the analysis for the full input content.
         /// </summary>
         [JsonProperty("document_tone", NullValueHandling = NullValueHandling.Ignore)]
         public DocumentAnalysis DocumentTone { get; set; }

@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// Words.
+    /// Information about the words from a custom language model.
     /// </summary>
     public class Words
     {
