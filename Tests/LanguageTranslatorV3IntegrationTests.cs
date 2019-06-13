@@ -33,6 +33,7 @@ namespace IBM.Watson.Tests
         private string versionDate = "2019-02-13";
         private string forcedGlossaryFilepath;
         private string translateDocumentPath;
+        private string documentId;
         private string englishText = "Where is the library?";
         private string spanishText = "¿Dónde está la biblioteca?";
         private string englishToSpanishModel = "en-es";
@@ -266,14 +267,15 @@ namespace IBM.Watson.Tests
                     service.TranslateDocument(
                         callback: (DetailedResponse<DocumentStatus> response, IBMError error) =>
                         {
-                            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", response.Response);
+                            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate Document result: {0}", response.Response);
                             documentStatus = response.Result;
                             Assert.IsNotNull(documentStatus);
                             Assert.IsNotNull(documentStatus.DocumentId);
+                            documentId = documentStatus.DocumentId;
                             Assert.IsNull(error);
                         },
                         file: ms,
-                        filename: "trabslate-document.txt",
+                        filename: "translate-document.txt",
                         modelId: "en-fr"
                     );
 
@@ -285,32 +287,71 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region List Documents
-        [UnityTest, Order(99)]
+        [UnityTest, Order(9)]
         public IEnumerator TestListDocuments()
         {
-            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to Translate...");
+            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Getting the document list...");
             DocumentList documents = null;
 
-            using (FileStream fs = File.OpenRead(translateDocumentPath))
-            {
-                using (MemoryStream ms = new MemoryStream())
+            service.ListDocuments(
+                callback: (DetailedResponse<DocumentList> response, IBMError error) =>
                 {
-                    fs.CopyTo(ms);
-                    service.ListDocuments(
-                        callback: (DetailedResponse<DocumentList> response, IBMError error) =>
-                        {
-                            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Translate result: {0}", response.Response);
-                            documents = response.Result;
-                            Assert.IsNotNull(documents);
-                            Assert.IsNull(error);
-                        }
-                    );
-
-                    while (documents == null)
-                        yield return null;
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "List Documents result: {0}", response.Response);
+                    documents = response.Result;
+                    Assert.IsNotNull(documents);
+                    Assert.IsNull(error);
                 }
-            }
+            );
+
+            while (documents == null)
+                yield return null;
         }
         #endregion
+
+        #region Get Document Status
+        [UnityTest, Order(10)]
+        public IEnumerator TestGetDocumentStatus()
+        {
+            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Getting document status...");
+            DocumentStatus documentStatus = null;
+
+            service.GetDocumentStatus(
+                callback: (DetailedResponse<DocumentStatus> response, IBMError error) =>
+                {
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Get Document Status: {0}", response.Response);
+                    documentStatus = response.Result;
+                    Assert.IsNotNull(documentStatus);
+                    Assert.IsNull(error);
+                },
+                documentId: documentId
+            );
+
+            while (documentStatus == null)
+                yield return null;
         }
+        #endregion
+
+        #region Delete Document
+        [UnityTest, Order(99)]
+        public IEnumerator TestDeletetDocument()
+        {
+            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Deleteing the Document...");
+            object deleteResponse = null;
+
+            service.DeleteDocument(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Delete Document result: {0}", response.Response);
+                    deleteResponse = response.Result;
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                },
+                documentId: documentId
+            );
+
+            while (deleteResponse == null)
+                yield return null;
+        }
+        #endregion
     }
+}

@@ -795,6 +795,8 @@ namespace IBM.Watson.LanguageTranslator.V3
                 throw new ArgumentNullException("`callback` is required for `TranslateDocument`");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `TranslateDocument`");
+            if (filename == null)
+                throw new ArgumentNullException("`filename` is required for `TranslateDocument`");
 
             RequestObject<DocumentStatus> req = new RequestObject<DocumentStatus>
             {
