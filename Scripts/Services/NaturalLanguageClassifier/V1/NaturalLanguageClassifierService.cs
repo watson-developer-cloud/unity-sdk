@@ -286,7 +286,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// Japanese (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).</param>
         /// <param name="trainingData">Training data in CSV format. Each text value must have at least one class. The
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
-        /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier/using-your-data.html).</param>
+        /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
         public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream metadata, System.IO.MemoryStream trainingData)
         {
@@ -362,22 +362,21 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete classifier.
+        /// List classifiers.
+        ///
+        /// Returns an empty array if no classifiers are available.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="classifierId">Classifier ID to delete.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteClassifier(Callback<object> callback, string classifierId)
+        /// <returns><see cref="ClassifierList" />ClassifierList</returns>
+        public bool ListClassifiers(Callback<ClassifierList> callback)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
-            if (string.IsNullOrEmpty(classifierId))
-                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
+                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
 
-            RequestObject<object> req = new RequestObject<object>
+            RequestObject<ClassifierList> req = new RequestObject<ClassifierList>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -388,15 +387,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
 
-            req.OnResponse = OnDeleteClassifierResponse;
+            req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/classifiers");
             if (connector == null)
             {
                 return false;
@@ -405,9 +404,9 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<object> response = new DetailedResponse<object>();
+            DetailedResponse<ClassifierList> response = new DetailedResponse<ClassifierList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -417,17 +416,17 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Result = JsonConvert.DeserializeObject<ClassifierList>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("NaturalLanguageClassifierService.OnDeleteClassifierResponse()", "Exception: {0}", e.ToString());
+                Log.Error("NaturalLanguageClassifierService.OnListClassifiersResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
+            if (((RequestObject<ClassifierList>)req).Callback != null)
+                ((RequestObject<ClassifierList>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Get information about a classifier.
@@ -500,21 +499,22 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List classifiers.
-        ///
-        /// Returns an empty array if no classifiers are available.
+        /// Delete classifier.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ClassifierList" />ClassifierList</returns>
-        public bool ListClassifiers(Callback<ClassifierList> callback)
+        /// <param name="classifierId">Classifier ID to delete.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteClassifier(Callback<object> callback, string classifierId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
+                throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
+            if (string.IsNullOrEmpty(classifierId))
+                throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
 
-            RequestObject<ClassifierList> req = new RequestObject<ClassifierList>
+            RequestObject<object> req = new RequestObject<object>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -525,15 +525,15 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "ListClassifiers"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural_language_classifier", "V1", "DeleteClassifier"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
 
-            req.OnResponse = OnListClassifiersResponse;
+            req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}", classifierId));
             if (connector == null)
             {
                 return false;
@@ -542,9 +542,9 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             return connector.Send(req);
         }
 
-        private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ClassifierList> response = new DetailedResponse<ClassifierList>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -554,17 +554,17 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ClassifierList>(json);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("NaturalLanguageClassifierService.OnListClassifiersResponse()", "Exception: {0}", e.ToString());
+                Log.Error("NaturalLanguageClassifierService.OnDeleteClassifierResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<ClassifierList>)req).Callback != null)
-                ((RequestObject<ClassifierList>)req).Callback(response, resp.Error);
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }

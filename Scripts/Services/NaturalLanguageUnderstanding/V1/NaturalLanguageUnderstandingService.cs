@@ -151,12 +151,12 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// (optional)</param>
         /// <param name="clean">Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning,
         /// see the [Analyzing
-        /// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html)
+        /// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
         /// documentation. (optional, default to true)</param>
         /// <param name="xpath">An [XPath
-        /// query](https://cloud.ibm.com/docs/services/natural-language-understanding/analyzing-webpages.html#xpath) to
-        /// perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before
-        /// it is analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
+        /// query](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
+        /// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text
+        /// before it is analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
         /// (optional)</param>
         /// <param name="fallbackToRaw">Whether to use raw HTML content if text cleaning fails. (optional, default to
         /// true)</param>
@@ -165,8 +165,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <param name="language">ISO 639-1 code that specifies the language of your text. This overrides automatic
         /// language detection. Language support differs depending on the features you include in your analysis. See
         /// [Language
-        /// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-language-support) for
-        /// more information. (optional)</param>
+        /// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-language-support)
+        /// for more information. (optional)</param>
         /// <param name="limitTextCharacters">Sets the maximum number of characters that are processed by the service.
         /// (optional)</param>
         /// <returns><see cref="AnalysisResults" />AnalysisResults</returns>
@@ -259,6 +259,76 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// List models.
+        ///
+        /// Lists Watson Knowledge Studio [custom entities and relations
+        /// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+        /// that are deployed to your Natural Language Understanding service.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <returns><see cref="ListModelsResults" />ListModelsResults</returns>
+        public bool ListModels(Callback<ListModelsResults> callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListModels`");
+
+            RequestObject<ListModelsResults> req = new RequestObject<ListModelsResults>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListModelsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/models");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ListModelsResults> response = new DetailedResponse<ListModelsResults>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ListModelsResults>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("NaturalLanguageUnderstandingService.OnListModelsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ListModelsResults>)req).Callback != null)
+                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Delete model.
         ///
         /// Deletes a custom model.
@@ -328,76 +398,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             if (((RequestObject<DeleteModelResults>)req).Callback != null)
                 ((RequestObject<DeleteModelResults>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// List models.
-        ///
-        /// Lists Watson Knowledge Studio [custom
-        /// models](https://cloud.ibm.com/docs/services/natural-language-understanding/customizing.html) that are
-        /// deployed to your Natural Language Understanding service.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ListModelsResults" />ListModelsResults</returns>
-        public bool ListModels(Callback<ListModelsResults> callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListModels`");
-
-            RequestObject<ListModelsResults> req = new RequestObject<ListModelsResults>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("natural-language-understanding", "V1", "ListModels"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnListModelsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/models");
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<ListModelsResults> response = new DetailedResponse<ListModelsResults>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ListModelsResults>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("NaturalLanguageUnderstandingService.OnListModelsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<ListModelsResults>)req).Callback != null)
-                ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error);
         }
     }
 }

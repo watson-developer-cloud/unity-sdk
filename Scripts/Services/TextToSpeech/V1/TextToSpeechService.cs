@@ -109,6 +109,78 @@ namespace IBM.Watson.TextToSpeech.V1
         }
 
         /// <summary>
+        /// List voices.
+        ///
+        /// Lists all voices available for use with the service. The information includes the name, language, gender,
+        /// and other details about the voice. To see information about a specific voice, use the **Get a voice**
+        /// method.
+        ///
+        /// **See also:** [Listing all available
+        /// voices](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoices).
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <returns><see cref="Voices" />Voices</returns>
+        public bool ListVoices(Callback<Voices> callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListVoices`");
+
+            RequestObject<Voices> req = new RequestObject<Voices>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "ListVoices"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+
+            req.OnResponse = OnListVoicesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/voices");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListVoicesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Voices> response = new DetailedResponse<Voices>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Voices>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("TextToSpeechService.OnListVoicesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Voices>)req).Callback != null)
+                ((RequestObject<Voices>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Get a voice.
         ///
         /// Gets information about the specified voice. The information includes the name, language, gender, and other
@@ -116,7 +188,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// specified voice. To list information about all available voices, use the **List voices** method.
         ///
         /// **See also:** [Listing a specific
-        /// voice](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoice).
+        /// voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="voice">The voice for which information is to be returned.</param>
@@ -192,78 +264,6 @@ namespace IBM.Watson.TextToSpeech.V1
                 ((RequestObject<Voice>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List voices.
-        ///
-        /// Lists all voices available for use with the service. The information includes the name, language, gender,
-        /// and other details about the voice. To see information about a specific voice, use the **Get a voice**
-        /// method.
-        ///
-        /// **See also:** [Listing all available
-        /// voices](https://cloud.ibm.com/docs/services/text-to-speech/voices.html#listVoices).
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="Voices" />Voices</returns>
-        public bool ListVoices(Callback<Voices> callback)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListVoices`");
-
-            RequestObject<Voices> req = new RequestObject<Voices>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "ListVoices"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-
-            req.OnResponse = OnListVoicesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/voices");
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListVoicesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Voices> response = new DetailedResponse<Voices>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Voices>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("TextToSpeechService.OnListVoicesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Voices>)req).Callback != null)
-                ((RequestObject<Voices>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Synthesize audio.
         ///
         /// Synthesizes text to audio that is spoken in the specified voice. The service bases its understanding of the
@@ -274,7 +274,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// headers. The 5 KB limit includes any SSML tags that you specify. The service returns the synthesized audio
         /// stream as an array of bytes.
         ///
-        /// **See also:** [The HTTP interface](https://cloud.ibm.com/docs/services/text-to-speech/http.html).
+        /// **See also:** [The HTTP
+        /// interface](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
         ///
         /// ### Audio formats (accept types)
         ///
@@ -332,7 +333,9 @@ namespace IBM.Watson.TextToSpeech.V1
         ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
         ///
         /// For more information about specifying an audio format, including additional details about some of the
-        /// formats, see [Audio formats](https://cloud.ibm.com/docs/services/text-to-speech/audio-formats.html).
+        /// formats, see [Audio
+        /// formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
+        ///
         ///
         /// ### Warning messages
         ///
@@ -438,7 +441,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying a word from a
-        /// language](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsQueryLanguage).
+        /// language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">The word for which the pronunciation is requested.</param>
@@ -542,7 +545,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Creating a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsCreate).
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the new custom voice model.</param>
@@ -625,161 +628,6 @@ namespace IBM.Watson.TextToSpeech.V1
                 ((RequestObject<VoiceModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete a custom model.
-        ///
-        /// Deletes the specified custom voice model. You must use credentials for the instance of the service that owns
-        /// a model to delete it.
-        ///
-        /// **Note:** This method is currently a beta release.
-        ///
-        /// **See also:** [Deleting a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsDelete).
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteVoiceModel(Callback<object> callback, string customizationId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteVoiceModel`");
-            if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("`customizationId` is required for `DeleteVoiceModel`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "DeleteVoiceModel"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-
-            req.OnResponse = OnDeleteVoiceModelResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteVoiceModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("TextToSpeechService.OnDeleteVoiceModelResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get a custom model.
-        ///
-        /// Gets all information about a specified custom voice model. In addition to metadata such as the name and
-        /// description of the voice model, the output includes the words and their translations as defined in the
-        /// model. To see just the metadata for a voice model, use the **List custom models** method.
-        ///
-        /// **Note:** This method is currently a beta release.
-        ///
-        /// **See also:** [Querying a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQuery).
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
-        /// <returns><see cref="VoiceModel" />VoiceModel</returns>
-        public bool GetVoiceModel(Callback<VoiceModel> callback, string customizationId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetVoiceModel`");
-            if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("`customizationId` is required for `GetVoiceModel`");
-
-            RequestObject<VoiceModel> req = new RequestObject<VoiceModel>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "GetVoiceModel"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-
-            req.OnResponse = OnGetVoiceModelResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetVoiceModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<VoiceModel> response = new DetailedResponse<VoiceModel>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<VoiceModel>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("TextToSpeechService.OnGetVoiceModelResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<VoiceModel>)req).Callback != null)
-                ((RequestObject<VoiceModel>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// List custom models.
         ///
         /// Lists metadata such as the name and description for all custom voice models that are owned by an instance of
@@ -790,7 +638,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying all custom
-        /// models](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsQueryAll).
+        /// models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The language for which custom voice models that are owned by the requesting service
@@ -885,10 +733,11 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **See also:**
         /// * [Updating a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-models.html#cuModelsUpdate)
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
         /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-        /// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// * [Understanding
+        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -973,61 +822,32 @@ namespace IBM.Watson.TextToSpeech.V1
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Add a custom word.
+        /// Get a custom model.
         ///
-        /// Adds a single word and its translation to the specified custom voice model. Adding a new translation for a
-        /// word that already exists in a custom model overwrites the word's existing translation. A custom model can
-        /// contain no more than 20,000 entries. You must use credentials for the instance of the service that owns a
-        /// model to add a word to it.
-        ///
-        /// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or
-        /// more words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme
-        /// format for representing a word. You can specify them in standard International Phonetic Alphabet (IPA)
-        /// representation
-        ///
-        ///   <code>&lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;</code>
-        ///
-        ///   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
-        ///
-        ///   <code>&lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;</code>
+        /// Gets all information about a specified custom voice model. In addition to metadata such as the name and
+        /// description of the voice model, the output includes the words and their translations as defined in the
+        /// model. To see just the metadata for a voice model, use the **List custom models** method.
         ///
         /// **Note:** This method is currently a beta release.
         ///
-        /// **See also:**
-        /// * [Adding a single word to a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordAdd)
-        /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-        /// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
+        /// **See also:** [Querying a custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
         /// request with service credentials created for the instance of the service that owns the custom model.</param>
-        /// <param name="word">The word that is to be added or updated for the custom voice model.</param>
-        /// <param name="translation">The phonetic or sounds-like translation for the word. A phonetic translation is
-        /// based on the SSML format for representing the phonetic string of a word either as an IPA translation or as
-        /// an IBM SPR translation. A sounds-like is one or more words that, when combined, sound like the word.</param>
-        /// <param name="partOfSpeech">**Japanese only.** The part of speech for the word. The service uses the value to
-        /// produce the correct intonation for the word. You can create only a single entry, with or without a single
-        /// part of speech, for any word; you cannot create multiple entries with different parts of speech for the same
-        /// word. For more information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech/custom-rules.html#jaNotes). (optional)</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool AddWord(Callback<object> callback, string customizationId, string word, string translation, string partOfSpeech = null)
+        /// <returns><see cref="VoiceModel" />VoiceModel</returns>
+        public bool GetVoiceModel(Callback<VoiceModel> callback, string customizationId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `AddWord`");
+                throw new ArgumentNullException("`callback` is required for `GetVoiceModel`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("`customizationId` is required for `AddWord`");
-            if (string.IsNullOrEmpty(word))
-                throw new ArgumentNullException("`word` is required for `AddWord`");
-            if (string.IsNullOrEmpty(translation))
-                throw new ArgumentNullException("`translation` is required for `AddWord`");
+                throw new ArgumentNullException("`customizationId` is required for `GetVoiceModel`");
 
-            RequestObject<object> req = new RequestObject<object>
+            RequestObject<VoiceModel> req = new RequestObject<VoiceModel>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPUT,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -1038,24 +858,15 @@ namespace IBM.Watson.TextToSpeech.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "AddWord"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "GetVoiceModel"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "";
 
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(translation))
-                bodyObject["translation"] = translation;
-            if (!string.IsNullOrEmpty(partOfSpeech))
-                bodyObject["part_of_speech"] = partOfSpeech;
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            req.OnResponse = OnGetVoiceModelResponse;
 
-            req.OnResponse = OnAddWordResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
             if (connector == null)
             {
                 return false;
@@ -1064,7 +875,84 @@ namespace IBM.Watson.TextToSpeech.V1
             return connector.Send(req);
         }
 
-        private void OnAddWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetVoiceModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<VoiceModel> response = new DetailedResponse<VoiceModel>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<VoiceModel>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("TextToSpeechService.OnGetVoiceModelResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<VoiceModel>)req).Callback != null)
+                ((RequestObject<VoiceModel>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete a custom model.
+        ///
+        /// Deletes the specified custom voice model. You must use credentials for the instance of the service that owns
+        /// a model to delete it.
+        ///
+        /// **Note:** This method is currently a beta release.
+        ///
+        /// **See also:** [Deleting a custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
+        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteVoiceModel(Callback<object> callback, string customizationId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteVoiceModel`");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("`customizationId` is required for `DeleteVoiceModel`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "DeleteVoiceModel"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+
+            req.OnResponse = OnDeleteVoiceModelResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteVoiceModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -1081,7 +969,7 @@ namespace IBM.Watson.TextToSpeech.V1
             }
             catch (Exception e)
             {
-                Log.Error("TextToSpeechService.OnAddWordResponse()", "Exception: {0}", e.ToString());
+                Log.Error("TextToSpeechService.OnDeleteVoiceModelResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -1111,10 +999,11 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **See also:**
         /// * [Adding multiple words to a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsAdd)
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
         /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuJapaneseAdd)
-        /// * [Understanding customization](https://cloud.ibm.com/docs/services/text-to-speech/custom-intro.html).
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// * [Understanding
+        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1198,34 +1087,32 @@ namespace IBM.Watson.TextToSpeech.V1
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete a custom word.
+        /// List custom words.
         ///
-        /// Deletes a single word from the specified custom voice model. You must use credentials for the instance of
-        /// the service that owns a model to delete its words.
+        /// Lists all of the words and their translations for the specified custom voice model. The output shows the
+        /// translations as they are defined in the model. You must use credentials for the instance of the service that
+        /// owns a model to list its words.
         ///
         /// **Note:** This method is currently a beta release.
         ///
-        /// **See also:** [Deleting a word from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordDelete).
+        /// **See also:** [Querying all words from a custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
         /// request with service credentials created for the instance of the service that owns the custom model.</param>
-        /// <param name="word">The word that is to be deleted from the custom voice model.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteWord(Callback<object> callback, string customizationId, string word)
+        /// <returns><see cref="Words" />Words</returns>
+        public bool ListWords(Callback<Words> callback, string customizationId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteWord`");
+                throw new ArgumentNullException("`callback` is required for `ListWords`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("`customizationId` is required for `DeleteWord`");
-            if (string.IsNullOrEmpty(word))
-                throw new ArgumentNullException("`word` is required for `DeleteWord`");
+                throw new ArgumentNullException("`customizationId` is required for `ListWords`");
 
-            RequestObject<object> req = new RequestObject<object>
+            RequestObject<Words> req = new RequestObject<Words>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -1236,13 +1123,130 @@ namespace IBM.Watson.TextToSpeech.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "DeleteWord"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "ListWords"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
 
-            req.OnResponse = OnDeleteWordResponse;
+            req.OnResponse = OnListWordsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words", customizationId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Words> response = new DetailedResponse<Words>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Words>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("TextToSpeechService.OnListWordsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Words>)req).Callback != null)
+                ((RequestObject<Words>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Add a custom word.
+        ///
+        /// Adds a single word and its translation to the specified custom voice model. Adding a new translation for a
+        /// word that already exists in a custom model overwrites the word's existing translation. A custom model can
+        /// contain no more than 20,000 entries. You must use credentials for the instance of the service that owns a
+        /// model to add a word to it.
+        ///
+        /// You can define sounds-like or phonetic translations for words. A sounds-like translation consists of one or
+        /// more words that, when combined, sound like the word. Phonetic translations are based on the SSML phoneme
+        /// format for representing a word. You can specify them in standard International Phonetic Alphabet (IPA)
+        /// representation
+        ///
+        ///   <code>&lt;phoneme alphabet="ipa" ph="t&#601;m&#712;&#593;to"&gt;&lt;/phoneme&gt;</code>
+        ///
+        ///   or in the proprietary IBM Symbolic Phonetic Representation (SPR)
+        ///
+        ///   <code>&lt;phoneme alphabet="ibm" ph="1gAstroEntxrYFXs"&gt;&lt;/phoneme&gt;</code>
+        ///
+        /// **Note:** This method is currently a beta release.
+        ///
+        /// **See also:**
+        /// * [Adding a single word to a custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
+        /// * [Adding words to a Japanese custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// * [Understanding
+        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
+        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// <param name="word">The word that is to be added or updated for the custom voice model.</param>
+        /// <param name="translation">The phonetic or sounds-like translation for the word. A phonetic translation is
+        /// based on the SSML format for representing the phonetic string of a word either as an IPA translation or as
+        /// an IBM SPR translation. A sounds-like is one or more words that, when combined, sound like the word.</param>
+        /// <param name="partOfSpeech">**Japanese only.** The part of speech for the word. The service uses the value to
+        /// produce the correct intonation for the word. You can create only a single entry, with or without a single
+        /// part of speech, for any word; you cannot create multiple entries with different parts of speech for the same
+        /// word. For more information, see [Working with Japanese
+        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+        /// (optional)</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool AddWord(Callback<object> callback, string customizationId, string word, string translation, string partOfSpeech = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `AddWord`");
+            if (string.IsNullOrEmpty(customizationId))
+                throw new ArgumentNullException("`customizationId` is required for `AddWord`");
+            if (string.IsNullOrEmpty(word))
+                throw new ArgumentNullException("`word` is required for `AddWord`");
+            if (string.IsNullOrEmpty(translation))
+                throw new ArgumentNullException("`translation` is required for `AddWord`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPUT,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "AddWord"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Headers["Content-Type"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(translation))
+                bodyObject["translation"] = translation;
+            if (!string.IsNullOrEmpty(partOfSpeech))
+                bodyObject["part_of_speech"] = partOfSpeech;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnAddWordResponse;
 
             RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
             if (connector == null)
@@ -1253,7 +1257,7 @@ namespace IBM.Watson.TextToSpeech.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnAddWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -1270,7 +1274,7 @@ namespace IBM.Watson.TextToSpeech.V1
             }
             catch (Exception e)
             {
-                Log.Error("TextToSpeechService.OnDeleteWordResponse()", "Exception: {0}", e.ToString());
+                Log.Error("TextToSpeechService.OnAddWordResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
@@ -1287,7 +1291,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying a single word from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordQueryModel).
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1359,32 +1363,34 @@ namespace IBM.Watson.TextToSpeech.V1
                 ((RequestObject<Translation>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List custom words.
+        /// Delete a custom word.
         ///
-        /// Lists all of the words and their translations for the specified custom voice model. The output shows the
-        /// translations as they are defined in the model. You must use credentials for the instance of the service that
-        /// owns a model to list its words.
+        /// Deletes a single word from the specified custom voice model. You must use credentials for the instance of
+        /// the service that owns a model to delete its words.
         ///
         /// **Note:** This method is currently a beta release.
         ///
-        /// **See also:** [Querying all words from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech/custom-entries.html#cuWordsQueryModel).
+        /// **See also:** [Deleting a word from a custom
+        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
         /// request with service credentials created for the instance of the service that owns the custom model.</param>
-        /// <returns><see cref="Words" />Words</returns>
-        public bool ListWords(Callback<Words> callback, string customizationId)
+        /// <param name="word">The word that is to be deleted from the custom voice model.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteWord(Callback<object> callback, string customizationId, string word)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListWords`");
+                throw new ArgumentNullException("`callback` is required for `DeleteWord`");
             if (string.IsNullOrEmpty(customizationId))
-                throw new ArgumentNullException("`customizationId` is required for `ListWords`");
+                throw new ArgumentNullException("`customizationId` is required for `DeleteWord`");
+            if (string.IsNullOrEmpty(word))
+                throw new ArgumentNullException("`word` is required for `DeleteWord`");
 
-            RequestObject<Words> req = new RequestObject<Words>
+            RequestObject<object> req = new RequestObject<object>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -1395,15 +1401,15 @@ namespace IBM.Watson.TextToSpeech.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "ListWords"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("text_to_speech", "V1", "DeleteWord"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
 
-            req.OnResponse = OnListWordsResponse;
+            req.OnResponse = OnDeleteWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
             if (connector == null)
             {
                 return false;
@@ -1412,9 +1418,9 @@ namespace IBM.Watson.TextToSpeech.V1
             return connector.Send(req);
         }
 
-        private void OnListWordsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteWordResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<Words> response = new DetailedResponse<Words>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1424,17 +1430,17 @@ namespace IBM.Watson.TextToSpeech.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Words>(json);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("TextToSpeechService.OnListWordsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("TextToSpeechService.OnDeleteWordResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<Words>)req).Callback != null)
-                ((RequestObject<Words>)req).Callback(response, resp.Error);
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
@@ -1448,7 +1454,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// the data.
         ///
         /// **See also:** [Information
-        /// security](https://cloud.ibm.com/docs/services/text-to-speech/information-security.html).
+        /// security](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-information-security#information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>

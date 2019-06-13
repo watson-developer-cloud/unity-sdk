@@ -236,6 +236,104 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// List workspaces.
+        ///
+        /// List the workspaces associated with a Watson Assistant service instance.
+        ///
+        /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
+        /// default to false)</param>
+        /// <param name="sort">The attribute by which returned workspaces will be sorted. To reverse the sort order,
+        /// prefix the value with a minus sign (`-`). (optional)</param>
+        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
+        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
+
+            RequestObject<WorkspaceCollection> req = new RequestObject<WorkspaceCollection>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListWorkspaces"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (pageLimit != null)
+            {
+                req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
+            }
+            if (!string.IsNullOrEmpty(sort))
+            {
+                req.Parameters["sort"] = sort;
+            }
+            if (!string.IsNullOrEmpty(cursor))
+            {
+                req.Parameters["cursor"] = cursor;
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnListWorkspacesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListWorkspacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<WorkspaceCollection> response = new DetailedResponse<WorkspaceCollection>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<WorkspaceCollection>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnListWorkspacesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<WorkspaceCollection>)req).Callback != null)
+                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Create workspace.
         ///
         /// Create a workspace based on component objects. You must provide workspace components defining the content of
@@ -245,9 +343,9 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the workspace. This string cannot contain carriage return, newline, or tab
-        /// characters, and it must be no longer than 64 characters. (optional)</param>
+        /// characters. (optional)</param>
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
@@ -348,79 +446,6 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete workspace.
-        ///
-        /// Delete a workspace from the service instance.
-        ///
-        /// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteWorkspace(Callback<object> callback, string workspaceId)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteWorkspace`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteWorkspace`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteWorkspaceResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnDeleteWorkspaceResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Get information about a workspace.
         ///
         /// Get information about a workspace, optionally including all workspace content.
@@ -515,104 +540,6 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List workspaces.
-        ///
-        /// List the workspaces associated with a Watson Assistant service instance.
-        ///
-        /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
-        /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
-        /// default to false)</param>
-        /// <param name="sort">The attribute by which returned workspaces will be sorted. To reverse the sort order,
-        /// prefix the value with a minus sign (`-`). (optional)</param>
-        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
-        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
-
-            RequestObject<WorkspaceCollection> req = new RequestObject<WorkspaceCollection>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListWorkspaces"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (pageLimit != null)
-            {
-                req.Parameters["page_limit"] = pageLimit;
-            }
-            if (includeCount != null)
-            {
-                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
-            }
-            if (!string.IsNullOrEmpty(sort))
-            {
-                req.Parameters["sort"] = sort;
-            }
-            if (!string.IsNullOrEmpty(cursor))
-            {
-                req.Parameters["cursor"] = cursor;
-            }
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnListWorkspacesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/workspaces");
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListWorkspacesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<WorkspaceCollection> response = new DetailedResponse<WorkspaceCollection>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<WorkspaceCollection>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnListWorkspacesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<WorkspaceCollection>)req).Callback != null)
-                ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Update workspace.
         ///
         /// Update an existing workspace with new or modified data. You must provide component objects defining the
@@ -623,9 +550,9 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="name">The name of the workspace. This string cannot contain carriage return, newline, or tab
-        /// characters, and it must be no longer than 64 characters. (optional)</param>
+        /// characters. (optional)</param>
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
@@ -642,7 +569,6 @@ namespace IBM.Watson.Assistant.V1
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data includes **entities** and
         /// **append**=`false`, all existing entities in the workspace are discarded and replaced with the new entities.
-        ///
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
@@ -740,117 +666,21 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create intent.
+        /// Delete workspace.
         ///
-        /// Create a new intent.
+        /// Delete a workspace from the service instance.
         ///
-        /// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// This operation is limited to 30 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="intent">The name of the intent. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
-        /// - It cannot begin with the reserved prefix `sys-`.
-        /// - It must be no longer than 128 characters.</param>
-        /// <param name="description">The description of the intent. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
-        /// <param name="examples">An array of user input examples for the intent. (optional)</param>
-        /// <returns><see cref="Intent" />Intent</returns>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateIntent`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateIntent`");
-            if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `CreateIntent`");
-
-            RequestObject<Intent> req = new RequestObject<Intent>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateIntent"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(intent))
-                bodyObject["intent"] = intent;
-            if (!string.IsNullOrEmpty(description))
-                bodyObject["description"] = description;
-            if (examples != null && examples.Count > 0)
-                bodyObject["examples"] = JToken.FromObject(examples);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateIntentResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateIntentResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete intent.
-        ///
-        /// Delete an intent from a workspace.
-        ///
-        /// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="intent">The intent name.</param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteIntent(Callback<object> callback, string workspaceId, string intent)
+        public bool DeleteWorkspace(Callback<object> callback, string workspaceId)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteIntent`");
+                throw new ArgumentNullException("`callback` is required for `DeleteWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteIntent`");
-            if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `DeleteIntent`");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteWorkspace`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -866,16 +696,16 @@ namespace IBM.Watson.Assistant.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteIntent"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteWorkspace"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnDeleteIntentResponse;
+            req.OnResponse = OnDeleteWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}", workspaceId));
             if (connector == null)
             {
                 return false;
@@ -884,7 +714,7 @@ namespace IBM.Watson.Assistant.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteWorkspaceResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -901,102 +731,12 @@ namespace IBM.Watson.Assistant.V1
             }
             catch (Exception e)
             {
-                Log.Error("AssistantService.OnDeleteIntentResponse()", "Exception: {0}", e.ToString());
+                Log.Error("AssistantService.OnDeleteWorkspaceResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get intent.
-        ///
-        /// Get information about an intent, optionally including all intent content.
-        ///
-        /// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`,
-        /// the limit is 400 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="intent">The intent name.</param>
-        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
-        /// returned data includes only information about the element itself. If **export**=`true`, all content,
-        /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Intent" />Intent</returns>
-        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetIntent`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetIntent`");
-            if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `GetIntent`");
-
-            RequestObject<Intent> req = new RequestObject<Intent>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetIntent"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (export != null)
-            {
-                req.Parameters["export"] = (bool)export ? "true" : "false";
-            }
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetIntentResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Intent>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetIntentResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Intent>)req).Callback != null)
-                ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List intents.
@@ -1108,10 +848,198 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<IntentCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create intent.
+        ///
+        /// Create a new intent.
+        ///
+        /// If you want to create multiple intents with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
+        ///
+        /// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="intent">The name of the intent. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
+        /// - It cannot begin with the reserved prefix `sys-`.</param>
+        /// <param name="description">The description of the intent. This string cannot contain carriage return,
+        /// newline, or tab characters. (optional)</param>
+        /// <param name="examples">An array of user input examples for the intent. (optional)</param>
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateIntent`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateIntent`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `CreateIntent`");
+
+            RequestObject<Intent> req = new RequestObject<Intent>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(intent))
+                bodyObject["intent"] = intent;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (examples != null && examples.Count > 0)
+                bodyObject["examples"] = JToken.FromObject(examples);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateIntentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents", workspaceId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Intent>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateIntentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Intent>)req).Callback != null)
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get intent.
+        ///
+        /// Get information about an intent, optionally including all intent content.
+        ///
+        /// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`,
+        /// the limit is 400 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="intent">The intent name.</param>
+        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
+        /// returned data includes only information about the element itself. If **export**=`true`, all content,
+        /// including subelements, is included. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Intent" />Intent</returns>
+        public bool GetIntent(Callback<Intent> callback, string workspaceId, string intent, bool? export = null, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetIntent`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetIntent`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `GetIntent`");
+
+            RequestObject<Intent> req = new RequestObject<Intent>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetIntent"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (export != null)
+            {
+                req.Parameters["export"] = (bool)export ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetIntentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Intent> response = new DetailedResponse<Intent>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Intent>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetIntentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Intent>)req).Callback != null)
+                ((RequestObject<Intent>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update intent.
         ///
         /// Update an existing intent with new or modified data. You must provide component objects defining the content
         /// of the updated intent.
+        ///
+        /// If you want to update multiple intents with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
         ///
         /// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -1120,10 +1048,9 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="intent">The intent name.</param>
         /// <param name="newIntent">The name of the intent. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
-        /// - It cannot begin with the reserved prefix `sys-`.
-        /// - It must be no longer than 128 characters. (optional)</param>
+        /// - It cannot begin with the reserved prefix `sys-`. (optional)</param>
         /// <param name="newDescription">The description of the intent. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// newline, or tab characters. (optional)</param>
         /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
         /// <returns><see cref="Intent" />Intent</returns>
         public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
@@ -1203,120 +1130,24 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create user input example.
+        /// Delete intent.
         ///
-        /// Add a new user input example to an intent.
+        /// Delete an intent from a workspace.
         ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// This operation is limited to 2000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
-        /// <param name="text">The text of a user input example. This string must conform to the following restrictions:
-        ///
-        /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 1024 characters.</param>
-        /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
-        /// <returns><see cref="Example" />Example</returns>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateExample`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateExample`");
-            if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `CreateExample`");
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `CreateExample`");
-
-            RequestObject<Example> req = new RequestObject<Example>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateExample"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(text))
-                bodyObject["text"] = text;
-            if (mentions != null && mentions.Count > 0)
-                bodyObject["mentions"] = JToken.FromObject(mentions);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateExampleResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Example> response = new DetailedResponse<Example>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Example>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateExampleResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete user input example.
-        ///
-        /// Delete a user input example from an intent.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="intent">The intent name.</param>
-        /// <param name="text">The text of the user input example.</param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteExample(Callback<object> callback, string workspaceId, string intent, string text)
+        public bool DeleteIntent(Callback<object> callback, string workspaceId, string intent)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteExample`");
+                throw new ArgumentNullException("`callback` is required for `DeleteIntent`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteExample`");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteIntent`");
             if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `DeleteExample`");
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `DeleteExample`");
+                throw new ArgumentNullException("`intent` is required for `DeleteIntent`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1332,16 +1163,16 @@ namespace IBM.Watson.Assistant.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteExample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteIntent"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnDeleteExampleResponse;
+            req.OnResponse = OnDeleteIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
             if (connector == null)
             {
                 return false;
@@ -1350,7 +1181,7 @@ namespace IBM.Watson.Assistant.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteIntentResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -1367,97 +1198,12 @@ namespace IBM.Watson.Assistant.V1
             }
             catch (Exception e)
             {
-                Log.Error("AssistantService.OnDeleteExampleResponse()", "Exception: {0}", e.ToString());
+                Log.Error("AssistantService.OnDeleteIntentResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get user input example.
-        ///
-        /// Get information about a user input example.
-        ///
-        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="intent">The intent name.</param>
-        /// <param name="text">The text of the user input example.</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Example" />Example</returns>
-        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetExample`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetExample`");
-            if (string.IsNullOrEmpty(intent))
-                throw new ArgumentNullException("`intent` is required for `GetExample`");
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `GetExample`");
-
-            RequestObject<Example> req = new RequestObject<Example>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetExample"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetExampleResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Example> response = new DetailedResponse<Example>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Example>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetExampleResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Example>)req).Callback != null)
-                ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List user input examples.
@@ -1564,9 +1310,191 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create user input example.
+        ///
+        /// Add a new user input example to an intent.
+        ///
+        /// If you want to add multiple exaples with a single API call, consider using the **[Update
+        /// intent](#update-intent)** method instead.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="intent">The intent name.</param>
+        /// <param name="text">The text of a user input example. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.</param>
+        /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
+        /// <returns><see cref="Example" />Example</returns>
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateExample`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateExample`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `CreateExample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `CreateExample`");
+
+            RequestObject<Example> req = new RequestObject<Example>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            if (mentions != null && mentions.Count > 0)
+                bodyObject["mentions"] = JToken.FromObject(mentions);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateExampleResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Example> response = new DetailedResponse<Example>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Example>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateExampleResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Example>)req).Callback != null)
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get user input example.
+        ///
+        /// Get information about a user input example.
+        ///
+        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="intent">The intent name.</param>
+        /// <param name="text">The text of the user input example.</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Example" />Example</returns>
+        public bool GetExample(Callback<Example> callback, string workspaceId, string intent, string text, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetExample`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetExample`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `GetExample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `GetExample`");
+
+            RequestObject<Example> req = new RequestObject<Example>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetExample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetExampleResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Example> response = new DetailedResponse<Example>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Example>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetExampleResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Example>)req).Callback != null)
+                ((RequestObject<Example>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update user input example.
         ///
         /// Update the text of a user input example.
+        ///
+        /// If you want to update multiple examples with a single API call, consider using the **[Update
+        /// intent](#update-intent)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -1577,8 +1505,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newText">The text of the user input example. This string must conform to the following
         /// restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 1024 characters. (optional)</param>
+        /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <param name="newMentions">An array of contextual entity mentions. (optional)</param>
         /// <returns><see cref="Example" />Example</returns>
         public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mention> newMentions = null)
@@ -1658,113 +1585,27 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create counterexample.
+        /// Delete user input example.
         ///
-        /// Add a new counterexample to a workspace. Counterexamples are examples that have been marked as irrelevant
-        /// input.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="text">The text of a user input marked as irrelevant input. This string must conform to the
-        /// following restrictions:
-        /// - It cannot contain carriage return, newline, or tab characters
-        /// - It cannot consist of only whitespace characters
-        /// - It must be no longer than 1024 characters.</param>
-        /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateCounterexample`");
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `CreateCounterexample`");
-
-            RequestObject<Counterexample> req = new RequestObject<Counterexample>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateCounterexample"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(text))
-                bodyObject["text"] = text;
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateCounterexampleResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateCounterexampleResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete counterexample.
-        ///
-        /// Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant
-        /// input.
+        /// Delete a user input example from an intent.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
+        /// <param name="intent">The intent name.</param>
+        /// <param name="text">The text of the user input example.</param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteCounterexample(Callback<object> callback, string workspaceId, string text)
+        public bool DeleteExample(Callback<object> callback, string workspaceId, string intent, string text)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteCounterexample`");
+                throw new ArgumentNullException("`callback` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteCounterexample`");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteExample`");
+            if (string.IsNullOrEmpty(intent))
+                throw new ArgumentNullException("`intent` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `DeleteCounterexample`");
+                throw new ArgumentNullException("`text` is required for `DeleteExample`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1780,16 +1621,16 @@ namespace IBM.Watson.Assistant.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteExample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnDeleteCounterexampleResponse;
+            req.OnResponse = OnDeleteExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
             if (connector == null)
             {
                 return false;
@@ -1798,7 +1639,7 @@ namespace IBM.Watson.Assistant.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -1815,95 +1656,12 @@ namespace IBM.Watson.Assistant.V1
             }
             catch (Exception e)
             {
-                Log.Error("AssistantService.OnDeleteCounterexampleResponse()", "Exception: {0}", e.ToString());
+                Log.Error("AssistantService.OnDeleteExampleResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get counterexample.
-        ///
-        /// Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant
-        /// input.
-        ///
-        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetCounterexample`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetCounterexample`");
-            if (string.IsNullOrEmpty(text))
-                throw new ArgumentNullException("`text` is required for `GetCounterexample`");
-
-            RequestObject<Counterexample> req = new RequestObject<Counterexample>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetCounterexample"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetCounterexampleResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetCounterexampleResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Counterexample>)req).Callback != null)
-                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List counterexamples.
@@ -2008,10 +1766,185 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create counterexample.
+        ///
+        /// Add a new counterexample to a workspace. Counterexamples are examples that have been marked as irrelevant
+        /// input.
+        ///
+        /// If you want to add multiple counterexamples with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="text">The text of a user input marked as irrelevant input. This string must conform to the
+        /// following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.</param>
+        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateCounterexample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `CreateCounterexample`");
+
+            RequestObject<Counterexample> req = new RequestObject<Counterexample>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(text))
+                bodyObject["text"] = text;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateCounterexampleResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateCounterexampleResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Counterexample>)req).Callback != null)
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get counterexample.
+        ///
+        /// Get information about a counterexample. Counterexamples are examples that have been marked as irrelevant
+        /// input.
+        ///
+        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Counterexample" />Counterexample</returns>
+        public bool GetCounterexample(Callback<Counterexample> callback, string workspaceId, string text, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetCounterexample`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetCounterexample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `GetCounterexample`");
+
+            RequestObject<Counterexample> req = new RequestObject<Counterexample>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetCounterexample"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetCounterexampleResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Counterexample> response = new DetailedResponse<Counterexample>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Counterexample>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetCounterexampleResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Counterexample>)req).Callback != null)
+                ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update counterexample.
         ///
         /// Update the text of a counterexample. Counterexamples are examples that have been marked as irrelevant input.
         ///
+        /// If you want to update multiple counterexamples with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -2020,9 +1953,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
         /// <param name="newText">The text of a user input marked as irrelevant input. This string must conform to the
         /// following restrictions:
-        /// - It cannot contain carriage return, newline, or tab characters
-        /// - It cannot consist of only whitespace characters
-        /// - It must be no longer than 1024 characters. (optional)</param>
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
         public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, string newText = null)
         {
@@ -2097,125 +2029,25 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create entity.
+        /// Delete counterexample.
         ///
-        /// Create a new entity, or enable a system entity.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-        /// - It must be no longer than 64 characters.
-        ///
-        /// If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system
-        /// entity that you want to enable. (Any entity content specified with the request is ignored.).</param>
-        /// <param name="description">The description of the entity. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
-        /// <param name="metadata">Any metadata related to the entity. (optional)</param>
-        /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
-        /// <param name="values">An array of objects describing the entity values. (optional)</param>
-        /// <returns><see cref="Entity" />Entity</returns>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateEntity`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateEntity`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `CreateEntity`");
-
-            RequestObject<Entity> req = new RequestObject<Entity>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateEntity"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(entity))
-                bodyObject["entity"] = entity;
-            if (!string.IsNullOrEmpty(description))
-                bodyObject["description"] = description;
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (fuzzyMatch != null)
-                bodyObject["fuzzy_match"] = JToken.FromObject(fuzzyMatch);
-            if (values != null && values.Count > 0)
-                bodyObject["values"] = JToken.FromObject(values);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateEntityResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateEntityResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete entity.
-        ///
-        /// Delete an entity from a workspace, or disable a system entity.
+        /// Delete a counterexample from a workspace. Counterexamples are examples that have been marked as irrelevant
+        /// input.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
+        /// <param name="text">The text of a user input counterexample (for example, `What are you wearing?`).</param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteEntity(Callback<object> callback, string workspaceId, string entity)
+        public bool DeleteCounterexample(Callback<object> callback, string workspaceId, string text)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteEntity`");
+                throw new ArgumentNullException("`callback` is required for `DeleteCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteEntity`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `DeleteEntity`");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteCounterexample`");
+            if (string.IsNullOrEmpty(text))
+                throw new ArgumentNullException("`text` is required for `DeleteCounterexample`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2231,16 +2063,16 @@ namespace IBM.Watson.Assistant.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteEntity"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteCounterexample"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnDeleteEntityResponse;
+            req.OnResponse = OnDeleteCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
             if (connector == null)
             {
                 return false;
@@ -2249,7 +2081,7 @@ namespace IBM.Watson.Assistant.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteCounterexampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -2266,102 +2098,12 @@ namespace IBM.Watson.Assistant.V1
             }
             catch (Exception e)
             {
-                Log.Error("AssistantService.OnDeleteEntityResponse()", "Exception: {0}", e.ToString());
+                Log.Error("AssistantService.OnDeleteCounterexampleResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get entity.
-        ///
-        /// Get information about an entity, optionally including all entity content.
-        ///
-        /// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`,
-        /// the limit is 200 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
-        /// returned data includes only information about the element itself. If **export**=`true`, all content,
-        /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Entity" />Entity</returns>
-        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetEntity`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetEntity`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `GetEntity`");
-
-            RequestObject<Entity> req = new RequestObject<Entity>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetEntity"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (export != null)
-            {
-                req.Parameters["export"] = (bool)export ? "true" : "false";
-            }
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetEntityResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Entity>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetEntityResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Entity>)req).Callback != null)
-                ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entities.
@@ -2473,10 +2215,205 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<EntityCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create entity.
+        ///
+        /// Create a new entity, or enable a system entity.
+        ///
+        /// If you want to create multiple entities with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity. This string must conform to the following restrictions:
+        /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
+        /// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system
+        /// entity that you want to enable. (Any entity content specified with the request is ignored.).</param>
+        /// <param name="description">The description of the entity. This string cannot contain carriage return,
+        /// newline, or tab characters. (optional)</param>
+        /// <param name="metadata">Any metadata related to the entity. (optional)</param>
+        /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
+        /// <param name="values">An array of objects describing the entity values. (optional)</param>
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateEntity`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateEntity`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `CreateEntity`");
+
+            RequestObject<Entity> req = new RequestObject<Entity>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(entity))
+                bodyObject["entity"] = entity;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (fuzzyMatch != null)
+                bodyObject["fuzzy_match"] = JToken.FromObject(fuzzyMatch);
+            if (values != null && values.Count > 0)
+                bodyObject["values"] = JToken.FromObject(values);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateEntityResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities", workspaceId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Entity>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateEntityResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Entity>)req).Callback != null)
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get entity.
+        ///
+        /// Get information about an entity, optionally including all entity content.
+        ///
+        /// With **export**=`false`, this operation is limited to 6000 requests per 5 minutes. With **export**=`true`,
+        /// the limit is 200 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
+        /// returned data includes only information about the element itself. If **export**=`true`, all content,
+        /// including subelements, is included. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Entity" />Entity</returns>
+        public bool GetEntity(Callback<Entity> callback, string workspaceId, string entity, bool? export = null, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetEntity`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetEntity`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `GetEntity`");
+
+            RequestObject<Entity> req = new RequestObject<Entity>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (export != null)
+            {
+                req.Parameters["export"] = (bool)export ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetEntityResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Entity> response = new DetailedResponse<Entity>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Entity>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetEntityResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Entity>)req).Callback != null)
+                ((RequestObject<Entity>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update entity.
         ///
         /// Update an existing entity with new or modified data. You must provide component objects defining the content
         /// of the updated entity.
+        ///
+        /// If you want to update multiple entities with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -2485,10 +2422,9 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="newEntity">The name of the entity. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
-        /// - It cannot begin with the reserved prefix `sys-`.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// - It cannot begin with the reserved prefix `sys-`. (optional)</param>
         /// <param name="newDescription">The description of the entity. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// newline, or tab characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
         /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="newValues">An array of objects describing the entity values. (optional)</param>
@@ -2572,6 +2508,82 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<Entity>)req).Callback != null)
                 ((RequestObject<Entity>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete entity.
+        ///
+        /// Delete an entity from a workspace, or disable a system entity.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteEntity(Callback<object> callback, string workspaceId, string entity)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteEntity`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteEntity`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `DeleteEntity`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteEntity"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteEntityResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteEntityResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnDeleteEntityResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity mentions.
@@ -2662,286 +2674,6 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<EntityMentionCollection>)req).Callback != null)
                 ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Create entity value.
-        ///
-        /// Create a new value for an entity.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="value">The text of the entity value. This string must conform to the following restrictions:
-        /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters.</param>
-        /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
-        /// <param name="valueType">Specifies the type of entity value. (optional, default to synonyms)</param>
-        /// <param name="synonyms">An array of synonyms for the entity value. A value can specify either synonyms or
-        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
-        /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
-        /// <param name="patterns">An array of patterns for the entity value. A value can specify either synonyms or
-        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
-        /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
-        /// (optional)</param>
-        /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateValue`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateValue`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `CreateValue`");
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `CreateValue`");
-
-            RequestObject<Value> req = new RequestObject<Value>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateValue"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(value))
-                bodyObject["value"] = value;
-            if (metadata != null)
-                bodyObject["metadata"] = JToken.FromObject(metadata);
-            if (!string.IsNullOrEmpty(valueType))
-                bodyObject["type"] = valueType;
-            if (synonyms != null && synonyms.Count > 0)
-                bodyObject["synonyms"] = JToken.FromObject(synonyms);
-            if (patterns != null && patterns.Count > 0)
-                bodyObject["patterns"] = JToken.FromObject(patterns);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateValueResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Value> response = new DetailedResponse<Value>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Value>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateValueResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete entity value.
-        ///
-        /// Delete a value from an entity.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="value">The text of the entity value.</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteValue(Callback<object> callback, string workspaceId, string entity, string value)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteValue`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteValue`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `DeleteValue`");
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `DeleteValue`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteValue"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteValueResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnDeleteValueResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get entity value.
-        ///
-        /// Get information about an entity value.
-        ///
-        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="value">The text of the entity value.</param>
-        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
-        /// returned data includes only information about the element itself. If **export**=`true`, all content,
-        /// including subelements, is included. (optional, default to false)</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Value" />Value</returns>
-        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetValue`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetValue`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `GetValue`");
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `GetValue`");
-
-            RequestObject<Value> req = new RequestObject<Value>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetValue"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (export != null)
-            {
-                req.Parameters["export"] = (bool)export ? "true" : "false";
-            }
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetValueResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Value> response = new DetailedResponse<Value>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Value>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetValueResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Value>)req).Callback != null)
-                ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity values.
@@ -3055,10 +2787,215 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<ValueCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create entity value.
+        ///
+        /// Create a new value for an entity.
+        ///
+        /// If you want to create multiple entity values with a single API call, consider using the **[Update
+        /// entity](#update-entity)** method instead.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="value">The text of the entity value. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.</param>
+        /// <param name="metadata">Any metadata related to the entity value. (optional)</param>
+        /// <param name="valueType">Specifies the type of entity value. (optional, default to synonyms)</param>
+        /// <param name="synonyms">An array of synonyms for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters. (optional)</param>
+        /// <param name="patterns">An array of patterns for the entity value. A value can specify either synonyms or
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression; for more
+        /// information about how to specify a pattern, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+        /// (optional)</param>
+        /// <returns><see cref="Value" />Value</returns>
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string valueType = null, List<string> synonyms = null, List<string> patterns = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateValue`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateValue`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `CreateValue`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `CreateValue`");
+
+            RequestObject<Value> req = new RequestObject<Value>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(value))
+                bodyObject["value"] = value;
+            if (metadata != null)
+                bodyObject["metadata"] = JToken.FromObject(metadata);
+            if (!string.IsNullOrEmpty(valueType))
+                bodyObject["type"] = valueType;
+            if (synonyms != null && synonyms.Count > 0)
+                bodyObject["synonyms"] = JToken.FromObject(synonyms);
+            if (patterns != null && patterns.Count > 0)
+                bodyObject["patterns"] = JToken.FromObject(patterns);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateValueResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Value>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateValueResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Value>)req).Callback != null)
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get entity value.
+        ///
+        /// Get information about an entity value.
+        ///
+        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="value">The text of the entity value.</param>
+        /// <param name="export">Whether to include all element content in the returned data. If **export**=`false`, the
+        /// returned data includes only information about the element itself. If **export**=`true`, all content,
+        /// including subelements, is included. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Value" />Value</returns>
+        public bool GetValue(Callback<Value> callback, string workspaceId, string entity, string value, bool? export = null, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetValue`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetValue`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `GetValue`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `GetValue`");
+
+            RequestObject<Value> req = new RequestObject<Value>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetValue"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (export != null)
+            {
+                req.Parameters["export"] = (bool)export ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetValueResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Value> response = new DetailedResponse<Value>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Value>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetValueResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Value>)req).Callback != null)
+                ((RequestObject<Value>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update entity value.
         ///
         /// Update an existing entity value with new or modified data. You must provide component objects defining the
         /// content of the updated entity value.
+        ///
+        /// If you want to update multiple entity values with a single API call, consider using the **[Update
+        /// entity](#update-entity)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -3067,21 +3004,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="newValue">The text of the entity value. This string must conform to the following restrictions:
-        ///
         /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <param name="newMetadata">Any metadata related to the entity value. (optional)</param>
         /// <param name="newValueType">Specifies the type of entity value. (optional, default to synonyms)</param>
         /// <param name="newSynonyms">An array of synonyms for the entity value. A value can specify either synonyms or
         /// patterns (depending on the value type), but not both. A synonym must conform to the following resrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <param name="newPatterns">An array of patterns for the entity value. A value can specify either synonyms or
-        /// patterns (depending on the value type), but not both. A pattern is a regular expression no longer than 512
-        /// characters. For more information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/entities.html#entities-create-dictionary-based).
+        /// patterns (depending on the value type), but not both. A pattern is a regular expression; for more
+        /// information about how to specify a pattern, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
         /// (optional)</param>
         /// <returns><see cref="Value" />Value</returns>
         public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, Dictionary<string, object> newMetadata = null, string newValueType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
@@ -3167,101 +3101,9 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Create entity value synonym.
+        /// Delete entity value.
         ///
-        /// Add a new synonym to an entity value.
-        ///
-        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="value">The text of the entity value.</param>
-        /// <param name="synonym">The text of the synonym. This string must conform to the following restrictions:
-        /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters.</param>
-        /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `CreateSynonym`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `CreateSynonym`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `CreateSynonym`");
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `CreateSynonym`");
-            if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("`synonym` is required for `CreateSynonym`");
-
-            RequestObject<Synonym> req = new RequestObject<Synonym>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateSynonym"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(synonym))
-                bodyObject["synonym"] = synonym;
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnCreateSynonymResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnCreateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnCreateSynonymResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Delete entity value synonym.
-        ///
-        /// Delete a synonym from an entity value.
+        /// Delete a value from an entity.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -3269,20 +3111,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
-        /// <param name="synonym">The text of the synonym.</param>
         /// <returns><see cref="object" />object</returns>
-        public bool DeleteSynonym(Callback<object> callback, string workspaceId, string entity, string value, string synonym)
+        public bool DeleteValue(Callback<object> callback, string workspaceId, string entity, string value)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteSynonym`");
+                throw new ArgumentNullException("`callback` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteSynonym`");
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `DeleteSynonym`");
+                throw new ArgumentNullException("`entity` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `DeleteSynonym`");
-            if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("`synonym` is required for `DeleteSynonym`");
+                throw new ArgumentNullException("`value` is required for `DeleteValue`");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3298,16 +3137,16 @@ namespace IBM.Watson.Assistant.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteSynonym"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteValue"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
 
-            req.OnResponse = OnDeleteSynonymResponse;
+            req.OnResponse = OnDeleteValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
             if (connector == null)
             {
                 return false;
@@ -3316,7 +3155,7 @@ namespace IBM.Watson.Assistant.V1
             return connector.Send(req);
         }
 
-        private void OnDeleteSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnDeleteValueResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
             DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
@@ -3333,100 +3172,12 @@ namespace IBM.Watson.Assistant.V1
             }
             catch (Exception e)
             {
-                Log.Error("AssistantService.OnDeleteSynonymResponse()", "Exception: {0}", e.ToString());
+                Log.Error("AssistantService.OnDeleteValueResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Get entity value synonym.
-        ///
-        /// Get information about a synonym of an entity value.
-        ///
-        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="entity">The name of the entity.</param>
-        /// <param name="value">The text of the entity value.</param>
-        /// <param name="synonym">The text of the synonym.</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `GetSynonym`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `GetSynonym`");
-            if (string.IsNullOrEmpty(entity))
-                throw new ArgumentNullException("`entity` is required for `GetSynonym`");
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("`value` is required for `GetSynonym`");
-            if (string.IsNullOrEmpty(synonym))
-                throw new ArgumentNullException("`synonym` is required for `GetSynonym`");
-
-            RequestObject<Synonym> req = new RequestObject<Synonym>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetSynonym"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnGetSynonymResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnGetSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<Synonym>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnGetSynonymResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<Synonym>)req).Callback != null)
-                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List entity value synonyms.
@@ -3536,9 +3287,194 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create entity value synonym.
+        ///
+        /// Add a new synonym to an entity value.
+        ///
+        /// If you want to create multiple synonyms with a single API call, consider using the **[Update
+        /// entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="value">The text of the entity value.</param>
+        /// <param name="synonym">The text of the synonym. This string must conform to the following restrictions:
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.</param>
+        /// <returns><see cref="Synonym" />Synonym</returns>
+        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(synonym))
+                throw new ArgumentNullException("`synonym` is required for `CreateSynonym`");
+
+            RequestObject<Synonym> req = new RequestObject<Synonym>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "CreateSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(synonym))
+                bodyObject["synonym"] = synonym;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateSynonymResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnCreateSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Synonym>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnCreateSynonymResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Synonym>)req).Callback != null)
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get entity value synonym.
+        ///
+        /// Get information about a synonym of an entity value.
+        ///
+        /// This operation is limited to 6000 requests per 5 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="value">The text of the entity value.</param>
+        /// <param name="synonym">The text of the synonym.</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="Synonym" />Synonym</returns>
+        public bool GetSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetSynonym`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `GetSynonym`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `GetSynonym`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `GetSynonym`");
+            if (string.IsNullOrEmpty(synonym))
+                throw new ArgumentNullException("`synonym` is required for `GetSynonym`");
+
+            RequestObject<Synonym> req = new RequestObject<Synonym>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "GetSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnGetSynonymResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Synonym> response = new DetailedResponse<Synonym>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Synonym>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnGetSynonymResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Synonym>)req).Callback != null)
+                ((RequestObject<Synonym>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Update entity value synonym.
         ///
         /// Update an existing entity value synonym with new text.
+        ///
+        /// If you want to update multiple synonyms with a single API call, consider using the **[Update
+        /// entity](#update-entity)** or **[Update entity value](#update-entity-value)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -3549,8 +3485,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="synonym">The text of the synonym.</param>
         /// <param name="newSynonym">The text of the synonym. This string must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
-        /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <returns><see cref="Synonym" />Synonym</returns>
         public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, string newSynonym = null)
         {
@@ -3629,29 +3564,213 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Delete entity value synonym.
+        ///
+        /// Delete a synonym from an entity value.
+        ///
+        /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="entity">The name of the entity.</param>
+        /// <param name="value">The text of the entity value.</param>
+        /// <param name="synonym">The text of the synonym.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteSynonym(Callback<object> callback, string workspaceId, string entity, string value, string synonym)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteSynonym`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteSynonym`");
+            if (string.IsNullOrEmpty(entity))
+                throw new ArgumentNullException("`entity` is required for `DeleteSynonym`");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("`value` is required for `DeleteSynonym`");
+            if (string.IsNullOrEmpty(synonym))
+                throw new ArgumentNullException("`synonym` is required for `DeleteSynonym`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteSynonym"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteSynonymResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteSynonymResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnDeleteSynonymResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List dialog nodes.
+        ///
+        /// List the dialog nodes for a workspace.
+        ///
+        /// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
+        /// default to false)</param>
+        /// <param name="sort">The attribute by which returned dialog nodes will be sorted. To reverse the sort order,
+        /// prefix the value with a minus sign (`-`). (optional)</param>
+        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
+        /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
+        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `ListDialogNodes`");
+
+            RequestObject<DialogNodeCollection> req = new RequestObject<DialogNodeCollection>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListDialogNodes"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (pageLimit != null)
+            {
+                req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
+            }
+            if (!string.IsNullOrEmpty(sort))
+            {
+                req.Parameters["sort"] = sort;
+            }
+            if (!string.IsNullOrEmpty(cursor))
+            {
+                req.Parameters["cursor"] = cursor;
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
+
+            req.OnResponse = OnListDialogNodesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListDialogNodesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DialogNodeCollection> response = new DetailedResponse<DialogNodeCollection>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DialogNodeCollection>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnListDialogNodesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DialogNodeCollection>)req).Callback != null)
+                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Create dialog node.
         ///
         /// Create a new dialog node.
+        ///
+        /// If you want to create multiple dialog nodes with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
         ///
         /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="dialogNode">The dialog node ID. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 1024 characters.</param>
+        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.</param>
         /// <param name="description">The description of the dialog node. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
+        /// newline, or tab characters. (optional)</param>
         /// <param name="conditions">The condition that will trigger the dialog node. This string cannot contain
-        /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
-        /// (optional)</param>
+        /// carriage return, newline, or tab characters. (optional)</param>
         /// <param name="parent">The ID of the parent dialog node. This property is omitted if the dialog node has no
         /// parent. (optional)</param>
         /// <param name="previousSibling">The ID of the previous sibling dialog node. This property is omitted if the
         /// dialog node has no previous sibling. (optional)</param>
         /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="context">The context for the dialog node. (optional)</param>
         /// <param name="metadata">The metadata for the dialog node. (optional)</param>
@@ -3659,7 +3778,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="title">The alias used to identify the dialog node. This string must conform to the following
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// (optional)</param>
         /// <param name="nodeType">How the dialog node is processed. (optional)</param>
         /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="variable">The location in the dialog context where output is stored. (optional)</param>
@@ -3670,7 +3789,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="digressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
         /// (optional)</param>
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
-        /// users. This string must be no longer than 512 characters. (optional)</param>
+        /// users. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
         public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string nodeType = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
@@ -3779,82 +3898,6 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Delete dialog node.
-        ///
-        /// Delete a dialog node from a workspace.
-        ///
-        /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
-        /// <returns><see cref="object" />object</returns>
-        public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `DeleteDialogNode`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `DeleteDialogNode`");
-            if (string.IsNullOrEmpty(dialogNode))
-                throw new ArgumentNullException("`dialogNode` is required for `DeleteDialogNode`");
-
-            RequestObject<object> req = new RequestObject<object>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-
-            req.OnResponse = OnDeleteDialogNodeResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnDeleteDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<object> response = new DetailedResponse<object>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<object>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnDeleteDialogNodeResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<object>)req).Callback != null)
-                ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Get dialog node.
         ///
         /// Get information about a dialog node.
@@ -3937,110 +3980,12 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List dialog nodes.
-        ///
-        /// List the dialog nodes for a workspace.
-        ///
-        /// This operation is limited to 2500 requests per 30 minutes. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
-        /// <param name="includeCount">Whether to include information about the number of records returned. (optional,
-        /// default to false)</param>
-        /// <param name="sort">The attribute by which returned dialog nodes will be sorted. To reverse the sort order,
-        /// prefix the value with a minus sign (`-`). (optional)</param>
-        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
-        /// the response. (optional, default to false)</param>
-        /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
-        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `ListDialogNodes`");
-
-            RequestObject<DialogNodeCollection> req = new RequestObject<DialogNodeCollection>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListDialogNodes"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (pageLimit != null)
-            {
-                req.Parameters["page_limit"] = pageLimit;
-            }
-            if (includeCount != null)
-            {
-                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
-            }
-            if (!string.IsNullOrEmpty(sort))
-            {
-                req.Parameters["sort"] = sort;
-            }
-            if (!string.IsNullOrEmpty(cursor))
-            {
-                req.Parameters["cursor"] = cursor;
-            }
-            if (includeAudit != null)
-            {
-                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
-            }
-
-            req.OnResponse = OnListDialogNodesResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListDialogNodesResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<DialogNodeCollection> response = new DetailedResponse<DialogNodeCollection>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<DialogNodeCollection>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnListDialogNodesResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<DialogNodeCollection>)req).Callback != null)
-                ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Update dialog node.
         ///
         /// Update an existing dialog node with new or modified data.
+        ///
+        /// If you want to update multiple dialog nodes with a single API call, consider using the **[Update
+        /// workspace](#update-workspace)** method instead.
         ///
         /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
         /// </summary>
@@ -4049,19 +3994,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
         /// <param name="newDialogNode">The dialog node ID. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 1024 characters. (optional)</param>
-        /// <param name="newDescription">The description of the dialog node. This string cannot contain carriage return,
-        /// newline, or tab characters, and it must be no longer than 128 characters. (optional)</param>
-        /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
-        /// carriage return, newline, or tab characters, and it must be no longer than 2048 characters.
         /// (optional)</param>
+        /// <param name="newDescription">The description of the dialog node. This string cannot contain carriage return,
+        /// newline, or tab characters. (optional)</param>
+        /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
+        /// carriage return, newline, or tab characters. (optional)</param>
         /// <param name="newParent">The ID of the parent dialog node. This property is omitted if the dialog node has no
         /// parent. (optional)</param>
         /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. This property is omitted if the
         /// dialog node has no previous sibling. (optional)</param>
         /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="newContext">The context for the dialog node. (optional)</param>
         /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
@@ -4069,7 +4013,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newTitle">The alias used to identify the dialog node. This string must conform to the following
         /// restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 64 characters. (optional)</param>
+        /// (optional)</param>
         /// <param name="newNodeType">How the dialog node is processed. (optional)</param>
         /// <param name="newEventName">How an `event_handler` node is processed. (optional)</param>
         /// <param name="newVariable">The location in the dialog context where output is stored. (optional)</param>
@@ -4081,7 +4025,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newDigressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
         /// (optional)</param>
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
-        /// users. This string must be no longer than 512 characters. (optional)</param>
+        /// users. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
         public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newNodeType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
@@ -4190,6 +4134,181 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Delete dialog node.
+        ///
+        /// Delete a dialog node from a workspace.
+        ///
+        /// This operation is limited to 500 requests per 30 minutes. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteDialogNode`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `DeleteDialogNode`");
+            if (string.IsNullOrEmpty(dialogNode))
+                throw new ArgumentNullException("`dialogNode` is required for `DeleteDialogNode`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "DeleteDialogNode"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteDialogNodeResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteDialogNodeResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnDeleteDialogNodeResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List log events in a workspace.
+        ///
+        /// List the events from the log of a specific workspace.
+        ///
+        /// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is
+        /// specified, the limit is 120 requests per minute. For more information, see **Rate limiting**.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
+        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
+        /// request_timestamp)</param>
+        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
+        /// For more information, see the
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
+        /// (optional)</param>
+        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
+        /// <returns><see cref="LogCollection" />LogCollection</returns>
+        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListLogs`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `ListLogs`");
+
+            RequestObject<LogCollection> req = new RequestObject<LogCollection>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListLogs"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(sort))
+            {
+                req.Parameters["sort"] = sort;
+            }
+            if (!string.IsNullOrEmpty(filter))
+            {
+                req.Parameters["filter"] = filter;
+            }
+            if (pageLimit != null)
+            {
+                req.Parameters["page_limit"] = pageLimit;
+            }
+            if (!string.IsNullOrEmpty(cursor))
+            {
+                req.Parameters["cursor"] = cursor;
+            }
+
+            req.OnResponse = OnListLogsResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/logs", workspaceId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnListLogsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<LogCollection>)req).Callback != null)
+                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// List log events in all workspaces.
         ///
         /// List the events from the logs of all workspaces in the service instance.
@@ -4201,7 +4320,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id`
         /// or `request.context.metadata.deployment`. For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).</param>
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
         /// request_timestamp)</param>
@@ -4288,105 +4407,6 @@ namespace IBM.Watson.Assistant.V1
                 ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List log events in a workspace.
-        ///
-        /// List the events from the log of a specific workspace.
-        ///
-        /// If **cursor** is not specified, this operation is limited to 40 requests per 30 minutes. If **cursor** is
-        /// specified, the limit is 120 requests per minute. For more information, see **Rate limiting**.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
-        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
-        /// request_timestamp)</param>
-        /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
-        /// For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/filter-reference.html#filter-reference-syntax).
-        /// (optional)</param>
-        /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
-        /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
-        /// <returns><see cref="LogCollection" />LogCollection</returns>
-        public bool ListLogs(Callback<LogCollection> callback, string workspaceId, string sort = null, string filter = null, long? pageLimit = null, string cursor = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListLogs`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `ListLogs`");
-
-            RequestObject<LogCollection> req = new RequestObject<LogCollection>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbGET,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "ListLogs"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(sort))
-            {
-                req.Parameters["sort"] = sort;
-            }
-            if (!string.IsNullOrEmpty(filter))
-            {
-                req.Parameters["filter"] = filter;
-            }
-            if (pageLimit != null)
-            {
-                req.Parameters["page_limit"] = pageLimit;
-            }
-            if (!string.IsNullOrEmpty(cursor))
-            {
-                req.Parameters["cursor"] = cursor;
-            }
-
-            req.OnResponse = OnListLogsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/workspaces/{0}/logs", workspaceId));
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnListLogsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<LogCollection> response = new DetailedResponse<LogCollection>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<LogCollection>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnListLogsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<LogCollection>)req).Callback != null)
-                ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
         /// Delete labeled data.
         ///
         /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated
@@ -4394,7 +4414,7 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/assistant/information-security.html).
+        /// security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
