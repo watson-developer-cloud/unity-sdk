@@ -1,3 +1,16 @@
+# [3.2.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.1.0...v3.2.0) (2019-06-14)
+
+
+### Bug Fixes
+
+* **Version:** Manually bumpversion to 3.1.0 ([0330079](https://github.com/watson-developer-cloud/unity-sdk/commit/0330079))
+
+
+### Features
+
+* **regenerate:** updates based on latest API definitions ([dc40499](https://github.com/watson-developer-cloud/unity-sdk/commit/dc40499))
+* **Regeneration:** Regenerated SDK based on the latest API definitions ([192c13b](https://github.com/watson-developer-cloud/unity-sdk/commit/192c13b))
+
 # [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-06-14)
 
 
