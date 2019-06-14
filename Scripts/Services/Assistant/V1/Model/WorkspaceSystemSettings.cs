@@ -26,7 +26,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class WorkspaceSystemSettings
     {
         /// <summary>
-        /// Workspace settings related to the Watson Assistant tool.
+        /// Workspace settings related to the Watson Assistant user interface.
         /// </summary>
         [JsonProperty("tooling", NullValueHandling = NullValueHandling.Ignore)]
         public WorkspaceSystemSettingsTooling Tooling { get; set; }

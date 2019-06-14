@@ -133,8 +133,9 @@ namespace IBM.Watson.Assistant.V2
         /// maintains the state of the conversation.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
-        /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
+        /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
+        /// Assistant user interface, open the assistant settings and click **API Details**. For information about
+        /// creating assistants, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
@@ -208,8 +209,9 @@ namespace IBM.Watson.Assistant.V2
         /// Deletes a session explicitly before it times out.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
-        /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
+        /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
+        /// Assistant user interface, open the assistant settings and click **API Details**. For information about
+        /// creating assistants, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
@@ -288,8 +290,9 @@ namespace IBM.Watson.Assistant.V2
         /// There is no rate limit for this operation.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="assistantId">Unique identifier of the assistant. You can find the assistant ID of an assistant
-        /// on the **Assistants** tab of the Watson Assistant tool. For information about creating assistants, see the
+        /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
+        /// Assistant user interface, open the assistant settings and click **API Details**. For information about
+        /// creating assistants, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>

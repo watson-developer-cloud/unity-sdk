@@ -58,6 +58,10 @@ namespace IBM.Watson.Assistant.V2.Model
             /// Constant SUGGESTION for suggestion
             /// </summary>
             public const string SUGGESTION = "suggestion";
+            /// <summary>
+            /// Constant SEARCH for search
+            /// </summary>
+            public const string SEARCH = "search";
             
         }
 

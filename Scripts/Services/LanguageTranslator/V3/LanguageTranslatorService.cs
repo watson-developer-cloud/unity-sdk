@@ -216,6 +216,75 @@ namespace IBM.Watson.LanguageTranslator.V3
                 ((RequestObject<TranslationResult>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// List identifiable languages.
+        ///
+        /// Lists the languages that the service can identify. Returns the language code (for example, `en` for English
+        /// or `es` for Spanish) and name of each language.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <returns><see cref="IdentifiableLanguages" />IdentifiableLanguages</returns>
+        public bool ListIdentifiableLanguages(Callback<IdentifiableLanguages> callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListIdentifiableLanguages`");
+
+            RequestObject<IdentifiableLanguages> req = new RequestObject<IdentifiableLanguages>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListIdentifiableLanguagesResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identifiable_languages");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnListIdentifiableLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<IdentifiableLanguages> response = new DetailedResponse<IdentifiableLanguages>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<IdentifiableLanguages>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("LanguageTranslatorService.OnListIdentifiableLanguagesResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<IdentifiableLanguages>)req).Callback != null)
+                ((RequestObject<IdentifiableLanguages>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Identify language.
         ///
         /// Identifies the language of the input text.
@@ -290,19 +359,24 @@ namespace IBM.Watson.LanguageTranslator.V3
                 ((RequestObject<IdentifiedLanguages>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List identifiable languages.
+        /// List models.
         ///
-        /// Lists the languages that the service can identify. Returns the language code (for example, `en` for English
-        /// or `es` for Spanish) and name of each language.
+        /// Lists available translation models.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="IdentifiableLanguages" />IdentifiableLanguages</returns>
-        public bool ListIdentifiableLanguages(Callback<IdentifiableLanguages> callback)
+        /// <param name="source">Specify a language code to filter results by source language. (optional)</param>
+        /// <param name="target">Specify a language code to filter results by target language. (optional)</param>
+        /// <param name="defaultModels">If the default parameter isn't specified, the service will return all models
+        /// (default and non-default) for each language pair. To return only default models, set this to `true`. To
+        /// return only non-default models, set this to `false`. There is exactly one default model per language pair,
+        /// the IBM provided base model. (optional)</param>
+        /// <returns><see cref="TranslationModels" />TranslationModels</returns>
+        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? defaultModels = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListIdentifiableLanguages`");
+                throw new ArgumentNullException("`callback` is required for `ListModels`");
 
-            RequestObject<IdentifiableLanguages> req = new RequestObject<IdentifiableLanguages>
+            RequestObject<TranslationModels> req = new RequestObject<TranslationModels>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -316,16 +390,28 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListIdentifiableLanguages"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListModels"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(source))
+            {
+                req.Parameters["source"] = source;
+            }
+            if (!string.IsNullOrEmpty(target))
+            {
+                req.Parameters["target"] = target;
+            }
+            if (defaultModels != null)
+            {
+                req.Parameters["default"] = (bool)defaultModels ? "true" : "false";
+            }
 
-            req.OnResponse = OnListIdentifiableLanguagesResponse;
+            req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identifiable_languages");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
             if (connector == null)
             {
                 return false;
@@ -334,9 +420,9 @@ namespace IBM.Watson.LanguageTranslator.V3
             return connector.Send(req);
         }
 
-        private void OnListIdentifiableLanguagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<IdentifiableLanguages> response = new DetailedResponse<IdentifiableLanguages>();
+            DetailedResponse<TranslationModels> response = new DetailedResponse<TranslationModels>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -346,17 +432,17 @@ namespace IBM.Watson.LanguageTranslator.V3
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<IdentifiableLanguages>(json);
+                response.Result = JsonConvert.DeserializeObject<TranslationModels>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("LanguageTranslatorService.OnListIdentifiableLanguagesResponse()", "Exception: {0}", e.ToString());
+                Log.Error("LanguageTranslatorService.OnListModelsResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<IdentifiableLanguages>)req).Callback != null)
-                ((RequestObject<IdentifiableLanguages>)req).Callback(response, resp.Error);
+            if (((RequestObject<TranslationModels>)req).Callback != null)
+                ((RequestObject<TranslationModels>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Create model.
@@ -615,24 +701,18 @@ namespace IBM.Watson.LanguageTranslator.V3
                 ((RequestObject<TranslationModel>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// List models.
+        /// List documents.
         ///
-        /// Lists available translation models.
+        /// Lists documents that have been submitted for translation.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="source">Specify a language code to filter results by source language. (optional)</param>
-        /// <param name="target">Specify a language code to filter results by target language. (optional)</param>
-        /// <param name="defaultModels">If the default parameter isn't specified, the service will return all models
-        /// (default and non-default) for each language pair. To return only default models, set this to `true`. To
-        /// return only non-default models, set this to `false`. There is exactly one default model per language pair,
-        /// the IBM provided base model. (optional)</param>
-        /// <returns><see cref="TranslationModels" />TranslationModels</returns>
-        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? defaultModels = null)
+        /// <returns><see cref="DocumentList" />DocumentList</returns>
+        public bool ListDocuments(Callback<DocumentList> callback)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `ListModels`");
+                throw new ArgumentNullException("`callback` is required for `ListDocuments`");
 
-            RequestObject<TranslationModels> req = new RequestObject<TranslationModels>
+            RequestObject<DocumentList> req = new RequestObject<DocumentList>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -646,28 +726,16 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListModels"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "ListDocuments"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(source))
-            {
-                req.Parameters["source"] = source;
-            }
-            if (!string.IsNullOrEmpty(target))
-            {
-                req.Parameters["target"] = target;
-            }
-            if (defaultModels != null)
-            {
-                req.Parameters["default"] = (bool)defaultModels ? "true" : "false";
-            }
 
-            req.OnResponse = OnListModelsResponse;
+            req.OnResponse = OnListDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/documents");
             if (connector == null)
             {
                 return false;
@@ -676,9 +744,9 @@ namespace IBM.Watson.LanguageTranslator.V3
             return connector.Send(req);
         }
 
-        private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnListDocumentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<TranslationModels> response = new DetailedResponse<TranslationModels>();
+            DetailedResponse<DocumentList> response = new DetailedResponse<DocumentList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -688,17 +756,336 @@ namespace IBM.Watson.LanguageTranslator.V3
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TranslationModels>(json);
+                response.Result = JsonConvert.DeserializeObject<DocumentList>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("LanguageTranslatorService.OnListModelsResponse()", "Exception: {0}", e.ToString());
+                Log.Error("LanguageTranslatorService.OnListDocumentsResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<TranslationModels>)req).Callback != null)
-                ((RequestObject<TranslationModels>)req).Callback(response, resp.Error);
+            if (((RequestObject<DocumentList>)req).Callback != null)
+                ((RequestObject<DocumentList>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Translate document.
+        ///
+        /// Submit a document for translation. You can submit the document contents in the `file` parameter, or you can
+        /// reference a previously submitted document by document ID.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="file">The source file to translate.
+        ///
+        /// [Supported file
+        /// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
+        ///
+        /// Maximum file size: **20 MB**.</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
+        /// <param name="modelId">The model to use for translation. `model_id` or both `source` and `target` are
+        /// required. (optional)</param>
+        /// <param name="source">Language code that specifies the language of the source document. (optional)</param>
+        /// <param name="target">Language code that specifies the target language for translation. (optional)</param>
+        /// <param name="documentId">To use a previously submitted document as the source for a new translation, enter
+        /// the `document_id` of the document. (optional)</param>
+        /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
+        public bool TranslateDocument(Callback<DocumentStatus> callback, System.IO.MemoryStream file, string filename,  string fileContentType = null, string modelId = null, string source = null, string target = null, string documentId = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `TranslateDocument`");
+            if (file == null)
+                throw new ArgumentNullException("`file` is required for `TranslateDocument`");
+            if (filename == null)
+                throw new ArgumentNullException("`filename` is required for `TranslateDocument`");
+
+            RequestObject<DocumentStatus> req = new RequestObject<DocumentStatus>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "TranslateDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
+            }
+            if (!string.IsNullOrEmpty(modelId))
+            {
+                req.Forms["model_id"] = new RESTConnector.Form(modelId);
+            }
+            if (!string.IsNullOrEmpty(source))
+            {
+                req.Forms["source"] = new RESTConnector.Form(source);
+            }
+            if (!string.IsNullOrEmpty(target))
+            {
+                req.Forms["target"] = new RESTConnector.Form(target);
+            }
+            if (!string.IsNullOrEmpty(documentId))
+            {
+                req.Forms["document_id"] = new RESTConnector.Form(documentId);
+            }
+
+            req.OnResponse = OnTranslateDocumentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/documents");
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnTranslateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DocumentStatus> response = new DetailedResponse<DocumentStatus>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("LanguageTranslatorService.OnTranslateDocumentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DocumentStatus>)req).Callback != null)
+                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get document status.
+        ///
+        /// Gets the translation status of a document.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="documentId">The document ID of the document.</param>
+        /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
+        public bool GetDocumentStatus(Callback<DocumentStatus> callback, string documentId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetDocumentStatus`");
+            if (string.IsNullOrEmpty(documentId))
+                throw new ArgumentNullException("`documentId` is required for `GetDocumentStatus`");
+
+            RequestObject<DocumentStatus> req = new RequestObject<DocumentStatus>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "GetDocumentStatus"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetDocumentStatusResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}", documentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetDocumentStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<DocumentStatus> response = new DetailedResponse<DocumentStatus>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<DocumentStatus>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("LanguageTranslatorService.OnGetDocumentStatusResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<DocumentStatus>)req).Callback != null)
+                ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete document.
+        ///
+        /// Deletes a document.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="documentId">Document ID of the document to delete.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteDocument(Callback<object> callback, string documentId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
+            if (string.IsNullOrEmpty(documentId))
+                throw new ArgumentNullException("`documentId` is required for `DeleteDocument`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "DeleteDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteDocumentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}", documentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("LanguageTranslatorService.OnDeleteDocumentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get translated document.
+        ///
+        /// Gets the translated document associated with the given document ID.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="documentId">The document ID of the document that was submitted for translation.</param>
+        /// <param name="accept">The type of the response: application/powerpoint, application/mspowerpoint,
+        /// application/x-rtf, application/json, application/xml, application/vnd.ms-excel,
+        /// application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint,
+        /// application/vnd.openxmlformats-officedocument.presentationml.presentation, application/msword,
+        /// application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+        /// application/vnd.oasis.opendocument.spreadsheet, application/vnd.oasis.opendocument.presentation,
+        /// application/vnd.oasis.opendocument.text, application/pdf, application/rtf, text/html, text/json, text/plain,
+        /// text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset`
+        /// parameter. For example, 'text/html;charset=utf-8'. (optional)</param>
+        /// <returns><see cref="byte[]" />byte[]</returns>
+        public bool GetTranslatedDocument(Callback<byte[]> callback, string documentId, string accept = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTranslatedDocument`");
+            if (string.IsNullOrEmpty(documentId))
+                throw new ArgumentNullException("`documentId` is required for `GetTranslatedDocument`");
+
+            RequestObject<byte[]> req = new RequestObject<byte[]>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("language_translator", "V3", "GetTranslatedDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetTranslatedDocumentResponse;
+
+            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}/translated_document", documentId));
+            if (connector == null)
+            {
+                return false;
+            }
+
+            return connector.Send(req);
+        }
+
+        private void OnGetTranslatedDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<byte[]> response = new DetailedResponse<byte[]>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            response.Result = resp.Data;
+
+            if (((RequestObject<byte[]>)req).Callback != null)
+                ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
     }
 }

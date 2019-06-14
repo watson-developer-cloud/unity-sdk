@@ -33,7 +33,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
         /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
         /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml` with **source_version** of `online`,
-        /// or `ntml_v1` with **source_version** of `2016`
+        /// or `ntlm_v1` with **source_version** of `2016`
         /// -  `\"source_type\": \"web_crawl\"` - valid `credential_type`s: `noauth` or `basic`
         /// -  \"source_type\": \"cloud_object_storage\"` - valid `credential_type`s: `aws4_hmac`.
         /// </summary>
@@ -60,9 +60,9 @@ namespace IBM.Watson.Discovery.V1.Model
             /// </summary>
             public const string BASIC = "basic";
             /// <summary>
-            /// Constant NTML_V1 for ntml_v1
+            /// Constant NTLM_V1 for ntlm_v1
             /// </summary>
-            public const string NTML_V1 = "ntml_v1";
+            public const string NTLM_V1 = "ntlm_v1";
             /// <summary>
             /// Constant AWS4_HMAC for aws4_hmac
             /// </summary>
@@ -90,7 +90,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
         /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
         /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml` with **source_version** of `online`,
-        /// or `ntml_v1` with **source_version** of `2016`
+        /// or `ntlm_v1` with **source_version** of `2016`
         /// -  `\"source_type\": \"web_crawl\"` - valid `credential_type`s: `noauth` or `basic`
         /// -  \"source_type\": \"cloud_object_storage\"` - valid `credential_type`s: `aws4_hmac`.
         /// Constants for possible values can be found using CredentialDetails.CredentialTypeValue
@@ -124,7 +124,7 @@ namespace IBM.Watson.Discovery.V1.Model
         public string Url { get; set; }
         /// <summary>
         /// The **username** of the source that these credentials connect to. Only valid, and required, with a
-        /// **credential_type** of `saml`, `username_password`, `basic`, or `ntml_v1`.
+        /// **credential_type** of `saml`, `username_password`, `basic`, or `ntlm_v1`.
         /// </summary>
         [JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
         public string Username { get; set; }
@@ -170,7 +170,7 @@ namespace IBM.Watson.Discovery.V1.Model
         public string Passphrase { get; set; }
         /// <summary>
         /// The **password** of the source that these credentials connect to. Only valid, and required, with
-        /// **credential_type**s of `saml`, `username_password`, `basic`, or `ntml_v1`.
+        /// **credential_type**s of `saml`, `username_password`, `basic`, or `ntlm_v1`.
         ///
         /// **Note:** When used with a **source_type** of `salesforce`, the password consists of the Salesforce password
         /// and a valid Salesforce security token concatenated. This value is never returned and is only used when
@@ -180,13 +180,14 @@ namespace IBM.Watson.Discovery.V1.Model
         public string Password { get; set; }
         /// <summary>
         /// The ID of the **gateway** to be connected through (when connecting to intranet sites). Only valid with a
-        /// **credential_type** of `noauth`, `basic`, or `ntml_v1`. Gateways are created using the
+        /// **credential_type** of `noauth`, `basic`, or `ntlm_v1`. Gateways are created using the
         /// `/v1/environments/{environment_id}/gateways` methods.
         /// </summary>
         [JsonProperty("gateway_id", NullValueHandling = NullValueHandling.Ignore)]
         public string GatewayId { get; set; }
         /// <summary>
-        /// SharePoint OnPrem WebApplication URL. Only valid, and required, with a **source_version** of `2016`.
+        /// SharePoint OnPrem WebApplication URL. Only valid, and required, with a **source_version** of `2016`. If a
+        /// port is not supplied, the default to port `80` for http and port `443` for https connections are used.
         /// </summary>
         [JsonProperty("web_application_url", NullValueHandling = NullValueHandling.Ignore)]
         public string WebApplicationUrl { get; set; }
@@ -204,7 +205,8 @@ namespace IBM.Watson.Discovery.V1.Model
         public string Endpoint { get; set; }
         /// <summary>
         /// The access key ID associated with the cloud object store. Only valid, and required, with a
-        /// **credential_type** of `aws4_hmac`. For more infomation, see the [cloud object store
+        /// **credential_type** of `aws4_hmac`. This value is never returned and is only used when creating or modifying
+        /// **credentials**. For more infomation, see the [cloud object store
         /// documentation](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
         /// </summary>
         [JsonProperty("access_key_id", NullValueHandling = NullValueHandling.Ignore)]

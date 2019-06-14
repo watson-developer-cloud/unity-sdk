@@ -27,10 +27,8 @@ namespace IBM.Watson.Assistant.V1.Model
     {
         /// <summary>
         /// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
-        ///
-        /// - It cannot contain carriage return, newline, or tab characters
-        /// - It cannot consist of only whitespace characters
-        /// - It must be no longer than 1024 characters.
+        /// - It cannot contain carriage return, newline, or tab characters.
+        /// - It cannot consist of only whitespace characters.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }

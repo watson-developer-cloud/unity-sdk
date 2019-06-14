@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// Utterance.
+    /// An utterance for the input of the general-purpose endpoint.
     /// </summary>
     public class Utterance
     {

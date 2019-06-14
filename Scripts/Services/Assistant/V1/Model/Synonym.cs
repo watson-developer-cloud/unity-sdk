@@ -29,7 +29,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The text of the synonym. This string must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.
-        /// - It must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("synonym", NullValueHandling = NullValueHandling.Ignore)]
         public string _Synonym { get; set; }

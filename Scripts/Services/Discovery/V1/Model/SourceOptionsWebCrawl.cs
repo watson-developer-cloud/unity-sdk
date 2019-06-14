@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -90,5 +91,11 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("override_robots_txt", NullValueHandling = NullValueHandling.Ignore)]
         public bool? OverrideRobotsTxt { get; set; }
+        /// <summary>
+        /// Array of URL's to be excluded while crawling. The crawler will not follow links which contains this string.
+        /// For example, listing `https://ibm.com/watson` also excludes `https://ibm.com/watson/discovery`.
+        /// </summary>
+        [JsonProperty("blacklist", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Blacklist { get; set; }
     }
 }

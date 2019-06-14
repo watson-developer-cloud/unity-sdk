@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneInput.
+    /// Input for the general-purpose endpoint.
     /// </summary>
     public class ToneInput
     {

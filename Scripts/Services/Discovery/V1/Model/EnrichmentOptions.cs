@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// An object representing the configuration options to use for the `elements` enrichment.
+    /// Options which are specific to a particular enrichment.
     /// </summary>
     public class EnrichmentOptions
     {

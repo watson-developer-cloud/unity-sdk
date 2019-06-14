@@ -103,9 +103,14 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("training_status", NullValueHandling = NullValueHandling.Ignore)]
         public TrainingStatus TrainingStatus { get; set; }
         /// <summary>
-        /// Object containing source crawl status information.
+        /// Object containing information about the crawl status of this collection.
         /// </summary>
-        [JsonProperty("source_crawl", NullValueHandling = NullValueHandling.Ignore)]
-        public SourceStatus SourceCrawl { get; set; }
+        [JsonProperty("crawl_status", NullValueHandling = NullValueHandling.Ignore)]
+        public CollectionCrawlStatus CrawlStatus { get; set; }
+        /// <summary>
+        /// Object containing smart document understanding information for this collection.
+        /// </summary>
+        [JsonProperty("smart_document_understanding", NullValueHandling = NullValueHandling.Ignore)]
+        public SduStatus SmartDocumentUnderstanding { get; set; }
     }
 }

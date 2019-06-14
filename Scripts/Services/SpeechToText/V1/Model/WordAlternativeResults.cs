@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// WordAlternativeResults.
+    /// Information about alternative hypotheses for words from speech recognition results.
     /// </summary>
     public class WordAlternativeResults
     {

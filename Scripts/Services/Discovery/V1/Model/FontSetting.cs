@@ -25,7 +25,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class FontSetting
     {
         /// <summary>
-        /// The HTML heading level that any content with the matching font will be converted to.
+        /// The HTML heading level that any content with the matching font is converted to.
         /// </summary>
         [JsonProperty("level", NullValueHandling = NullValueHandling.Ignore)]
         public long? Level { get; set; }

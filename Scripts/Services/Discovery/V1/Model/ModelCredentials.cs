@@ -58,6 +58,24 @@ namespace IBM.Watson.Discovery.V1.Model
         }
 
         /// <summary>
+        /// The current status of this set of credentials. `connected` indicates that the credentials are available to
+        /// use with the source configuration of a collection. `invalid` refers to the credentials (for example, the
+        /// password provided has expired) and must be corrected before they can be used with a collection.
+        /// </summary>
+        public class StatusValue
+        {
+            /// <summary>
+            /// Constant CONNECTED for connected
+            /// </summary>
+            public const string CONNECTED = "connected";
+            /// <summary>
+            /// Constant INVALID for invalid
+            /// </summary>
+            public const string INVALID = "invalid";
+            
+        }
+
+        /// <summary>
         /// The source that this credentials object connects to.
         /// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
         /// -  `salesforce` indicates the credentials are used to connect to Salesforce.
@@ -68,6 +86,14 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("source_type", NullValueHandling = NullValueHandling.Ignore)]
         public string SourceType { get; set; }
+        /// <summary>
+        /// The current status of this set of credentials. `connected` indicates that the credentials are available to
+        /// use with the source configuration of a collection. `invalid` refers to the credentials (for example, the
+        /// password provided has expired) and must be corrected before they can be used with a collection.
+        /// Constants for possible values can be found using ModelCredentials.StatusValue
+        /// </summary>
+        [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+        public string Status { get; set; }
         /// <summary>
         /// Unique identifier for this set of credentials.
         /// </summary>

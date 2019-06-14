@@ -21,7 +21,7 @@ using System;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// The results of a single feedback query.
+    /// The results of a successful **Get Feedback** request for a single feedback entry.
     /// </summary>
     public class GetFeedback
     {
@@ -41,7 +41,7 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
         public string Comment { get; set; }
         /// <summary>
-        /// Information returned from the `POST /v1/feedback` method.
+        /// Information returned from the **Add Feedback** method.
         /// </summary>
         [JsonProperty("feedback_data", NullValueHandling = NullValueHandling.Ignore)]
         public FeedbackDataOutput FeedbackData { get; set; }

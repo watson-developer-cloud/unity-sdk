@@ -196,19 +196,17 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// The dialog node ID. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 1024 characters.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string _DialogNode { get; set; }
         /// <summary>
-        /// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters,
-        /// and it must be no longer than 128 characters.
+        /// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
         /// <summary>
         /// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
-        /// characters, and it must be no longer than 2048 characters.
+        /// characters.
         /// </summary>
         [JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
         public string Conditions { get; set; }
@@ -225,7 +223,7 @@ namespace IBM.Watson.Assistant.V1.Model
         public string PreviousSibling { get; set; }
         /// <summary>
         /// The output of the dialog node. For more information about how to specify dialog node output, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant/dialog-overview.html#dialog-overview-responses).
+        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public JObject Output { get; set; }
@@ -247,7 +245,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// The alias used to identify the dialog node. This string must conform to the following restrictions:
         /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-        /// - It must be no longer than 64 characters.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }
@@ -262,8 +259,7 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
-        /// A label that can be displayed externally to describe the purpose of the node to users. This string must be
-        /// no longer than 512 characters.
+        /// A label that can be displayed externally to describe the purpose of the node to users.
         /// </summary>
         [JsonProperty("user_label", NullValueHandling = NullValueHandling.Ignore)]
         public string UserLabel { get; set; }

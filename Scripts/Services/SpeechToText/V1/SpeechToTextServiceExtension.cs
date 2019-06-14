@@ -239,8 +239,30 @@ namespace IBM.Watson.SpeechToText.V1
         /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text/output.html#redaction).
         /// </summary>
         public string Redaction { get; set; }
+        /// <summary>
+        /// If `true`, requests processing metrics about the service's transcription of
+        /// the input audio. The service returns processing metrics at the interval specified by the
+        /// `processing_metrics_interval` parameter. It also returns processing metrics for transcription events, for
+        /// example, for final and interim results. By default, the service returns no processing metrics. (optional,
+        /// default to false)
+        /// </summary>
+        public bool ProcessingMetrics { get; set; }
+        /// <summary>
+        /// Specifies the interval in real wall-clock seconds at which the
+        /// service is to return processing metrics. The parameter is ignored unless the `processing_metrics` parameter
+        /// is set to `true`.
+        ///
+        /// The parameter accepts a minimum value of 0.1 seconds. The level of precision is not restricted, so you can
+        /// specify values such as 0.25 and 0.125.
+        ///
+        /// The service does not impose a maximum value. If you want to receive processing metrics only for
+        /// transcription events instead of at periodic intervals, set the value to a large number. If the value is
+        /// larger than the duration of the audio, the service returns processing metrics only for transcription events.
+        /// (optional)
+        /// </summary>
+        public float? ProcessingMetricsInterval { get; set; }
         #endregion
-        
+
         #region Sessionless - Streaming
         /// <summary>
         /// This callback object is used by the Recognize() and StartListening() methods.
@@ -479,6 +501,8 @@ namespace IBM.Watson.SpeechToText.V1
                 start["grammar_name"] = GrammarName;
             if (Redaction != null)
                 start["redaction"] = Redaction;
+            start["processing_metrics"] = ProcessingMetrics;
+            start["processing_metrics_interval"] = ProcessingMetricsInterval;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING

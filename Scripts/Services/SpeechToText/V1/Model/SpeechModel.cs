@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// SpeechModel.
+    /// Information about an available language model.
     /// </summary>
     public class SpeechModel
     {
@@ -46,7 +46,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
         public string Url { get; set; }
         /// <summary>
-        /// Describes the additional service features that are supported with the model.
+        /// Additional service features that are supported with the model.
         /// </summary>
         [JsonProperty("supported_features", NullValueHandling = NullValueHandling.Ignore)]
         public SupportedFeatures SupportedFeatures { get; set; }

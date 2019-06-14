@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.ToneAnalyzer.V3.Model
 {
     /// <summary>
-    /// ToneChatScore.
+    /// The score for an utterance from the input content.
     /// </summary>
     public class ToneChatScore
     {

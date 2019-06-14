@@ -26,8 +26,7 @@ namespace IBM.Watson.Assistant.V1.Model
     {
         /// <summary>
         /// Whether values in the output will overwrite output values in an array specified by previously executed
-        /// dialog nodes. If this option is set to **false**, new values will be appended to previously specified
-        /// values.
+        /// dialog nodes. If this option is set to `false`, new values will be appended to previously specified values.
         /// </summary>
         [JsonProperty("overwrite", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Overwrite { get; set; }

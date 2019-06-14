@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Describes the additional service features that are supported with the voice.
+    /// Additional service features that are supported with the voice.
     /// </summary>
     public class SupportedFeatures
     {

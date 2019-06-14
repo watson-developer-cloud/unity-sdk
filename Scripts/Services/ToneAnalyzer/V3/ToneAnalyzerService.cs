@@ -129,7 +129,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <summary>
         /// Analyze general tone.
         ///
-        /// Use the general purpose endpoint to analyze the tone of your input content. The service analyzes the content
+        /// Use the general-purpose endpoint to analyze the tone of your input content. The service analyzes the content
         /// for emotional and language tones. The method always analyzes the tone of the full document; by default, it
         /// also analyzes the tone of each individual sentence of the content.
         ///
@@ -144,7 +144,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// For `text/html`, the service removes HTML tags and analyzes only the textual content.
         ///
         /// **See also:** [Using the general-purpose
-        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone.html#using-the-general-purpose-endpoint).
+        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="toneInput">JSON, plain text, or HTML input that contains the content to be analyzed. For JSON
@@ -260,9 +260,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 ((RequestObject<ToneAnalysis>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Analyze customer engagement tone.
+        /// Analyze customer-engagement tone.
         ///
-        /// Use the customer engagement endpoint to analyze the tone of customer service and customer support
+        /// Use the customer-engagement endpoint to analyze the tone of customer service and customer support
         /// conversations. For each utterance of a conversation, the method reports the most prevalent subset of the
         /// following seven tones: sad, frustrated, satisfied, excited, polite, impolite, and sympathetic.
         ///
@@ -273,7 +273,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// JSON content is effectively always UTF-8.
         ///
         /// **See also:** [Using the customer-engagement
-        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer/using-tone-chat.html#using-the-customer-engagement-endpoint).
+        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utco#utco).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="utterances">An array of `Utterance` objects that provides the input content that the service is

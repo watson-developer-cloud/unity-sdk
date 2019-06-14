@@ -33,6 +33,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `complete` indicates that the crawl has completed with no errors.
         /// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when
         /// possible.
+        /// -  `unknown` indicates that an unidentified error has occured in the service.
         /// </summary>
         public class StatusValue
         {
@@ -52,6 +53,10 @@ namespace IBM.Watson.Discovery.V1.Model
             /// Constant QUEUED for queued
             /// </summary>
             public const string QUEUED = "queued";
+            /// <summary>
+            /// Constant UNKNOWN for unknown
+            /// </summary>
+            public const string UNKNOWN = "unknown";
             
         }
 
@@ -63,14 +68,15 @@ namespace IBM.Watson.Discovery.V1.Model
         /// -  `complete` indicates that the crawl has completed with no errors.
         /// -  `queued` indicates that the crawl has been paused by the system and will automatically restart when
         /// possible.
+        /// -  `unknown` indicates that an unidentified error has occured in the service.
         /// Constants for possible values can be found using SourceStatus.StatusValue
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// Date in UTC format indicating when the last crawl was attempted. If `null`, no crawl was completed.
+        /// Date in `RFC 3339` format indicating the time of the next crawl attempt.
         /// </summary>
-        [JsonProperty("last_updated", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? LastUpdated { get; set; }
+        [JsonProperty("next_crawl", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? NextCrawl { get; set; }
     }
 }

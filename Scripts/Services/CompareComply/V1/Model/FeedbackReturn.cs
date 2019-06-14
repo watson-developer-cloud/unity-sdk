@@ -46,7 +46,7 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Created { get; set; }
         /// <summary>
-        /// Information returned from the `POST /v1/feedback` method.
+        /// Information returned from the **Add Feedback** method.
         /// </summary>
         [JsonProperty("feedback_data", NullValueHandling = NullValueHandling.Ignore)]
         public FeedbackDataOutput FeedbackData { get; set; }
