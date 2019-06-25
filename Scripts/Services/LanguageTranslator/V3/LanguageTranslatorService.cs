@@ -111,7 +111,7 @@ namespace IBM.Watson.LanguageTranslator.V3
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasIamTokenData())
+            if (credentials.HasCredentials() || credentials.HasTokenData())
             {
                 Credentials = credentials;
 

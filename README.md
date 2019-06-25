@@ -451,6 +451,48 @@ void Example()
 }
 ```
 
+## IBM Cloud Pak for Data(ICP4D)
+If your service instance is of ICP4D, below are two ways of initializing the assistant service.
+
+#### 1) Supplying the `username`, `password`, `icp4d_url` and `authentication_type`
+
+The SDK will manage the token for the user
+
+```cs
+    Icp4dTokenOptions tokenOptions = new Icp4dTokenOptions()
+    {
+        Username = "<username>",
+        Password = "<password>",
+        Url = "<icp4dUrl>",
+        DisableSslVerification = true
+    };
+    credentials = new Credentials(tokenOptions, "<serviceUrl>");
+    while(!credentials.HasTokenData())
+    {
+        yield return null;
+    }
+    service = new AssistantService(versionDate, credentials);
+```
+
+#### 2) Supplying the access token
+
+```cs
+    Icp4dTokenOptions tokenOptions = new Icp4dTokenOptions()
+    {
+        Username = "<username>",
+        Password = "<password>",
+        Url = "<icp4dUrl>",
+        AccessToken = "<accessToken>",
+        DisableSslVerification = true
+    };
+    credentials = new Credentials(tokenOptions, "<serviceUrl>");
+    while(!credentials.HasTokenData())
+    {
+        yield return null;
+    }
+    service = new AssistantService(versionDate, credentials);
+```
+
 ## IBM Cloud Private
 The Watson Unity SDK does not support IBM Cloud Private because connection via proxy is not supported in UnityWebRequest. 
 
