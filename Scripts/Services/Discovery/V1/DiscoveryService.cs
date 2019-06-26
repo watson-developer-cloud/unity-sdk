@@ -111,7 +111,7 @@ namespace IBM.Watson.Discovery.V1
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasIamTokenData())
+            if (credentials.HasCredentials() || credentials.HasTokenData())
             {
                 Credentials = credentials;
 

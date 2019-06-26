@@ -93,7 +93,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <param name="credentials">The service credentials.</param>
         public NaturalLanguageClassifierService(Credentials credentials) : base(credentials, serviceId)
         {
-            if (credentials.HasCredentials() || credentials.HasIamTokenData())
+            if (credentials.HasCredentials() || credentials.HasTokenData())
             {
                 Credentials = credentials;
 

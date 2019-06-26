@@ -1941,7 +1941,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnTrainLanguageModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<TrainingResponse> response = new DetailedResponse<TrainingResponse>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1951,7 +1951,7 @@ namespace IBM.Watson.SpeechToText.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -1960,8 +1960,8 @@ namespace IBM.Watson.SpeechToText.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<TrainingResponse>)req).Callback != null)
-                ((RequestObject<TrainingResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Reset a custom language model.
@@ -3848,7 +3848,7 @@ namespace IBM.Watson.SpeechToText.V1
 
         private void OnTrainAcousticModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<TrainingResponse> response = new DetailedResponse<TrainingResponse>();
+            DetailedResponse<object> response = new DetailedResponse<object>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3858,7 +3858,7 @@ namespace IBM.Watson.SpeechToText.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<TrainingResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -3867,8 +3867,8 @@ namespace IBM.Watson.SpeechToText.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<TrainingResponse>)req).Callback != null)
-                ((RequestObject<TrainingResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Reset a custom acoustic model.

@@ -93,7 +93,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="credentials">The service credentials.</param>
         public TextToSpeechService(Credentials credentials) : base(credentials, serviceId)
         {
-            if (credentials.HasCredentials() || credentials.HasIamTokenData())
+            if (credentials.HasCredentials() || credentials.HasTokenData())
             {
                 Credentials = credentials;
 
