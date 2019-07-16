@@ -1,3 +1,11 @@
+# [3.3.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.2.0...v3.3.0) (2019-07-16)
+
+
+### Features
+
+* **icp4d:** add support for icp4d ([ba8044d](https://github.com/watson-developer-cloud/unity-sdk/commit/ba8044d))
+* **NaturalLanguageUnderstanding:** add examples for NaturalLanguageUnderstanding ([4bf9c54](https://github.com/watson-developer-cloud/unity-sdk/commit/4bf9c54))
+
 # [3.3.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.2.0...v3.3.0) (2019-06-26)
 
 
