@@ -427,8 +427,8 @@ private void OnMessage(DetailedResponse<MessageResponse> response, IBMError erro
 }
 ```
 
-## Streaming outside of US South region
-Watson services have upgraded their hosts to TLS 1.2. The US South region has a TLS 1.0 endpoint that will work for streaming but if you are streaming in other regions you will need to use Unity 2018.2 and set Scripting Runtime Version in Build Settings to .NET 4.x equivalent. In lower versions of Unity you will need to create the Speech to Text instance in US South.
+## TLS 1.0 support
+Watson services have upgraded their hosts to TLS 1.2. The Dallas location has a TLS 1.0 endpoint that works for streaming. To stream in other regions, use Unity 2018.2 and set **Scripting Runtime Version** in Build Settings to `.NET 4.x equivalent`. To support Speech to Text in earlier versions of Unity, create the instance in the Dallas location.
 
 ## Disabling SSL verification
 You can disable SSL verifciation when making a service call.
