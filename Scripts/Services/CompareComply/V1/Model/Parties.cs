@@ -48,7 +48,7 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("importance", NullValueHandling = NullValueHandling.Ignore)]
         public string Importance { get; set; }
         /// <summary>
-        /// A string identifying the party.
+        /// The normalized form of the party's name.
         /// </summary>
         [JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
         public string Party { get; set; }
@@ -58,14 +58,19 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("role", NullValueHandling = NullValueHandling.Ignore)]
         public string Role { get; set; }
         /// <summary>
-        /// List of the party's address or addresses.
+        /// A list of the party's address or addresses.
         /// </summary>
         [JsonProperty("addresses", NullValueHandling = NullValueHandling.Ignore)]
         public List<Address> Addresses { get; set; }
         /// <summary>
-        /// List of the names and roles of contacts identified in the input document.
+        /// A list of the names and roles of contacts identified in the input document.
         /// </summary>
         [JsonProperty("contacts", NullValueHandling = NullValueHandling.Ignore)]
         public List<Contact> Contacts { get; set; }
+        /// <summary>
+        /// A list of the party's mentions in the input document.
+        /// </summary>
+        [JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Mention> Mentions { get; set; }
     }
 }

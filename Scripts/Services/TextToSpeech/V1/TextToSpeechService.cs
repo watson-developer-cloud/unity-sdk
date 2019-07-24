@@ -184,8 +184,9 @@ namespace IBM.Watson.TextToSpeech.V1
         /// Get a voice.
         ///
         /// Gets information about the specified voice. The information includes the name, language, gender, and other
-        /// details about the voice. Specify a customization ID to obtain information for that custom voice model of the
-        /// specified voice. To list information about all available voices, use the **List voices** method.
+        /// details about the voice. Specify a customization ID to obtain information for a custom voice model that is
+        /// defined for the language of the specified voice. To list information about all available voices, use the
+        /// **List voices** method.
         ///
         /// **See also:** [Listing a specific
         /// voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
@@ -193,9 +194,9 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="voice">The voice for which information is to be returned.</param>
         /// <param name="customizationId">The customization ID (GUID) of a custom voice model for which information is
-        /// to be returned. You must make the request with service credentials created for the instance of the service
-        /// that owns the custom model. Omit the parameter to see information about the specified voice with no
-        /// customization. (optional)</param>
+        /// to be returned. You must make the request with credentials for the instance of the service that owns the
+        /// custom model. Omit the parameter to see information about the specified voice with no customization.
+        /// (optional)</param>
         /// <returns><see cref="Voice" />Voice</returns>
         public bool GetVoice(Callback<Voice> callback, string voice, string customizationId = null)
         {
@@ -350,14 +351,12 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="voice">The voice to use for synthesis. (optional, default to en-US_MichaelVoice)</param>
         /// <param name="customizationId">The customization ID (GUID) of a custom voice model to use for the synthesis.
         /// If a custom voice model is specified, it is guaranteed to work only if it matches the language of the
-        /// indicated voice. You must make the request with service credentials created for the instance of the service
-        /// that owns the custom model. Omit the parameter to use the specified voice with no customization.
-        /// (optional)</param>
+        /// indicated voice. You must make the request with credentials for the instance of the service that owns the
+        /// custom model. Omit the parameter to use the specified voice with no customization. (optional)</param>
         /// <param name="accept">The requested format (MIME type) of the audio. You can use the `Accept` header or the
         /// `accept` parameter to specify the audio format. For more information about specifying an audio format, see
-        /// **Audio formats (accept types)** in the method description.
-        ///
-        /// Default: `audio/ogg;codecs=opus`. (optional)</param>
+        /// **Audio formats (accept types)** in the method description. (optional, default to
+        /// audio/ogg;codecs=opus)</param>
         /// <returns><see cref="byte[]" />byte[]</returns>
         public bool Synthesize(Callback<byte[]> callback, string text, string voice = null, string customizationId = null, string accept = null)
         {
@@ -453,9 +452,9 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="customizationId">The customization ID (GUID) of a custom voice model for which the
         /// pronunciation is to be returned. The language of a specified custom model must match the language of the
         /// specified voice. If the word is not defined in the specified custom model, the service returns the default
-        /// translation for the custom model's language. You must make the request with service credentials created for
-        /// the instance of the service that owns the custom model. Omit the parameter to see the translation for the
-        /// specified voice with no customization. (optional)</param>
+        /// translation for the custom model's language. You must make the request with credentials for the instance of
+        /// the service that owns the custom model. Omit the parameter to see the translation for the specified voice
+        /// with no customization. (optional)</param>
         /// <returns><see cref="Pronunciation" />Pronunciation</returns>
         public bool GetPronunciation(Callback<Pronunciation> callback, string text, string voice = null, string format = null, string customizationId = null)
         {
@@ -641,7 +640,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="language">The language for which custom voice models that are owned by the requesting service
+        /// <param name="language">The language for which custom voice models that are owned by the requesting
         /// credentials are to be returned. Omit the parameter to see all custom voice models that are owned by the
         /// requester. (optional)</param>
         /// <returns><see cref="VoiceModels" />VoiceModels</returns>
@@ -741,7 +740,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <param name="name">A new name for the custom voice model. (optional)</param>
         /// <param name="description">A new description for the custom voice model. (optional)</param>
         /// <param name="words">An array of `Word` objects that provides the words and their translations that are to be
@@ -835,7 +834,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <returns><see cref="VoiceModel" />VoiceModel</returns>
         public bool GetVoiceModel(Callback<VoiceModel> callback, string customizationId)
         {
@@ -912,7 +911,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <returns><see cref="object" />object</returns>
         public bool DeleteVoiceModel(Callback<object> callback, string customizationId)
         {
@@ -1007,7 +1006,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <param name="words">The **Add custom words** method accepts an array of `Word` objects. Each object provides
         /// a word that is to be added or updated for the custom voice model and the word's translation.
         ///
@@ -1100,7 +1099,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <returns><see cref="Words" />Words</returns>
         public bool ListWords(Callback<Words> callback, string customizationId)
         {
@@ -1195,7 +1194,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <param name="word">The word that is to be added or updated for the custom voice model.</param>
         /// <param name="translation">The phonetic or sounds-like translation for the word. A phonetic translation is
         /// based on the SSML format for representing the phonetic string of a word either as an IPA translation or as
@@ -1295,7 +1294,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <param name="word">The word that is to be queried from the custom voice model.</param>
         /// <returns><see cref="Translation" />Translation</returns>
         public bool GetWord(Callback<Translation> callback, string customizationId, string word)
@@ -1375,7 +1374,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
-        /// request with service credentials created for the instance of the service that owns the custom model.</param>
+        /// request with credentials for the instance of the service that owns the custom model.</param>
         /// <param name="word">The word that is to be deleted from the custom voice model.</param>
         /// <returns><see cref="object" />object</returns>
         public bool DeleteWord(Callback<object> callback, string customizationId, string word)

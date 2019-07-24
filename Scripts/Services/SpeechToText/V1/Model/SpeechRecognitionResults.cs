@@ -50,6 +50,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         public List<SpeakerLabelsResult> SpeakerLabels { get; set; }
         /// <summary>
         /// If processing metrics are requested, information about the service's processing of the input audio.
+        /// Processing metrics are not available with the synchronous **Recognize audio** method.
         /// </summary>
         [JsonProperty("processing_metrics", NullValueHandling = NullValueHandling.Ignore)]
         public ProcessingMetrics ProcessingMetrics { get; set; }

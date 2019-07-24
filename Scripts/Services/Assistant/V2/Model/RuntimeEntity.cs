@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// A term from the request that was identified as an entity.
+    /// The entity value that was recognized in the user input.
     /// </summary>
     public class RuntimeEntity
     {
@@ -42,7 +42,7 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
         public string Value { get; set; }
         /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the entity.
+        /// A decimal percentage that represents Watson's confidence in the recognized entity.
         /// </summary>
         [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
         public float? Confidence { get; set; }
@@ -56,5 +56,12 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
         public List<CaptureGroup> Groups { get; set; }
+        /// <summary>
+        /// An object containing detailed information about the entity recognized in the user input.
+        ///
+        /// This property is a part of the new system entities, which are a beta feature.
+        /// </summary>
+        [JsonProperty("interpretation", NullValueHandling = NullValueHandling.Ignore)]
+        public RuntimeEntityInterpretation Interpretation { get; set; }
     }
 }

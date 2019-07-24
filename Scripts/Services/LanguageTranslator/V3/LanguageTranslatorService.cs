@@ -458,7 +458,7 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// cumulative file size of all uploaded files is limited to <b>250 MB</b>. To successfully train with a
         /// parallel corpus you must have at least <b>5,000 parallel sentences</b> in your corpus.
         ///
-        /// You can have a <b>maxium of 10 custom models per language pair</b>.
+        /// You can have a <b>maximum of 10 custom models per language pair</b>.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="baseModelId">The model ID of the model to use as the base for customization. To see available
@@ -781,6 +781,7 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
         ///
         /// Maximum file size: **20 MB**.</param>
+        /// <param name="filename">The filename for file.</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="modelId">The model to use for translation. `model_id` or both `source` and `target` are
         /// required. (optional)</param>
@@ -789,13 +790,13 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// <param name="documentId">To use a previously submitted document as the source for a new translation, enter
         /// the `document_id` of the document. (optional)</param>
         /// <returns><see cref="DocumentStatus" />DocumentStatus</returns>
-        public bool TranslateDocument(Callback<DocumentStatus> callback, System.IO.MemoryStream file, string filename,  string fileContentType = null, string modelId = null, string source = null, string target = null, string documentId = null)
+        public bool TranslateDocument(Callback<DocumentStatus> callback, System.IO.MemoryStream file, string filename, string fileContentType = null, string modelId = null, string source = null, string target = null, string documentId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TranslateDocument`");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `TranslateDocument`");
-            if (filename == null)
+            if (string.IsNullOrEmpty(filename))
                 throw new ArgumentNullException("`filename` is required for `TranslateDocument`");
 
             RequestObject<DocumentStatus> req = new RequestObject<DocumentStatus>

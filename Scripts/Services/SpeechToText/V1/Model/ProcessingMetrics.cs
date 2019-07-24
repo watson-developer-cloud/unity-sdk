@@ -20,7 +20,8 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// If processing metrics are requested, information about the service's processing of the input audio.
+    /// If processing metrics are requested, information about the service's processing of the input audio. Processing
+    /// metrics are not available with the synchronous **Recognize audio** method.
     /// </summary>
     public class ProcessingMetrics
     {

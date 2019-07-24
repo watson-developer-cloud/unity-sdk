@@ -151,5 +151,16 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; set; }
+        /// <summary>
+        /// The title or introductory text to show before the response. This text is defined in the search skill
+        /// configuration.
+        /// </summary>
+        [JsonProperty("header", NullValueHandling = NullValueHandling.Ignore)]
+        public string Header { get; set; }
+        /// <summary>
+        /// An array of objects containing search results.
+        /// </summary>
+        [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SearchResult> Results { get; set; }
     }
 }

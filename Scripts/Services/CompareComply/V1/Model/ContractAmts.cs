@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.CompareComply.V1.Model
@@ -55,6 +56,23 @@ namespace IBM.Watson.CompareComply.V1.Model
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
+        /// <summary>
+        /// The normalized form of the amount, which is listed as a string. This element is optional; that is, the
+        /// service output lists it only if normalized text exists.
+        /// </summary>
+        [JsonProperty("text_normalized", NullValueHandling = NullValueHandling.Ignore)]
+        public string TextNormalized { get; set; }
+        /// <summary>
+        /// The details of the normalized text, if applicable. This element is optional; that is, the service output
+        /// lists it only if normalized text exists.
+        /// </summary>
+        [JsonProperty("interpretation", NullValueHandling = NullValueHandling.Ignore)]
+        public Interpretation Interpretation { get; set; }
+        /// <summary>
+        /// One or more hash values that you can send to IBM to provide feedback or receive support.
+        /// </summary>
+        [JsonProperty("provenance_ids", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> ProvenanceIds { get; set; }
         /// <summary>
         /// The numeric location of the identified element in the document, represented with two integers labeled
         /// `begin` and `end`.

@@ -90,6 +90,10 @@ namespace IBM.Watson.CompareComply.V1.Model
             /// </summary>
             public const string LIABILITY = "Liability";
             /// <summary>
+            /// Constant ORDER_OF_PRECEDENCE for Order of Precedence
+            /// </summary>
+            public const string ORDER_OF_PRECEDENCE = "Order of Precedence";
+            /// <summary>
             /// Constant PAYMENT_TERMS_BILLING for Payment Terms & Billing
             /// </summary>
             public const string PAYMENT_TERMS_BILLING = "Payment Terms & Billing";
