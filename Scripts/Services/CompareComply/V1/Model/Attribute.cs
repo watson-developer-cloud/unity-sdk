@@ -38,6 +38,10 @@ namespace IBM.Watson.CompareComply.V1.Model
             /// </summary>
             public const string DATETIME = "DateTime";
             /// <summary>
+            /// Constant DEFINEDTERM for DefinedTerm
+            /// </summary>
+            public const string DEFINEDTERM = "DefinedTerm";
+            /// <summary>
             /// Constant DURATION for Duration
             /// </summary>
             public const string DURATION = "Duration";
@@ -45,6 +49,10 @@ namespace IBM.Watson.CompareComply.V1.Model
             /// Constant LOCATION for Location
             /// </summary>
             public const string LOCATION = "Location";
+            /// <summary>
+            /// Constant NUMBER for Number
+            /// </summary>
+            public const string NUMBER = "Number";
             /// <summary>
             /// Constant ORGANIZATION for Organization
             /// </summary>

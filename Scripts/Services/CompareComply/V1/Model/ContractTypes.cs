@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Termination dates identified in the input document.
+    /// The contract type identified in the input document.
     /// </summary>
-    public class TerminationDates
+    public class ContractTypes
     {
         /// <summary>
-        /// The confidence level in the identification of the termination date.
+        /// The confidence level in the identification of the contract type.
         /// </summary>
         public class ConfidenceLevelValue
         {
@@ -46,22 +46,16 @@ namespace IBM.Watson.CompareComply.V1.Model
         }
 
         /// <summary>
-        /// The confidence level in the identification of the termination date.
-        /// Constants for possible values can be found using TerminationDates.ConfidenceLevelValue
+        /// The confidence level in the identification of the contract type.
+        /// Constants for possible values can be found using ContractTypes.ConfidenceLevelValue
         /// </summary>
         [JsonProperty("confidence_level", NullValueHandling = NullValueHandling.Ignore)]
         public string ConfidenceLevel { get; set; }
         /// <summary>
-        /// The termination date.
+        /// The contract type.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
-        /// <summary>
-        /// The normalized form of the termination date, which is listed as a string. This element is optional; that is,
-        /// the service output lists it only if normalized text exists.
-        /// </summary>
-        [JsonProperty("text_normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public string TextNormalized { get; set; }
         /// <summary>
         /// One or more hash values that you can send to IBM to provide feedback or receive support.
         /// </summary>

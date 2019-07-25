@@ -194,9 +194,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
         /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
-        /// description.
-        ///
-        /// Default: `text/plain`. (optional)</param>
+        /// description. (optional, default to text/plain)</param>
         /// <returns><see cref="Profile" />Profile</returns>
         public bool Profile(Callback<Profile> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
         {
@@ -358,9 +356,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
         /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
-        /// description.
-        ///
-        /// Default: `text/plain`. (optional)</param>
+        /// description. (optional, default to text/plain)</param>
         /// <returns><see cref="System.IO.MemoryStream" />System.IO.MemoryStream</returns>
         public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
         {

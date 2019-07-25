@@ -29,7 +29,7 @@ namespace IBM.Watson.Tests
     public class AssistantV2IntegrationTests
     {
         private AssistantService service;
-        private string versionDate = "2019-02-13";
+        private string versionDate = "2019-02-28";
         private string assistantId;
         private string sessionId;
 
@@ -56,7 +56,7 @@ namespace IBM.Watson.Tests
             service.CreateSession(
                 callback: (DetailedResponse<SessionResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     createSessionResponse = response.Result;
                     sessionId = createSessionResponse.SessionId;
                     Assert.IsNotNull(createSessionResponse);
@@ -75,7 +75,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -101,7 +101,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -128,7 +128,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -156,7 +156,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -184,7 +184,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -212,7 +212,34 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
+                    messageResponse = response.Result;
+                    Assert.IsNotNull(messageResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId,
+                input: input
+            );
+
+            while (messageResponse == null)
+                yield return null;
+
+            messageResponse = null;
+            input = new MessageInput()
+            {
+                Text = "who did Watson beat on Jeopardy?",
+                Options = new MessageInputOptions()
+                {
+                    ReturnContext = true
+                }
+            };
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to Message...who did Watson beat on Jeopardy?");
+            service.WithHeader("X-Watson-Test", "1");
+            service.Message(
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
+                {
+                Log.Debug("AssistantV2IntegrationTests", "result: {0} {1}", response.Response, assistantId);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -231,7 +258,7 @@ namespace IBM.Watson.Tests
             service.DeleteSession(
                 callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", response.Response);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
                     deleteSessionResponse = response.Result;
                     Assert.IsNotNull(response.Result);
                     Assert.IsNull(error);

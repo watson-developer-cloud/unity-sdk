@@ -42,6 +42,12 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("section_title", NullValueHandling = NullValueHandling.Ignore)]
         public SectionTitle SectionTitle { get; set; }
         /// <summary>
+        /// If identified, the title or caption of the current table of the form `Table x.: ...`. Empty when no title is
+        /// identified. When exposed, the `title` is also excluded from the `contexts` array of the same table.
+        /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public TableTitle Title { get; set; }
+        /// <summary>
         /// An array of table-level cells that apply as headers to all the other cells in the current table.
         /// </summary>
         [JsonProperty("table_headers", NullValueHandling = NullValueHandling.Ignore)]
@@ -59,15 +65,21 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("column_headers", NullValueHandling = NullValueHandling.Ignore)]
         public List<ColumnHeaders> ColumnHeaders { get; set; }
         /// <summary>
-        /// An array of key-value pairs identified in the current table.
-        /// </summary>
-        [JsonProperty("key_value_pairs", NullValueHandling = NullValueHandling.Ignore)]
-        public List<KeyValuePair> KeyValuePairs { get; set; }
-        /// <summary>
         /// An array of cells that are neither table header nor column header nor row header cells, of the current table
         /// with corresponding row and column header associations.
         /// </summary>
         [JsonProperty("body_cells", NullValueHandling = NullValueHandling.Ignore)]
         public List<BodyCells> BodyCells { get; set; }
+        /// <summary>
+        /// An array of objects that list text that is related to the table contents and that precedes or follows the
+        /// current table.
+        /// </summary>
+        [JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Contexts> Contexts { get; set; }
+        /// <summary>
+        /// An array of key-value pairs identified in the current table.
+        /// </summary>
+        [JsonProperty("key_value_pairs", NullValueHandling = NullValueHandling.Ignore)]
+        public List<KeyValuePair> KeyValuePairs { get; set; }
     }
 }

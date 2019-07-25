@@ -41,6 +41,13 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         [JsonProperty("relevance", NullValueHandling = NullValueHandling.Ignore)]
         public double? Relevance { get; set; }
         /// <summary>
+        /// Confidence in the entity identification from 0 to 1. Higher values indicate higher confidence. In standard
+        /// entities requests, confidence is returned only for English text. All entities requests that use custom
+        /// models return the confidence score.
+        /// </summary>
+        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Confidence { get; set; }
+        /// <summary>
         /// Entity mentions and locations.
         /// </summary>
         [JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]

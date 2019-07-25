@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Termination dates identified in the input document.
+    /// The duration or durations of the contract.
     /// </summary>
-    public class TerminationDates
+    public class ContractTerms
     {
         /// <summary>
-        /// The confidence level in the identification of the termination date.
+        /// The confidence level in the identification of the contract term.
         /// </summary>
         public class ConfidenceLevelValue
         {
@@ -46,22 +46,28 @@ namespace IBM.Watson.CompareComply.V1.Model
         }
 
         /// <summary>
-        /// The confidence level in the identification of the termination date.
-        /// Constants for possible values can be found using TerminationDates.ConfidenceLevelValue
+        /// The confidence level in the identification of the contract term.
+        /// Constants for possible values can be found using ContractTerms.ConfidenceLevelValue
         /// </summary>
         [JsonProperty("confidence_level", NullValueHandling = NullValueHandling.Ignore)]
         public string ConfidenceLevel { get; set; }
         /// <summary>
-        /// The termination date.
+        /// The contract term (duration).
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
-        /// The normalized form of the termination date, which is listed as a string. This element is optional; that is,
+        /// The normalized form of the contract term, which is listed as a string. This element is optional; that is,
         /// the service output lists it only if normalized text exists.
         /// </summary>
         [JsonProperty("text_normalized", NullValueHandling = NullValueHandling.Ignore)]
         public string TextNormalized { get; set; }
+        /// <summary>
+        /// The details of the normalized text, if applicable. This element is optional; that is, the service output
+        /// lists it only if normalized text exists.
+        /// </summary>
+        [JsonProperty("interpretation", NullValueHandling = NullValueHandling.Ignore)]
+        public Interpretation Interpretation { get; set; }
         /// <summary>
         /// One or more hash values that you can send to IBM to provide feedback or receive support.
         /// </summary>

@@ -15,22 +15,20 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.TextToSpeech.V1.Model
+namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// Information about existing custom voice models.
+    /// The locations of each paragraph in the input document.
     /// </summary>
-    public class VoiceModels
+    public class Paragraphs
     {
         /// <summary>
-        /// An array of `VoiceModel` objects that provides information about each available custom voice model. The
-        /// array is empty if the requesting credentials own no custom voice models (if no language is specified) or own
-        /// no custom voice models for the specified language.
+        /// The numeric location of the identified element in the document, represented with two integers labeled
+        /// `begin` and `end`.
         /// </summary>
-        [JsonProperty("customizations", NullValueHandling = NullValueHandling.Ignore)]
-        public List<VoiceModel> Customizations { get; set; }
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public Location Location { get; set; }
     }
 }
