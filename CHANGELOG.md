@@ -1,3 +1,10 @@
+## [3.4.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.4.1) (2019-08-05)
+
+
+### Bug Fixes
+
+* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
+
 # [3.4.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.3.0...v3.4.0) (2019-07-25)
 
 
