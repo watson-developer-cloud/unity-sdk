@@ -62,35 +62,37 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("column_index_end", NullValueHandling = NullValueHandling.Ignore)]
         public long? ColumnIndexEnd { get; set; }
         /// <summary>
-        /// Gets or Sets RowHeaderIds
+        /// An array that contains the `id` value of a row header that is applicable to this body cell.
         /// </summary>
         [JsonProperty("row_header_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<RowHeaderIds> RowHeaderIds { get; set; }
+        public List<string> RowHeaderIds { get; set; }
         /// <summary>
-        /// Gets or Sets RowHeaderTexts
+        /// An array that contains the `text` value of a row header that is applicable to this body cell.
         /// </summary>
         [JsonProperty("row_header_texts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<RowHeaderTexts> RowHeaderTexts { get; set; }
+        public List<string> RowHeaderTexts { get; set; }
         /// <summary>
-        /// Gets or Sets RowHeaderTextsNormalized
+        /// If you provide customization input, the normalized version of the row header texts according to the
+        /// customization; otherwise, the same value as `row_header_texts`.
         /// </summary>
         [JsonProperty("row_header_texts_normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public List<RowHeaderTextsNormalized> RowHeaderTextsNormalized { get; set; }
+        public List<string> RowHeaderTextsNormalized { get; set; }
         /// <summary>
-        /// Gets or Sets ColumnHeaderIds
+        /// An array that contains the `id` value of a column header that is applicable to the current cell.
         /// </summary>
         [JsonProperty("column_header_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ColumnHeaderIds> ColumnHeaderIds { get; set; }
+        public List<string> ColumnHeaderIds { get; set; }
         /// <summary>
-        /// Gets or Sets ColumnHeaderTexts
+        /// An array that contains the `text` value of a column header that is applicable to the current cell.
         /// </summary>
         [JsonProperty("column_header_texts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ColumnHeaderTexts> ColumnHeaderTexts { get; set; }
+        public List<string> ColumnHeaderTexts { get; set; }
         /// <summary>
-        /// Gets or Sets ColumnHeaderTextsNormalized
+        /// If you provide customization input, the normalized version of the column header texts according to the
+        /// customization; otherwise, the same value as `column_header_texts`.
         /// </summary>
         [JsonProperty("column_header_texts_normalized", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ColumnHeaderTextsNormalized> ColumnHeaderTextsNormalized { get; set; }
+        public List<string> ColumnHeaderTextsNormalized { get; set; }
         /// <summary>
         /// Gets or Sets Attributes
         /// </summary>

@@ -20,8 +20,8 @@ using Newtonsoft.Json;
 namespace IBM.Watson.CompareComply.V1.Model
 {
     /// <summary>
-    /// The details of the normalized text, if applicable. This element is optional; that is, the service output lists
-    /// it only if normalized text exists.
+    /// The details of the normalized text, if applicable. This element is optional; it is returned only if normalized
+    /// text exists.
     /// </summary>
     public class Interpretation
     {

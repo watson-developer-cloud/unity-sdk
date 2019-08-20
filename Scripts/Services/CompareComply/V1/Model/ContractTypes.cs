@@ -57,7 +57,7 @@ namespace IBM.Watson.CompareComply.V1.Model
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
         /// <summary>
-        /// One or more hash values that you can send to IBM to provide feedback or receive support.
+        /// Hashed values that you can send to IBM to provide feedback or receive support.
         /// </summary>
         [JsonProperty("provenance_ids", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> ProvenanceIds { get; set; }
