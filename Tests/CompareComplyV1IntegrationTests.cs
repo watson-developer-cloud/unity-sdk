@@ -34,7 +34,8 @@ namespace IBM.Watson.Tests
         private string versionDate = "2019-02-13";
         private string contractAFilepath;
         private string contractBFilepath;
-        private string tableFilepath;
+        private string tablePdfFilepath;
+        private string tablePngFilepath;
         private string createdFeedbackId;
         private string objectStorageCredentialsInputFilepath;
         private string objectStorageCredentialsOutputFilepath;
@@ -47,7 +48,8 @@ namespace IBM.Watson.Tests
 
             contractAFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_A.pdf";
             contractBFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/contract_B.pdf";
-            tableFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/TestTable.pdf";
+            tablePdfFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/TestTable.pdf";
+            tablePngFilepath = Application.dataPath + "/Watson/Tests/TestData/CompareComplyV1/TableTestV3.png";
 
             objectStorageCredentialsInputFilepath = "../sdk-credentials/cloud-object-storage-credentials-input.json";
             objectStorageCredentialsOutputFilepath = "../sdk-credentials/cloud-object-storage-credentials-output.json";
@@ -137,13 +139,13 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region ExtractTables
+        #region ExtractTablesPdf
         [UnityTest, Order(2)]
-        public IEnumerator TestExtractTables()
+        public IEnumerator TestExtractPdfTables()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ExtractTables...");
             TableReturn extractTablesResponse = null;
-            using (FileStream fs = File.OpenRead(tableFilepath))
+            using (FileStream fs = File.OpenRead(tablePdfFilepath))
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -161,19 +163,51 @@ namespace IBM.Watson.Tests
                             Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds);
                             Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts);
                             Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds.Count > 0);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts.Count > 0);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized.Count > 0);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds.Count > 0);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts.Count > 0);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized.Count > 0);
                             Assert.IsNotNull(extractTablesResponse.Tables[0].KeyValuePairs);
-                            //Assert.IsTrue(extractTablesResponse.Tables[0].KeyValuePairs.Count > 0);
                             Assert.IsNull(error);
                         },
                         file: ms,
                         model: "tables",
-                        fileContentType: Utility.GetMimeType(Path.GetExtension(tableFilepath))
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(tablePdfFilepath))
+                    );
+
+                    while (extractTablesResponse == null)
+                        yield return null;
+                }
+            }
+        }
+        #endregion
+
+        #region ExtractTablesPng
+        [UnityTest, Order(3)]
+        public IEnumerator TestExtractPngTables()
+        {
+            Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ExtractTables...");
+            TableReturn extractTablesResponse = null;
+            using (FileStream fs = File.OpenRead(tablePngFilepath))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.ExtractTables(
+                        callback: (DetailedResponse<TableReturn> response, IBMError error) =>
+                        {
+                            Log.Debug("CompareComplyServiceV1IntegrationTests", "ExtractTables from png file result: {0}", response.Response);
+                            extractTablesResponse = response.Result;
+                            Assert.IsNotNull(extractTablesResponse);
+                            Assert.IsNotNull(extractTablesResponse.Tables);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].RowHeaderTextsNormalized);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderIds);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTexts);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].BodyCells[0].ColumnHeaderTextsNormalized);
+                            Assert.IsNotNull(extractTablesResponse.Tables[0].KeyValuePairs);
+                            Assert.IsNull(error);
+                        },
+                        file: ms,
+                        model: "tables",
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(tablePngFilepath))
                     );
 
                     while (extractTablesResponse == null)
@@ -184,7 +218,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CompareDocuments
-        [UnityTest, Order(3)]
+        [UnityTest, Order(4)]
         public IEnumerator TestCompareDocuments()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to CompareDocuments...");
@@ -227,7 +261,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region AddFeedback
-        [UnityTest, Order(4)]
+        [UnityTest, Order(5)]
         public IEnumerator TestAddFeedback()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to AddFeedback...");
@@ -352,7 +386,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetFeedback
-        [UnityTest, Order(5)]
+        [UnityTest, Order(6)]
         public IEnumerator TestGetFeedback()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to GetFeedback...");
@@ -376,7 +410,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region ListFeedback
-        [UnityTest, Order(6)]
+        [UnityTest, Order(7)]
         public IEnumerator TestListFeedback()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ListFeedback...");
@@ -401,7 +435,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CreateBatch
-        [UnityTest, Order(7)]
+        [UnityTest, Order(8)]
         public IEnumerator TestCreateBatch()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to CreateBatch...");
@@ -447,7 +481,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetBatch
-        [UnityTest, Order(8)]
+        [UnityTest, Order(9)]
         public IEnumerator TestGetBatch()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to GetBatch...");
@@ -470,7 +504,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region ListBatches
-        [UnityTest, Order(9)]
+        [UnityTest, Order(10)]
         public IEnumerator TestListBatches()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to ListBatches...");
@@ -493,7 +527,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region UpdateBatch
-        [UnityTest, Order(10)]
+        [UnityTest, Order(11)]
         public IEnumerator TestUpdateBatch()
         {
             Log.Debug("CompareComplyServiceV1IntegrationTests", "Attempting to UpdateBatch...");
