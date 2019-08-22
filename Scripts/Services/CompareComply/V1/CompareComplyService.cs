@@ -592,9 +592,9 @@ namespace IBM.Watson.CompareComply.V1
         /// `model_id`. The only permitted value is `contracts`. (optional)</param>
         /// <param name="modelVersion">An optional string that filters the output to include only feedback with the
         /// specified `model_version`. (optional)</param>
-        /// <param name="categoryRemoved">An optional string in the form of a comma-separated list of categories. If
-        /// this is specified, the service filters the output to include only feedback that has at least one category
-        /// from the list removed. (optional)</param>
+        /// <param name="categoryRemoved">An optional string in the form of a comma-separated list of categories. If it
+        /// is specified, the service filters the output to include only feedback that has at least one category from
+        /// the list removed. (optional)</param>
         /// <param name="categoryAdded">An optional string in the form of a comma-separated list of categories. If this
         /// is specified, the service filters the output to include only feedback that has at least one category from
         /// the list added. (optional)</param>
