@@ -1,3 +1,15 @@
+# [3.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.5.0) (2019-08-22)
+
+
+### Bug Fixes
+
+* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
+
+
+### Features
+
+* **compare-comply:** add ContractCurrentcies model ([57677db](https://github.com/watson-developer-cloud/unity-sdk/commit/57677db))
+
 ## [3.4.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.4.1) (2019-08-05)
 
 
