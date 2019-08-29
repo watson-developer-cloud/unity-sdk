@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.VisualRecognition.V3.Model;
@@ -32,20 +33,16 @@ namespace IBM.Watson.VisualRecognition.V3
         private const string serviceId = "visual_recognition";
         private const string defaultUrl = "https://gateway.watsonplatform.net/visual-recognition/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -89,17 +86,14 @@ namespace IBM.Watson.VisualRecognition.V3
         /// VisualRecognitionService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public VisualRecognitionService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public VisualRecognitionService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// VisualRecognitionService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public VisualRecognitionService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -110,18 +104,19 @@ namespace IBM.Watson.VisualRecognition.V3
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the VisualRecognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the VisualRecognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-authenticator");
             }
         }
 
@@ -213,11 +208,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnClassifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/classify");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classify");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -318,11 +314,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDetectFacesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/detect_faces");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/detect_faces");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -355,10 +352,16 @@ namespace IBM.Watson.VisualRecognition.V3
         /// Create a classifier.
         ///
         /// Train a new multi-faceted classifier on the uploaded image data. Create your custom classifier with positive
-        /// or negative examples. Include at least two sets of examples, either two positive example files or one
-        /// positive and one negative file. You can upload a maximum of 256 MB per call.
+        /// or negative example training images. Include at least two sets of examples, either two positive example
+        /// files or one positive and one negative file. You can upload a maximum of 256 MB per call.
         ///
-        /// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
+        /// **Tips when creating:**
+        ///
+        /// - If you set the **X-Watson-Learning-Opt-Out** header parameter to `true` when you create a classifier, the
+        /// example training images are not stored. Save your training images locally. For more information, see [Data
+        /// collection](#data-collection).
+        ///
+        /// - Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
         /// and class names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
@@ -431,11 +434,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnCreateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -503,11 +507,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -574,11 +579,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -618,9 +624,15 @@ namespace IBM.Watson.VisualRecognition.V3
         /// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
         /// and class names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
         ///
-        /// **Tip:** Don't make retraining calls on a classifier until the status is ready. When you submit retraining
-        /// requests in parallel, the last request overwrites the previous requests. The retrained property shows the
-        /// last time the classifier retraining finished.
+        /// **Tips about retraining:**
+        ///
+        /// - You can't update the classifier if the **X-Watson-Learning-Opt-Out** header parameter was set to `true`
+        /// when the classifier was created. Training images are not stored in that case. Instead, create another
+        /// classifier. For more information, see [Data collection](#data-collection).
+        ///
+        /// - Don't make retraining calls on a classifier until the status is ready. When you submit retraining requests
+        /// in parallel, the last request overwrites the previous requests. The `retrained` property shows the last time
+        /// the classifier retraining finished.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="classifierId">The ID of the classifier.</param>
@@ -684,11 +696,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnUpdateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -753,11 +766,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -825,11 +839,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetCoreMlModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/classifiers/{0}/core_ml_model", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}/core_ml_model", classifierId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -895,11 +910,12 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/user_data");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/user_data");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

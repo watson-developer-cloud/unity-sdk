@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.LanguageTranslator.V3.Model;
@@ -33,20 +34,16 @@ namespace IBM.Watson.LanguageTranslator.V3
         private const string serviceId = "language_translator";
         private const string defaultUrl = "https://gateway.watsonplatform.net/language-translator/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -90,17 +87,14 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// LanguageTranslatorService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public LanguageTranslatorService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public LanguageTranslatorService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// LanguageTranslatorService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public LanguageTranslatorService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public LanguageTranslatorService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -111,18 +105,19 @@ namespace IBM.Watson.LanguageTranslator.V3
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the LanguageTranslator service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the LanguageTranslator service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-authenticator");
             }
         }
 
@@ -182,11 +177,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnTranslateResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/translate");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/translate");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -251,11 +247,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnListIdentifiableLanguagesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identifiable_languages");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identifiable_languages");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -325,11 +322,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnIdentifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/identify");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identify");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -366,12 +364,12 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="source">Specify a language code to filter results by source language. (optional)</param>
         /// <param name="target">Specify a language code to filter results by target language. (optional)</param>
-        /// <param name="defaultModels">If the default parameter isn't specified, the service will return all models
-        /// (default and non-default) for each language pair. To return only default models, set this to `true`. To
-        /// return only non-default models, set this to `false`. There is exactly one default model per language pair,
-        /// the IBM provided base model. (optional)</param>
+        /// <param name="_default">If the default parameter isn't specified, the service will return all models (default
+        /// and non-default) for each language pair. To return only default models, set this to `true`. To return only
+        /// non-default models, set this to `false`. There is exactly one default model per language pair, the IBM
+        /// provided base model. (optional)</param>
         /// <returns><see cref="TranslationModels" />TranslationModels</returns>
-        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? defaultModels = null)
+        public bool ListModels(Callback<TranslationModels> callback, string source = null, string target = null, bool? _default = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
@@ -404,18 +402,19 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 req.Parameters["target"] = target;
             }
-            if (defaultModels != null)
+            if (_default != null)
             {
-                req.Parameters["default"] = (bool)defaultModels ? "true" : "false";
+                req.Parameters["default"] = (bool)_default ? "true" : "false";
             }
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -523,11 +522,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnCreateModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/models");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -594,11 +594,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnDeleteModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/models/{0}", modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -667,11 +668,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/models/{0}", modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -735,11 +737,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnListDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/documents");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -843,11 +846,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnTranslateDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/documents");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -914,11 +918,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}", documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -985,11 +990,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnDeleteDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}", documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1065,11 +1071,12 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetTranslatedDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v3/documents/{0}/translated_document", documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}/translated_document", documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

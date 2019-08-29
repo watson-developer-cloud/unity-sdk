@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.PersonalityInsights.V3.Model;
@@ -33,20 +34,16 @@ namespace IBM.Watson.PersonalityInsights.V3
         private const string serviceId = "personality_insights";
         private const string defaultUrl = "https://gateway.watsonplatform.net/personality-insights/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -90,17 +87,14 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// PersonalityInsightsService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public PersonalityInsightsService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public PersonalityInsightsService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// PersonalityInsightsService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public PersonalityInsightsService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public PersonalityInsightsService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -111,18 +105,19 @@ namespace IBM.Watson.PersonalityInsights.V3
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the PersonalityInsights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                throw new IBMException("Please provide a username and password or authorization token to use the PersonalityInsights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-authenticator");
             }
         }
 
@@ -171,6 +166,8 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// for more information, see [Providing sufficient
         /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient).
         /// For JSON input, provide an object of type `Content`.</param>
+        /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
+        /// description. (optional, default to text/plain)</param>
         /// <param name="contentLanguage">The language of the input text for the request: Arabic, English, Japanese,
         /// Korean, or Spanish. Regional variants are treated as their parent language; for example, `en-US` is
         /// interpreted as `en`.
@@ -193,10 +190,8 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// false)</param>
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
-        /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
-        /// description. (optional, default to text/plain)</param>
         /// <returns><see cref="Profile" />Profile</returns>
-        public bool Profile(Callback<Profile> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
+        public bool Profile(Callback<Profile> callback, Content content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Profile`");
@@ -237,6 +232,11 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
+
             if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
@@ -246,20 +246,16 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/profile");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -333,6 +329,8 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// for more information, see [Providing sufficient
         /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient).
         /// For JSON input, provide an object of type `Content`.</param>
+        /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
+        /// description. (optional, default to text/plain)</param>
         /// <param name="contentLanguage">The language of the input text for the request: Arabic, English, Japanese,
         /// Korean, or Spanish. Regional variants are treated as their parent language; for example, `en-US` is
         /// interpreted as `en`.
@@ -355,10 +353,8 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// false)</param>
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
-        /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
-        /// description. (optional, default to text/plain)</param>
         /// <returns><see cref="System.IO.MemoryStream" />System.IO.MemoryStream</returns>
-        public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, Content content, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null, string contentType = null)
+        public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, Content content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ProfileAsCsv`");
@@ -399,6 +395,11 @@ namespace IBM.Watson.PersonalityInsights.V3
             }
             req.Headers["Accept"] = "text/csv";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
+
             if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
@@ -408,20 +409,16 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
 
             req.OnResponse = OnProfileAsCsvResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/profile");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
