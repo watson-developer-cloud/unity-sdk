@@ -57,7 +57,7 @@ namespace IBM.Watson.Tests
                 service = new LanguageTranslatorService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -81,7 +81,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(translateResponse);
                     Assert.IsNotNull(translateResponse.Translations);
                     Assert.IsTrue(translateResponse.Translations.Count > 0);
-                    Assert.IsTrue(translateResponse.Translations[0].TranslationOutput == spanishText);
+                    Assert.IsTrue(translateResponse.Translations[0]._Translation == spanishText);
                     Assert.IsNull(error);
                 },
                 text: new List<string>() { englishText },
@@ -219,8 +219,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 source: "en",
-                target: "fr",
-                defaultModels: true
+                target: "fr"
             );
 
             while (listModelsResponse == null)

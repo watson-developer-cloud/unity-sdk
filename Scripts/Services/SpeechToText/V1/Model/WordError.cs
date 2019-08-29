@@ -26,10 +26,10 @@ namespace IBM.Watson.SpeechToText.V1.Model
     {
         /// <summary>
         /// A key-value pair that describes an error associated with the definition of a word in the words resource. The
-        /// pair has the format `\"element\": \"message\"`, where `element` is the aspect of the definition that caused
-        /// the problem and `message` describes the problem. The following example describes a problem with one of the
-        /// word's sounds-like definitions: `\"{sounds_like_string}\": \"Numbers are not allowed in sounds-like. You can
-        /// try for example '{suggested_string}'.\"`.
+        /// pair has the format `"element": "message"`, where `element` is the aspect of the definition that caused the
+        /// problem and `message` describes the problem. The following example describes a problem with one of the
+        /// word's sounds-like definitions: `"{sounds_like_string}": "Numbers are not allowed in sounds-like. You can
+        /// try for example '{suggested_string}'."`.
         /// </summary>
         [JsonProperty("element", NullValueHandling = NullValueHandling.Ignore)]
         public string Element { get; set; }

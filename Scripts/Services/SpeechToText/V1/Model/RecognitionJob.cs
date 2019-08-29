@@ -109,9 +109,9 @@ namespace IBM.Watson.SpeechToText.V1.Model
         public List<SpeechRecognitionResults> Results { get; set; }
         /// <summary>
         /// An array of warning messages about invalid parameters included with the request. Each warning includes a
-        /// descriptive message and a list of invalid argument strings, for example, `\"unexpected query parameter
-        /// 'user_token', query parameter 'callback_url' was not specified\"`. The request succeeds despite the
-        /// warnings. This field can be returned only by the **Create a job** method.
+        /// descriptive message and a list of invalid argument strings, for example, `"unexpected query parameter
+        /// 'user_token', query parameter 'callback_url' was not specified"`. The request succeeds despite the warnings.
+        /// This field can be returned only by the **Create a job** method.
         /// </summary>
         [JsonProperty("warnings", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Warnings { get; set; }

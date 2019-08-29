@@ -16,6 +16,7 @@
 */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
@@ -59,6 +60,6 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <em> tags.
         /// </summary>
         [JsonProperty("highlight", NullValueHandling = NullValueHandling.Ignore)]
-        public SearchResultHighlight Highlight { get; set; }
+        public JObject Highlight { get; set; }
     }
 }

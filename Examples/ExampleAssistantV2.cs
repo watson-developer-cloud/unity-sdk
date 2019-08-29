@@ -18,6 +18,8 @@
 
 using System.Collections;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V2;
 using IBM.Watson.Assistant.V2.Model;
@@ -68,21 +70,13 @@ namespace IBM.Watson.Examples
             }
 
             //  Create credential and instantiate service
-            Credentials credentials = null;
-
-            //  Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = iamApikey
-            };
-
-            credentials = new Credentials(tokenOptions, serviceUrl);
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: iamApikey);
 
             //  Wait for tokendata
-            while (!credentials.HasIamTokenData())
+            while (!authenticator.CanAuthenticate())
                 yield return null;
 
-            service = new AssistantService(versionDate, credentials);
+            service = new AssistantService(versionDate, authenticator);
 
             Runnable.Run(Examples());
         }

@@ -15,8 +15,8 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -42,7 +42,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// corresponding option.
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Output { get; set; }
+        public JObject Output { get; set; }
         /// <summary>
         /// The ID of the dialog node that the **label** property is taken from. The **label** property is populated
         /// using the value of the dialog node's **user_label** property.

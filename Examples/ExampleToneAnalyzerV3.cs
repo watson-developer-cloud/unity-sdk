@@ -22,6 +22,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 
 namespace IBM.Watson.Examples
 {
@@ -60,21 +62,13 @@ namespace IBM.Watson.Examples
             }
 
             //  Create credential and instantiate service
-            Credentials credentials = null;
-
-            //  Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = iamApikey
-            };
-
-            credentials = new Credentials(tokenOptions, serviceUrl);
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: iamApikey);
 
             //  Wait for tokendata
-            while (!credentials.HasIamTokenData())
+            while (!authenticator.CanAuthenticate())
                 yield return null;
 
-            service = new ToneAnalyzerService(versionDate, credentials);
+            service = new ToneAnalyzerService(versionDate, authenticator);
 
             Runnable.Run(Examples());
         }

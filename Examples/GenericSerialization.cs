@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using Newtonsoft.Json;
 using IBM.Watson.Assistant.V2.Model;
 

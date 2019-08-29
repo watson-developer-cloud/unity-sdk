@@ -19,6 +19,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Watson.Assistant.V1;
 using IBM.Watson.Assistant.V1.Model;
 using Newtonsoft.Json.Linq;
@@ -69,10 +71,10 @@ namespace IBM.Watson.Tests
         {
             if (service == null)
             {
-                service = new AssistantService(versionDate);
+                service = new AssistantService(versionDate, authenticator);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -89,7 +91,7 @@ namespace IBM.Watson.Tests
             JToken context = null;
             MessageResponse messageResponse = null;
             JToken conversationId = null;
-            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...");
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...{0}...", workspaceId);
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
@@ -325,7 +327,6 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-name",
                 includeAudit: true
             );
@@ -428,7 +429,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-name",
                 includeAudit: true
             );
@@ -527,7 +527,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-text",
                 includeAudit: true
             );
@@ -622,7 +621,6 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-text",
                 includeAudit: true
             );
@@ -722,7 +720,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-entity",
                 includeAudit: true
             );
@@ -848,7 +845,6 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-value",
                 includeAudit: true
             );
@@ -949,7 +945,6 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-synonym",
                 includeAudit: true
             );
@@ -1048,7 +1043,6 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-dialog_node",
                 includeAudit: true
             );

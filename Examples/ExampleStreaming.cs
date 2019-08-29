@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using IBM.Watson.SpeechToText.V1;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Cloud.SDK.DataTypes;
 
@@ -70,22 +72,13 @@ namespace IBM.Watsson.Examples
                 throw new IBMException("Plesae provide IAM ApiKey for the service.");
             }
 
-            //  Create credential and instantiate service
-            Credentials credentials = null;
-
-            //  Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = _iamApikey
-            };
-
-            credentials = new Credentials(tokenOptions, _serviceUrl);
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: _iamApikey);
 
             //  Wait for tokendata
-            while (!credentials.HasIamTokenData())
+            while (!authenticator.CanAuthenticate())
                 yield return null;
 
-            _service = new SpeechToTextService(credentials);
+            _service = new SpeechToTextService(authenticator);
             _service.StreamMultipart = true;
 
             Active = true;

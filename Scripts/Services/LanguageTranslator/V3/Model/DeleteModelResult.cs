@@ -25,7 +25,7 @@ namespace IBM.Watson.LanguageTranslator.V3.Model
     public class DeleteModelResult
     {
         /// <summary>
-        /// \"OK\" indicates that the model was successfully deleted.
+        /// "OK" indicates that the model was successfully deleted.
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }

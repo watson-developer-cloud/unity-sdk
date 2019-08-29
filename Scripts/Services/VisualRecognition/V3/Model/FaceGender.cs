@@ -30,7 +30,7 @@ namespace IBM.Watson.VisualRecognition.V3.Model
         [JsonProperty("gender", NullValueHandling = NullValueHandling.Ignore)]
         public string Gender { get; set; }
         /// <summary>
-        /// The word for \"male\" or \"female\" in the language defined by the **Accept-Language** request header.
+        /// The word for "male" or "female" in the language defined by the **Accept-Language** request header.
         /// </summary>
         [JsonProperty("gender_label", NullValueHandling = NullValueHandling.Ignore)]
         public string GenderLabel { get; set; }

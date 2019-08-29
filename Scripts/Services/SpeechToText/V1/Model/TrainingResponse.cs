@@ -15,20 +15,22 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V1.Model
+namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// DialogNodeOutputTextValuesElement.
+    /// The response from training of a custom language or custom acoustic model.
     /// </summary>
-    public class DialogNodeOutputTextValuesElement
+    public class TrainingResponse
     {
         /// <summary>
-        /// The text of a response. This string can include newline characters (`\n`), Markdown tagging, or other
-        /// special characters, if supported by the channel.
+        /// An array of `TrainingWarning` objects that lists any invalid resources contained in the custom model. For
+        /// custom language models, invalid resources are grouped and identified by type of resource. The method can
+        /// return warnings only if the `strict` parameter is set to `false`.
         /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string Text { get; set; }
+        [JsonProperty("warnings", NullValueHandling = NullValueHandling.Ignore)]
+        public List<TrainingWarning> Warnings { get; set; }
     }
 }

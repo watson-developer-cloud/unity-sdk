@@ -15,20 +15,25 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V1.Model
+namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
 {
     /// <summary>
-    /// DialogNodeOutputTextValuesElement.
+    /// The extracted object from the sentence.
     /// </summary>
-    public class DialogNodeOutputTextValuesElement
+    public class SemanticRolesResultModelObject
     {
         /// <summary>
-        /// The text of a response. This string can include newline characters (`\n`), Markdown tagging, or other
-        /// special characters, if supported by the channel.
+        /// Object text.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; set; }
+        /// <summary>
+        /// An array of extracted keywords.
+        /// </summary>
+        [JsonProperty("keywords", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SemanticRolesKeyword> Keywords { get; set; }
     }
 }

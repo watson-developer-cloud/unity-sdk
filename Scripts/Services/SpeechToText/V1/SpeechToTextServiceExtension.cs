@@ -16,6 +16,7 @@
 */
 
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.DataTypes;
 using IBM.Cloud.SDK.Utilities;
@@ -107,8 +108,8 @@ namespace IBM.Watson.SpeechToText.V1
         private bool _streamMultipart = false;           //  If true sets `Transfer-Encoding` header of multipart request to `chunked`.
         private float _silenceDuration = 0.0f;
         private float _silenceCutoff = 1.0f;
-        
-        private Credentials _credentials = null;
+
+        private Authenticator _authenticator = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
         #endregion
 
@@ -292,7 +293,7 @@ namespace IBM.Watson.SpeechToText.V1
                 return false;
             if (!CreateListenConnector())
                 return false;
-            
+
             Dictionary<string, string> customHeaders = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
             {
@@ -445,7 +446,9 @@ namespace IBM.Watson.SpeechToText.V1
                     parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
 
-                _listenSocket = WSConnector.CreateConnector(Credentials, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams);
+                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams);
+                Authenticator.Authenticate(_listenSocket);
+                Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", UnityWebRequest.EscapeURL(_recognizeModel), parsedParams);
                 _listenSocket.DisableSslVerification = DisableSslVerification;
                 if (_listenSocket == null)
                 {
