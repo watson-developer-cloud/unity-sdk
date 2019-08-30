@@ -136,8 +136,8 @@ string versionDate = "<service-version-date>";
 
 void TokenExample()
 {
-    //  Create authenticator using the IAM apikey
-    authenticator = new IamAuthenticator(apikey: "<iam-api-key>");
+    //  Create authenticator using the Bearer Token
+    authenticator = new BearerTokenAuthenticator("<bearer-token>");
 
     assistant = new AssistantService(versionDate, authenticator);
     assistant.ListWorkspaces(callback: OnListWorkspaces);
@@ -192,7 +192,7 @@ public IEnumerator ExampleAutoService()
 
 And that's it!
 
-If you're using more than one service at a time in your code and get two different `ibm-authenticator.env` files, just put the contents together in one `ibm-authenticator.env` file and the SDK will handle assigning authenticator to their appropriate services.
+If you're using more than one service at a time in your code and get two different `ibm-credentials.env` files, just put the contents together in one `ibm-credentials.env` file and the SDK will handle assigning authenticator to their appropriate services.
 
 If you would like to configure the location/name of your credential file, you can set an environment variable called `IBM_CREDENTIALS_FILE`. **This will take precedence over the locations specified above.** Here's how you can do that:
 
