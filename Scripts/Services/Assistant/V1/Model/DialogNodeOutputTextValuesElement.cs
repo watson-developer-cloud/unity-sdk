@@ -25,7 +25,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class DialogNodeOutputTextValuesElement
     {
         /// <summary>
-        /// The text of a response. This string can include newline characters (`\\n`), Markdown tagging, or other
+        /// The text of a response. This string can include newline characters (`\n`), Markdown tagging, or other
         /// special characters, if supported by the channel.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]

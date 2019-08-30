@@ -16,6 +16,7 @@
 */
 
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Watson.Assistant.V2;
 using IBM.Watson.Assistant.V2.Model;
 using NUnit.Framework;
@@ -44,7 +45,7 @@ namespace IBM.Watson.Tests
         {
             service = new AssistantService(versionDate);
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
 
             assistantId = Environment.GetEnvironmentVariable("ASSISTANT_ASSISTANT_ID");

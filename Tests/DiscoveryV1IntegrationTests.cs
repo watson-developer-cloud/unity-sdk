@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1;
 using IBM.Watson.Discovery.V1.Model;
@@ -89,7 +90,7 @@ namespace IBM.Watson.Tests
                 service = new DiscoveryService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -888,8 +889,7 @@ namespace IBM.Watson.Tests
                 collectionIds: collectionId,
                 passages: true,
                 count: 10,
-                highlight: true,
-                loggingOptOut: true
+                highlight: true
             );
 
             while (federatedQueryResponse == null)
@@ -1408,9 +1408,9 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region CreateCredentials
+        #region CreateAuthenticator
         [UnityTest, Order(45)]
-        public IEnumerator TestCreateCredentials()
+        public IEnumerator TestCreateAuthenticator()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateCredentials...");
             ModelCredentials createCredentialsResponse = null;

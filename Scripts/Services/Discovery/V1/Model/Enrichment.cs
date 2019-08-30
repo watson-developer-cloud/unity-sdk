@@ -61,7 +61,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-element-classification#element-classification).
         /// </summary>
         [JsonProperty("enrichment", NullValueHandling = NullValueHandling.Ignore)]
-        public string EnrichmentName { get; set; }
+        public string _Enrichment { get; set; }
         /// <summary>
         /// If true, then most errors generated during the enrichment process will be treated as warnings and will not
         /// cause the document to fail processing.

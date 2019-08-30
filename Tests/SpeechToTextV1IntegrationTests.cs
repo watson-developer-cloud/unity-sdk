@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.SpeechToText.V1;
 using IBM.Watson.SpeechToText.V1.Model;
@@ -79,7 +80,7 @@ namespace IBM.Watson.Tests
                 service = new SpeechToTextService();
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -461,7 +462,7 @@ namespace IBM.Watson.Tests
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to TrainLanguageModel...");
             object trainLanguageModelResponse = null;
             service.TrainLanguageModel(
-                callback: (DetailedResponse<object> response, IBMError error) =>
+                callback: (DetailedResponse<TrainingResponse> response, IBMError error) =>
                 {
                     Log.Debug("SpeechToTextServiceV1IntegrationTests", "TrainLanguageModel result: {0}", response.Response);
                     trainLanguageModelResponse = response.Result;
@@ -639,7 +640,7 @@ namespace IBM.Watson.Tests
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to TrainLanguageModel2...");
             object trainLanguageModelResponse = null;
             service.TrainLanguageModel(
-                callback: (DetailedResponse<object> response, IBMError error) =>
+                callback: (DetailedResponse<TrainingResponse> response, IBMError error) =>
                 {
                     Log.Debug("SpeechToTextServiceV1IntegrationTests", "TrainLanguageModel result: {0}", response.Response);
                     trainLanguageModelResponse = response.Result;
@@ -763,7 +764,7 @@ namespace IBM.Watson.Tests
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to TrainLanguageModel3...");
             object trainLanguageModelResponse = null;
             service.TrainLanguageModel(
-                callback: (DetailedResponse<object> response, IBMError error) =>
+                callback: (DetailedResponse<TrainingResponse> response, IBMError error) =>
                 {
                     Log.Debug("SpeechToTextServiceV1IntegrationTests", "TrainLanguageModel result: {0}", response.Response);
                     trainLanguageModelResponse = response.Result;
@@ -1012,7 +1013,7 @@ namespace IBM.Watson.Tests
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to TrainAcousticModel...");
             bool isComplete = false;
             service.TrainAcousticModel(
-                callback: (DetailedResponse<object> response, IBMError error) =>
+                callback: (DetailedResponse<TrainingResponse> response, IBMError error) =>
                 {
                     Log.Debug("SpeechToTextServiceV1IntegrationTests", "TrainAcousticModel result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 200);

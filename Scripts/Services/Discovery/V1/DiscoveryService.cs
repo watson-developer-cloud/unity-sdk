@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1.Model;
@@ -33,20 +34,16 @@ namespace IBM.Watson.Discovery.V1
         private const string serviceId = "discovery";
         private const string defaultUrl = "https://gateway.watsonplatform.net/discovery/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -90,17 +87,14 @@ namespace IBM.Watson.Discovery.V1
         /// DiscoveryService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public DiscoveryService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public DiscoveryService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// DiscoveryService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public DiscoveryService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -111,14 +105,15 @@ namespace IBM.Watson.Discovery.V1
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
@@ -182,11 +177,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/environments");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/environments");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -255,11 +251,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListEnvironmentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/environments");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/environments");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -324,11 +321,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -411,11 +409,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -480,11 +479,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -558,11 +558,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListFieldsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/fields", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/fields", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -663,11 +664,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -739,11 +741,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListConfigurationsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -811,11 +814,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -918,11 +922,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -995,11 +1000,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1042,16 +1048,15 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="configuration">The configuration to use to process the document. If this part is provided, then
         /// the provided configuration is used to process the document. If the **configuration_id** is also provided
         /// (both are present at the same time), then request is rejected. The maximum supported configuration size is 1
-        /// MB. Configuration parts larger than 1 MB are rejected.
-        /// See the `GET /configurations/{configuration_id}` operation for an example configuration. (optional)</param>
+        /// MB. Configuration parts larger than 1 MB are rejected. See the `GET /configurations/{configuration_id}`
+        /// operation for an example configuration. (optional)</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
         /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
-        /// rejected.
-        /// Example:  ``` {
+        /// rejected. Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
@@ -1113,11 +1118,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnTestConfigurationInEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/preview", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/preview", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1203,11 +1209,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1279,11 +1286,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCollectionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1351,11 +1359,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1438,11 +1447,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1510,11 +1520,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1584,11 +1595,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCollectionFieldsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1659,11 +1671,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1696,8 +1709,7 @@ namespace IBM.Watson.Discovery.V1
         /// Create or update expansion list.
         ///
         /// Create or replace the Expansion list for this collection. The maximum number of expanded terms per
-        /// collection is `500`.
-        /// The current expansion list is replaced with the uploaded content.
+        /// collection is `500`. The current expansion list is replaced with the uploaded content.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
@@ -1757,11 +1769,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1832,11 +1845,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1906,11 +1920,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1990,11 +2005,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateTokenizationDictionaryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2064,11 +2080,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTokenizationDictionaryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2138,11 +2155,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetStopwordListStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2223,11 +2241,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2298,11 +2317,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2367,8 +2387,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
-        /// rejected.
-        /// Example:  ``` {
+        /// rejected. Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
@@ -2414,11 +2433,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnAddDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2493,11 +2513,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2545,8 +2566,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
-        /// rejected.
-        /// Example:  ``` {
+        /// rejected. Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
@@ -2594,11 +2614,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2672,11 +2693,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2728,7 +2750,7 @@ namespace IBM.Watson.Discovery.V1
         /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
         /// aggregations, see the Query reference. (optional)</param>
         /// <param name="count">Number of results to return. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// <param name="_return">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
         /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
@@ -2768,10 +2790,10 @@ namespace IBM.Watson.Discovery.V1
         /// towards field values closer to the current date. When a **number** type field is specified, returned results
         /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
         /// parameter. (optional)</param>
-        /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
-        /// default to false)</param>
+        /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
+        /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Query`");
@@ -2803,9 +2825,9 @@ namespace IBM.Watson.Discovery.V1
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            if (loggingOptOut != null)
+            if (xWatsonLoggingOptOut != null)
             {
-                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
+                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)xWatsonLoggingOptOut ? "true" : "false";
             }
 
             JObject bodyObject = new JObject();
@@ -2821,8 +2843,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["aggregation"] = aggregation;
             if (count != null)
                 bodyObject["count"] = JToken.FromObject(count);
-            if (!string.IsNullOrEmpty(returnFields))
-                bodyObject["return"] = returnFields;
+            if (!string.IsNullOrEmpty(_return))
+                bodyObject["return"] = _return;
             if (offset != null)
                 bodyObject["offset"] = JToken.FromObject(offset);
             if (!string.IsNullOrEmpty(sort))
@@ -2853,11 +2875,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2911,7 +2934,7 @@ namespace IBM.Watson.Discovery.V1
         /// aggregations, see the Query reference. (optional)</param>
         /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
         /// together in any one query is **10000**. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// <param name="_return">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
         /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
@@ -2941,7 +2964,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
         /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
-        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
+        public bool QueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, List<string> _return = null, long? offset = null, List<string> sort = null, bool? highlight = null, List<string> passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryNotices`");
@@ -2994,9 +3017,9 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            if (returnFields != null && returnFields.Count > 0)
+            if (_return != null && _return.Count > 0)
             {
-                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+                req.Parameters["return"] = string.Join(",", _return.ToArray());
             }
             if (offset != null)
             {
@@ -3041,11 +3064,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryNoticesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3097,7 +3121,7 @@ namespace IBM.Watson.Discovery.V1
         /// filters. Useful for applications to build lists, tables, and time series. For a full list of possible
         /// aggregations, see the Query reference. (optional)</param>
         /// <param name="count">Number of results to return. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// <param name="_return">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
         /// of results that are returned is 10 and the offset is 8, it returns the last two results. (optional)</param>
@@ -3137,10 +3161,10 @@ namespace IBM.Watson.Discovery.V1
         /// towards field values closer to the current date. When a **number** type field is specified, returned results
         /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
         /// parameter. (optional)</param>
-        /// <param name="loggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint. (optional,
-        /// default to false)</param>
+        /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
+        /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string returnFields = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? loggingOptOut = null)
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, string collectionIds = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
@@ -3170,9 +3194,9 @@ namespace IBM.Watson.Discovery.V1
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
-            if (loggingOptOut != null)
+            if (xWatsonLoggingOptOut != null)
             {
-                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)loggingOptOut ? "true" : "false";
+                req.Headers["X-Watson-Logging-Opt-Out"] = (bool)xWatsonLoggingOptOut ? "true" : "false";
             }
 
             JObject bodyObject = new JObject();
@@ -3188,8 +3212,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["aggregation"] = aggregation;
             if (count != null)
                 bodyObject["count"] = JToken.FromObject(count);
-            if (!string.IsNullOrEmpty(returnFields))
-                bodyObject["return"] = returnFields;
+            if (!string.IsNullOrEmpty(_return))
+                bodyObject["return"] = _return;
             if (offset != null)
                 bodyObject["offset"] = JToken.FromObject(offset);
             if (!string.IsNullOrEmpty(sort))
@@ -3220,11 +3244,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnFederatedQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/query", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/query", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3276,7 +3301,7 @@ namespace IBM.Watson.Discovery.V1
         /// aggregations, see the Query reference. (optional)</param>
         /// <param name="count">Number of results to return. The maximum for the **count** and **offset** values
         /// together in any one query is **10000**. (optional)</param>
-        /// <param name="returnFields">A comma-separated list of the portion of the document hierarchy to return.
+        /// <param name="_return">A comma-separated list of the portion of the document hierarchy to return.
         /// (optional)</param>
         /// <param name="offset">The number of query results to skip at the beginning. For example, if the total number
         /// of results that are returned is 10 and the offset is 8, it returns the last two results. The maximum for the
@@ -3300,7 +3325,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="similarFields">A comma-separated list of field names that are used as a basis for comparison to
         /// identify similar documents. If not specified, the entire document is used for comparison. (optional)</param>
         /// <returns><see cref="QueryNoticesResponse" />QueryNoticesResponse</returns>
-        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> returnFields = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
+        public bool FederatedQueryNotices(Callback<QueryNoticesResponse> callback, string environmentId, List<string> collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, string aggregation = null, long? count = null, List<string> _return = null, long? offset = null, List<string> sort = null, bool? highlight = null, string deduplicateField = null, bool? similar = null, List<string> similarDocumentIds = null, List<string> similarFields = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
@@ -3353,9 +3378,9 @@ namespace IBM.Watson.Discovery.V1
             {
                 req.Parameters["count"] = count;
             }
-            if (returnFields != null && returnFields.Count > 0)
+            if (_return != null && _return.Count > 0)
             {
-                req.Parameters["return"] = string.Join(",", returnFields.ToArray());
+                req.Parameters["return"] = string.Join(",", _return.ToArray());
             }
             if (offset != null)
             {
@@ -3388,11 +3413,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnFederatedQueryNoticesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/notices", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/notices", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3488,11 +3514,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryEntitiesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3592,11 +3619,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryRelationsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/query_relations", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query_relations", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3666,11 +3694,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3756,11 +3785,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnAddTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3830,11 +3860,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteAllTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3907,11 +3938,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3984,11 +4016,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4061,11 +4094,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListTrainingExamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4152,11 +4186,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4232,11 +4267,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4323,11 +4359,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4403,11 +4440,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4483,11 +4521,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4567,11 +4606,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/events");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/events");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4669,11 +4709,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryLogResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/logs");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/logs");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4754,11 +4795,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4841,11 +4883,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_event");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries_with_event");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4927,11 +4970,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryNoResultsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/number_of_queries_with_no_search_results");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries_with_no_search_results");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5014,11 +5058,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsEventRateResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/event_rate");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/event_rate");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5090,11 +5135,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryTokenEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/metrics/top_query_tokens_with_event_rate");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/top_query_tokens_with_event_rate");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5163,11 +5209,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5262,11 +5309,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5339,11 +5387,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5440,11 +5489,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5514,11 +5564,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5585,11 +5636,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListGatewaysResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5664,11 +5716,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways", environmentId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways", environmentId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5738,11 +5791,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -5812,11 +5866,12 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

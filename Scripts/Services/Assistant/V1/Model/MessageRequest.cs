@@ -36,13 +36,13 @@ namespace IBM.Watson.Assistant.V1.Model
         /// those intents rather than trying to recognize intents in the new input.
         /// </summary>
         [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Intents { get; set; }
+        public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
         /// Entities to use when evaluating the message. Include entities from the previous response to continue using
         /// those entities rather than detecting entities in the new input.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Entities { get; set; }
+        public List<RuntimeEntity> Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>

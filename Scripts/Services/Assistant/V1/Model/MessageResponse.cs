@@ -35,12 +35,12 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
         [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Intents { get; set; }
+        public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Entities { get; set; }
+        public List<RuntimeEntity> Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>

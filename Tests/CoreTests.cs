@@ -18,6 +18,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Watson.Assistant.V1;
 using IBM.Watson.Assistant.V1.Model;
 using NUnit.Framework;
@@ -53,7 +54,7 @@ namespace IBM.Watson.Tests
                 service = new AssistantService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
 
             WorkspaceCollection listWorkspacesResponse = null;

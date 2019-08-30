@@ -107,29 +107,18 @@ You supply either an IAM service **API key** or an **access token**:
 
 #### Supplying the IAM API key
 ```cs
-Credentials credentials;
+Authenticator authenticator;
 AssistantService assistant;
 string versionDate = "<service-version-date>";
 
 IEnumerator TokenExample()
 {
-    //  Create IAM token options and supply the apikey. IamUrl is the URL used to get the 
-    //  authorization token using the IamApiKey. It defaults to https://iam.cloud.ibm.com/identity/token
-    TokenOptions iamTokenOptions = new TokenOptions()
-    {
-        IamApiKey = "<iam-api-key>",
-        IamUrl = "<iam-url>"
-    };
-
-    //  Create credentials using the IAM token options
-    credentials = new Credentials(iamTokenOptions, "<service-url>");
-    while (!credentials.HasIamTokenData())
+    //  Create authenticator using the IAM token options
+    authenticator = new IamAuthenticator(apikey: "<iam-api-key>");
+    while (!authenticator.CanAuthenticate())
         yield return null;
 
-    assistant = new AssistantService(
-        versionDate: versionDate, 
-        credentials: credentials
-    );
+    assistant = new AssistantService(versionDate, authenticator);
     assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
@@ -141,25 +130,16 @@ private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IB
 
 #### Supplying the access token
 ```cs
-Credentials credentials;
+Authenticator authenticator;
 AssistantService assistant;
 string versionDate = "<service-version-date>";
 
 void TokenExample()
 {
-    //  Create IAM token options and supply the access token.
-    TokenOptions iamTokenOptions = new TokenOptions()
-    {
-        IamAccessToken = "<iam-access-token>"
-    };
+    //  Create authenticator using the Bearer Token
+    authenticator = new BearerTokenAuthenticator("<bearer-token>");
 
-    //  Create credentials using the IAM token options
-    credentials = new Credentials(iamTokenOptions, "<service-url>");
-
-    assistant = new AssistantService(
-        versionDate: versionDate,
-        credentials: credentials
-    );
+    assistant = new AssistantService(versionDate, authenticator);
     assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
@@ -171,23 +151,20 @@ private void OnListWorkspaces(DetailedResponse<WorkspaceCollection> response, IB
 
 ### Username and password
 ```cs
-Credentials credentials;
+Authenticator authenticator;
 AssistantService assistant;
 string versionDate = "<service-version-date>";
 
 void UsernamePasswordExample()
 {
-    Credentials credentials = new Credentials("<username>", "<password>", "<url>");
-    assistant = new AssistantService(
-        versionDate: versionDate,
-        credentials: credentials
-    );
+    Authenticator authenticator = new BasicAuthenticator("<username>", "<password>", "<url>");
+    assistant = new AssistantService(versionDate, authenticator);
 }
 ```
 
-### Supplying credentials
+### Supplying authenticator
 
-There are two ways to supply the credentials you found above to the SDK for authentication.
+There are two ways to supply the authenticator you found above to the SDK for authentication.
 
 #### Credential file (easier!)
 
@@ -206,16 +183,16 @@ public IEnumerator ExampleAutoService()
     Assistant assistantService = new Assistant("2019-04-03");
 
     //  Wait for authorization token
-    while (!assistantService.Credentials.HasIamTokenData())
+    while (!assistantService.Authenticator.CanAuthenticate())
         yield return null;
-        
+
     var listWorkspacesResult = assistantService.ListWorkspaces();
 }
 ```
 
 And that's it!
 
-If you're using more than one service at a time in your code and get two different `ibm-credentials.env` files, just put the contents together in one `ibm-credentials.env` file and the SDK will handle assigning credentials to their appropriate services.
+If you're using more than one service at a time in your code and get two different `ibm-credentials.env` files, just put the contents together in one `ibm-credentials.env` file and the SDK will handle assigning authenticator to their appropriate services.
 
 If you would like to configure the location/name of your credential file, you can set an environment variable called `IBM_CREDENTIALS_FILE`. **This will take precedence over the locations specified above.** Here's how you can do that:
 
@@ -227,35 +204,29 @@ where `<path>` is something like `/home/user/Downloads/<file_name>.env`.
 
 #### Manually
 
-If you'd prefer to set authentication values manually in your code, the SDK supports that as well. The way you'll do this depends on what type of credentials your service instance gives you.
+If you'd prefer to set authentication values manually in your code, the SDK supports that as well. The way you'll do this depends on what type of authenticator your service instance gives you.
 
 ## Callbacks
-A success callback is required. You can specify the return type in the callback.  
+A success callback is required. You can specify the return type in the callback.
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 DiscoveryService discovery;
 string discoveryVersionDate = "<discovery-version-date>";
-Credentials discoveryCredentials;
+Authenticator discoveryAuthenticator;
 
 private void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
-    discovery = new DiscoveryService(
-        versionDate: discoveryVersionDate,
-        credentials: discoveryCredentials
-    );
+    discovery = new DiscoveryService(discoveryVersionDate, discoveryAuthenticator);
 
     //  Call with sepcific callbacks
     assistant.Message(
-        callback: OnMessage, 
+        callback: OnMessage,
         workspaceId: workspaceId
     );
 
@@ -279,25 +250,22 @@ Since the success callback signature is generic and the failure callback always 
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 DiscoveryService discovery;
 string discoveryVersionDate = "<discovery-version-date>";
-Credentials discoveryCredentials;
+Authenticator discoveryAuthenticator;
 
 private void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
     //  Call with generic callbacks
     JObject input = new JObject();
     input.Add("text", "");
     assistant.Message(
-        callback: OnSuccess, 
+        callback: OnSuccess,
         workspaceId: workspaceId,
         input: input
     );
@@ -318,15 +286,12 @@ You can also use an anonymous callback
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 private void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
     assistant.ListWorkspaces(
         callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
@@ -345,15 +310,12 @@ You can check the `error` response to see if there was an error in the call.
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 private void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(versionDate, authenticator);
 
     assistant.Message(OnMessage, workspaceId);
 }
@@ -377,15 +339,12 @@ You can send custom request headers by adding them to the service.
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
     //  Add custom header to the REST call
     assistant.WithHeader("X-Watson-Metadata", "customer_id=some-assistant-customer-id");
@@ -404,15 +363,12 @@ You can get response headers in the `headers` object in the DetailedResponse.
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 void Example()
 {
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
     assistant.Message(OnMessage, "<workspace-id>");
 }
@@ -435,16 +391,13 @@ You can disable SSL verifciation when making a service call.
 ```cs
 AssistantService assistant;
 string assistantVersionDate = "<assistant-version-date>";
-Credentials assistantCredentials;
+Authenticator assistantAuthenticator;
 string workspaceId = "<workspaceId>";
 
 void Example()
 {
-    credentials.DisableSslVerification = true;
-    assistant = new AssistantService(
-        versionDate: assistantVersionDate,
-        credentials: assistantCredentials
-    );
+    authenticator.DisableSslVerification = true;
+    assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
 
     //  disable ssl verification
     assistant.DisableSslVerification = true;
@@ -459,38 +412,23 @@ If your service instance is of ICP4D, below are two ways of initializing the ass
 The SDK will manage the token for the user
 
 ```cs
-    Icp4dTokenOptions tokenOptions = new Icp4dTokenOptions()
-    {
-        Username = "<username>",
-        Password = "<password>",
-        Url = "<icp4dUrl>",
-        DisableSslVerification = true
-    };
-    credentials = new Credentials(tokenOptions, "<serviceUrl>");
-    while(!credentials.HasTokenData())
+    CloudPakForDataAuthenticator authenticator = new CloudPakForDataAuthenticator("<url>", "<username>", "<password>");
+    while(!authenticator.CanAuthenticate())
     {
         yield return null;
     }
-    service = new AssistantService(versionDate, credentials);
+    service = new AssistantService(versionDate, authenticator);
 ```
 
 #### 2) Supplying the access token
 
 ```cs
-    Icp4dTokenOptions tokenOptions = new Icp4dTokenOptions()
-    {
-        Username = "<username>",
-        Password = "<password>",
-        Url = "<icp4dUrl>",
-        AccessToken = "<accessToken>",
-        DisableSslVerification = true
-    };
-    credentials = new Credentials(tokenOptions, "<serviceUrl>");
-    while(!credentials.HasTokenData())
+    BearerTokenAuthenticator = new BearerTokenAuthenticator("<accessToken>");
+    while(!authenticator.CanAuthenticate())
     {
         yield return null;
     }
-    service = new AssistantService(versionDate, credentials);
+    service = new AssistantService(versionDate, authenticator);
 ```
 
 ## IBM Cloud Private

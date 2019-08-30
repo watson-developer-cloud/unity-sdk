@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Watson.PersonalityInsights.V3;
 using IBM.Watson.PersonalityInsights.V3.Model;
 using NUnit.Framework;
@@ -47,7 +48,7 @@ namespace IBM.Watson.Tests
                 service = new PersonalityInsightsService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 

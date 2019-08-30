@@ -43,8 +43,7 @@ namespace IBM.Watson.Assistant.V1.Model
         ///     - `reprompt`
         ///     - `skip_slot`
         ///     - `skip_all_slots`
-        ///
-        /// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+        ///      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
         /// </summary>
         public class BehaviorValue
         {
@@ -118,8 +117,7 @@ namespace IBM.Watson.Assistant.V1.Model
         ///     - `reprompt`
         ///     - `skip_slot`
         ///     - `skip_all_slots`
-        ///
-        /// If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
+        ///      If you specify `jump_to`, then you must also specify a value for the `dialog_node` property.
         /// Constants for possible values can be found using DialogNodeNextStep.BehaviorValue
         /// </summary>
         [JsonProperty("behavior", NullValueHandling = NullValueHandling.Ignore)]

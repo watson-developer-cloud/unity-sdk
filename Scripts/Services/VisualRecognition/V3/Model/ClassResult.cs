@@ -33,7 +33,7 @@ namespace IBM.Watson.VisualRecognition.V3.Model
         /// or when there is no translation for the class name.
         /// </summary>
         [JsonProperty("class", NullValueHandling = NullValueHandling.Ignore)]
-        public string ClassName { get; set; }
+        public string _Class { get; set; }
         /// <summary>
         /// Confidence score for the property in the range of 0 to 1. A higher score indicates greater likelihood that
         /// the class is depicted in the image. The default threshold for returning scores from a classifier is 0.5.

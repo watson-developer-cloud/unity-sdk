@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.NaturalLanguageUnderstanding.V1.Model;
@@ -33,20 +34,16 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         private const string serviceId = "natural_language_understanding";
         private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-understanding/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -90,17 +87,14 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public NaturalLanguageUnderstandingService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public NaturalLanguageUnderstandingService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public NaturalLanguageUnderstandingService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public NaturalLanguageUnderstandingService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -111,14 +105,15 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
@@ -225,11 +220,12 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnAnalyzeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/analyze");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/analyze");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -295,11 +291,12 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/models");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -366,11 +363,12 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnDeleteModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/models/{0}", modelId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId));
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

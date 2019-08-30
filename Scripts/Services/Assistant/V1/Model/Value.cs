@@ -29,7 +29,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// Specifies the type of entity value.
         /// </summary>
-        public class ValueTypeValue
+        public class TypeValue
         {
             /// <summary>
             /// Constant SYNONYMS for synonyms
@@ -44,10 +44,10 @@ namespace IBM.Watson.Assistant.V1.Model
 
         /// <summary>
         /// Specifies the type of entity value.
-        /// Constants for possible values can be found using Value.ValueTypeValue
+        /// Constants for possible values can be found using Value.TypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public string ValueType { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// The text of the entity value. This string must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.

@@ -16,6 +16,8 @@
 */
 
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.PersonalityInsights.V3;
 using IBM.Watson.PersonalityInsights.V3.Model;
@@ -35,7 +37,7 @@ namespace IBM.Watson.Examples
 
         private bool profileTested = false;
         private bool profileAsCsvTested = false;
-        
+
         private void Start()
         {
             LogSystem.InstallDefaultReactors();
@@ -45,11 +47,14 @@ namespace IBM.Watson.Examples
 
         private IEnumerator CreateService()
         {
-            service = new PersonalityInsightsService("2019-02-18");
 
-            //  Wait for authorization token
-            while (!service.Credentials.HasIamTokenData())
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: "{iamApikey}");
+
+            //  Wait for tokendata
+            while (!authenticator.CanAuthenticate())
                 yield return null;
+
+            service = new PersonalityInsightsService("2019-02-18", authenticator);
 
             Runnable.Run(Examples());
         }

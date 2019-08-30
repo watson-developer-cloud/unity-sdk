@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.ToneAnalyzer.V3.Model;
@@ -33,20 +34,16 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private const string serviceId = "tone_analyzer";
         private const string defaultUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
 
-        #region Credentials
+        #region Authenticator
         /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
+        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
         /// </summary>
-        public Credentials Credentials
+        public Authenticator Authenticator
         {
-            get { return credentials; }
+            get { return authenticator; }
             set
             {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
+                authenticator = value;
             }
         }
         #endregion
@@ -90,17 +87,14 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// ToneAnalyzerService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public ToneAnalyzerService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public ToneAnalyzerService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// ToneAnalyzerService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public ToneAnalyzerService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             if (string.IsNullOrEmpty(versionDate))
             {
@@ -111,14 +105,15 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
+            if (authenticator != null)
             {
-                Credentials = credentials;
+                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
+                if (string.IsNullOrEmpty(Url))
                 {
-                    credentials.Url = defaultUrl;
+                    Authenticator.Url = defaultUrl;
                 }
+                Authenticator.Url = Url;
             }
             else
             {
@@ -149,6 +144,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="toneInput">JSON, plain text, or HTML input that contains the content to be analyzed. For JSON
         /// input, provide an object of type `ToneInput`.</param>
+        /// <param name="contentType">The type of the input. A character encoding can be specified by including a
+        /// `charset` parameter. For example, 'text/plain;charset=utf-8'. (optional)</param>
         /// <param name="sentences">Indicates whether the service is to return an analysis of each individual sentence
         /// in addition to its analysis of the full document. If `true` (the default), the service returns results for
         /// each sentence. (optional, default to true)</param>
@@ -168,10 +165,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="acceptLanguage">The desired language of the response. For two-character arguments, regional
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
-        /// <param name="contentType">The type of the input. A character encoding can be specified by including a
-        /// `charset` parameter. For example, 'text/plain;charset=utf-8'. (optional)</param>
         /// <returns><see cref="ToneAnalysis" />ToneAnalysis</returns>
-        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null, string contentType = null)
+        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, string contentType = null, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Tone`");
@@ -208,6 +203,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
             }
             req.Headers["Accept"] = "application/json";
 
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                req.Headers["Content-Type"] = contentType;
+            }
+
             if (!string.IsNullOrEmpty(contentLanguage))
             {
                 req.Headers["Content-Language"] = contentLanguage;
@@ -217,20 +217,16 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-
-            if (!string.IsNullOrEmpty(contentType))
-            {
-                req.Headers["Content-Type"] = contentType;
-            }
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
 
             req.OnResponse = OnToneResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -335,11 +331,12 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneChatResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v3/tone_chat");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat");
             if (connector == null)
             {
                 return false;
             }
+            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
