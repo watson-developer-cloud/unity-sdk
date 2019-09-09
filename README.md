@@ -34,11 +34,15 @@ Ensure that you have the following prerequisites:
 * Change the build settings in Unity (**File > Build Settings**) to any platform except for web player/Web GL. The IBM Watson SDK for Unity does not support Unity Web Player.
 * If using Unity 2018.2 or later you'll need to set **Scripting Runtime Version** and **Api Compatibility Level** in Build Settings to **.NET 4.x equivalent**. We need to access security options to enable TLS 1.2. 
 
+> Updating MacOS to Mojave may disable microphone for Unity. If you are running into this issue please see these [guidelines](https://support.apple.com/en-us/HT209175) to configure microphone for Mojave. 
+
+
 ## Getting the Watson SDK and adding it to Unity
 You can get the latest SDK release by clicking [here][latest_release_sdk]. **You will also need to download the latest release of the IBM Unity SDK Core by clicking [here][latest_release_core].**
 
 ### Installing the SDK source into your Unity project
 Move the **`unity-sdk`** and **`unity-sdk-core`** directories into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson` and the Core directory from `unity-sdk-core` to `IBMSdkCore`_.
+
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.
