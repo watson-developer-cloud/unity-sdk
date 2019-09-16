@@ -33,31 +33,6 @@ namespace IBM.Watson.VisualRecognition.V3
         private const string serviceId = "visual_recognition";
         private const string defaultUrl = "https://gateway.watsonplatform.net/visual-recognition/api";
 
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
-
         #region VersionDate
         private string versionDate;
         /// <summary>
@@ -95,6 +70,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="authenticator">The service authenticator.</param>
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -104,19 +80,9 @@ namespace IBM.Watson.VisualRecognition.V3
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
+            if (string.IsNullOrEmpty(serviceUrl))
             {
-                Authenticator = authenticator;
-
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
-            {
-                throw new IBMException("Please provide a username and password or authorization token to use the VisualRecognition service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                serviceUrl = defaultUrl;
             }
         }
 
@@ -208,12 +174,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnClassifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classify");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classify", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -314,12 +279,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDetectFacesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/detect_faces");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/detect_faces", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -434,12 +398,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnCreateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -507,12 +470,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -579,12 +541,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -696,12 +657,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnUpdateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -766,12 +726,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -839,12 +798,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetCoreMlModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}/core_ml_model", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}/core_ml_model", classifierId), serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -910,12 +868,11 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/user_data");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/user_data", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

@@ -446,7 +446,7 @@ namespace IBM.Watson.SpeechToText.V1
                     parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
 
-                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams);
+                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams, serviceUrl);
                 Authenticator.Authenticate(_listenSocket);
                 Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", UnityWebRequest.EscapeURL(_recognizeModel), parsedParams);
                 _listenSocket.DisableSslVerification = DisableSslVerification;
