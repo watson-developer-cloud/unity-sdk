@@ -34,31 +34,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         private const string serviceId = "tone_analyzer";
         private const string defaultUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
 
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
-
         #region VersionDate
         private string versionDate;
         /// <summary>
@@ -96,6 +71,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <param name="authenticator">The service authenticator.</param>
         public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
@@ -105,19 +81,9 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
+            if (string.IsNullOrEmpty(serviceUrl))
             {
-                Authenticator = authenticator;
-
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
-            {
-                throw new IBMException("Please provide a username and password or authorization token to use the ToneAnalyzer service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                serviceUrl = defaultUrl;
             }
         }
 
@@ -221,12 +187,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -331,12 +296,11 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneChatResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

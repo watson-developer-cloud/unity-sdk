@@ -119,6 +119,7 @@ IEnumerator TokenExample()
         yield return null;
 
     assistant = new AssistantService(versionDate, authenticator);
+    assistant.SetServiceUrl("<service-url>");
     assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
@@ -140,6 +141,7 @@ void TokenExample()
     authenticator = new BearerTokenAuthenticator("<bearer-token>");
 
     assistant = new AssistantService(versionDate, authenticator);
+    assistant.SetServiceUrl("<service-url>");
     assistant.ListWorkspaces(callback: OnListWorkspaces);
 }
 
@@ -159,6 +161,7 @@ void UsernamePasswordExample()
 {
     Authenticator authenticator = new BasicAuthenticator("<username>", "<password>", "<url>");
     assistant = new AssistantService(versionDate, authenticator);
+    assistant.SetServiceUrl("<service-url>");
 }
 ```
 
@@ -221,8 +224,10 @@ Authenticator discoveryAuthenticator;
 private void Example()
 {
     assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
+    assistant.SetServiceUrl("<service-url>");
 
     discovery = new DiscoveryService(discoveryVersionDate, discoveryAuthenticator);
+    discovery.SetServiceUrl("<service-url>");
 
     //  Call with sepcific callbacks
     assistant.Message(
@@ -260,6 +265,7 @@ Authenticator discoveryAuthenticator;
 private void Example()
 {
     assistant = new AssistantService(assistantVersionDate, assistantAuthenticator);
+    assistant.SetServiceUrl("<service-url>");
 
     //  Call with generic callbacks
     JObject input = new JObject();
@@ -269,6 +275,9 @@ private void Example()
         workspaceId: workspaceId,
         input: input
     );
+
+    discovery = new DiscoveryService(discoveryVersionDate, discoveryAuthenticator);
+    discovery.SetServiceUrl("<service-url>");
 
     discovery.ListEnvironments(
         callback: OnSuccess
@@ -303,6 +312,7 @@ private void Example()
         sort: "-name",
         includeAudit: true
     );
+    assistant.SetServiceUrl("<service-url>");
 }
 ```
 

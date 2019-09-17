@@ -34,31 +34,6 @@ namespace IBM.Watson.PersonalityInsights.V3
         private const string serviceId = "personality_insights";
         private const string defaultUrl = "https://gateway.watsonplatform.net/personality-insights/api";
 
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
-
         #region VersionDate
         private string versionDate;
         /// <summary>
@@ -96,6 +71,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="authenticator">The service authenticator.</param>
         public PersonalityInsightsService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of PersonalityInsightsService");
@@ -105,19 +81,9 @@ namespace IBM.Watson.PersonalityInsights.V3
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
+            if (string.IsNullOrEmpty(serviceUrl))
             {
-                Authenticator = authenticator;
-
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
-            {
-                throw new IBMException("Please provide a username and password or authorization token to use the PersonalityInsights service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                serviceUrl = defaultUrl;
             }
         }
 
@@ -250,12 +216,11 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -413,12 +378,11 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileAsCsvResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", serviceUrl);
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

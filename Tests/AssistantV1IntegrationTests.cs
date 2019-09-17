@@ -71,7 +71,7 @@ namespace IBM.Watson.Tests
         {
             if (service == null)
             {
-                service = new AssistantService(versionDate, authenticator);
+                service = new AssistantService(versionDate);
             }
 
             while (!service.Authenticator.CanAuthenticate())
@@ -314,7 +314,7 @@ namespace IBM.Watson.Tests
         [UnityTest, Order(3)]
         public IEnumerator TestListWorkspaces()
         {
-            Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListWorkspaces...");
+            Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to ListWorkspaces...{0}", service.GetServiceUrl());
             WorkspaceCollection listWorkspacesResponse = null;
             service.ListWorkspaces(
                 callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
