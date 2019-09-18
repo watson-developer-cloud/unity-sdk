@@ -329,41 +329,6 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region TestConfigurationInEnvironment
-        [UnityTest, Order(8)]
-        public IEnumerator TestTestConfigurationInEnvironment()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to TestConfigurationInEnvironment...");
-            TestDocument testConfigurationInEnvironmentResponse = null;
-            using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    service.TestConfigurationInEnvironment(
-                        callback: (DetailedResponse<TestDocument> response, IBMError error) =>
-                        {
-                            Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", response.Response);
-                            testConfigurationInEnvironmentResponse = response.Result;
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse);
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
-                            Assert.IsNull(error);
-                        },
-                        environmentId: environmentId,
-                        configurationId: createdConfigurationId,
-                        file: ms,
-                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
-                    );
-
-                    while (testConfigurationInEnvironmentResponse == null)
-                        yield return null;
-                }
-            }
-        }
-        #endregion
-
         #region CreateCollection
         [UnityTest, Order(9)]
         public IEnumerator TestCreateCollection()
@@ -886,7 +851,6 @@ namespace IBM.Watson.Tests
                 },
                 environmentId: environmentId,
                 naturalLanguageQuery: "When did Watson win Jeopardy",
-                collectionIds: collectionId,
                 passages: true,
                 count: 10,
                 highlight: true

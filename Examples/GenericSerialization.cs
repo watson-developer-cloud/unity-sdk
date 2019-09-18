@@ -47,7 +47,7 @@ namespace IBM.Watson.Examples
             //Log.Debug("GenericSerialization", "main skill: {0}", uDefinedObject["name"]);
             //Log.Debug("GenericSerialization", "test: {0}", messageResponse);
 
-            var name = messageResponse.Context.Skills["main skill"]["user_defined"]["name"].ToString();
+            var name = messageResponse.Context.Skills.Skill.UserDefined["name"].ToString();
             Log.Debug("GenericSerialization", "name: {0}", name);
 
         }
