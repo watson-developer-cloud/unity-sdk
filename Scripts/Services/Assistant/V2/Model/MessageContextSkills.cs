@@ -16,7 +16,6 @@
 */
 
 using IBM.Cloud.SDK.Model;
-using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
@@ -28,13 +27,5 @@ namespace IBM.Watson.Assistant.V2.Model
     /// </summary>
     public class MessageContextSkills: DynamicModel<MessageContextSkill>
     {
-        /// <summary>
-        /// Information specific to particular skills used by the Assistant.
-        ///
-        /// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables
-        /// that apply to the dialog skill used by the assistant.
-        /// </summary>
-        [JsonProperty("main skill", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextSkill Skill { get; set; }
     }
 }
