@@ -20,7 +20,8 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Enrichment.
+    /// Enrichment step to perform on the document. Each enrichment is performed on the specified field in the order
+    /// that they are listed in the configuration.
     /// </summary>
     public class Enrichment
     {

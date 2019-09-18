@@ -21,7 +21,7 @@ using System;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// TrainingStatus.
+    /// Training status details.
     /// </summary>
     public class TrainingStatus
     {

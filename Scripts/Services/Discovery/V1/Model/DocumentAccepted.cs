@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// DocumentAccepted.
+    /// Information returned after an uploaded document is accepted.
     /// </summary>
     public class DocumentAccepted
     {

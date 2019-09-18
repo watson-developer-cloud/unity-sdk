@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// ListConfigurationsResponse.
+    /// Object containing an array of available configurations.
     /// </summary>
     public class ListConfigurationsResponse
     {
         /// <summary>
-        /// An array of Configurations that are available for the service instance.
+        /// An array of configurations that are available for the service instance.
         /// </summary>
         [JsonProperty("configurations", NullValueHandling = NullValueHandling.Ignore)]
         public List<Configuration> Configurations { get; set; }

@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// TrainingExampleList.
+    /// Object containing an array of training examples.
     /// </summary>
     public class TrainingExampleList
     {
