@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
@@ -24,7 +25,7 @@ namespace IBM.Watson.Assistant.V2.Model
     /// An object containing segments of text from search results with query-matching text highlighted using HTML <em>
     /// tags.
     /// </summary>
-    public class SearchResultHighlight
+    public class SearchResultHighlight: DynamicModel<List<string>>
     {
         /// <summary>
         /// An array of strings containing segments taken from body text in the search results, with query-matching

@@ -17,12 +17,11 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// QueryNoticesResponse.
+    /// Object containing notice query results.
     /// </summary>
     public class QueryNoticesResponse
     {
@@ -35,7 +34,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Array of document results that match the query.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Results { get; set; }
+        public List<QueryNoticesResult> Results { get; set; }
         /// <summary>
         /// Array of aggregation results that match the query.
         /// </summary>

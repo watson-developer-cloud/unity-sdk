@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// TrainingExample.
+    /// Training example details.
     /// </summary>
     public class TrainingExample
     {

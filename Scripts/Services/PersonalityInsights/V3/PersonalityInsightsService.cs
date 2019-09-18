@@ -32,7 +32,7 @@ namespace IBM.Watson.PersonalityInsights.V3
     public partial class PersonalityInsightsService : BaseService
     {
         private const string serviceId = "personality_insights";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/personality-insights/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/personality-insights/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.PersonalityInsights.V3
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -216,7 +217,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -378,7 +379,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileAsCsvResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", GetServiceUrl());
             if (connector == null)
             {
                 return false;

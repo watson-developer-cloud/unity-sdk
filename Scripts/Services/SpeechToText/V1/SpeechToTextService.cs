@@ -32,7 +32,7 @@ namespace IBM.Watson.SpeechToText.V1
     public partial class SpeechToTextService : BaseService
     {
         private const string serviceId = "speech_to_text";
-        private const string defaultUrl = "https://stream.watsonplatform.net/speech-to-text/api";
+        private const string defaultServiceUrl = "https://stream.watsonplatform.net/speech-to-text/api";
 
         #region VersionDate
         #endregion
@@ -63,9 +63,10 @@ namespace IBM.Watson.SpeechToText.V1
         public SpeechToTextService(Authenticator authenticator) : base(authenticator, serviceId)
         {
             Authenticator = authenticator;
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -107,7 +108,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -182,7 +183,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -541,7 +542,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnRecognizeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognize", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognize", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -653,7 +654,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnRegisterCallbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/register_callback", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/register_callback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -732,7 +733,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnUnregisterCallbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/unregister_callback", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/unregister_callback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1170,7 +1171,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnCreateJobResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognitions", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognitions", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1245,7 +1246,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnCheckJobsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognitions", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/recognitions", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1327,7 +1328,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnCheckJobResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/recognitions/{0}", id), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/recognitions/{0}", id), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1404,7 +1405,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteJobResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/recognitions/{0}", id), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/recognitions/{0}", id), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1523,7 +1524,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnCreateLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1603,7 +1604,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListLanguageModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1679,7 +1680,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1756,7 +1757,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1883,7 +1884,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnTrainLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/train", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/train", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1961,7 +1962,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnResetLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/reset", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/reset", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2047,7 +2048,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnUpgradeLanguageModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/upgrade_model", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/upgrade_model", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2124,7 +2125,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListCorporaResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2270,7 +2271,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnAddCorpusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2350,7 +2351,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetCorpusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2433,7 +2434,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteCorpusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/corpora/{1}", customizationId, corpusName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2532,7 +2533,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListWordsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2659,7 +2660,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnAddWordsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2795,7 +2796,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnAddWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2876,7 +2877,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -2961,7 +2962,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, wordName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3038,7 +3039,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListGrammarsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3184,7 +3185,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnAddGrammarResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3264,7 +3265,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetGrammarResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3347,7 +3348,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteGrammarResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/grammars/{1}", customizationId, grammarName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3445,7 +3446,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnCreateAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/acoustic_customizations", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/acoustic_customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3525,7 +3526,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListAcousticModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/acoustic_customizations", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/acoustic_customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3601,7 +3602,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3678,7 +3679,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3801,7 +3802,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnTrainAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/train", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/train", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3881,7 +3882,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnResetAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/reset", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/reset", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3992,7 +3993,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnUpgradeAcousticModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/upgrade_model", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/upgrade_model", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -4071,7 +4072,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnListAudioResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio", customizationId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -4283,7 +4284,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnAddAudioResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -4376,7 +4377,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnGetAudioResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -4461,7 +4462,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteAudioResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/acoustic_customizations/{0}/audio/{1}", customizationId, audioName), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -4544,7 +4545,7 @@ namespace IBM.Watson.SpeechToText.V1
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data", GetServiceUrl());
             if (connector == null)
             {
                 return false;

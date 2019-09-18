@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// DeleteConfigurationResponse.
+    /// Information returned when a configuration is deleted.
     /// </summary>
     public class DeleteConfigurationResponse
     {

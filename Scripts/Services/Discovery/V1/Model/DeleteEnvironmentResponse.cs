@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// DeleteEnvironmentResponse.
+    /// Response object returned when deleting an environment.
     /// </summary>
     public class DeleteEnvironmentResponse
     {

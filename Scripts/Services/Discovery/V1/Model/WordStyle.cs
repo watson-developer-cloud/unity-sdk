@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// WordStyle.
+    /// Microsoft Word styles to convert into a specified HTML head level.
     /// </summary>
     public class WordStyle
     {

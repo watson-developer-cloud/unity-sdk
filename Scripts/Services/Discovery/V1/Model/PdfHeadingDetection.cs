@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// PdfHeadingDetection.
+    /// Object containing heading detection conversion settings for PDF documents.
     /// </summary>
     public class PdfHeadingDetection
     {
         /// <summary>
-        /// Gets or Sets Fonts
+        /// Array of font matching configurations.
         /// </summary>
         [JsonProperty("fonts", NullValueHandling = NullValueHandling.Ignore)]
         public List<FontSetting> Fonts { get; set; }

@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// QueryFilterType.
+    /// Object containing information about excluded and included types.
     /// </summary>
     public class QueryFilterType
     {

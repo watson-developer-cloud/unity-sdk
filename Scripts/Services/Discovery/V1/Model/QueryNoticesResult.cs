@@ -16,14 +16,15 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// QueryNoticesResult.
+    /// Query result object.
     /// </summary>
-    public class QueryNoticesResult
+    public class QueryNoticesResult: DynamicModel<object>
     {
         /// <summary>
         /// The type of the original source file.

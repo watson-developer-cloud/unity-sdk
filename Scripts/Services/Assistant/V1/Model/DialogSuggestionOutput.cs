@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -24,7 +25,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// The dialog output that will be returned from the Watson Assistant service if the user selects the corresponding
     /// option.
     /// </summary>
-    public class DialogSuggestionOutput
+    public class DialogSuggestionOutput: DynamicModel<object>
     {
         /// <summary>
         /// An array of the nodes that were triggered to create the response, in the order in which they were visited.

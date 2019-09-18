@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -24,7 +25,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from
     /// the log.
     /// </summary>
-    public class OutputData
+    public class OutputData: DynamicModel<object>
     {
         /// <summary>
         /// An array of the nodes that were triggered to create the response, in the order in which they were visited.

@@ -32,7 +32,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
     public partial class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -187,7 +188,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -296,7 +297,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneChatResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat", GetServiceUrl());
             if (connector == null)
             {
                 return false;

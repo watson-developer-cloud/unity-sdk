@@ -32,7 +32,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
     public partial class NaturalLanguageUnderstandingService : BaseService
     {
         private const string serviceId = "natural_language_understanding";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-understanding/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/natural-language-understanding/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -186,7 +187,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnAnalyzeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/analyze", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/analyze", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -256,7 +257,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -327,7 +328,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnDeleteModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId), GetServiceUrl());
             if (connector == null)
             {
                 return false;

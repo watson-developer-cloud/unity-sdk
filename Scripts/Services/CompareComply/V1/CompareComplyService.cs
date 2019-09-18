@@ -32,7 +32,7 @@ namespace IBM.Watson.CompareComply.V1
     public partial class CompareComplyService : BaseService
     {
         private const string serviceId = "compare_comply";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/compare-comply/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/compare-comply/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.CompareComply.V1
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -139,7 +140,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnConvertToHtmlResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/html_conversion", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/html_conversion", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -224,7 +225,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnClassifyElementsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/element_classification", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/element_classification", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -309,7 +310,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnExtractTablesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/tables", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/tables", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -412,7 +413,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCompareDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/comparison", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/comparison", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -499,7 +500,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnAddFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -671,7 +672,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -750,7 +751,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -829,7 +830,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnDeleteFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -968,7 +969,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCreateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1036,7 +1037,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListBatchesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1107,7 +1108,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1194,7 +1195,7 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnUpdateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
