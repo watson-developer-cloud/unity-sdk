@@ -32,32 +32,7 @@ namespace IBM.Watson.Assistant.V2
     public partial class AssistantService : BaseService
     {
         private const string serviceId = "assistant";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
-
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/assistant/api";
 
         #region VersionDate
         private string versionDate;
@@ -96,6 +71,7 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -105,19 +81,10 @@ namespace IBM.Watson.Assistant.V2
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
-            {
-                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -165,12 +132,11 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnCreateSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -245,12 +211,11 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnDeleteSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -340,12 +305,11 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

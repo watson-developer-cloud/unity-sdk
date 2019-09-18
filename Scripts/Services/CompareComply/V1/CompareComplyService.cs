@@ -32,32 +32,7 @@ namespace IBM.Watson.CompareComply.V1
     public partial class CompareComplyService : BaseService
     {
         private const string serviceId = "compare_comply";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/compare-comply/api";
-
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/compare-comply/api";
 
         #region VersionDate
         private string versionDate;
@@ -96,6 +71,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="authenticator">The service authenticator.</param>
         public CompareComplyService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of CompareComplyService");
@@ -105,19 +81,10 @@ namespace IBM.Watson.CompareComply.V1
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
-            {
-                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the CompareComply service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -173,12 +140,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnConvertToHtmlResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/html_conversion");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/html_conversion", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -259,12 +225,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnClassifyElementsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/element_classification");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/element_classification", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -345,12 +310,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnExtractTablesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/tables");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/tables", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -449,12 +413,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCompareDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/comparison");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/comparison", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -537,12 +500,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnAddFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -710,12 +672,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -790,12 +751,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -870,12 +830,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnDeleteFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1010,12 +969,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCreateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1079,12 +1037,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListBatchesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1151,12 +1108,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1239,12 +1195,11 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnUpdateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }

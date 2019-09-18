@@ -32,32 +32,7 @@ namespace IBM.Watson.Assistant.V1
     public partial class AssistantService : BaseService
     {
         private const string serviceId = "assistant";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
-
-        #region Authenticator
-        /// <summary>
-        /// Gets and sets the authenticator of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Authenticator Authenticator
-        {
-            get { return authenticator; }
-            set
-            {
-                authenticator = value;
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/assistant/api";
 
         #region VersionDate
         private string versionDate;
@@ -96,6 +71,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -105,19 +81,10 @@ namespace IBM.Watson.Assistant.V1
                 VersionDate = versionDate;
             }
 
-            if (authenticator != null)
-            {
-                Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(Url))
-                {
-                    Authenticator.Url = defaultUrl;
-                }
-                Authenticator.Url = Url;
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -151,7 +118,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, JObject input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, JObject context = null, JObject output = null, bool? nodesVisitedDetails = null)
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageInput input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, Context context = null, OutputData output = null, bool? nodesVisitedDetails = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -202,12 +169,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/message", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/message", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -295,12 +261,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListWorkspacesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/workspaces");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/workspaces", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -408,12 +373,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/workspaces");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/workspaces", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -503,12 +467,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -630,12 +593,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -704,12 +666,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteWorkspaceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -808,12 +769,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListIntentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -904,12 +864,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -995,12 +954,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1093,12 +1051,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1170,12 +1127,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteIntentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1269,12 +1225,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListExamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1364,12 +1319,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1450,12 +1404,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1547,12 +1500,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1627,12 +1579,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1724,12 +1675,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListCounterexamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1815,12 +1765,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1899,12 +1848,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -1990,12 +1938,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2068,12 +2015,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteCounterexampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2172,12 +2118,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListEntitiesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2275,12 +2220,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2366,12 +2310,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2470,12 +2413,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2547,12 +2489,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteEntityResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2638,12 +2579,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListMentionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2744,12 +2684,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListValuesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2855,12 +2794,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -2948,12 +2886,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3061,12 +2998,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3141,12 +3077,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteValueResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3243,12 +3178,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListSynonymsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3338,12 +3272,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3427,12 +3360,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3523,12 +3455,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3606,12 +3537,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteSynonymResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3702,12 +3632,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListDialogNodesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3781,7 +3710,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, JObject output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3854,12 +3783,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnCreateDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -3937,12 +3865,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnGetDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4019,7 +3946,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, JObject newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4092,12 +4019,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnUpdateDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4169,12 +4095,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteDialogNodeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4269,12 +4194,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListLogsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/logs", workspaceId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/workspaces/{0}/logs", workspaceId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4368,12 +4292,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnListAllLogsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/logs");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/logs", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
@@ -4449,12 +4372,11 @@ namespace IBM.Watson.Assistant.V1
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data", GetServiceUrl());
             if (connector == null)
             {
                 return false;
             }
-            Authenticator.Authenticate(connector);
 
             return connector.Send(req);
         }
