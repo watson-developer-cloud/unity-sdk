@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// ListEnvironmentsResponse.
+    /// Response object containing an array of configured environments.
     /// </summary>
     public class ListEnvironmentsResponse
     {

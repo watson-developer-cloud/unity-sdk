@@ -17,12 +17,11 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// TopHitsResults.
+    /// Top hit information for this query.
     /// </summary>
     public class TopHitsResults
     {
@@ -35,6 +34,6 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Top results returned by the aggregation.
         /// </summary>
         [JsonProperty("hits", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Hits { get; set; }
+        public List<QueryResult> Hits { get; set; }
     }
 }

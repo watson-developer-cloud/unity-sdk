@@ -25,7 +25,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class PdfSettings
     {
         /// <summary>
-        /// Gets or Sets Heading
+        /// Object containing heading detection conversion settings for PDF documents.
         /// </summary>
         [JsonProperty("heading", NullValueHandling = NullValueHandling.Ignore)]
         public PdfHeadingDetection Heading { get; set; }

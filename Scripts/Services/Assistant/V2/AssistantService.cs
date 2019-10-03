@@ -32,7 +32,7 @@ namespace IBM.Watson.Assistant.V2
     public partial class AssistantService : BaseService
     {
         private const string serviceId = "assistant";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/assistant/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.Assistant.V2
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -131,7 +132,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnCreateSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -210,7 +211,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnDeleteSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -304,7 +305,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;

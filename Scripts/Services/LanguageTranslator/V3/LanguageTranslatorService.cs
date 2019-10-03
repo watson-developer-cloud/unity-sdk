@@ -32,7 +32,7 @@ namespace IBM.Watson.LanguageTranslator.V3
     public partial class LanguageTranslatorService : BaseService
     {
         private const string serviceId = "language_translator";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/language-translator/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/language-translator/api";
 
         #region VersionDate
         private string versionDate;
@@ -81,9 +81,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 VersionDate = versionDate;
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -143,7 +144,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnTranslateResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/translate", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/translate", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -212,7 +213,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnListIdentifiableLanguagesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identifiable_languages", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identifiable_languages", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -286,7 +287,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnIdentifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identify", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/identify", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -372,7 +373,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -484,7 +485,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnCreateModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/models", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -555,7 +556,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnDeleteModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -628,7 +629,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/models/{0}", modelId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -696,7 +697,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnListDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -804,7 +805,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnTranslateDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/documents", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -875,7 +876,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -946,7 +947,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnDeleteDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}", documentId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1026,7 +1027,7 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             req.OnResponse = OnGetTranslatedDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}/translated_document", documentId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/documents/{0}/translated_document", documentId), GetServiceUrl());
             if (connector == null)
             {
                 return false;

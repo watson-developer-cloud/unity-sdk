@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// NormalizationOperation.
+    /// Object containing normalization operations.
     /// </summary>
     public class NormalizationOperation
     {

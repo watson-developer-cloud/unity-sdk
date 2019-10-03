@@ -16,14 +16,15 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// QueryResult.
+    /// Query result object.
     /// </summary>
-    public class QueryResult
+    public class QueryResult: DynamicModel<object>
     {
         /// <summary>
         /// The unique identifier of the document.

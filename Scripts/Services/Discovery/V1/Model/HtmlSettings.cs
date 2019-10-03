@@ -36,12 +36,12 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("exclude_tags_keep_content", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> ExcludeTagsKeepContent { get; set; }
         /// <summary>
-        /// Gets or Sets KeepContent
+        /// Object containing an array of XPaths.
         /// </summary>
         [JsonProperty("keep_content", NullValueHandling = NullValueHandling.Ignore)]
         public XPathPatterns KeepContent { get; set; }
         /// <summary>
-        /// Gets or Sets ExcludeContent
+        /// Object containing an array of XPaths.
         /// </summary>
         [JsonProperty("exclude_content", NullValueHandling = NullValueHandling.Ignore)]
         public XPathPatterns ExcludeContent { get; set; }

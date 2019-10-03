@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// QueryRelationsArgument.
+    /// Object containing an array of query entities.
     /// </summary>
     public class QueryRelationsArgument
     {

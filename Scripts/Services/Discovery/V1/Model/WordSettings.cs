@@ -25,7 +25,7 @@ namespace IBM.Watson.Discovery.V1.Model
     public class WordSettings
     {
         /// <summary>
-        /// Gets or Sets Heading
+        /// Object containing heading detection conversion settings for Microsoft Word documents.
         /// </summary>
         [JsonProperty("heading", NullValueHandling = NullValueHandling.Ignore)]
         public WordHeadingDetection Heading { get; set; }

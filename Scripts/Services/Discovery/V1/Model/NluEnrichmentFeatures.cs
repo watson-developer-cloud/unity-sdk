@@ -16,12 +16,11 @@
 */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// NluEnrichmentFeatures.
+    /// Object containing Natural Language Understanding features to be used.
     /// </summary>
     public class NluEnrichmentFeatures
     {
@@ -49,7 +48,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// An object that indicates the Categories enrichment will be applied to the specified field.
         /// </summary>
         [JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Categories { get; set; }
+        public NluEnrichmentCategories Categories { get; set; }
         /// <summary>
         /// An object specifiying the semantic roles enrichment and related parameters.
         /// </summary>

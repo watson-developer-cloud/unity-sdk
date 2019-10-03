@@ -32,7 +32,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
     public partial class NaturalLanguageClassifierService : BaseService
     {
         private const string serviceId = "natural_language_classifier";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
 
         #region VersionDate
         #endregion
@@ -63,9 +63,10 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         public NaturalLanguageClassifierService(Authenticator authenticator) : base(authenticator, serviceId)
         {
             Authenticator = authenticator;
-            if (string.IsNullOrEmpty(serviceUrl))
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                serviceUrl = defaultUrl;
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -117,7 +118,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnClassifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify", classifierId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -200,7 +201,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnClassifyCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify_collection", classifierId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify_collection", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -289,7 +290,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnCreateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -356,7 +357,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -426,7 +427,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnGetClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -494,7 +495,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), serviceUrl);
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;

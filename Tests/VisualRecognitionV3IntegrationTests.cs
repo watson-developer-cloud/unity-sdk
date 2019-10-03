@@ -41,7 +41,6 @@ namespace IBM.Watson.Tests
         private string turtleImageFilepath;
         private string turtleImageContentType = "image/jpeg";
         private string obamaImageFilepath;
-        private string obamaImageContentType = "image/jpeg";
         private string imageMetadataFilepath;
         private string classifierName = "unity-sdk-classifier-safe-to-delete";
         private string classifierId;
@@ -155,41 +154,6 @@ namespace IBM.Watson.Tests
                 );
 
                     while (classifyResponse == null)
-                        yield return null;
-                }
-            }
-        }
-        #endregion
-
-        #region DetectFaces
-        [UnityTest, Order(2)]
-        public IEnumerator TestDetectFaces()
-        {
-            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "Attempting to DetectFaces...");
-            DetectedFaces detectFacesResponse = null;
-            using (FileStream fs = File.OpenRead(obamaImageFilepath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    service.DetectFaces(
-                        callback: (DetailedResponse<DetectedFaces> response, IBMError error) =>
-                        {
-                            Log.Debug("VisualRecognitionServiceV3IntegrationTests", "DetectFaces result: {0}", response.Response);
-                            detectFacesResponse = response.Result;
-                            Assert.IsNotNull(detectFacesResponse);
-                            Assert.IsNotNull(detectFacesResponse.Images);
-                            Assert.IsTrue(detectFacesResponse.Images.Count > 0);
-                            Assert.IsNotNull(detectFacesResponse.Images[0].Faces);
-                            Assert.IsTrue(detectFacesResponse.Images[0].Faces.Count > 0);
-                            Assert.IsNull(error);
-                        },
-                        imagesFile: ms,
-                        imagesFileContentType: obamaImageContentType,
-                        imagesFilename: Path.GetFileName(obamaImageFilepath)
-                    );
-
-                    while (detectFacesResponse == null)
                         yield return null;
                 }
             }

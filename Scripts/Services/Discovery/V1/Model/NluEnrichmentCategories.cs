@@ -15,12 +15,14 @@
 *
 */
 
+using IBM.Cloud.SDK.Model;
+
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
     /// An object that indicates the Categories enrichment will be applied to the specified field.
     /// </summary>
-    public class NluEnrichmentCategories
+    public class NluEnrichmentCategories: DynamicModel<object>
     {
     }
 }

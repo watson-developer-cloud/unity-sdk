@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -31,7 +30,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An input object that includes the input text.
         /// </summary>
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Input { get; set; }
+        public MessageInput Input { get; set; }
         /// <summary>
         /// An array of intents to be sent along with the user input.
         /// </summary>
