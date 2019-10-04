@@ -39,9 +39,7 @@ namespace IBM.Watson.Tests
         private string negativeExamplesFilepath;
         private string giraffeImageFilepath;
         private string turtleImageFilepath;
-        private string turtleImageContentType = "image/jpeg";
         private string imageMetadataFilepath;
-        private string classifierName = "unity-sdk-classifier-safe-to-delete";
         private string giraffeCollectionId = "d31d6534-3458-40c4-b6de-2185a5f3cbe4";
         private string giraffeClassname = "giraffe";
         private string turtleCollectionId = "760c8625-a456-4b73-b71d-d1619a6daf84";
