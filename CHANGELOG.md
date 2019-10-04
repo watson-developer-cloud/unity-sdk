@@ -1,3 +1,29 @@
+# [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v4.0.0) (2019-10-04)
+
+
+### Bug Fixes
+
+* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
+
+
+### Features
+
+* **additionalProps:** add support for dynamic additional properties for models ([1dcc5d2](https://github.com/watson-developer-cloud/unity-sdk/commit/1dcc5d2))
+* **compare-comply:** add ContractCurrentcies model ([57677db](https://github.com/watson-developer-cloud/unity-sdk/commit/57677db))
+* add meta file for vis rec v4 ([12194cf](https://github.com/watson-developer-cloud/unity-sdk/commit/12194cf))
+* **Discovery:** add suggested query to query response ([3f582d1](https://github.com/watson-developer-cloud/unity-sdk/commit/3f582d1))
+* **Examples:** add examples for NLU, LT and Discovery ([2f220b8](https://github.com/watson-developer-cloud/unity-sdk/commit/2f220b8))
+* **regenerate:** regenerate services to include model and connector changes ([eaec06c](https://github.com/watson-developer-cloud/unity-sdk/commit/eaec06c))
+* **regenerate:** regenerate services using current api def ([affd1f9](https://github.com/watson-developer-cloud/unity-sdk/commit/affd1f9))
+* **regerate:** regenerate services for pre-release ([4d2a36f](https://github.com/watson-developer-cloud/unity-sdk/commit/4d2a36f))
+* **SetServiceUrl:** provide setServiceUrl method and use serviceUrl instead of Url ([a6df1b8](https://github.com/watson-developer-cloud/unity-sdk/commit/a6df1b8))
+* **VisualRecognitionV4:** add support for visual recognition v4 ([b47e990](https://github.com/watson-developer-cloud/unity-sdk/commit/b47e990))
+
+
+### BREAKING CHANGES
+
+* **additionalProps:** add support for dynamic additional properties for models
+
 # [3.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.5.0) (2019-09-09)
 
 
