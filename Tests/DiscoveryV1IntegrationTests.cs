@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V1;
 using IBM.Watson.Discovery.V1.Model;
@@ -89,7 +90,7 @@ namespace IBM.Watson.Tests
                 service = new DiscoveryService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -325,41 +326,6 @@ namespace IBM.Watson.Tests
 
             while (updateConfigurationResponse == null)
                 yield return null;
-        }
-        #endregion
-
-        #region TestConfigurationInEnvironment
-        [UnityTest, Order(8)]
-        public IEnumerator TestTestConfigurationInEnvironment()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to TestConfigurationInEnvironment...");
-            TestDocument testConfigurationInEnvironmentResponse = null;
-            using (FileStream fs = File.OpenRead(watsonBeatsJeopardyHtmlFilePath))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    fs.CopyTo(ms);
-                    service.TestConfigurationInEnvironment(
-                        callback: (DetailedResponse<TestDocument> response, IBMError error) =>
-                        {
-                            Log.Debug("DiscoveryServiceV1IntegrationTests", "TestConfigurationInEnvironment result: {0}", response.Response);
-                            testConfigurationInEnvironmentResponse = response.Result;
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse);
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Status);
-                            Assert.IsNotNull(testConfigurationInEnvironmentResponse.Snapshots);
-                            Assert.IsNull(error);
-                        },
-                        environmentId: environmentId,
-                        configurationId: createdConfigurationId,
-                        file: ms,
-                        fileContentType: Utility.GetMimeType(Path.GetExtension(watsonBeatsJeopardyHtmlFilePath)),
-                        filename: Path.GetFileName(watsonBeatsJeopardyHtmlFilePath)
-                    );
-
-                    while (testConfigurationInEnvironmentResponse == null)
-                        yield return null;
-                }
-            }
         }
         #endregion
 
@@ -884,12 +850,11 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
-                naturalLanguageQuery: "When did Watson win Jeopardy",
                 collectionIds: collectionId,
+                naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
-                highlight: true,
-                loggingOptOut: true
+                highlight: true
             );
 
             while (federatedQueryResponse == null)
@@ -952,37 +917,6 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region QueryEntities
-        //[UnityTest, Order(28)]
-        public IEnumerator TestQueryEntities()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryEntities...");
-            QueryEntitiesResponse queryEntitiesResponse = null;
-            QueryEntitiesEntity entity = new QueryEntitiesEntity()
-            {
-                Text = "Jeopardy"
-            };
-
-            service.QueryEntities(
-                callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", response.Response);
-                    queryEntitiesResponse = response.Result;
-                    Assert.IsNotNull(queryEntitiesResponse);
-                    Assert.IsNull(error);
-                },
-                environmentId: environmentId,
-                collectionId: collectionId,
-                entity: entity,
-                feature: "disambiguate",
-                count: 10
-            );
-
-            while (queryEntitiesResponse == null)
-                yield return null;
-        }
-        #endregion
-
         #region QueryNotices
         [UnityTest, Order(29)]
         public IEnumerator TestQueryNotices()
@@ -1006,38 +940,6 @@ namespace IBM.Watson.Tests
             );
 
             while (queryNoticesResponse == null)
-                yield return null;
-        }
-        #endregion
-
-        #region QueryRelations
-        //[UnityTest, Order(30)]
-        public IEnumerator TestQueryRelations()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryRelations...");
-            QueryRelationsResponse queryRelationsResponse = null;
-            List<QueryRelationsEntity> entities = new List<QueryRelationsEntity>()
-            {
-                new QueryRelationsEntity()
-                {
-                    Text = "Jeopardy"
-                }
-            };
-            service.QueryRelations(
-                callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", response.Response);
-                    queryRelationsResponse = response.Result;
-                    Assert.IsNotNull(queryRelationsResponse);
-                    Assert.IsNull(error);
-                },
-                environmentId: environmentId,
-                collectionId: collectionId,
-                entities: entities,
-                count: 10
-            );
-
-            while (queryRelationsResponse == null)
                 yield return null;
         }
         #endregion
@@ -1408,9 +1310,9 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region CreateCredentials
+        #region CreateAuthenticator
         [UnityTest, Order(45)]
-        public IEnumerator TestCreateCredentials()
+        public IEnumerator TestCreateAuthenticator()
         {
             Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to CreateCredentials...");
             ModelCredentials createCredentialsResponse = null;

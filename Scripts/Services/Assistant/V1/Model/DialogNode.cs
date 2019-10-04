@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -30,7 +29,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// How the dialog node is processed.
         /// </summary>
-        public class NodeTypeValue
+        public class TypeValue
         {
             /// <summary>
             /// Constant STANDARD for standard
@@ -165,10 +164,10 @@ namespace IBM.Watson.Assistant.V1.Model
 
         /// <summary>
         /// How the dialog node is processed.
-        /// Constants for possible values can be found using DialogNode.NodeTypeValue
+        /// Constants for possible values can be found using DialogNode.TypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public string NodeType { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// How an `event_handler` node is processed.
         /// Constants for possible values can be found using DialogNode.EventNameValue
@@ -226,7 +225,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Output { get; set; }
+        public DialogNodeOutput Output { get; set; }
         /// <summary>
         /// The context for the dialog node.
         /// </summary>

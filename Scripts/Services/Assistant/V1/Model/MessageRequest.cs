@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -30,19 +29,19 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An input object that includes the input text.
         /// </summary>
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Input { get; set; }
+        public MessageInput Input { get; set; }
         /// <summary>
         /// Intents to use when evaluating the user input. Include intents from the previous response to continue using
         /// those intents rather than trying to recognize intents in the new input.
         /// </summary>
         [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Intents { get; set; }
+        public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
         /// Entities to use when evaluating the message. Include entities from the previous response to continue using
         /// those entities rather than detecting entities in the new input.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Entities { get; set; }
+        public List<RuntimeEntity> Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>
@@ -52,13 +51,13 @@ namespace IBM.Watson.Assistant.V1.Model
         /// State information for the conversation. To maintain state, include the context from the previous response.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Context { get; set; }
+        public Context Context { get; set; }
         /// <summary>
         /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages
         /// from the log.
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Output { get; set; }
+        public OutputData Output { get; set; }
         /// <summary>
         /// An array of objects describing any actions requested by the dialog node.
         /// </summary>

@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// DeleteCollectionResponse.
+    /// Response object returned when deleting a colleciton.
     /// </summary>
     public class DeleteCollectionResponse
     {

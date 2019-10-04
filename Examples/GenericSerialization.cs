@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using Newtonsoft.Json;
 using IBM.Watson.Assistant.V2.Model;
 
@@ -32,21 +33,8 @@ namespace IBM.Watson.Examples
             LogSystem.InstallDefaultReactors();
 
             MessageResponse messageResponse = JsonConvert.DeserializeObject<MessageResponse>(responseJson);
-            //Dictionary<string, object> e = Json.Deserialize(responseJson) as Dictionary<string, object>;
-            //Dictionary<string, object> context = e["context"] as Dictionary<string, object>;
-            //Dictionary<string, object> skills = context["skills"] as Dictionary<string, object>;
-            //Dictionary<string, object> main_skill = skills["main skill"] as Dictionary<string, object>;
-            //Dictionary<string, object> user_defined = main_skill["user_defined"] as Dictionary<string, object>;
 
-            //string name = user_defined["name"] as string;
-
-            //var user_defined = messageResponse.Context.Skills["main skill"]["user_defined"].ToString();
-            //var uDefinedObject = JsonConvert.DeserializeObject<Dictionary<string, object>>(user_defined);
-
-            //Log.Debug("GenericSerialization", "main skill: {0}", uDefinedObject["name"]);
-            //Log.Debug("GenericSerialization", "test: {0}", messageResponse);
-
-            var name = messageResponse.Context.Skills["main skill"]["user_defined"]["name"].ToString();
+            var name = messageResponse.Context.Skills.Get("main skill").UserDefined["name"].ToString();
             Log.Debug("GenericSerialization", "name: {0}", name);
 
         }

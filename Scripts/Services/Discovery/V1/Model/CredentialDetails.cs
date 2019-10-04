@@ -30,12 +30,12 @@ namespace IBM.Watson.Discovery.V1.Model
         /// The authentication method for this credentials definition. The  **credential_type** specified must be
         /// supported by the **source_type**. The following combinations are possible:
         ///
-        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
-        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
-        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml` with **source_version** of `online`,
-        /// or `ntlm_v1` with **source_version** of `2016`
-        /// -  `\"source_type\": \"web_crawl\"` - valid `credential_type`s: `noauth` or `basic`
-        /// -  \"source_type\": \"cloud_object_storage\"` - valid `credential_type`s: `aws4_hmac`.
+        /// -  `"source_type": "box"` - valid `credential_type`s: `oauth2`
+        /// -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
+        /// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or
+        /// `ntlm_v1` with **source_version** of `2016`
+        /// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
+        /// -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
         /// </summary>
         public class CredentialTypeValue
         {
@@ -87,12 +87,12 @@ namespace IBM.Watson.Discovery.V1.Model
         /// The authentication method for this credentials definition. The  **credential_type** specified must be
         /// supported by the **source_type**. The following combinations are possible:
         ///
-        /// -  `\"source_type\": \"box\"` - valid `credential_type`s: `oauth2`
-        /// -  `\"source_type\": \"salesforce\"` - valid `credential_type`s: `username_password`
-        /// -  `\"source_type\": \"sharepoint\"` - valid `credential_type`s: `saml` with **source_version** of `online`,
-        /// or `ntlm_v1` with **source_version** of `2016`
-        /// -  `\"source_type\": \"web_crawl\"` - valid `credential_type`s: `noauth` or `basic`
-        /// -  \"source_type\": \"cloud_object_storage\"` - valid `credential_type`s: `aws4_hmac`.
+        /// -  `"source_type": "box"` - valid `credential_type`s: `oauth2`
+        /// -  `"source_type": "salesforce"` - valid `credential_type`s: `username_password`
+        /// -  `"source_type": "sharepoint"` - valid `credential_type`s: `saml` with **source_version** of `online`, or
+        /// `ntlm_v1` with **source_version** of `2016`
+        /// -  `"source_type": "web_crawl"` - valid `credential_type`s: `noauth` or `basic`
+        /// -  "source_type": "cloud_object_storage"` - valid `credential_type`s: `aws4_hmac`.
         /// Constants for possible values can be found using CredentialDetails.CredentialTypeValue
         /// </summary>
         [JsonProperty("credential_type", NullValueHandling = NullValueHandling.Ignore)]

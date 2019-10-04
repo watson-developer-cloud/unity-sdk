@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.CompareComply.V1;
 using IBM.Watson.CompareComply.V1.Model;
@@ -63,7 +64,7 @@ namespace IBM.Watson.Tests
                 service = new CompareComplyService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -94,7 +95,6 @@ namespace IBM.Watson.Tests
                             Assert.IsNull(error);
                         },
                         file: ms,
-                        filename: "contract_A.pdf",
                         model: "contracts",
                         fileContentType: Utility.GetMimeType(Path.GetExtension(contractAFilepath))
                     );

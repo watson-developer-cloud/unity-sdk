@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using IBM.Watson.Assistant.V1;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V1.Model;
 using System;
@@ -104,11 +106,14 @@ namespace IBM.Watson.Examples
 
         private IEnumerator CreateService()
         {
-            service = new AssistantService("2019-02-18");
 
-            //  Wait for authorization token
-            while (!service.Credentials.HasIamTokenData())
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: "{iamApikey}");
+
+            //  Wait for tokendata
+            while (!authenticator.CanAuthenticate())
                 yield return null;
+
+            service = new AssistantService("2019-02-18", authenticator);
 
             workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
             Runnable.Run(Examples());
@@ -118,7 +123,7 @@ namespace IBM.Watson.Examples
         {
             //  List Workspaces
             Log.Debug("ExampleAssistantV1", "Attempting to ListWorkspaces...");
-            service.ListWorkspaces(callback: OnListWorkspaces, pageLimit: 1, includeCount: true, sort: "-name", includeAudit: true);
+            service.ListWorkspaces(callback: OnListWorkspaces, pageLimit: 1, sort: "-name", includeAudit: true);
             while (!listWorkspacesTested)
                 yield return null;
 

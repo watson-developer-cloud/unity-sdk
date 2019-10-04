@@ -18,6 +18,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Watson.NaturalLanguageUnderstanding.V1;
 using IBM.Watson.NaturalLanguageUnderstanding.V1.Model;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace IBM.Watson.Tests
                 service = new NaturalLanguageUnderstandingService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 

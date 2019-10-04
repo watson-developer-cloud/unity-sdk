@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -30,17 +29,17 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An input object that includes the input text.
         /// </summary>
         [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Input { get; set; }
+        public MessageInput Input { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>
         [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Intents { get; set; }
+        public List<RuntimeIntent> Intents { get; set; }
         /// <summary>
         /// An array of entities identified in the user input.
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Entities { get; set; }
+        public List<RuntimeEntity> Entities { get; set; }
         /// <summary>
         /// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
         /// </summary>
@@ -50,13 +49,13 @@ namespace IBM.Watson.Assistant.V1.Model
         /// State information for the conversation. To maintain state, include the context from the previous response.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Context { get; set; }
+        public Context Context { get; set; }
         /// <summary>
         /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages
         /// from the log.
         /// </summary>
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
-        public JObject Output { get; set; }
+        public OutputData Output { get; set; }
         /// <summary>
         /// An array of objects describing any actions requested by the dialog node.
         /// </summary>

@@ -26,8 +26,8 @@ namespace IBM.Watson.Discovery.V1.Model
     {
         /// <summary>
         /// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with
-        /// relationship extraction. May be a custom model provided by Watson Knowledge Studio, the public model for use
-        /// with Knowledge Graph `en-news`, the default is`en-news`.
+        /// relationship extraction. May be a custom model provided by Watson Knowledge Studio, the default public model
+        /// is`en-news`.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
         public string Model { get; set; }

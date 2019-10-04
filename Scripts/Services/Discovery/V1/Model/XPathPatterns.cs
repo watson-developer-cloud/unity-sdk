@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// XPathPatterns.
+    /// Object containing an array of XPaths.
     /// </summary>
     public class XPathPatterns
     {

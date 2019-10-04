@@ -19,6 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Watson.NaturalLanguageClassifier.V1;
 using IBM.Watson.NaturalLanguageClassifier.V1.Model;
 using NUnit.Framework;
@@ -53,7 +54,7 @@ namespace IBM.Watson.Tests
                 service = new NaturalLanguageClassifierService();
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -181,7 +182,7 @@ namespace IBM.Watson.Tests
                                     Assert.IsTrue(createClassifierResponse.Language == "en");
                                     Assert.IsNull(error);
                                 },
-                                metadata: ms0,
+                                trainingMetadata: ms0,
                                 trainingData: ms1
                             );
 

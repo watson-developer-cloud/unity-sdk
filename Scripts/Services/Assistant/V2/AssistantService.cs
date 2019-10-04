@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Assistant.V2.Model;
@@ -31,36 +32,7 @@ namespace IBM.Watson.Assistant.V2
     public partial class AssistantService : BaseService
     {
         private const string serviceId = "assistant";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/assistant/api";
-
-        #region Credentials
-        /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Credentials Credentials
-        {
-            get { return credentials; }
-            set
-            {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/assistant/api";
 
         #region VersionDate
         private string versionDate;
@@ -90,18 +62,16 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public AssistantService(string versionDate) : base(versionDate, serviceId)
-        {
-            VersionDate = versionDate;
-        }
+        public AssistantService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
         /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        /// <param name="credentials">The service credentials.</param>
-        public AssistantService(string versionDate, Credentials credentials) : base(versionDate, credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Authenticator = authenticator;
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -111,18 +81,10 @@ namespace IBM.Watson.Assistant.V2
                 VersionDate = versionDate;
             }
 
-            if (credentials.HasCredentials() || credentials.HasTokenData())
-            {
-                Credentials = credentials;
 
-                if (string.IsNullOrEmpty(credentials.Url))
-                {
-                    credentials.Url = defaultUrl;
-                }
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the Assistant service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -170,7 +132,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnCreateSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions", assistantId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -249,7 +211,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnDeleteSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -343,7 +305,7 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;

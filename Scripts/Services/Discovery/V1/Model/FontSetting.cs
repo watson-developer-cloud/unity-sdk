@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// FontSetting.
+    /// Font matching configuration.
     /// </summary>
     public class FontSetting
     {

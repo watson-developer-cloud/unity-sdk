@@ -39,17 +39,17 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// <summary>
         /// Time alignments for each word from the transcript as a list of lists. Each inner list consists of three
         /// elements: the word followed by its start and end time in seconds, for example:
-        /// `[[\"hello\",0.0,1.2],[\"world\",1.2,2.5]]`. Timestamps are returned only for the best alternative.
+        /// `[["hello",0.0,1.2],["world",1.2,2.5]]`. Timestamps are returned only for the best alternative.
         /// </summary>
         [JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
-        public string[][] Timestamps { get; set; }
+        public List<string> Timestamps { get; set; }
         /// <summary>
         /// A confidence score for each word of the transcript as a list of lists. Each inner list consists of two
         /// elements: the word and its confidence score in the range of 0.0 to 1.0, for example:
-        /// `[[\"hello\",0.95],[\"world\",0.866]]`. Confidence scores are returned only for the best alternative and
-        /// only with results marked as final.
+        /// `[["hello",0.95],["world",0.866]]`. Confidence scores are returned only for the best alternative and only
+        /// with results marked as final.
         /// </summary>
         [JsonProperty("word_confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public string[][] WordConfidence { get; set; }
+        public List<string> WordConfidence { get; set; }
     }
 }

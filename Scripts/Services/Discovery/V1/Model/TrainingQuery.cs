@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// TrainingQuery.
+    /// Training query details.
     /// </summary>
     public class TrainingQuery
     {

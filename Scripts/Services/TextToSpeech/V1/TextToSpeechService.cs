@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.TextToSpeech.V1.Model;
@@ -31,36 +32,7 @@ namespace IBM.Watson.TextToSpeech.V1
     public partial class TextToSpeechService : BaseService
     {
         private const string serviceId = "text_to_speech";
-        private const string defaultUrl = "https://stream.watsonplatform.net/text-to-speech/api";
-
-        #region Credentials
-        /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Credentials Credentials
-        {
-            get { return credentials; }
-            set
-            {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://stream.watsonplatform.net/text-to-speech/api";
 
         #region VersionDate
         #endregion
@@ -81,30 +53,20 @@ namespace IBM.Watson.TextToSpeech.V1
         /// TextToSpeechService constructor.
         /// </summary>
         
-        public TextToSpeechService() : base(serviceId)
-        {
-            
-        }
+        public TextToSpeechService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
         
-        /// <param name="credentials">The service credentials.</param>
-        public TextToSpeechService(Credentials credentials) : base(credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public TextToSpeechService(Authenticator authenticator) : base(authenticator, serviceId)
         {
-            if (credentials.HasCredentials() || credentials.HasTokenData())
-            {
-                Credentials = credentials;
+            Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
-                {
-                    credentials.Url = defaultUrl;
-                }
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the TextToSpeech service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -147,7 +109,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnListVoicesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/voices");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/voices", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -231,7 +193,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnGetVoiceResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/voices/{0}", voice));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/voices/{0}", voice), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -283,55 +245,33 @@ namespace IBM.Watson.TextToSpeech.V1
         ///  The service can return audio in the following formats (MIME types).
         /// * Where indicated, you can optionally specify the sampling rate (`rate`) of the audio. You must specify a
         /// sampling rate for the `audio/l16` and `audio/mulaw` formats. A specified sampling rate must lie in the range
-        /// of 8 kHz to 192 kHz.
+        /// of 8 kHz to 192 kHz. Some formats restrict the sampling rate to certain values, as noted.
         /// * For the `audio/l16` format, you can optionally specify the endianness (`endianness`) of the audio:
         /// `endianness=big-endian` or `endianness=little-endian`.
         ///
         /// Use the `Accept` header or the `accept` parameter to specify the requested format of the response audio. If
         /// you omit an audio format altogether, the service returns the audio in Ogg format with the Opus codec
         /// (`audio/ogg;codecs=opus`). The service always returns single-channel audio.
-        /// * `audio/basic`
-        ///
-        ///   The service returns audio with a sampling rate of 8000 Hz.
-        /// * `audio/flac`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/l16`
-        ///
-        ///   You must specify the `rate` of the audio. You can optionally specify the `endianness` of the audio. The
-        /// default endianness is `little-endian`.
-        /// * `audio/mp3`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/mpeg`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/mulaw`
-        ///
-        ///   You must specify the `rate` of the audio.
-        /// * `audio/ogg`
-        ///
-        ///   The service returns the audio in the `vorbis` codec. You can optionally specify the `rate` of the audio.
-        /// The default sampling rate is 22,050 Hz.
-        /// * `audio/ogg;codecs=opus`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/ogg;codecs=vorbis`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/wav`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
-        /// * `audio/webm`
-        ///
-        ///   The service returns the audio in the `opus` codec. The service returns audio with a sampling rate of
-        /// 48,000 Hz.
-        /// * `audio/webm;codecs=opus`
-        ///
-        ///   The service returns audio with a sampling rate of 48,000 Hz.
-        /// * `audio/webm;codecs=vorbis`
-        ///
-        ///   You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/basic` - The service returns audio with a sampling rate of 8000 Hz.
+        /// * `audio/flac` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/l16` - You must specify the `rate` of the audio. You can optionally specify the `endianness` of the
+        /// audio. The default endianness is `little-endian`.
+        /// * `audio/mp3` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/mpeg` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/mulaw` - You must specify the `rate` of the audio.
+        /// * `audio/ogg` - The service returns the audio in the `vorbis` codec. You can optionally specify the `rate`
+        /// of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/ogg;codecs=opus` - You can optionally specify the `rate` of the audio. Only the following values
+        /// are valid sampling rates: `48000`, `24000`, `16000`, `12000`, or `8000`. If you specify a value other than
+        /// one of these, the service returns an error. The default sampling rate is 48,000 Hz.
+        /// * `audio/ogg;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate
+        /// is 22,050 Hz.
+        /// * `audio/wav` - You can optionally specify the `rate` of the audio. The default sampling rate is 22,050 Hz.
+        /// * `audio/webm` - The service returns the audio in the `opus` codec. The service returns audio with a
+        /// sampling rate of 48,000 Hz.
+        /// * `audio/webm;codecs=opus` - The service returns audio with a sampling rate of 48,000 Hz.
+        /// * `audio/webm;codecs=vorbis` - You can optionally specify the `rate` of the audio. The default sampling rate
+        /// is 22,050 Hz.
         ///
         /// For more information about specifying an audio format, including additional details about some of the
         /// formats, see [Audio
@@ -348,17 +288,17 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">The text to synthesize.</param>
+        /// <param name="accept">The requested format (MIME type) of the audio. You can use the `Accept` header or the
+        /// `accept` parameter to specify the audio format. For more information about specifying an audio format, see
+        /// **Audio formats (accept types)** in the method description. (optional, default to
+        /// audio/ogg;codecs=opus)</param>
         /// <param name="voice">The voice to use for synthesis. (optional, default to en-US_MichaelVoice)</param>
         /// <param name="customizationId">The customization ID (GUID) of a custom voice model to use for the synthesis.
         /// If a custom voice model is specified, it is guaranteed to work only if it matches the language of the
         /// indicated voice. You must make the request with credentials for the instance of the service that owns the
         /// custom model. Omit the parameter to use the specified voice with no customization. (optional)</param>
-        /// <param name="accept">The requested format (MIME type) of the audio. You can use the `Accept` header or the
-        /// `accept` parameter to specify the audio format. For more information about specifying an audio format, see
-        /// **Audio formats (accept types)** in the method description. (optional, default to
-        /// audio/ogg;codecs=opus)</param>
         /// <returns><see cref="byte[]" />byte[]</returns>
-        public bool Synthesize(Callback<byte[]> callback, string text, string voice = null, string customizationId = null, string accept = null)
+        public bool Synthesize(Callback<byte[]> callback, string text, string accept = null, string voice = null, string customizationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Synthesize`");
@@ -407,7 +347,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnSynthesizeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/synthesize");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/synthesize", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -501,7 +441,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnGetPronunciationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/pronunciation");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/pronunciation", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -593,7 +533,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnCreateVoiceModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/customizations");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -675,7 +615,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnListVoiceModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/customizations");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/customizations", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -787,7 +727,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnUpdateVoiceModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -865,7 +805,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnGetVoiceModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -942,7 +882,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnDeleteVoiceModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1052,7 +992,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnAddWordsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1130,7 +1070,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnListWordsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words", customizationId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words", customizationId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1247,7 +1187,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnAddWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1328,7 +1268,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnGetWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1408,7 +1348,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnDeleteWordResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/customizations/{0}/words/{1}", customizationId, word), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -1491,7 +1431,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/user_data");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data", GetServiceUrl());
             if (connector == null)
             {
                 return false;

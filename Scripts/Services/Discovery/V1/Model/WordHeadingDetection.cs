@@ -21,17 +21,17 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// WordHeadingDetection.
+    /// Object containing heading detection conversion settings for Microsoft Word documents.
     /// </summary>
     public class WordHeadingDetection
     {
         /// <summary>
-        /// Gets or Sets Fonts
+        /// Array of font matching configurations.
         /// </summary>
         [JsonProperty("fonts", NullValueHandling = NullValueHandling.Ignore)]
         public List<FontSetting> Fonts { get; set; }
         /// <summary>
-        /// Gets or Sets Styles
+        /// Array of Microsoft Word styles to convert.
         /// </summary>
         [JsonProperty("styles", NullValueHandling = NullValueHandling.Ignore)]
         public List<WordStyle> Styles { get; set; }

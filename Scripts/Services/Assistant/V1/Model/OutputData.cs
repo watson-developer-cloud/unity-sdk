@@ -16,8 +16,8 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
@@ -25,24 +25,8 @@ namespace IBM.Watson.Assistant.V1.Model
     /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from
     /// the log.
     /// </summary>
-    public class OutputData
+    public class OutputData: DynamicModel<object>
     {
-        /// <summary>
-        /// An array of up to 50 messages logged with the request.
-        /// </summary>
-        [JsonProperty("log_messages", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> LogMessages { get; set; }
-        /// <summary>
-        /// An array of responses to the user.
-        /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Text { get; set; }
-        /// <summary>
-        /// Output intended for any channel. It is the responsibility of the client application to implement the
-        /// supported response types.
-        /// </summary>
-        [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogRuntimeResponseGeneric> Generic { get; set; }
         /// <summary>
         /// An array of the nodes that were triggered to create the response, in the order in which they were visited.
         /// This information is useful for debugging and for tracing the path taken through the node tree.
@@ -56,5 +40,21 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("nodes_visited_details", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeVisitedDetails> NodesVisitedDetails { get; set; }
+        /// <summary>
+        /// An array of up to 50 messages logged with the request.
+        /// </summary>
+        [JsonProperty("log_messages", NullValueHandling = NullValueHandling.Ignore)]
+        public List<LogMessage> LogMessages { get; set; }
+        /// <summary>
+        /// An array of responses to the user.
+        /// </summary>
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Text { get; set; }
+        /// <summary>
+        /// Output intended for any channel. It is the responsibility of the client application to implement the
+        /// supported response types.
+        /// </summary>
+        [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
+        public List<RuntimeResponseGeneric> Generic { get; set; }
     }
 }

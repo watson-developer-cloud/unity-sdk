@@ -20,14 +20,14 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Field.
+    /// Object containing field details.
     /// </summary>
     public class Field
     {
         /// <summary>
         /// The type of the field.
         /// </summary>
-        public class FieldTypeValue
+        public class TypeValue
         {
             /// <summary>
             /// Constant NESTED for nested
@@ -78,14 +78,14 @@ namespace IBM.Watson.Discovery.V1.Model
 
         /// <summary>
         /// The type of the field.
-        /// Constants for possible values can be found using Field.FieldTypeValue
+        /// Constants for possible values can be found using Field.TypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public string FieldType { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// The name of the field.
         /// </summary>
         [JsonProperty("field", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string FieldName { get; private set; }
+        public virtual string _Field { get; private set; }
     }
 }

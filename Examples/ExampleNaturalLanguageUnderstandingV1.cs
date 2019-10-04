@@ -19,6 +19,7 @@ using IBM.Watson.NaturalLanguageUnderstanding.V1;
 using IBM.Watson.NaturalLanguageUnderstanding.V1.Model;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,18 +58,14 @@ namespace IBM.Watson.Examples
                 throw new IBMException("Please add IAM ApiKey to the Iam Apikey field in the inspector.");
             }
 
-            IamTokenOptions tokenOptions = new IamTokenOptions()
-            {
-                IamApiKey = iamApikey
-            };
-            Credentials credentials = new Credentials(tokenOptions, serviceUrl);
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: iamApikey);
 
-            while (!credentials.HasTokenData())
+            while (!authenticator.CanAuthenticate())
             {
                 yield return null;
             }
 
-			service = new NaturalLanguageUnderstandingService(versionDate, credentials);
+			service = new NaturalLanguageUnderstandingService(versionDate, authenticator);
 
             Runnable.Run(ExampleAnalyze());
             Runnable.Run(ExampleListModels());

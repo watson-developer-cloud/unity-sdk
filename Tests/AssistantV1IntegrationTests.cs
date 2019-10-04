@@ -19,6 +19,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Watson.Assistant.V1;
 using IBM.Watson.Assistant.V1.Model;
 using Newtonsoft.Json.Linq;
@@ -72,7 +74,7 @@ namespace IBM.Watson.Tests
                 service = new AssistantService(versionDate);
             }
 
-            while (!service.Credentials.HasIamTokenData())
+            while (!service.Authenticator.CanAuthenticate())
                 yield return null;
         }
 
@@ -86,17 +88,17 @@ namespace IBM.Watson.Tests
         public IEnumerator TestMessage()
         {
             workspaceId = Environment.GetEnvironmentVariable("ASSISTANT_WORKSPACE_ID");
-            JToken context = null;
+            Context  context = null;
             MessageResponse messageResponse = null;
-            JToken conversationId = null;
-            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...");
+            string conversationId = null;
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...{0}...", workspaceId);
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId = context.ConversationId;
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId);
                     Assert.IsNull(error);
@@ -111,26 +113,30 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
-            JObject input = new JObject();
-            JToken conversationId1 = null;
+            MessageInput input = new MessageInput();
+            string conversationId1 = null;
+            context.Add("name", "watson");
             input.Add("text", "Are you open on Christmas?");
+
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Are you open on Christmas?");
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
+                    Context context1 = null;
                     messageResponse = response.Result;
-                    context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId1);
+                    context1 = messageResponse.Context;
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId1 = context1.ConversationId;
 
+                    Assert.AreEqual(context1.Get("name"), context.Get("name"));
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId1);
-                    Assert.IsTrue(conversationId1.ToString() == conversationId.ToString());
+                    Assert.IsTrue(conversationId1 == conversationId);
                     Assert.IsNull(error);
                 },
                 workspaceId: workspaceId,
                 input: input,
-                context: context as JObject,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -140,8 +146,8 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
-            input = new JObject();
-            JToken conversationId2 = null;
+            input = new MessageInput();
+            string conversationId2 = null;
             input.Add("text", "What are your hours?");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...What are your hours?");
             service.Message(
@@ -149,8 +155,8 @@ namespace IBM.Watson.Tests
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId2);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId2 = context.ConversationId;
 
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId2);
@@ -159,7 +165,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 input: input,
-                context: context as JObject,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -169,8 +175,8 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
-            input = new JObject();
-            JToken conversationId3 = null;
+            input = new MessageInput();
+            string conversationId3 = null;
             input.Add("text", "I'd like to make an appointment for 12pm.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...I'd like to make an appointment for 12pm.");
             service.Message(
@@ -178,8 +184,8 @@ namespace IBM.Watson.Tests
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId3);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId3 = context.ConversationId;
 
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId3);
@@ -188,7 +194,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 input: input,
-                context: context as JObject,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -198,8 +204,8 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
-            input = new JObject();
-            JToken conversationId4 = null;
+            input = new MessageInput();
+            string conversationId4 = null;
             input.Add("text", "On Friday please.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...On Friday please.");
             service.Message(
@@ -207,8 +213,8 @@ namespace IBM.Watson.Tests
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId4);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId4 = context.ConversationId;
 
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId4);
@@ -217,7 +223,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 input: input,
-                context: context as JObject,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -227,8 +233,8 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
 
             messageResponse = null;
-            input = new JObject();
-            JToken conversationId5 = null;
+            input = new MessageInput();
+            string conversationId5 = null;
             input.Add("text", "Yes.");
             Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...Yes.");
             service.Message(
@@ -236,8 +242,8 @@ namespace IBM.Watson.Tests
                 {
                     messageResponse = response.Result;
                     context = messageResponse.Context;
-                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output["generic"][0]["text"]);
-                    (context as JObject).TryGetValue("conversation_id", out conversationId5);
+                    Log.Debug("AssistantV1IntegrationTests", "result: {0}", messageResponse.Output.Generic[0].Text);
+                    conversationId5 = context.ConversationId;
 
                     Assert.IsNotNull(context);
                     Assert.IsNotNull(conversationId5);
@@ -246,7 +252,7 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 input: input,
-                context: context as JObject,
+                context: context,
                 nodesVisitedDetails: true
             );
 
@@ -325,7 +331,6 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-name",
                 includeAudit: true
             );
@@ -428,7 +433,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-name",
                 includeAudit: true
             );
@@ -527,7 +531,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 intent: updatedIntentName,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-text",
                 includeAudit: true
             );
@@ -622,7 +625,6 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-text",
                 includeAudit: true
             );
@@ -722,7 +724,6 @@ namespace IBM.Watson.Tests
                 workspaceId: workspaceId,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-entity",
                 includeAudit: true
             );
@@ -848,7 +849,6 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 export: true,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-value",
                 includeAudit: true
             );
@@ -949,7 +949,6 @@ namespace IBM.Watson.Tests
                 entity: updatedEntityName,
                 value: updatedValueText,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-synonym",
                 includeAudit: true
             );
@@ -1048,7 +1047,6 @@ namespace IBM.Watson.Tests
                 },
                 workspaceId: workspaceId,
                 pageLimit: 1,
-                includeCount: true,
                 sort: "-dialog_node",
                 includeAudit: true
             );

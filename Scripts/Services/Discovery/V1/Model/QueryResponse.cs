@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
@@ -35,7 +34,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// Array of document results for the query.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
-        public List<JObject> Results { get; set; }
+        public List<QueryResult> Results { get; set; }
         /// <summary>
         /// Array of aggregation results for the query.
         /// </summary>
@@ -64,5 +63,10 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("retrieval_details", NullValueHandling = NullValueHandling.Ignore)]
         public RetrievalDetails RetrievalDetails { get; set; }
+        /// <summary>
+        /// The suggestions for a misspelled natural language query.
+        /// </summary>
+        [JsonProperty("suggested_query", NullValueHandling = NullValueHandling.Ignore)]
+        public string SuggestedQuery { get; set; }
     }
 }

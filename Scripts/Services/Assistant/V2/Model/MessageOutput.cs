@@ -30,7 +30,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// supported response types.
         /// </summary>
         [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogRuntimeResponseGeneric> Generic { get; set; }
+        public List<RuntimeResponseGeneric> Generic { get; set; }
         /// <summary>
         /// An array of intents recognized in the user input, sorted in descending order of confidence.
         /// </summary>

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.NaturalLanguageClassifier.V1.Model;
@@ -31,36 +32,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
     public partial class NaturalLanguageClassifierService : BaseService
     {
         private const string serviceId = "natural_language_classifier";
-        private const string defaultUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
-
-        #region Credentials
-        /// <summary>
-        /// Gets and sets the credentials of the service. Replace the default endpoint if endpoint is defined.
-        /// </summary>
-        public Credentials Credentials
-        {
-            get { return credentials; }
-            set
-            {
-                credentials = value;
-                if (!string.IsNullOrEmpty(credentials.Url))
-                {
-                    Url = credentials.Url;
-                }
-            }
-        }
-        #endregion
-
-        #region Url
-        /// <summary>
-        /// Gets and sets the endpoint URL for the service.
-        /// </summary>
-        public string Url
-        {
-            get { return url; }
-            set { url = value; }
-        }
-        #endregion
+        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
 
         #region VersionDate
         #endregion
@@ -81,30 +53,20 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
         
-        public NaturalLanguageClassifierService() : base(serviceId)
-        {
-            
-        }
+        public NaturalLanguageClassifierService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
         
-        /// <param name="credentials">The service credentials.</param>
-        public NaturalLanguageClassifierService(Credentials credentials) : base(credentials, serviceId)
+        /// <param name="authenticator">The service authenticator.</param>
+        public NaturalLanguageClassifierService(Authenticator authenticator) : base(authenticator, serviceId)
         {
-            if (credentials.HasCredentials() || credentials.HasTokenData())
-            {
-                Credentials = credentials;
+            Authenticator = authenticator;
 
-                if (string.IsNullOrEmpty(credentials.Url))
-                {
-                    credentials.Url = defaultUrl;
-                }
-            }
-            else
+            if (string.IsNullOrEmpty(GetServiceUrl()))
             {
-                throw new IBMException("Please provide a username and password or authorization token to use the NaturalLanguageClassifier service. For more information, see https://github.com/watson-developer-cloud/unity-sdk/#configuring-your-service-credentials");
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -156,7 +118,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnClassifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}/classify", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -239,7 +201,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnClassifyCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}/classify_collection", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}/classify_collection", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -278,9 +240,9 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// Sends data to create and train a classifier and returns information about the new classifier.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="metadata">Metadata in JSON format. The metadata identifies the language of the data, and an
-        /// optional name to identify the classifier. Specify the language with the 2-letter primary language code as
-        /// assigned in ISO standard 639.
+        /// <param name="trainingMetadata">Metadata in JSON format. The metadata identifies the language of the data,
+        /// and an optional name to identify the classifier. Specify the language with the 2-letter primary language
+        /// code as assigned in ISO standard 639.
         ///
         /// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`),
         /// Japanese (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).</param>
@@ -288,12 +250,12 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
         /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
-        public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream metadata, System.IO.MemoryStream trainingData)
+        public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream trainingMetadata, System.IO.MemoryStream trainingData)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
-            if (metadata == null)
-                throw new ArgumentNullException("`metadata` is required for `CreateClassifier`");
+            if (trainingMetadata == null)
+                throw new ArgumentNullException("`trainingMetadata` is required for `CreateClassifier`");
             if (trainingData == null)
                 throw new ArgumentNullException("`trainingData` is required for `CreateClassifier`");
 
@@ -317,9 +279,9 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-            if (metadata != null)
+            if (trainingMetadata != null)
             {
-                req.Forms["training_metadata"] = new RESTConnector.Form(metadata, "filename", "application/json");
+                req.Forms["training_metadata"] = new RESTConnector.Form(trainingMetadata, "filename", "application/json");
             }
             if (trainingData != null)
             {
@@ -328,7 +290,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnCreateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -395,7 +357,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, "/v1/classifiers");
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/classifiers", GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -465,7 +427,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnGetClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -533,7 +495,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Credentials, string.Format("/v1/classifiers/{0}", classifierId));
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/classifiers/{0}", classifierId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
