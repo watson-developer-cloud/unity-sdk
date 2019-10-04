@@ -93,9 +93,9 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// Send user input to a workspace and receive a response.
         ///
-        /// **Note:** For most applications, there are significant advantages to using the v2 runtime API instead. These
-        /// advantages include ease of deployment, automatic state management, versioning, and search capabilities. For
-        /// more information, see the
+        /// **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant
+        /// advantages, including ease of deployment, automatic state management, versioning, and search capabilities.
+        /// For more information, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
         ///
         /// There is no rate limit for this operation.
@@ -4139,8 +4139,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
-        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
-        /// request_timestamp)</param>
+        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// For more information, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
@@ -4241,8 +4240,7 @@ namespace IBM.Watson.Assistant.V1
         /// or `request.context.metadata.deployment`. For more information, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
-        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional, default to
-        /// request_timestamp)</param>
+        /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <returns><see cref="LogCollection" />LogCollection</returns>

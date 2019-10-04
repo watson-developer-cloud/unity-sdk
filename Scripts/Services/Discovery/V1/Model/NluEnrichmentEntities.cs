@@ -57,7 +57,7 @@ namespace IBM.Watson.Discovery.V1.Model
         public bool? SentenceLocations { get; set; }
         /// <summary>
         /// The enrichement model to use with entity extraction. May be a custom model provided by Watson Knowledge
-        /// Studio, the public model for use with Knowledge Graph `en-news`, or the default public model `alchemy`.
+        /// Studio, or the default public model `alchemy`.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
         public string Model { get; set; }

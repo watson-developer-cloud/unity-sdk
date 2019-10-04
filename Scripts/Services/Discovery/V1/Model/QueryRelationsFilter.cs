@@ -21,17 +21,17 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object containing an array of documents to query.
+    /// QueryRelationsFilter.
     /// </summary>
     public class QueryRelationsFilter
     {
         /// <summary>
-        /// Object containing information about excluded and included types.
+        /// Gets or Sets RelationTypes
         /// </summary>
         [JsonProperty("relation_types", NullValueHandling = NullValueHandling.Ignore)]
         public QueryFilterType RelationTypes { get; set; }
         /// <summary>
-        /// Object containing information about excluded and included types.
+        /// Gets or Sets EntityTypes
         /// </summary>
         [JsonProperty("entity_types", NullValueHandling = NullValueHandling.Ignore)]
         public QueryFilterType EntityTypes { get; set; }

@@ -15,21 +15,20 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// An object specifying the relations enrichment and related parameters.
+    /// An object containing an array of autocompletion suggestions.
     /// </summary>
-    public class NluEnrichmentRelations
+    public class Completions
     {
         /// <summary>
-        /// *For use with `natural_language_understanding` enrichments only.* The enrichement model to use with
-        /// relationship extraction. May be a custom model provided by Watson Knowledge Studio, the default public model
-        /// is`en-news`.
+        /// Array of autcomplete suggestion based on the provided prefix.
         /// </summary>
-        [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
-        public string Model { get; set; }
+        [JsonProperty("completions", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> _Completions { get; set; }
     }
 }

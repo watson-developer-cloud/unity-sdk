@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object containing knowledge graph relationship details.
+    /// QueryRelationsRelationship.
     /// </summary>
     public class QueryRelationsRelationship
     {

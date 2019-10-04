@@ -2607,10 +2607,16 @@ namespace IBM.Watson.Discovery.V1
         /// towards field values closer to the current date. When a **number** type field is specified, returned results
         /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
         /// parameter. (optional)</param>
+        /// <param name="spellingSuggestions">When `true` and the **natural_language_query** parameter is used, the
+        /// **natural_languge_query** parameter is spell checked. The most likely correction is retunred in the
+        /// **suggested_query** field of the response (if one exists).
+        ///
+        /// **Important:** this parameter is only valid when using the Cloud Pak version of Discovery. (optional,
+        /// default to false)</param>
         /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
         /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
+        public bool Query(Callback<QueryResponse> callback, string environmentId, string collectionId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? spellingSuggestions = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Query`");
@@ -2686,6 +2692,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["similar.fields"] = similarFields;
             if (!string.IsNullOrEmpty(bias))
                 bodyObject["bias"] = bias;
+            if (spellingSuggestions != null)
+                bodyObject["spelling_suggestions"] = JToken.FromObject(spellingSuggestions);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnQueryResponse;
@@ -2920,6 +2928,7 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
         /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
         /// searches are better for metadata-type searches and for assessing the concepts in the data set.
         /// (optional)</param>
@@ -2975,7 +2984,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
         /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
@@ -3011,6 +3020,8 @@ namespace IBM.Watson.Discovery.V1
             }
 
             JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(collectionIds))
+                bodyObject["collection_ids"] = collectionIds;
             if (!string.IsNullOrEmpty(filter))
                 bodyObject["filter"] = filter;
             if (!string.IsNullOrEmpty(query))
@@ -3255,38 +3266,33 @@ namespace IBM.Watson.Discovery.V1
                 ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Knowledge Graph entity query.
+        /// Get Autocomplete Suggestions.
         ///
-        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
-        /// for more details.
+        /// Returns completion query suggestions for the specified prefix.  /n/n **Important:** this method is only
+        /// valid when using the Cloud Pak version of Discovery.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="feature">The entity query feature to perform. Supported features are `disambiguate` and
-        /// `similar_entities`. (optional)</param>
-        /// <param name="entity">A text string that appears within the entity text field. (optional)</param>
-        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
-        /// association. For example, if you wanted to query the city of London in England your query would look for
-        /// `London` with the context of `England`. (optional)</param>
-        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
+        /// <param name="field">The field in the result documents that autocompletion suggestions are identified from.
         /// (optional)</param>
-        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
-        /// maximum number of evidence items per query is 10,000. (optional)</param>
-        /// <returns><see cref="QueryEntitiesResponse" />QueryEntitiesResponse</returns>
-        public bool QueryEntities(Callback<QueryEntitiesResponse> callback, string environmentId, string collectionId, string feature = null, QueryEntitiesEntity entity = null, QueryEntitiesContext context = null, long? count = null, long? evidenceCount = null)
+        /// <param name="prefix">The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete
+        /// to `Hot`, `Housing`, or `How do I upgrade`. Possible completions are. (optional)</param>
+        /// <param name="count">The number of autocompletion suggestions to return. (optional)</param>
+        /// <returns><see cref="Completions" />Completions</returns>
+        public bool GetAutocompletion(Callback<Completions> callback, string environmentId, string collectionId, string field = null, string prefix = null, long? count = null)
         {
             if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `QueryEntities`");
+                throw new ArgumentNullException("`callback` is required for `GetAutocompletion`");
             if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `QueryEntities`");
+                throw new ArgumentNullException("`environmentId` is required for `GetAutocompletion`");
             if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `QueryEntities`");
+                throw new ArgumentNullException("`collectionId` is required for `GetAutocompletion`");
 
-            RequestObject<QueryEntitiesResponse> req = new RequestObject<QueryEntitiesResponse>
+            RequestObject<Completions> req = new RequestObject<Completions>
             {
                 Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
                 DisableSslVerification = DisableSslVerification
             };
 
@@ -3297,31 +3303,28 @@ namespace IBM.Watson.Discovery.V1
 
             ClearCustomRequestHeaders();
 
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryEntities"))
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "GetAutocompletion"))
             {
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
             req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (!string.IsNullOrEmpty(feature))
-                bodyObject["feature"] = feature;
-            if (entity != null)
-                bodyObject["entity"] = JToken.FromObject(entity);
-            if (context != null)
-                bodyObject["context"] = JToken.FromObject(context);
+            if (!string.IsNullOrEmpty(field))
+            {
+                req.Parameters["field"] = field;
+            }
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                req.Parameters["prefix"] = prefix;
+            }
             if (count != null)
-                bodyObject["count"] = JToken.FromObject(count);
-            if (evidenceCount != null)
-                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+            {
+                req.Parameters["count"] = count;
+            }
 
-            req.OnResponse = OnQueryEntitiesResponse;
+            req.OnResponse = OnGetAutocompletionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query_entities", environmentId, collectionId), GetServiceUrl());
+            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/autocompletion", environmentId, collectionId), GetServiceUrl());
             if (connector == null)
             {
                 return false;
@@ -3330,9 +3333,9 @@ namespace IBM.Watson.Discovery.V1
             return connector.Send(req);
         }
 
-        private void OnQueryEntitiesResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        private void OnGetAutocompletionResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<QueryEntitiesResponse> response = new DetailedResponse<QueryEntitiesResponse>();
+            DetailedResponse<Completions> response = new DetailedResponse<Completions>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -3342,121 +3345,17 @@ namespace IBM.Watson.Discovery.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<QueryEntitiesResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<Completions>(json);
                 response.Response = json;
             }
             catch (Exception e)
             {
-                Log.Error("DiscoveryService.OnQueryEntitiesResponse()", "Exception: {0}", e.ToString());
+                Log.Error("DiscoveryService.OnGetAutocompletionResponse()", "Exception: {0}", e.ToString());
                 resp.Success = false;
             }
 
-            if (((RequestObject<QueryEntitiesResponse>)req).Callback != null)
-                ((RequestObject<QueryEntitiesResponse>)req).Callback(response, resp.Error);
-        }
-        /// <summary>
-        /// Knowledge Graph relationship query.
-        ///
-        /// See the [Knowledge Graph documentation](https://cloud.ibm.com/docs/services/discovery?topic=discovery-kg#kg)
-        /// for more details.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="entities">An array of entities to find relationships for. (optional)</param>
-        /// <param name="context">Entity text to provide context for the queried entity and rank based on that
-        /// association. For example, if you wanted to query the city of London in England your query would look for
-        /// `London` with the context of `England`. (optional)</param>
-        /// <param name="sort">The sorting method for the relationships, can be `score` or `frequency`. `frequency` is
-        /// the number of unique times each entity is identified. The default is `score`. This parameter cannot be used
-        /// in the same query as the **bias** parameter. (optional)</param>
-        /// <param name="filter">Object containing an array of documents to query. (optional)</param>
-        /// <param name="count">The number of results to return. The default is `10`. The maximum is `1000`.
-        /// (optional)</param>
-        /// <param name="evidenceCount">The number of evidence items to return for each result. The default is `0`. The
-        /// maximum number of evidence items per query is 10,000. (optional)</param>
-        /// <returns><see cref="QueryRelationsResponse" />QueryRelationsResponse</returns>
-        public bool QueryRelations(Callback<QueryRelationsResponse> callback, string environmentId, string collectionId, List<QueryRelationsEntity> entities = null, QueryEntitiesContext context = null, string sort = null, QueryRelationsFilter filter = null, long? count = null, long? evidenceCount = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `QueryRelations`");
-            if (string.IsNullOrEmpty(environmentId))
-                throw new ArgumentNullException("`environmentId` is required for `QueryRelations`");
-            if (string.IsNullOrEmpty(collectionId))
-                throw new ArgumentNullException("`collectionId` is required for `QueryRelations`");
-
-            RequestObject<QueryRelationsResponse> req = new RequestObject<QueryRelationsResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V1", "QueryRelations"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            req.Parameters["version"] = VersionDate;
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (entities != null && entities.Count > 0)
-                bodyObject["entities"] = JToken.FromObject(entities);
-            if (context != null)
-                bodyObject["context"] = JToken.FromObject(context);
-            if (!string.IsNullOrEmpty(sort))
-                bodyObject["sort"] = sort;
-            if (filter != null)
-                bodyObject["filter"] = JToken.FromObject(filter);
-            if (count != null)
-                bodyObject["count"] = JToken.FromObject(count);
-            if (evidenceCount != null)
-                bodyObject["evidence_count"] = JToken.FromObject(evidenceCount);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnQueryRelationsResponse;
-
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query_relations", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
-
-            return connector.Send(req);
-        }
-
-        private void OnQueryRelationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<QueryRelationsResponse> response = new DetailedResponse<QueryRelationsResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<QueryRelationsResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("DiscoveryService.OnQueryRelationsResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<QueryRelationsResponse>)req).Callback != null)
-                ((RequestObject<QueryRelationsResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<Completions>)req).Callback != null)
+                ((RequestObject<Completions>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List training data.
