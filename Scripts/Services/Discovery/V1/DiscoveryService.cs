@@ -3274,13 +3274,13 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="prefix">The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete
+        /// to `Hot`, `Housing`, or `How do I upgrade`. Possible completions are.</param>
         /// <param name="field">The field in the result documents that autocompletion suggestions are identified from.
         /// (optional)</param>
-        /// <param name="prefix">The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete
-        /// to `Hot`, `Housing`, or `How do I upgrade`. Possible completions are. (optional)</param>
         /// <param name="count">The number of autocompletion suggestions to return. (optional)</param>
         /// <returns><see cref="Completions" />Completions</returns>
-        public bool GetAutocompletion(Callback<Completions> callback, string environmentId, string collectionId, string field = null, string prefix = null, long? count = null)
+        public bool GetAutocompletion(Callback<Completions> callback, string environmentId, string collectionId, string prefix, string field = null, long? count = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetAutocompletion`");
@@ -3288,6 +3288,8 @@ namespace IBM.Watson.Discovery.V1
                 throw new ArgumentNullException("`environmentId` is required for `GetAutocompletion`");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetAutocompletion`");
+            if (string.IsNullOrEmpty(prefix))
+                throw new ArgumentNullException("`prefix` is required for `GetAutocompletion`");
 
             RequestObject<Completions> req = new RequestObject<Completions>
             {
@@ -3309,13 +3311,13 @@ namespace IBM.Watson.Discovery.V1
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(field))
-            {
-                req.Parameters["field"] = field;
-            }
             if (!string.IsNullOrEmpty(prefix))
             {
                 req.Parameters["prefix"] = prefix;
+            }
+            if (!string.IsNullOrEmpty(field))
+            {
+                req.Parameters["field"] = field;
             }
             if (count != null)
             {
