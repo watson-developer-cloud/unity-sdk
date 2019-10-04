@@ -108,7 +108,7 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
         public long? Time { get; set; }
         /// <summary>
-        /// Whether to send a \"user is typing\" event during the pause.
+        /// Whether to send a "user is typing" event during the pause.
         /// </summary>
         [JsonProperty("typing", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Typing { get; set; }

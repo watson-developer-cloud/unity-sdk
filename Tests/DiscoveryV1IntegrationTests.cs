@@ -850,6 +850,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNull(error);
                 },
                 environmentId: environmentId,
+                collectionIds: collectionId,
                 naturalLanguageQuery: "When did Watson win Jeopardy",
                 passages: true,
                 count: 10,
@@ -916,37 +917,6 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region QueryEntities
-        //[UnityTest, Order(28)]
-        public IEnumerator TestQueryEntities()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryEntities...");
-            QueryEntitiesResponse queryEntitiesResponse = null;
-            QueryEntitiesEntity entity = new QueryEntitiesEntity()
-            {
-                Text = "Jeopardy"
-            };
-
-            service.QueryEntities(
-                callback: (DetailedResponse<QueryEntitiesResponse> response, IBMError error) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryEntities result: {0}", response.Response);
-                    queryEntitiesResponse = response.Result;
-                    Assert.IsNotNull(queryEntitiesResponse);
-                    Assert.IsNull(error);
-                },
-                environmentId: environmentId,
-                collectionId: collectionId,
-                entity: entity,
-                feature: "disambiguate",
-                count: 10
-            );
-
-            while (queryEntitiesResponse == null)
-                yield return null;
-        }
-        #endregion
-
         #region QueryNotices
         [UnityTest, Order(29)]
         public IEnumerator TestQueryNotices()
@@ -970,38 +940,6 @@ namespace IBM.Watson.Tests
             );
 
             while (queryNoticesResponse == null)
-                yield return null;
-        }
-        #endregion
-
-        #region QueryRelations
-        //[UnityTest, Order(30)]
-        public IEnumerator TestQueryRelations()
-        {
-            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to QueryRelations...");
-            QueryRelationsResponse queryRelationsResponse = null;
-            List<QueryRelationsEntity> entities = new List<QueryRelationsEntity>()
-            {
-                new QueryRelationsEntity()
-                {
-                    Text = "Jeopardy"
-                }
-            };
-            service.QueryRelations(
-                callback: (DetailedResponse<QueryRelationsResponse> response, IBMError error) =>
-                {
-                    Log.Debug("DiscoveryServiceV1IntegrationTests", "QueryRelations result: {0}", response.Response);
-                    queryRelationsResponse = response.Result;
-                    Assert.IsNotNull(queryRelationsResponse);
-                    Assert.IsNull(error);
-                },
-                environmentId: environmentId,
-                collectionId: collectionId,
-                entities: entities,
-                count: 10
-            );
-
-            while (queryRelationsResponse == null)
                 yield return null;
         }
         #endregion

@@ -60,10 +60,6 @@ namespace IBM.Watson.Examples
 
             IamAuthenticator authenticator = new IamAuthenticator(apikey: iamApikey);
 
-            //  Wait for tokendata
-            while (!authenticator.CanAuthenticate())
-                yield return null;
-
             while (!authenticator.CanAuthenticate())
             {
                 yield return null;

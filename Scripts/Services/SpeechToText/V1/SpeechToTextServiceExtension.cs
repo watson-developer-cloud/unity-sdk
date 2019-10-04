@@ -447,7 +447,6 @@ namespace IBM.Watson.SpeechToText.V1
                 }
 
                 _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/recognize", "?model=" + UnityWebRequest.EscapeURL(_recognizeModel) + parsedParams, serviceUrl);
-                Authenticator.Authenticate(_listenSocket);
                 Log.Debug("SpeechToText.CreateListenConnector()", "Created listen socket. Model: {0}, parsedParams: {1}", UnityWebRequest.EscapeURL(_recognizeModel), parsedParams);
                 _listenSocket.DisableSslVerification = DisableSslVerification;
                 if (_listenSocket == null)
@@ -560,7 +559,6 @@ namespace IBM.Watson.SpeechToText.V1
             if (msg is WSConnector.TextMessage)
             {
                 WSConnector.TextMessage tm = (WSConnector.TextMessage)msg;
-
                 IDictionary json = Json.Deserialize(tm.Text) as IDictionary;
                 if (json != null)
                 {
