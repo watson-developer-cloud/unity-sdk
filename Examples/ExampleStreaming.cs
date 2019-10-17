@@ -79,6 +79,10 @@ namespace IBM.Watsson.Examples
                 yield return null;
 
             _service = new SpeechToTextService(authenticator);
+            if (!string.IsNullOrEmpty(_serviceUrl))
+            {
+                _service.SetServiceUrl(_serviceUrl);
+            }
             _service.StreamMultipart = true;
 
             Active = true;
@@ -192,9 +196,7 @@ namespace IBM.Watsson.Examples
 
                     yield return new WaitForSeconds(timeRemaining);
                 }
-
             }
-
             yield break;
         }
 

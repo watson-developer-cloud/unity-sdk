@@ -44,7 +44,7 @@ namespace IBM.Watson.SpeechToText.V1
         private const float WsKeepAliveInterval = 20.0f;
         /// <summary>
         /// If no listen state is received after start is sent within this time, we will timeout
-        /// and stop listening. 
+        /// and stop listening.
         /// </summary>
         private const float ListenTimeout = 10.0f;
         /// <summary>
@@ -77,9 +77,9 @@ namespace IBM.Watson.SpeechToText.V1
         #endregion
 
         #region Private Data
-        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()    
+        private OnRecognize _listenCallback = null;        // Callback is set by StartListening()
         private OnRecognizeSpeaker _speakerLabelCallback = null;
-        private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked  
+        private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked
         private bool _listenActive = false;
         private bool _audioSent = false;
         private bool _isListening = false;
@@ -541,6 +541,8 @@ namespace IBM.Watson.SpeechToText.V1
                     //  Temporary clip to use for KeepAlive
                     //  TODO: Generate small sound clip to send to the service to keep alive.
                     AudioClip _keepAliveClip = Resources.Load<AudioClip>("highHat");
+                    while (_keepAliveClip.loadState != AudioDataLoadState.Loaded)
+                        yield return null;
 
 #if ENABLE_DEBUGGING
                     Log.Debug("SpeechToText.KeepAlive()", "Sending keep alive.");
