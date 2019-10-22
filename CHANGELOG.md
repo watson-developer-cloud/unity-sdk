@@ -5,65 +5,7 @@
 
 * **STT:** wait for audio to load when sending keep alive message ([8082b33](https://github.com/watson-developer-cloud/unity-sdk/commit/8082b3354ce76d220e6432378307db1bc0cd3141))
 
-# [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v4.0.0) (2019-10-22)
-
-
-### Bug Fixes
-
-* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1dd9923d331389d9d4a30c74bab85ba09c))
-* **STT:** wait for audio to load when sending keep alive message ([8082b33](https://github.com/watson-developer-cloud/unity-sdk/commit/8082b3354ce76d220e6432378307db1bc0cd3141))
-
-
-### Features
-
-* **additionalProps:** add support for dynamic additional properties for models ([1dcc5d2](https://github.com/watson-developer-cloud/unity-sdk/commit/1dcc5d27d4238d1b54023b1b325646b5a1b03239))
-* **compare-comply:** add ContractCurrentcies model ([57677db](https://github.com/watson-developer-cloud/unity-sdk/commit/57677db75241c5623db23a01d45f6ddfb298f6ce))
-* add meta file for vis rec v4 ([12194cf](https://github.com/watson-developer-cloud/unity-sdk/commit/12194cf26251901a785c2dae50d7315e5827d2ae))
-* **Discovery:** add suggested query to query response ([3f582d1](https://github.com/watson-developer-cloud/unity-sdk/commit/3f582d1348121dd3facac678c3ebf068696ee765))
-* **Examples:** add examples for NLU, LT and Discovery ([2f220b8](https://github.com/watson-developer-cloud/unity-sdk/commit/2f220b8a2183821aa32e4a1918f312257bdebeed))
-* **regenerate:** regenerate services to include model and connector changes ([eaec06c](https://github.com/watson-developer-cloud/unity-sdk/commit/eaec06c8054eec6ef9aa87b60f08df66a6355a2b))
-* **regenerate:** regenerate services using current api def ([affd1f9](https://github.com/watson-developer-cloud/unity-sdk/commit/affd1f95726ad8fbd41720b3c7d5c0a8c4e65b1c))
-* **regerate:** regenerate services for pre-release ([4d2a36f](https://github.com/watson-developer-cloud/unity-sdk/commit/4d2a36f0fef72e07a3b8123394ee76ee4bb61291))
-* **SetServiceUrl:** provide setServiceUrl method and use serviceUrl instead of Url ([a6df1b8](https://github.com/watson-developer-cloud/unity-sdk/commit/a6df1b84400d1f87dad671d9b676bdf5f2625558))
-* **VisualRecognitionV4:** add support for visual recognition v4 ([b47e990](https://github.com/watson-developer-cloud/unity-sdk/commit/b47e99068fa0e50bb2b840efde1b117f78a6a832))
-
-
-### BREAKING CHANGES
-
-* **additionalProps:** add support for dynamic additional properties for models
-
-# [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v4.0.0) (2019-10-16)
-
-
-### Bug Fixes
-
-* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1dd9923d331389d9d4a30c74bab85ba09c))
-
-
-### Features
-
-* **additionalProps:** add support for dynamic additional properties for models ([1dcc5d2](https://github.com/watson-developer-cloud/unity-sdk/commit/1dcc5d27d4238d1b54023b1b325646b5a1b03239))
-* **compare-comply:** add ContractCurrentcies model ([57677db](https://github.com/watson-developer-cloud/unity-sdk/commit/57677db75241c5623db23a01d45f6ddfb298f6ce))
-* add meta file for vis rec v4 ([12194cf](https://github.com/watson-developer-cloud/unity-sdk/commit/12194cf26251901a785c2dae50d7315e5827d2ae))
-* **Discovery:** add suggested query to query response ([3f582d1](https://github.com/watson-developer-cloud/unity-sdk/commit/3f582d1348121dd3facac678c3ebf068696ee765))
-* **Examples:** add examples for NLU, LT and Discovery ([2f220b8](https://github.com/watson-developer-cloud/unity-sdk/commit/2f220b8a2183821aa32e4a1918f312257bdebeed))
-* **regenerate:** regenerate services to include model and connector changes ([eaec06c](https://github.com/watson-developer-cloud/unity-sdk/commit/eaec06c8054eec6ef9aa87b60f08df66a6355a2b))
-* **regenerate:** regenerate services using current api def ([affd1f9](https://github.com/watson-developer-cloud/unity-sdk/commit/affd1f95726ad8fbd41720b3c7d5c0a8c4e65b1c))
-* **regerate:** regenerate services for pre-release ([4d2a36f](https://github.com/watson-developer-cloud/unity-sdk/commit/4d2a36f0fef72e07a3b8123394ee76ee4bb61291))
-* **SetServiceUrl:** provide setServiceUrl method and use serviceUrl instead of Url ([a6df1b8](https://github.com/watson-developer-cloud/unity-sdk/commit/a6df1b84400d1f87dad671d9b676bdf5f2625558))
-* **VisualRecognitionV4:** add support for visual recognition v4 ([b47e990](https://github.com/watson-developer-cloud/unity-sdk/commit/b47e99068fa0e50bb2b840efde1b117f78a6a832))
-
-
-### BREAKING CHANGES
-
-* **additionalProps:** add support for dynamic additional properties for models
-
-# [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v4.0.0) (2019-10-04)
-
-
-### Bug Fixes
-
-* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
+# [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.5.0...v4.0.0) (2019-10-04)
 
 
 ### Features
@@ -84,24 +26,7 @@
 
 * **additionalProps:** add support for dynamic additional properties for models
 
-# [3.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.5.0) (2019-09-09)
-
-
-### Bug Fixes
-
-* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
-
-
-### Features
-
-* **compare-comply:** add ContractCurrentcies model ([57677db](https://github.com/watson-developer-cloud/unity-sdk/commit/57677db))
-
-# [3.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v3.5.0) (2019-08-22)
-
-
-### Bug Fixes
-
-* **build:** make assembly definitions compatible to unity 2018 and 2019 ([a6064b1](https://github.com/watson-developer-cloud/unity-sdk/commit/a6064b1))
+# [3.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.1...v3.5.0) (2019-08-22)
 
 
 ### Features
@@ -142,80 +67,6 @@
 
 * **regenerate:** updates based on latest API definitions ([dc40499](https://github.com/watson-developer-cloud/unity-sdk/commit/dc40499))
 * **Regeneration:** Regenerated SDK based on the latest API definitions ([192c13b](https://github.com/watson-developer-cloud/unity-sdk/commit/192c13b))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-06-14)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
-* **regenerate:** updates based on latest API definitions ([dc40499](https://github.com/watson-developer-cloud/unity-sdk/commit/dc40499))
-* **Regeneration:** Regenerated SDK based on the latest API definitions ([192c13b](https://github.com/watson-developer-cloud/unity-sdk/commit/192c13b))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-05-10)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-05-07)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-04-22)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-04-09)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
-
-# [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-04-03)
-
-
-### Bug Fixes
-
-* **ExampleAssistantV1:** Added missing param names ([5fac56c](https://github.com/watson-developer-cloud/unity-sdk/commit/5fac56c))
-
-
-### Features
-
-* **Core:** Removed Core submodule ([2eab8e7](https://github.com/watson-developer-cloud/unity-sdk/commit/2eab8e7))
 
 # [3.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.0.0...v3.1.0) (2019-04-01)
 
