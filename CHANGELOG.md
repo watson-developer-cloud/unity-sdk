@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.0.0...v4.0.1) (2019-10-22)
+
+
+### Bug Fixes
+
+* **STT:** wait for audio to load when sending keep alive message ([8082b33](https://github.com/watson-developer-cloud/unity-sdk/commit/8082b3354ce76d220e6432378307db1bc0cd3141))
+
 # [4.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v3.4.0...v4.0.0) (2019-10-22)
 
 
