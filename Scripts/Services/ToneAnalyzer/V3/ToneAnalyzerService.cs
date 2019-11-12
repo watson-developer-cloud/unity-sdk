@@ -72,6 +72,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -188,13 +188,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/tone";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnToneResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -297,13 +294,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             req.OnResponse = OnToneChatResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/tone_chat", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/tone_chat";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnToneChatResponse(RESTConnector.Request req, RESTConnector.Response resp)

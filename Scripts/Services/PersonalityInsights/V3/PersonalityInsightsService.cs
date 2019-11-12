@@ -72,6 +72,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         public PersonalityInsightsService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of PersonalityInsightsService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -217,13 +217,10 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/profile";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnProfileResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -379,13 +376,10 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             req.OnResponse = OnProfileAsCsvResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/profile", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/profile";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnProfileAsCsvResponse(RESTConnector.Request req, RESTConnector.Response resp)

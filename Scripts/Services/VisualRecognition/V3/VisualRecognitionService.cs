@@ -71,6 +71,7 @@ namespace IBM.Watson.VisualRecognition.V3
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -79,7 +80,6 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -175,13 +175,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnClassifyResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classify", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/classify";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -294,13 +291,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnCreateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/classifiers";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -366,13 +360,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnListClassifiersResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/classifiers", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/classifiers";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListClassifiersResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -437,13 +428,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -553,13 +541,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnUpdateClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -622,13 +607,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteClassifierResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}", classifierId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteClassifierResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -694,13 +676,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnGetCoreMlModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v3/classifiers/{0}/core_ml_model", classifierId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}/core_ml_model", classifierId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetCoreMlModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -764,13 +743,10 @@ namespace IBM.Watson.VisualRecognition.V3
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v3/user_data", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v3/user_data";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)

@@ -16,7 +16,6 @@
 */
 
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Authentication;
@@ -74,6 +73,7 @@ namespace IBM.Watson.VisualRecognition.V4
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -82,7 +82,6 @@ namespace IBM.Watson.VisualRecognition.V4
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -178,13 +177,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnAnalyzeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v4/analyze", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v4/analyze";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -264,13 +260,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnCreateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v4/collections", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v4/collections";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -332,13 +325,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnListCollectionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v4/collections", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v4/collections";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -403,13 +393,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnGetCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -489,13 +476,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnUpdateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -560,13 +544,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnDeleteCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -671,13 +652,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnAddImagesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAddImagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -742,13 +720,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnListImagesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListImagesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -816,13 +791,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnGetImageDetailsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetImageDetailsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -890,13 +862,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnDeleteImageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteImageResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -969,13 +938,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnGetJpegImageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images/{1}/jpeg", collectionId, imageId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}/jpeg", collectionId, imageId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetJpegImageResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1032,13 +998,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnTrainResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/train", collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/train", collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnTrainResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1121,13 +1084,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnAddImageTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v4/collections/{0}/images/{1}/training_data", collectionId, imageId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}/training_data", collectionId, imageId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAddImageTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1201,13 +1161,10 @@ namespace IBM.Watson.VisualRecognition.V4
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v4/user_data", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v4/user_data";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)

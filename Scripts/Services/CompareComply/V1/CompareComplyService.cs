@@ -72,6 +72,7 @@ namespace IBM.Watson.CompareComply.V1
         public CompareComplyService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of CompareComplyService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.CompareComply.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -140,13 +140,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnConvertToHtmlResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/html_conversion", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/html_conversion";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnConvertToHtmlResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -225,13 +222,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnClassifyElementsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/element_classification", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/element_classification";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnClassifyElementsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -310,13 +304,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnExtractTablesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/tables", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/tables";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnExtractTablesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -413,13 +404,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCompareDocumentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/comparison", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/comparison";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCompareDocumentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -500,13 +488,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnAddFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/feedback";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAddFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -672,13 +657,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/feedback", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/feedback";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -751,13 +733,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/feedback/{0}", feedbackId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -830,13 +809,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnDeleteFeedbackResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/feedback/{0}", feedbackId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/feedback/{0}", feedbackId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteFeedbackResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -969,13 +945,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnCreateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/batches";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1037,13 +1010,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnListBatchesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/batches", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/batches";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListBatchesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1108,13 +1078,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnGetBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/batches/{0}", batchId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1195,13 +1162,10 @@ namespace IBM.Watson.CompareComply.V1
 
             req.OnResponse = OnUpdateBatchResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/batches/{0}", batchId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/batches/{0}", batchId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateBatchResponse(RESTConnector.Request req, RESTConnector.Response resp)

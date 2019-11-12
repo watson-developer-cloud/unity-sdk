@@ -72,6 +72,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         public NaturalLanguageUnderstandingService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of NaturalLanguageUnderstandingService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -187,13 +187,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnAnalyzeResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/analyze", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/analyze";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAnalyzeResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -257,13 +254,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnListModelsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/models", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/models";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -328,13 +322,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             req.OnResponse = OnDeleteModelResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/models/{0}", modelId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/models/{0}", modelId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteModelResponse(RESTConnector.Request req, RESTConnector.Response resp)
