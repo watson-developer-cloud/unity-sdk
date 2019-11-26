@@ -33,7 +33,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// Workspace settings related to the disambiguation feature.
         ///
-        /// **Note:** This feature is available only to Premium users.
+        /// **Note:** This feature is available only to Plus and Premium users.
         /// </summary>
         [JsonProperty("disambiguation", NullValueHandling = NullValueHandling.Ignore)]
         public WorkspaceSystemSettingsDisambiguation Disambiguation { get; set; }
@@ -42,5 +42,10 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("human_agent_assist", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> HumanAgentAssist { get; set; }
+        /// <summary>
+        /// Workspace settings related to detection of irrelevant input.
+        /// </summary>
+        [JsonProperty("off_topic", NullValueHandling = NullValueHandling.Ignore)]
+        public WorkspaceSystemSettingsOffTopic OffTopic { get; set; }
     }
 }

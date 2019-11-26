@@ -126,5 +126,10 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("counterexamples", NullValueHandling = NullValueHandling.Ignore)]
         public List<Counterexample> Counterexamples { get; set; }
+        /// <summary>
+        /// Gets or Sets Webhooks
+        /// </summary>
+        [JsonProperty("webhooks", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Webhook> Webhooks { get; set; }
     }
 }

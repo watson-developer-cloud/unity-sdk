@@ -1192,12 +1192,12 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="name">The name of the collection. (optional, default to )</param>
+        /// <param name="name">The name of the collection.</param>
         /// <param name="description">A description of the collection. (optional, default to )</param>
         /// <param name="configurationId">The ID of the configuration in which the collection is to be updated.
         /// (optional, default to )</param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name = null, string description = null, string configurationId = null)
+        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name, string description = null, string configurationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
@@ -2127,7 +2127,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
-        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a configuration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
@@ -2298,7 +2298,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
-        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a configuration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
@@ -2832,8 +2832,7 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.
-        /// (optional)</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
         /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
         /// searches are better for metadata-type searches and for assessing the concepts in the data set.
         /// (optional)</param>
@@ -2889,7 +2888,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
         /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string collectionIds = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");

@@ -77,11 +77,6 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("result_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public QueryResultMetadata ResultMetadata { get; set; }
         /// <summary>
-        /// Automatically extracted result title.
-        /// </summary>
-        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-        public string Title { get; set; }
-        /// <summary>
         /// The internal status code returned by the ingestion subsystem indicating the overall result of ingesting the
         /// source document.
         /// </summary>

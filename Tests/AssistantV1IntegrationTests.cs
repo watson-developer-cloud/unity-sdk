@@ -265,6 +265,21 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to CreateWorkspace...");
             Workspace createWorkspaceResponse = null;
+            var webhooks = new List<Webhook>()
+            {
+                new Webhook()
+                {
+                    Url = "http://www.cloud.ibm.com",
+                    Name = "IBM Cloud",
+                    Headers = new List<WebhookHeader>()
+                    {
+                        new WebhookHeader(){
+                            Name = "testWebhookHeaderName",
+                            Value = "testWebhookHeaderValue"
+                        }
+                    }
+                }
+            };
             service.CreateWorkspace(
                 callback: (DetailedResponse<Workspace> response, IBMError error) =>
                 {
@@ -281,7 +296,8 @@ namespace IBM.Watson.Tests
                 name: createdWorkspaceName,
                 description: createdWorkspaceDescription,
                 language: createdWorkspaceLanguage,
-                learningOptOut: true
+                learningOptOut: true,
+                webhooks: webhooks
             );
 
             while (createWorkspaceResponse == null)

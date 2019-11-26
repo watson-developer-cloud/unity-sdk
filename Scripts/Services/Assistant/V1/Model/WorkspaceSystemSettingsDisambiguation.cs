@@ -22,7 +22,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// <summary>
     /// Workspace settings related to the disambiguation feature.
     ///
-    /// **Note:** This feature is available only to Premium users.
+    /// **Note:** This feature is available only to Plus and Premium users.
     /// </summary>
     public class WorkspaceSystemSettingsDisambiguation
     {
@@ -66,5 +66,21 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
+        /// <summary>
+        /// Whether the order in which disambiguation suggestions are presented should be randomized (but still
+        /// influenced by relative confidence).
+        /// </summary>
+        [JsonProperty("randomize", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Randomize { get; set; }
+        /// <summary>
+        /// The maximum number of disambigation suggestions that can be included in a `suggestion` response.
+        /// </summary>
+        [JsonProperty("max_suggestions", NullValueHandling = NullValueHandling.Ignore)]
+        public long? MaxSuggestions { get; set; }
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("suggestion_text_policy", NullValueHandling = NullValueHandling.Ignore)]
+        public string SuggestionTextPolicy { get; set; }
     }
 }
