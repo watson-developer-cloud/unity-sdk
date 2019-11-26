@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
 
@@ -51,10 +52,10 @@ namespace IBM.Watson.VisualRecognition.V4.Model
         [JsonProperty("dimensions", NullValueHandling = NullValueHandling.Ignore)]
         public ImageDimensions Dimensions { get; set; }
         /// <summary>
-        /// Details about an error.
+        /// Gets or Sets Errors
         /// </summary>
         [JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
-        public Error Errors { get; set; }
+        public List<Error> Errors { get; set; }
         /// <summary>
         /// Training data for all objects.
         /// </summary>

@@ -900,7 +900,9 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="collectionId">The identifier of the collection.</param>
         /// <param name="imageId">The identifier of the image.</param>
-        /// <param name="size">Specify the image size. (optional, default to full)</param>
+        /// <param name="size">The image size. Specify `thumbnail` to return a version that maintains the original
+        /// aspect ratio but is no larger than 200 pixels in the larger dimension. For example, an original 800 x 1000
+        /// image is resized to 160 x 200 pixels. (optional, default to full)</param>
         /// <returns><see cref="byte[]" />byte[]</returns>
         public bool GetJpegImage(Callback<byte[]> callback, string collectionId, string imageId, string size = null)
         {
@@ -1113,6 +1115,85 @@ namespace IBM.Watson.VisualRecognition.V4
 
             if (((RequestObject<TrainingDataObjects>)req).Callback != null)
                 ((RequestObject<TrainingDataObjects>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get training usage.
+        ///
+        /// Information about the completed training events. You can use this information to determine how close you are
+        /// to the training limits for the month.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="startTime">The earliest day to include training events. Specify dates in YYYY-MM-DD format. If
+        /// empty or not specified, the earliest training event is included. (optional)</param>
+        /// <param name="endTime">The most recent day to include training events. Specify dates in YYYY-MM-DD format.
+        /// All events for the day are included. If empty or not specified, the current day is used. Specify the same
+        /// value as `start_time` to request events for a single day. (optional)</param>
+        /// <returns><see cref="TrainingEvents" />TrainingEvents</returns>
+        public bool GetTrainingUsage(Callback<TrainingEvents> callback, string startTime = null, string endTime = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetTrainingUsage`");
+
+            RequestObject<TrainingEvents> req = new RequestObject<TrainingEvents>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "GetTrainingUsage"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(startTime))
+            {
+                req.Parameters["start_time"] = startTime;
+            }
+            if (!string.IsNullOrEmpty(endTime))
+            {
+                req.Parameters["end_time"] = endTime;
+            }
+
+            req.OnResponse = OnGetTrainingUsageResponse;
+
+            Connector.URL = GetServiceUrl() + "/v4/training_usage";
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetTrainingUsageResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<TrainingEvents> response = new DetailedResponse<TrainingEvents>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<TrainingEvents>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnGetTrainingUsageResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<TrainingEvents>)req).Callback != null)
+                ((RequestObject<TrainingEvents>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Delete labeled data.
