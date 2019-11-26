@@ -72,6 +72,7 @@ namespace IBM.Watson.Discovery.V1
         public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of DiscoveryService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.Discovery.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -144,13 +144,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/environments", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/environments";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -217,13 +214,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListEnvironmentsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/environments", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/environments";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListEnvironmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -286,13 +280,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -373,13 +364,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -442,13 +430,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteEnvironmentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteEnvironmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -520,13 +505,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListFieldsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/fields", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/fields", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -625,13 +607,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -701,13 +680,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListConfigurationsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListConfigurationsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -773,13 +749,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -880,13 +853,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -957,13 +927,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteConfigurationResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteConfigurationResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1047,13 +1014,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1123,13 +1087,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCollectionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListCollectionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1195,13 +1156,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1234,12 +1192,12 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
-        /// <param name="name">The name of the collection.</param>
+        /// <param name="name">The name of the collection. (optional, default to )</param>
         /// <param name="description">A description of the collection. (optional, default to )</param>
         /// <param name="configurationId">The ID of the configuration in which the collection is to be updated.
         /// (optional, default to )</param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name, string description = null, string configurationId = null)
+        public bool UpdateCollection(Callback<Collection> callback, string environmentId, string collectionId, string name = null, string description = null, string configurationId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
@@ -1282,13 +1240,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1354,13 +1309,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteCollectionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1428,13 +1380,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCollectionFieldsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListCollectionFieldsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1503,13 +1452,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1600,13 +1546,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1675,13 +1618,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteExpansionsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteExpansionsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1749,13 +1689,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetTokenizationDictionaryStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1833,13 +1770,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateTokenizationDictionaryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1907,13 +1841,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTokenizationDictionaryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteTokenizationDictionaryResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -1981,13 +1912,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetStopwordListStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetStopwordListStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2066,13 +1994,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2141,13 +2066,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteStopwordListResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteStopwordListResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2256,13 +2178,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnAddDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAddDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2335,13 +2254,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetDocumentStatusResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2435,13 +2351,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2513,13 +2426,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteDocumentResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2698,13 +2608,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2886,13 +2793,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryNoticesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -2928,7 +2832,8 @@ namespace IBM.Watson.Discovery.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="environmentId">The ID of the environment.</param>
-        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.</param>
+        /// <param name="collectionIds">A comma-separated list of collection IDs to be queried against.
+        /// (optional)</param>
         /// <param name="filter">A cacheable query that excludes documents that don't mention the query content. Filter
         /// searches are better for metadata-type searches and for assessing the concepts in the data set.
         /// (optional)</param>
@@ -2984,7 +2889,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="xWatsonLoggingOptOut">If `true`, queries are not stored in the Discovery **Logs** endpoint.
         /// (optional, default to false)</param>
         /// <returns><see cref="QueryResponse" />QueryResponse</returns>
-        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string collectionIds, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
+        public bool FederatedQuery(Callback<QueryResponse> callback, string environmentId, string collectionIds = null, string filter = null, string query = null, string naturalLanguageQuery = null, bool? passages = null, string aggregation = null, long? count = null, string _return = null, long? offset = null, string sort = null, bool? highlight = null, string passagesFields = null, long? passagesCount = null, long? passagesCharacters = null, bool? deduplicate = null, string deduplicateField = null, bool? similar = null, string similarDocumentIds = null, string similarFields = null, string bias = null, bool? xWatsonLoggingOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
@@ -3064,13 +2969,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnFederatedQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/query", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/query", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnFederatedQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3232,13 +3134,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnFederatedQueryNoticesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/notices", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/notices", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnFederatedQueryNoticesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3326,13 +3225,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetAutocompletionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/autocompletion", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/autocompletion", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetAutocompletionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3400,13 +3296,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3490,13 +3383,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnAddTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnAddTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3564,13 +3454,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteAllTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteAllTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3641,13 +3528,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3718,13 +3602,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTrainingDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteTrainingDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3795,13 +3676,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListTrainingExamplesResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListTrainingExamplesResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3886,13 +3764,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -3966,13 +3841,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4057,13 +3929,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4137,13 +4006,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetTrainingExampleResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetTrainingExampleResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4217,13 +4083,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteUserDataResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/user_data", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/user_data";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4301,13 +4164,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/events", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/events";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4403,13 +4263,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnQueryLogResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/logs", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/logs";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnQueryLogResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4488,13 +4345,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetMetricsQueryResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4575,13 +4429,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries_with_event", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries_with_event";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetMetricsQueryEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4661,13 +4512,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryNoResultsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/number_of_queries_with_no_search_results", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries_with_no_search_results";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetMetricsQueryNoResultsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4748,13 +4596,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsEventRateResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/event_rate", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/metrics/event_rate";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetMetricsEventRateResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4824,13 +4669,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetMetricsQueryTokenEventResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, "/v1/metrics/top_query_tokens_with_event_rate", GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + "/v1/metrics/top_query_tokens_with_event_rate";
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetMetricsQueryTokenEventResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4897,13 +4739,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -4996,13 +4835,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5073,13 +4909,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5174,13 +5007,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnUpdateCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnUpdateCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5248,13 +5078,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteCredentialsResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteCredentialsResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5319,13 +5146,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnListGatewaysResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnListGatewaysResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5398,13 +5222,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnCreateGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways", environmentId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways", environmentId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5472,13 +5293,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnGetGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnGetGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -5546,13 +5364,10 @@ namespace IBM.Watson.Discovery.V1
 
             req.OnResponse = OnDeleteGatewayResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteGatewayResponse(RESTConnector.Request req, RESTConnector.Response resp)

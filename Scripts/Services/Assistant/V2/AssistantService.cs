@@ -72,6 +72,7 @@ namespace IBM.Watson.Assistant.V2
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.Assistant.V2
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -132,13 +132,10 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnCreateSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions", assistantId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions", assistantId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnCreateSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -211,13 +208,10 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnDeleteSessionResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnDeleteSessionResponse(RESTConnector.Request req, RESTConnector.Response resp)
@@ -305,13 +299,10 @@ namespace IBM.Watson.Assistant.V2
 
             req.OnResponse = OnMessageResponse;
 
-            RESTConnector connector = RESTConnector.GetConnector(Authenticator, string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId), GetServiceUrl());
-            if (connector == null)
-            {
-                return false;
-            }
+            Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId);
+            Authenticator.Authenticate(Connector);
 
-            return connector.Send(req);
+            return Connector.Send(req);
         }
 
         private void OnMessageResponse(RESTConnector.Request req, RESTConnector.Response resp)
