@@ -1,3 +1,14 @@
+# [4.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.0.1...v4.1.0) (2019-11-27)
+
+
+### Features
+
+* **Discovery:** use json sub types in query aggregation ([0936857](https://github.com/watson-developer-cloud/unity-sdk/commit/0936857832d82dc44ebc945d5c3512a215e7a303))
+* **DiscoveryV2:** add support for discovery v2 ([f8e626d](https://github.com/watson-developer-cloud/unity-sdk/commit/f8e626d7e467bb952b8e4d2f91e92ab5ca2130a5))
+* **regerate:** regenerate sdk using current api defs ([4e8d68b](https://github.com/watson-developer-cloud/unity-sdk/commit/4e8d68b1d7cdacc7282a1cde80f64cb110ca4716))
+* **Services:** move Connector to base service to support unit testing ([196c86a](https://github.com/watson-developer-cloud/unity-sdk/commit/196c86ac3330b9f22b23065672b8643867c4fbea))
+* **VisualRecognitionV4:** add support to get training usage data ([41d8d8b](https://github.com/watson-developer-cloud/unity-sdk/commit/41d8d8be06dcba6c9b8878fcc1a9fa362e0b032a))
+
 ## [4.0.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.0.0...v4.0.1) (2019-10-22)
 
 
