@@ -24,7 +24,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// A restriction that alter the document set used for sub aggregations it precedes to nested documents found in the
     /// field specified.
     /// </summary>
-    public class QueryNestedAggregation
+    public class QueryNestedAggregation: QueryAggregation
     {
         /// <summary>
         /// The path to the document field to scope sub aggregations to.

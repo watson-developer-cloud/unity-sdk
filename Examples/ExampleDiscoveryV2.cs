@@ -43,7 +43,7 @@ public class ExampleDiscoveryV2 : MonoBehaviour
         //  Create credential and instantiate service using bearer token
         BearerTokenAuthenticator authenticator = new BearerTokenAuthenticator(bearerToken: bearerToken);
 
-        // Otions 2
+        // Option 2
         //  Create credential and instantiate service using username/password
         // var authenticator = new CloudPakForDataAuthenticator(
         //     url: "https://{cpd_cluster_host}{:port}",

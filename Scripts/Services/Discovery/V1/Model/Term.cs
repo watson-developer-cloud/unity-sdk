@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// Term.
     /// </summary>
-    public class Term
+    public class Term: QueryAggregation
     {
         /// <summary>
         /// The field where the aggregation is located in the document.

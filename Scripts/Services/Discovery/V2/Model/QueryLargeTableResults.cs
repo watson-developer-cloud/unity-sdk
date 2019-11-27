@@ -22,7 +22,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Configuration for table retrieval.
     /// </summary>
-    public class QueryLargeTableResults
+    public class QueryLargeTableResults: QueryAggregation
     {
         /// <summary>
         /// Whether to enable table retrieval.

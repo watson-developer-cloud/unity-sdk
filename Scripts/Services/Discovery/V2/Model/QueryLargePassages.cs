@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Configuration for passage retrieval.
     /// </summary>
-    public class QueryLargePassages
+    public class QueryLargePassages: QueryAggregation
     {
         /// <summary>
         /// A passages query that returns the most relevant passages from the results.

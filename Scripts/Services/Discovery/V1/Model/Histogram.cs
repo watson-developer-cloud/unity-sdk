@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// Histogram.
     /// </summary>
-    public class Histogram
+    public class Histogram: QueryAggregation
     {
         /// <summary>
         /// The field where the aggregation is located in the document.

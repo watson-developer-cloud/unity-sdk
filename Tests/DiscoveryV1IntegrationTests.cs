@@ -917,6 +917,72 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
+        #region Query Aggregation
+        [UnityTest, Order(28)]
+        public IEnumerator TestQueryAggregation()
+        {
+            Log.Debug("DiscoveryServiceV1IntegrationTests", "Attempting to Query...");
+            string naturalLanguageQuery = "Who beat Ken Jennings in Jeopardy!";
+            QueryResponse queryResultTimeslice = null;
+            service.Query(
+                callback: (DetailedResponse<QueryResponse> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", response.Response);
+                    queryResultTimeslice = response.Result;
+                    Assert.IsNotNull(queryResultTimeslice);
+                    Assert.IsNull(error);
+                    Assert.IsNotNull(queryResultTimeslice.Aggregations);
+                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Field == "product.sales");
+                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Interval == "2d");
+                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Anomaly == true);
+                },
+                environmentId: "system",
+                collectionId: "news-en",
+                naturalLanguageQuery: naturalLanguageQuery,
+                aggregation: "timeslice(product.sales,2day,anomaly:true)"
+            );
+
+            QueryResponse queryResultTerm = null;
+            service.Query(
+                callback: (DetailedResponse<QueryResponse> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", response.Response);
+                    queryResultTerm = response.Result;
+                    Assert.IsNotNull(queryResultTerm);
+                    Assert.IsNull(error);
+                    Assert.IsNotNull(queryResultTerm.Aggregations);
+                    Assert.IsTrue((queryResultTerm.Aggregations[0] as Term).Field == "enriched_text.concepts.text");
+                    Assert.IsTrue((queryResultTerm.Aggregations[0] as Term).Count == 10);
+                },
+                environmentId: "system",
+                collectionId: "news-en",
+                naturalLanguageQuery: naturalLanguageQuery,
+                aggregation: "term(enriched_text.concepts.text,count:10)"
+            );
+
+            QueryResponse queryResultFilter = null;
+            service.Query(
+                callback: (DetailedResponse<QueryResponse> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV1IntegrationTests", "Query result: {0}", response.Response);
+                    queryResultFilter = response.Result;
+                    Assert.IsNotNull(queryResultFilter);
+                    Assert.IsNull(error);
+                    Assert.IsNotNull(queryResultFilter.Aggregations);
+                    Assert.IsTrue((queryResultFilter.Aggregations[0] as Filter).Match == "enriched_text.concepts.text:\"cloud computing\"");
+                },
+                environmentId: "system",
+                collectionId: "news-en",
+                naturalLanguageQuery: naturalLanguageQuery,
+                aggregation: "filter(enriched_text.concepts.text:\"cloud computing\")"
+            );
+
+            while (queryResultTimeslice == null || queryResultFilter == null || queryResultTerm == null)
+                yield return null;
+
+        }
+        #endregion
+
         #region QueryNotices
         [UnityTest, Order(29)]
         public IEnumerator TestQueryNotices()

@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using JsonSubTypes;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -23,6 +24,18 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// An aggregation produced by  Discovery to analyze the input provided.
     /// </summary>
+    [JsonConverter(typeof(JsonSubtypes), "Type")]
+    [JsonSubtypes.KnownSubType(typeof(Histogram), "histogram")]
+    [JsonSubtypes.KnownSubType(typeof(Calculation), "max")]
+    [JsonSubtypes.KnownSubType(typeof(Calculation), "min")]
+    [JsonSubtypes.KnownSubType(typeof(Calculation), "average")]
+    [JsonSubtypes.KnownSubType(typeof(Calculation), "sum")]
+    [JsonSubtypes.KnownSubType(typeof(Calculation), "unique_count")]
+    [JsonSubtypes.KnownSubType(typeof(Term), "term")]
+    [JsonSubtypes.KnownSubType(typeof(Filter), "filter")]
+    [JsonSubtypes.KnownSubType(typeof(Nested), "nested")]
+    [JsonSubtypes.KnownSubType(typeof(Timeslice), "timeslice")]
+    [JsonSubtypes.KnownSubType(typeof(TopHits), "top_hits")]
     public class QueryAggregation
     {
         /// <summary>

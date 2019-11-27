@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// A modifier that will narrow down the document set of the sub aggregations it precedes.
     /// </summary>
-    public class QueryFilterAggregation
+    public class QueryFilterAggregation: QueryAggregation
     {
         /// <summary>
         /// The filter written in Discovery Query Language syntax applied to the documents before sub aggregations are
