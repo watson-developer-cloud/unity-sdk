@@ -12,6 +12,7 @@ Use this SDK to build Watson-powered applications in Unity.
   * [Before you begin](#before-you-begin)
   * [Getting the Watson SDK and adding it to Unity](#getting-the-watson-sdk-and-adding-it-to-unity)
     * [Installing the SDK source into your Unity project](#installing-the-sdk-source-into-your-unity-project)
+  * [Discovery v2 only on CP4D](#discovery-v2-only-on-cp4d)
   * [Configuring your service credentials](#configuring-your-service-credentials)
   * [Authentication](#authentication)
   * [Watson Services](#watson-services)
@@ -43,6 +44,9 @@ You can get the latest SDK release by clicking [here][latest_release_sdk]. **You
 ### Installing the SDK source into your Unity project
 Move the **`unity-sdk`** and **`unity-sdk-core`** directories into the **`Assets`** directory of your Unity project. _Optional: rename the SDK directory from `unity-sdk` to `Watson` and the Core directory from `unity-sdk-core` to `IBMSdkCore`_.
 
+## Discovery v2 only on CP4D
+
+Discovery v2 is only available on Cloud Pak for Data.
 
 ## Configuring your service credentials
 To create instances of Watson services and their credentials, follow the steps below.

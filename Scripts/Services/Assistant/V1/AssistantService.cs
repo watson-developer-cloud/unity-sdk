@@ -313,8 +313,9 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, List<Webhook> webhooks = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -363,6 +364,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
@@ -521,8 +524,9 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -577,6 +581,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
             if (counterexamples != null && counterexamples.Count > 0)
                 bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
@@ -3595,8 +3601,10 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
+        /// <param name="disambiguationOptOut">Whether the dialog node should be excluded from disambiguation
+        /// suggestions. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3665,6 +3673,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["digress_out_slots"] = digressOutSlots;
             if (!string.IsNullOrEmpty(userLabel))
                 bodyObject["user_label"] = userLabel;
+            if (disambiguationOptOut != null)
+                bodyObject["disambiguation_opt_out"] = JToken.FromObject(disambiguationOptOut);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateDialogNodeResponse;
@@ -3825,8 +3835,10 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
+        /// <param name="newDisambiguationOptOut">Whether the dialog node should be excluded from disambiguation
+        /// suggestions. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -3895,6 +3907,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["digress_out_slots"] = newDigressOutSlots;
             if (!string.IsNullOrEmpty(newUserLabel))
                 bodyObject["user_label"] = newUserLabel;
+            if (newDisambiguationOptOut != null)
+                bodyObject["disambiguation_opt_out"] = JToken.FromObject(newDisambiguationOptOut);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateDialogNodeResponse;
@@ -4107,8 +4121,9 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
-        /// You must specify a filter query that includes a value for `language`, as well as a value for `workspace_id`
-        /// or `request.context.metadata.deployment`. For more information, see the
+        /// You must specify a filter query that includes a value for `language`, as well as a value for
+        /// `request.context.system.assistant_id`, `workspace_id`, or `request.context.metadata.deployment`. For more
+        /// information, see the
         /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>

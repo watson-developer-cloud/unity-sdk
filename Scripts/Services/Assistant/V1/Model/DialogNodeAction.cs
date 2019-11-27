@@ -46,6 +46,10 @@ namespace IBM.Watson.Assistant.V1.Model
             /// Constant WEB_ACTION for web_action
             /// </summary>
             public const string WEB_ACTION = "web_action";
+            /// <summary>
+            /// Constant WEBHOOK for webhook
+            /// </summary>
+            public const string WEBHOOK = "webhook";
             
         }
 

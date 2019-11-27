@@ -428,6 +428,31 @@ namespace IBM.Watson.Tests
             while (collection == null)
                 yield return null;
         }
+
+        [UnityTest, Order(12)]
+        public IEnumerator TestGetTrainingUsage()
+        {
+            Log.Debug("VisualRecognitionServiceV4IntegrationTests", "Attempting to Train...");
+            var startTime = "2019-11-18";
+            var endTime = "2019-11-20";
+            TrainingEvents trainingEvents = null;
+            service.GetTrainingUsage(
+                callback: (DetailedResponse<TrainingEvents> response, IBMError error) =>
+                {
+                    Log.Debug("VisualRecognitionServiceV4IntegrationTests", "GetTrainingUsage result: {0}", response.Response);
+                    trainingEvents = response.Result;
+                    Assert.IsNotNull(trainingEvents);
+                    Assert.IsNotNull(trainingEvents.Events);
+                    Assert.IsTrue(trainingEvents.Events.Count > 0);
+                    Assert.IsNull(error);
+                },
+                startTime: startTime,
+                endTime: endTime
+            );
+
+            while (trainingEvents == null)
+                yield return null;
+        }
         #endregion
     }
 }

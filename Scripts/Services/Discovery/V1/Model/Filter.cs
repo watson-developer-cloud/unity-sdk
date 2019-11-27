@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// Filter.
     /// </summary>
-    public class Filter
+    public class Filter: QueryAggregation
     {
         /// <summary>
         /// The match the aggregated results queried for.

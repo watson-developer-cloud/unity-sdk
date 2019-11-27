@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// TopHits.
     /// </summary>
-    public class TopHits
+    public class TopHits: QueryAggregation
     {
         /// <summary>
         /// Number of top hits returned by the aggregation.

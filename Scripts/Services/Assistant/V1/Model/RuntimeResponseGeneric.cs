@@ -149,7 +149,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of objects describing the possible matching dialog nodes from which the user can choose.
         ///
         /// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for
-        /// Premium users.
+        /// Plus and Premium users.
         /// </summary>
         [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; set; }

@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.VisualRecognition.V4.Model
@@ -40,9 +41,9 @@ namespace IBM.Watson.VisualRecognition.V4.Model
         [JsonProperty("objects", NullValueHandling = NullValueHandling.Ignore)]
         public DetectedObjects Objects { get; set; }
         /// <summary>
-        /// Details about an error.
+        /// A container for the problems in the request.
         /// </summary>
         [JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
-        public Error Errors { get; set; }
+        public List<Error> Errors { get; set; }
     }
 }
