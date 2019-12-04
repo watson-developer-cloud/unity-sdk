@@ -55,6 +55,7 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             service = new PersonalityInsightsService("2019-02-18", authenticator);
+            service.SetServiceUrl("{serviceUrl}");
 
             Runnable.Run(Examples());
         }

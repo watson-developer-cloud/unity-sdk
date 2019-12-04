@@ -66,6 +66,10 @@ namespace IBM.Watson.Examples
             }
 
 			service = new NaturalLanguageUnderstandingService(versionDate, authenticator);
+            if (!string.IsNullOrEmpty(serviceUrl))
+            {
+                service.SetServiceUrl(serviceUrl);
+            }
 
             Runnable.Run(ExampleAnalyze());
             Runnable.Run(ExampleListModels());

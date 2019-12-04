@@ -47,8 +47,10 @@ public class ExampleLanguageTranslatorV3 : MonoBehaviour
             yield return null;
 
         service = new LanguageTranslatorService(versionDate, authenticator);
-        service.SetServiceUrl("https://api.us-south.language-translator.test.watson.cloud.ibm.com");
-
+        if (!string.IsNullOrEmpty(serviceUrl))
+        {
+            service.SetServiceUrl(serviceUrl);
+        }
 
         Log.Debug("LanguageTranslatorServiceV3", "ListModels result");
     }

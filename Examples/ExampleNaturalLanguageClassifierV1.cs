@@ -63,6 +63,10 @@ namespace IBM.Watson.Examples
             }
 
 			service = new NaturalLanguageClassifierService(authenticator);
+            if (!string.IsNullOrEmpty(serviceUrl))
+            {
+                service.SetServiceUrl(serviceUrl);
+            }
 
             Runnable.Run(ExampleListClassifiers());
         }

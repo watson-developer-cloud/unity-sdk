@@ -77,13 +77,17 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             service = new AssistantService(versionDate, authenticator);
+            if (!string.IsNullOrEmpty(serviceUrl))
+            {
+                service.SetServiceUrl(serviceUrl);
+            }
 
             Runnable.Run(Examples());
         }
 
         private IEnumerator Examples()
         {
-            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to CreateSession");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Attempting to CreateSession");
             service.CreateSession(OnCreateSession, assistantId);
 
             while (!createSessionTested)
@@ -91,7 +95,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to Message");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Attempting to Message");
             service.Message(OnMessage0, assistantId, sessionId);
 
             while (!messageTested0)
@@ -99,7 +103,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "Are you open on Christmas?");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Are you open on Christmas?");
 
             var input1 = new MessageInput()
             {
@@ -117,7 +121,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "What are your hours?");
+            Log.Debug("ExampleAssistantV2.RunExample()", "What are your hours?");
 
             var input2 = new MessageInput()
             {
@@ -135,7 +139,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "I'd like to make an appointment for 12pm.");
+            Log.Debug("ExampleAssistantV2.RunExample()", "I'd like to make an appointment for 12pm.");
 
             var input3 = new MessageInput()
             {
@@ -153,7 +157,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "On Friday please.");
+            Log.Debug("ExampleAssistantV2.RunExample()", "On Friday please.");
 
             //Dictionary<string, string> userDefinedDictionary = new Dictionary<string, string>();
             //userDefinedDictionary.Add("name", "Watson");
@@ -197,7 +201,7 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            Log.Debug("ExampleAssistantV2.RunTest()", "Attempting to delete session");
+            Log.Debug("ExampleAssistantV2.RunExample()", "Attempting to delete session");
             service.DeleteSession(OnDeleteSession, assistantId, sessionId);
 
             while (!deleteSessionTested)

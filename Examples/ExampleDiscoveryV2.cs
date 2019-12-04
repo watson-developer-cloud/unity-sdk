@@ -57,7 +57,10 @@ public class ExampleDiscoveryV2 : MonoBehaviour
 
         service = new DiscoveryService(versionDate, authenticator);
         service.SetServiceUrl("service_url");
-
+        if (!string.IsNullOrEmpty(serviceUrl))
+        {
+            service.SetServiceUrl(serviceUrl);
+        }
 
         Runnable.Run(ExampleListCollections());
     }

@@ -114,6 +114,7 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             service = new AssistantService("2019-02-18", authenticator);
+            service.SetServiceUrl("{serviceUrl}");
 
             workspaceId = Environment.GetEnvironmentVariable("CONVERSATION_WORKSPACE_ID");
             Runnable.Run(Examples());
