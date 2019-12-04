@@ -47,7 +47,10 @@ public class ExampleDiscoveryV1 : MonoBehaviour
             yield return null;
 
         service = new DiscoveryService(versionDate, authenticator);
-
+        if (!string.IsNullOrEmpty(serviceUrl))
+        {
+            service.SetServiceUrl(serviceUrl);
+        }
 
         Runnable.Run(ExampleCreateEnvironment());
         Runnable.Run(ExampleListEnvironments());

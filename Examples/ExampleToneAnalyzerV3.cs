@@ -69,6 +69,10 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             service = new ToneAnalyzerService(versionDate, authenticator);
+            if (!string.IsNullOrEmpty(serviceUrl))
+            {
+                service.SetServiceUrl(serviceUrl);
+            }
 
             Runnable.Run(Examples());
         }
