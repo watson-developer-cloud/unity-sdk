@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.1.0...v4.1.1) (2019-12-04)
+
+
+### Bug Fixes
+
+* fix examples to always set service url ([13b37ee](https://github.com/watson-developer-cloud/unity-sdk/commit/13b37eee23e374598796d7be31f55bdbce08395d))
+
 # [4.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.0.1...v4.1.0) (2019-11-27)
 
 
