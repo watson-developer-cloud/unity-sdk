@@ -34,8 +34,6 @@ namespace IBM.Watson.TextToSpeech.V1
         private const string serviceId = "text_to_speech";
         private const string defaultServiceUrl = "https://stream.watsonplatform.net/text-to-speech/api";
 
-        #region VersionDate
-        #endregion
 
         #region DisableSslVerification
         private bool disableSslVerification = false;
