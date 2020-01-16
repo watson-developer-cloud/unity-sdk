@@ -35,10 +35,6 @@ namespace IBM.Watson.SpeechToText.V1
     {
         #region Constants
         /// <summary>
-        /// This ID is used to match up a configuration record with this service.
-        /// </summary>
-        private const string ServiceId = "speech_to_text";
-        /// <summary>
         /// How often to send a message to the web socket to keep it alive.
         /// </summary>
         private const float WsKeepAliveInterval = 20.0f;
@@ -109,7 +105,6 @@ namespace IBM.Watson.SpeechToText.V1
         private float _silenceDuration = 0.0f;
         private float _silenceCutoff = 1.0f;
 
-        private Authenticator _authenticator = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
         #endregion
 
