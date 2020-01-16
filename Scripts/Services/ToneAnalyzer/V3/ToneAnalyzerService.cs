@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
         public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -190,7 +190,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             Connector.URL = GetServiceUrl() + "/v3/tone";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -296,7 +295,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             Connector.URL = GetServiceUrl() + "/v3/tone_chat";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

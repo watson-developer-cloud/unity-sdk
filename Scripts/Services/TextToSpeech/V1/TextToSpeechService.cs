@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,6 +34,8 @@ namespace IBM.Watson.TextToSpeech.V1
         private const string serviceId = "text_to_speech";
         private const string defaultServiceUrl = "https://stream.watsonplatform.net/text-to-speech/api";
 
+        #region VersionDate
+        #endregion
 
         #region DisableSslVerification
         private bool disableSslVerification = false;
@@ -50,11 +52,13 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
+        
         public TextToSpeechService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
+        
         /// <param name="authenticator">The service authenticator.</param>
         public TextToSpeechService(Authenticator authenticator) : base(authenticator, serviceId)
         {
@@ -107,7 +111,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/voices";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -188,7 +191,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/voices/{0}", voice);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -339,7 +341,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/synthesize";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -364,7 +365,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// format. You can also request the pronunciation for a specific voice to see the default translation for the
         /// language of that voice or for a specific custom voice model to see the translation for that voice model.
         ///
-        /// **Note:** This method is currently a beta release.
+        /// **Note:** This method is currently a beta release. The method does not support the Arabic, Chinese, and
+        /// Dutch languages.
         ///
         /// **See also:** [Querying a word from a
         /// language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
@@ -430,7 +432,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/pronunciation";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -465,7 +466,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// specify the language and a description for the new model. The model is owned by the instance of the service
         /// whose credentials are used to create it.
         ///
-        /// **Note:** This method is currently a beta release.
+        /// **Note:** This method is currently a beta release. The service does not support voice model customization
+        /// for the Arabic, Chinese, and Dutch languages.
         ///
         /// **See also:** [Creating a custom
         /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
@@ -519,7 +521,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/customizations";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -598,7 +599,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/customizations";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -707,7 +707,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -782,7 +781,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -856,7 +854,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -963,7 +960,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words", customizationId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1038,7 +1034,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words", customizationId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1152,7 +1147,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1230,7 +1224,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1307,7 +1300,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1387,7 +1379,6 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/user_data";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -37,12 +37,5 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("limit", NullValueHandling = NullValueHandling.Ignore)]
         public long? Limit { get; set; }
-        /// <summary>
-        /// Enter a [custom
-        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
-        /// ID to override the standard categories model.
-        /// </summary>
-        [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
-        public string Model { get; set; }
     }
 }

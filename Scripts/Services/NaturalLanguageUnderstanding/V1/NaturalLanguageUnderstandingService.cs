@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         public NaturalLanguageUnderstandingService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of NaturalLanguageUnderstandingService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -102,6 +102,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// - Semantic roles
         /// - Sentiment
         /// - Syntax (Experimental).
+        ///
+        /// If a language for the input text is not specified with the `language` parameter, the service [automatically
+        /// detects the
+        /// language](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="features">Specific features to analyze the document for.</param>
@@ -189,7 +193,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + "/v1/analyze";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -256,7 +259,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + "/v1/models";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -324,7 +326,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/models/{0}", modelId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

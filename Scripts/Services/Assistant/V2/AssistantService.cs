@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.Assistant.V2
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.Assistant.V2
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -136,7 +136,6 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions", assistantId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -214,7 +213,6 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -305,7 +303,6 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

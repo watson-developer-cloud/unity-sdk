@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
         /// <summary>
-        /// When `true`, passages will be returned whithin their respective result.
+        /// When `true`, passages will be returned within their respective result.
         /// </summary>
         [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
         public bool? PerDocument { get; set; }

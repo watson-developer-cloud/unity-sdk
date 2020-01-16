@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace IBM.Watson.Discovery.V2.Model
     public class RetrievalDetails
     {
         /// <summary>
-        /// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
+        /// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
         /// results were returned using a relevancy trained model.
         ///
         ///  **Note**: In the event of trained collections being queried, but the trained model is not used to return
@@ -45,7 +45,7 @@ namespace IBM.Watson.Discovery.V2.Model
         }
 
         /// <summary>
-        /// Indentifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
+        /// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
         /// results were returned using a relevancy trained model.
         ///
         ///  **Note**: In the event of trained collections being queried, but the trained model is not used to return
