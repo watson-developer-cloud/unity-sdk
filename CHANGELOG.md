@@ -1,3 +1,17 @@
+# [4.2.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.1.1...v4.2.0) (2020-01-16)
+
+
+### Bug Fixes
+
+* fix copyright dates ([f48d19f](https://github.com/watson-developer-cloud/unity-sdk/commit/f48d19f3836b0d8446870a1a96be56c33ecfdd9d))
+
+
+### Features
+
+* **SpeechToText:** add support for endOfPhraseSilenceTime and splitTranscriptAtPhraseEnd ([0433887](https://github.com/watson-developer-cloud/unity-sdk/commit/0433887566283fa794491276a4a385db22a6a51e))
+* regenrate all of the services with current api defs ([c090ef5](https://github.com/watson-developer-cloud/unity-sdk/commit/c090ef5f0e09767bf9cc1f15d3c3e97db258539f))
+* **SpeechToText:** Add support for EndOfPhraseSilenceTime and SplitTranscriptAtPhraseEnd to STT web ([a009df5](https://github.com/watson-developer-cloud/unity-sdk/commit/a009df5b712f24ab285891e1e3af7a284acbfb44))
+
 ## [4.1.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.1.0...v4.1.1) (2019-12-04)
 
 
