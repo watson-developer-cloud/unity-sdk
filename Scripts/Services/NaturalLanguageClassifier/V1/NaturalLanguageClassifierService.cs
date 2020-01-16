@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,11 +50,13 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
+        
         public NaturalLanguageClassifierService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
+        
         /// <param name="authenticator">The service authenticator.</param>
         public NaturalLanguageClassifierService(Authenticator authenticator) : base(authenticator, serviceId)
         {
@@ -116,7 +118,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}/classify", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -196,7 +197,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}/classify_collection", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -282,7 +282,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + "/v1/classifiers";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -346,7 +345,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + "/v1/classifiers";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -413,7 +411,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -478,7 +475,6 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

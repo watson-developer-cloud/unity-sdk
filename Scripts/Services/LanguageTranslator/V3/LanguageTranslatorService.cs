@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.LanguageTranslator.V3
         public LanguageTranslatorService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of LanguageTranslatorService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -146,7 +146,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/translate";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -212,7 +211,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/identifiable_languages";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -283,7 +281,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/identify";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -366,7 +363,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/models";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -475,7 +471,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/models";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -543,7 +538,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/models/{0}", modelId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -613,7 +607,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/models/{0}", modelId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -678,7 +671,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/documents";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -713,7 +705,7 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// reference a previously submitted document by document ID.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="file">The source file to translate.
+        /// <param name="file">The contents of the source file to translate.
         ///
         /// [Supported file
         /// types](https://cloud.ibm.com/docs/services/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats)
@@ -783,7 +775,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + "/v3/documents";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -851,7 +842,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/documents/{0}", documentId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -919,7 +909,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/documents/{0}", documentId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -996,7 +985,6 @@ namespace IBM.Watson.LanguageTranslator.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/documents/{0}/translated_document", documentId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

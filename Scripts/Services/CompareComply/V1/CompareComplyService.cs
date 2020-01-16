@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.CompareComply.V1
         public CompareComplyService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of CompareComplyService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.CompareComply.V1
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -142,7 +142,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/html_conversion";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -224,7 +223,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/element_classification";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -306,7 +304,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/tables";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -406,7 +403,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/comparison";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -490,7 +486,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/feedback";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -659,7 +654,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/feedback";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -735,7 +729,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/feedback/{0}", feedbackId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -811,7 +804,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/feedback/{0}", feedbackId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -947,7 +939,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/batches";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1012,7 +1003,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + "/v1/batches";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1080,7 +1070,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/batches/{0}", batchId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1164,7 +1153,6 @@ namespace IBM.Watson.CompareComply.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/batches/{0}", batchId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

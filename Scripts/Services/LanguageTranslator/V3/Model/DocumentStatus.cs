@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ namespace IBM.Watson.LanguageTranslator.V3.Model
         [JsonProperty("completed", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? Completed { get; set; }
         /// <summary>
-        /// The number of words in the source document, present only if status=available.
+        /// An estimate of the number of words in the source document. Returned only if `status` is `available`.
         /// </summary>
         [JsonProperty("word_count", NullValueHandling = NullValueHandling.Ignore)]
         public long? WordCount { get; set; }

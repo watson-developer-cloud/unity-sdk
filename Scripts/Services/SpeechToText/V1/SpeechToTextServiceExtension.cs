@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,10 +34,6 @@ namespace IBM.Watson.SpeechToText.V1
     public partial class SpeechToTextService : BaseService
     {
         #region Constants
-        /// <summary>
-        /// This ID is used to match up a configuration record with this service.
-        /// </summary>
-        private const string ServiceId = "speech_to_text";
         /// <summary>
         /// How often to send a message to the web socket to keep it alive.
         /// </summary>
@@ -109,7 +105,6 @@ namespace IBM.Watson.SpeechToText.V1
         private float _silenceDuration = 0.0f;
         private float _silenceCutoff = 1.0f;
 
-        private Authenticator _authenticator = null;
         private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
         #endregion
 
@@ -262,6 +257,35 @@ namespace IBM.Watson.SpeechToText.V1
         /// (optional)
         /// </summary>
         public float? ProcessingMetricsInterval { get; set; }
+        /// <summary>
+        /// If `true`, specifies the duration of the pause service splits a transcript into multiple final results.
+        /// If the service detects pauses or extended silence
+        /// before it reaches the end of the audio stream, its response can include multiple final results. Silence
+        /// indicates a point at which the speaker pauses between spoken words or phrases.
+        ///
+        /// Specify a value for the pause interval in the range of 0.0 to 120.0.
+        /// * A value greater than 0 specifies the interval that the service is to use for speech recognition.
+        /// * A value of 0 indicates that the service is to use the default interval. It is equivalent to omitting the
+        /// parameter.
+        ///
+        /// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
+        ///
+        /// See [End of phrase silence
+        /// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+        /// <summary>
+        public double? EndOfPhraseSilenceTime { get; set; }
+        /// <summary>
+        /// If `true`, directs the service to split the transcript into
+        /// multiple final results based on semantic features of the input, for example, at the conclusion of meaningful
+        /// phrases such as sentences. The service bases its understanding of semantic features on the base language
+        /// model that you use with a request. Custom language models and grammars can also influence how and where the
+        /// service splits a transcript. By default, the service splits transcripts based solely on the pause interval.
+        ///
+        /// See [Split transcript at phrase
+        /// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+        /// (optional, default to false)
+        /// <summary>
+        public bool? SplitTranscriptAtPhraseEnd { get; set; }
         #endregion
 
         #region Sessionless - Streaming
@@ -503,6 +527,10 @@ namespace IBM.Watson.SpeechToText.V1
                 start["grammar_name"] = GrammarName;
             if (Redaction != null)
                 start["redaction"] = Redaction;
+            if (EndOfPhraseSilenceTime != null)
+                start["end_of_phrase_silence_time"] = EndOfPhraseSilenceTime;
+            if (SplitTranscriptAtPhraseEnd != null)
+                start["split_transcript_at_phrase_end"] = SplitTranscriptAtPhraseEnd;
             start["processing_metrics"] = ProcessingMetrics;
             start["processing_metrics_interval"] = ProcessingMetricsInterval;
 

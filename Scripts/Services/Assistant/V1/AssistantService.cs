@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,6 @@ namespace IBM.Watson.Assistant.V1
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -81,6 +80,7 @@ namespace IBM.Watson.Assistant.V1
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -171,7 +171,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/message", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -260,7 +259,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/workspaces";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -372,7 +370,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/workspaces";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -463,7 +460,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -517,6 +513,7 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the workspace. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data includes **entities** and
@@ -524,7 +521,6 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
-        /// <param name="webhooks"> (optional)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
         public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null)
         {
@@ -589,7 +585,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -659,7 +654,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -759,7 +753,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -851,7 +844,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -938,7 +930,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1032,7 +1023,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1105,7 +1095,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1200,7 +1189,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1291,7 +1279,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1373,7 +1360,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1466,7 +1452,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1542,7 +1527,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1635,7 +1619,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1722,7 +1705,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1802,7 +1784,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1889,7 +1870,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1963,7 +1943,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2063,7 +2042,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2162,7 +2140,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2249,7 +2226,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2349,7 +2325,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2422,7 +2397,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2509,7 +2483,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2611,7 +2584,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2718,7 +2690,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2807,7 +2778,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2916,7 +2886,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -2992,7 +2961,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3090,7 +3058,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3181,7 +3148,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3266,7 +3232,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3358,7 +3323,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3437,7 +3401,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3529,7 +3492,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3681,7 +3643,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3760,7 +3721,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3915,7 +3875,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -3988,7 +3947,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -4083,7 +4041,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/logs", workspaceId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -4178,7 +4135,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/logs";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -4215,6 +4171,8 @@ namespace IBM.Watson.Assistant.V1
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
         /// security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
+        ///
+        /// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -4255,7 +4213,6 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/user_data";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

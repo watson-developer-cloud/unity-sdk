@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,5 +30,10 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> UserDefined { get; set; }
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> System { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("suggested_query", NullValueHandling = NullValueHandling.Ignore)]
         public string SuggestedQuery { get; set; }
         /// <summary>
-        /// Array of suggested refinments.
+        /// Array of suggested refinements.
         /// </summary>
         [JsonProperty("suggested_refinements", NullValueHandling = NullValueHandling.Ignore)]
         public List<QuerySuggestedRefinement> SuggestedRefinements { get; set; }

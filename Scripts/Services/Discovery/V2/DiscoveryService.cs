@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -71,7 +71,6 @@ namespace IBM.Watson.Discovery.V2
         public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of DiscoveryService");
@@ -124,7 +123,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -258,7 +256,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/query", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -352,7 +349,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/autocompletion", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -454,7 +450,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/notices", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -529,7 +524,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/fields", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -598,7 +592,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/component_settings", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -655,14 +648,14 @@ namespace IBM.Watson.Discovery.V2
         /// **_/v2/projects/{project_id}/collections/{collection_id}/documents** method.
         ///
         /// **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used
-        /// to modify a collection that conects to an external source such as Microsoft SharePoint.
+        /// to modify a collection that connects to an external source such as Microsoft SharePoint.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
         /// Discovery administrative tooling.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
-        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a configuration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
@@ -717,7 +710,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents", projectId, collectionId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -758,7 +750,7 @@ namespace IBM.Watson.Discovery.V2
         /// the same **document_id** if it exists.
         ///
         /// **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used
-        /// to modify a collection that conects to an external source such as Microsoft SharePoint.
+        /// to modify a collection that connects to an external source such as Microsoft SharePoint.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
@@ -766,7 +758,7 @@ namespace IBM.Watson.Discovery.V2
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="documentId">The ID of the document.</param>
         /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
-        /// to a collection is 50 megabytes, the maximum supported file size when testing a confiruration is 1 megabyte.
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a configuration is 1 megabyte.
         /// Files larger than the supported size are rejected. (optional)</param>
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
@@ -823,7 +815,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents/{2}", projectId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -858,7 +849,7 @@ namespace IBM.Watson.Discovery.V2
         /// returned (HTTP status code `200`) with the status set to 'deleted'.
         ///
         /// **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used
-        /// to modify a collection that conects to an external source such as Microsoft SharePoint.
+        /// to modify a collection that connects to an external source such as Microsoft SharePoint.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
@@ -904,7 +895,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents/{2}", projectId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -973,7 +963,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1042,7 +1031,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1090,6 +1078,10 @@ namespace IBM.Watson.Discovery.V2
                 throw new ArgumentNullException("`callback` is required for `CreateTrainingQuery`");
             if (string.IsNullOrEmpty(projectId))
                 throw new ArgumentNullException("`projectId` is required for `CreateTrainingQuery`");
+            if (string.IsNullOrEmpty(naturalLanguageQuery))
+                throw new ArgumentNullException("`naturalLanguageQuery` is required for `CreateTrainingQuery`");
+            if (examples == null)
+                throw new ArgumentNullException("`examples` is required for `CreateTrainingQuery`");
 
             RequestObject<TrainingQuery> req = new RequestObject<TrainingQuery>
             {
@@ -1127,7 +1119,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1199,7 +1190,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries/{1}", projectId, queryId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -1290,7 +1280,6 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries/{1}", projectId, queryId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 

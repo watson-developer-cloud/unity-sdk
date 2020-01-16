@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -71,7 +71,6 @@ namespace IBM.Watson.VisualRecognition.V3
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
-
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -80,6 +79,7 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 VersionDate = versionDate;
             }
+
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -177,7 +177,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classify";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -228,7 +227,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
-        /// `goldenretriever_positive_examples` creates the class **goldenretriever**.
+        /// `goldenretriever_positive_examples` creates the class **goldenretriever**. The string cannot contain the
+        /// following characters: ``$ * - { } \ | / ' " ` [ ]``.
         ///
         /// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels.
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
@@ -293,7 +293,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classifiers";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -362,7 +361,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classifiers";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -430,7 +428,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -486,7 +483,8 @@ namespace IBM.Watson.VisualRecognition.V3
         /// update classes in the classifier. You can include more than one positive example file in a call.
         ///
         /// Specify the parameter name by appending `_positive_examples` to the class name. For example,
-        /// `goldenretriever_positive_examples` creates the class `goldenretriever`.
+        /// `goldenretriever_positive_examples` creates the class `goldenretriever`. The string cannot contain the
+        /// following characters: ``$ * - { } \ | / ' " ` [ ]``.
         ///
         /// Include at least 10 images in .jpg or .png format. The minimum recommended image resolution is 32X32 pixels.
         /// The maximum number of images is 10,000 images or 100 MB per .zip file.
@@ -543,7 +541,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -609,7 +606,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -678,7 +674,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}/core_ml_model", classifierId);
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
@@ -745,7 +740,6 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/user_data";
             Authenticator.Authenticate(Connector);
-
             return Connector.Send(req);
         }
 
