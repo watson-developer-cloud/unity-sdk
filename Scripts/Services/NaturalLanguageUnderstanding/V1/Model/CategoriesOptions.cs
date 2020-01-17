@@ -37,5 +37,14 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("limit", NullValueHandling = NullValueHandling.Ignore)]
         public long? Limit { get; set; }
+        /// <summary>
+        /// Enter a [custom
+        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+        /// ID to override the standard categories model
+        /// **Deprecated** the model parameter is no longer supported by the Natural Language Understanding service and will
+        /// be removed in the next major release
+        /// </summary>
+        [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
+        public string Model { get; set; }
     }
 }
