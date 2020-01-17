@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.2.0...v4.2.1) (2020-01-17)
+
+
+### Bug Fixes
+
+* **NaturalLanguageUnderstanding:** add Model param back to CategoriesOptions ([657acae](https://github.com/watson-developer-cloud/unity-sdk/commit/657acaefc7d1041b0fee2783759dbe7035fa29fa))
+
 # [4.2.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.1.1...v4.2.0) (2020-01-16)
 
 
