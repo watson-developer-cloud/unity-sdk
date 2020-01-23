@@ -1,3 +1,10 @@
+# [4.3.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.2.1...v4.3.0) (2020-01-23)
+
+
+### Features
+
+* **TextToSpeech:** add example for text to speech synthesize ([38666a5](https://github.com/watson-developer-cloud/unity-sdk/commit/38666a52f30088afa33dfd5dfe9cbb67961362dd))
+
 ## [4.2.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.2.0...v4.2.1) (2020-01-17)
 
 
