@@ -402,25 +402,25 @@ private void OnMessage(DetailedResponse<MessageResponse> response, IBMError erro
 ```
 
 ## Transaction IDs
-Every SDK call will return a response which will contain a transaction ID, accessible via the `x-global-transaction-id` header. This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
+Every SDK call returns a response with a transaction ID in the x-global-transaction-id header. This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
 
 ```cs
-AssistantService service = new AssistantService("{version-date}");
-
-public IEnumerator ExampleGetTransactionId()
+public void ExampleGetTransactionId()
 {
-    WorkspaceCollection listWorkspacesResponse = null;
+    AssistantService service = new AssistantService("{version-date}");
     service.ListWorkspaces(
-        callback: (DetailedResponse<WorkspaceCollection> response, IBMError error) =>
+        callback: (DetailedResponse<Workspace> response, IBMError error) =>
         {
-            var globalTransactionId = response.Headers["x-global-transaction-id"];
-            Log.Debug("AssistantServiceV1", "Global transaction id: {0}", globalTransactionId);
-            listWorkspacesResponse = response.Result;
+            if(error != null)
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", error.ResponseHeaders["x-global-transaction-id"]);
+            }
+            else
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", response.Headers["x-global-transaction-id"]);
+            }
         }
     );
-
-    while (listWorkspacesResponse == null)
-        yield return null;
 }
 ```
 
