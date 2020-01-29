@@ -401,6 +401,29 @@ private void OnMessage(DetailedResponse<MessageResponse> response, IBMError erro
 }
 ```
 
+## Transaction IDs
+Every SDK call returns a response with a transaction ID in the x-global-transaction-id header. This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
+
+```cs
+public void ExampleGetTransactionId()
+{
+    AssistantService service = new AssistantService("{version-date}");
+    service.ListWorkspaces(
+        callback: (DetailedResponse<Workspace> response, IBMError error) =>
+        {
+            if(error != null)
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", error.ResponseHeaders["x-global-transaction-id"]);
+            }
+            else
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", response.Headers["x-global-transaction-id"]);
+            }
+        }
+    );
+}
+```
+
 ## TLS 1.0 support
 Watson services have upgraded their hosts to TLS 1.2. The Dallas location has a TLS 1.0 endpoint that works for streaming. To stream in other regions, use Unity 2018.2 and set **Scripting Runtime Version** in Build Settings to `.NET 4.x equivalent`. To support Speech to Text in earlier versions of Unity, create the instance in the Dallas location.
 
