@@ -23,6 +23,7 @@ using IBM.Cloud.SDK.Authentication.Iam;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using IBM.Cloud.SDK;
 
 
@@ -38,10 +39,14 @@ namespace IBM.Watson.Examples
         [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/text-to-speech/api\"")]
         [SerializeField]
         private string serviceUrl;
-        private TextToSpeechService service;
-        private string allisionVoice = "en-US_AllisonVoice";
+        private TextToSpeechService _service;
+        private string allisionVoice = "en-US_AllisonV3Voice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string synthesizeMimeType = "audio/wav";
+        public Text textInput;
+        private int _recordingRoutine = 0;
+        private bool _textEntered = false;
+        private AudioClip _recording = null;
         #endregion
 
         #region PlayClip
@@ -65,6 +70,31 @@ namespace IBM.Watson.Examples
         {
             LogSystem.InstallDefaultReactors();
             Runnable.Run(CreateService());
+            textInput = GetComponent<Text>();
+        }
+
+        void Update()
+        {
+            foreach (char c in Input.inputString)
+            {
+                if (c == '\b') // has backspace/delete been pressed?
+                {
+                    if (textInput.text.Length != 0)
+                    {
+                        textInput.text = textInput.text.Substring(0, textInput.text.Length - 1);
+                    }
+                }
+                else if ((c == '\n') || (c == '\r')) // enter/return
+                {
+                    print("User entered the text: " + textInput.text);
+                    _service.OnListen(textInput.text);
+                    textInput.text = "";
+                }
+                else
+                {
+                    textInput.text += c;
+                }
+            }
         }
 
         private IEnumerator CreateService()
@@ -81,13 +111,75 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            service = new TextToSpeechService(authenticator);
+            _service = new TextToSpeechService(authenticator);
             if (!string.IsNullOrEmpty(serviceUrl))
             {
-                service.SetServiceUrl(serviceUrl);
+                _service.SetServiceUrl(serviceUrl);
             }
 
-            Runnable.Run(ExampleSynthesize());
+            Active = true;
+            StartListening();
+            // Runnable.Run(ExampleSynthesize());
+        }
+
+        private void OnError(string error)
+        {
+            Active = false;
+
+            Log.Debug("ExampleTextToSpeech.OnError()", "Error! {0}", error);
+        }
+
+        public bool Active
+        {
+            get { return _service.IsListening; }
+            set
+            {
+                if (value && !_service.IsListening)
+                {
+                    Log.Debug("start-", "listening");
+                    _service.Voice = allisionVoice;
+                    _service.OnError = OnError;
+                    _service.StartListening(OnSynthesize);
+                }
+                else if (!value && _service.IsListening)
+                {
+                    Log.Debug("stop", "listening");
+                    _service.StopListening();
+                }
+            }
+        }
+
+        private void StartListening()
+        {
+            if (_recordingRoutine == 0)
+            {
+                UnityObjectUtil.StartDestroyQueue();
+                // _recordingRoutine = Runnable.Run(SynthesizeHandler());
+            }
+        }
+
+        // private IEnumerator SynthesizeHandler()
+        // {
+        //     yield return null;      // let _recordingRoutine get set..
+
+        //     Log.Debug("ExampleTextToSpeechV1", "Text entered: {0}, {1}", synthesizeText, _textEntered);
+        //     while (_recordingRoutine != 0)
+        //     {
+        //         Log.Debug("ExampleTextToSpeechV1", "Text entered: {0}", synthesizeText);
+        //         if (_textEntered)
+        //         {
+        //             _service.OnListen(synthesizeText);
+        //             _textEntered = false;
+        //             textInput.text = "";
+        //         }
+        //     }
+        //     yield break;
+        // }
+
+        private void OnSynthesize(byte[] result) {
+            Log.Debug("ExampleTextToSpeechV1", "Synthesize done!");
+            _recording = WaveFile.ParseWAV("myClip", result);
+            PlayClip(_recording);
         }
 
         #region Synthesize
@@ -95,7 +187,7 @@ namespace IBM.Watson.Examples
         {
             byte[] synthesizeResponse = null;
             AudioClip clip = null;
-            service.Synthesize(
+            _service.Synthesize(
                 callback: (DetailedResponse<byte[]> response, IBMError error) =>
                 {
                     synthesizeResponse = response.Result;
