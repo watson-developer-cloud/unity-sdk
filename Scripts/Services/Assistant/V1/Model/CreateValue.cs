@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the
         /// value type), but not both. A pattern is a regular expression; for more information about how to specify a
         /// pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
         /// </summary>
         [JsonProperty("patterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Patterns { get; set; }

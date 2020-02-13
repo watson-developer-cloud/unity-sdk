@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -42,6 +42,11 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("human_agent_assist", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> HumanAgentAssist { get; set; }
+        /// <summary>
+        /// Workspace settings related to the behavior of system entities.
+        /// </summary>
+        [JsonProperty("system_entities", NullValueHandling = NullValueHandling.Ignore)]
+        public WorkspaceSystemSettingsSystemEntities SystemEntities { get; set; }
         /// <summary>
         /// Workspace settings related to detection of irrelevant input.
         /// </summary>
