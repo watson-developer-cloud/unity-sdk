@@ -71,6 +71,7 @@ namespace IBM.Watson.Discovery.V2
         public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of DiscoveryService");
@@ -79,7 +80,6 @@ namespace IBM.Watson.Discovery.V2
             {
                 VersionDate = versionDate;
             }
-
         }
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -256,6 +257,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/query", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -349,6 +351,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/autocompletion", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -450,6 +453,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/notices", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -524,6 +528,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/fields", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -592,6 +597,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/component_settings", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -710,6 +716,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents", projectId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -815,6 +822,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents/{2}", projectId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -895,6 +903,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/documents/{2}", projectId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -963,6 +972,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1031,6 +1041,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1119,6 +1130,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries", projectId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1190,6 +1202,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries/{1}", projectId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1280,6 +1293,7 @@ namespace IBM.Watson.Discovery.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/training_data/queries/{1}", projectId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

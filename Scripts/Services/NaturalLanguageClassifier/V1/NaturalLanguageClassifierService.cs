@@ -50,13 +50,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
-        
         public NaturalLanguageClassifierService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
-        
         /// <param name="authenticator">The service authenticator.</param>
         public NaturalLanguageClassifierService(Authenticator authenticator) : base(authenticator, serviceId)
         {
@@ -118,6 +116,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}/classify", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -197,6 +196,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}/classify_collection", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -238,7 +238,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// Japanese (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).</param>
         /// <param name="trainingData">Training data in CSV format. Each text value must have at least one class. The
         /// data can include up to 3,000 classes and 20,000 records. For details, see [Data
-        /// preparation](https://cloud.ibm.com/docs/services/natural-language-classifier?topic=natural-language-classifier-using-your-data).</param>
+        /// preparation](https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-using-your-data).</param>
         /// <returns><see cref="Classifier" />Classifier</returns>
         public bool CreateClassifier(Callback<Classifier> callback, System.IO.MemoryStream trainingMetadata, System.IO.MemoryStream trainingData)
         {
@@ -282,6 +282,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + "/v1/classifiers";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -345,6 +346,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + "/v1/classifiers";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -411,6 +413,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -475,6 +478,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
