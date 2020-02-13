@@ -50,13 +50,11 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
-        
         public TextToSpeechService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
 
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
-        
         /// <param name="authenticator">The service authenticator.</param>
         public TextToSpeechService(Authenticator authenticator) : base(authenticator, serviceId)
         {
@@ -76,7 +74,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// method.
         ///
         /// **See also:** [Listing all available
-        /// voices](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoices).
+        /// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoices).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <returns><see cref="Voices" />Voices</returns>
@@ -109,6 +107,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/voices";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -145,7 +144,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **List voices** method.
         ///
         /// **See also:** [Listing a specific
-        /// voice](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-voices#listVoice).
+        /// voice](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoice).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="voice">The voice for which information is to be returned.</param>
@@ -189,6 +188,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/voices/{0}", voice);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -228,7 +228,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// stream as an array of bytes.
         ///
         /// **See also:** [The HTTP
-        /// interface](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
+        /// interface](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-usingHTTP#usingHTTP).
         ///
         /// ### Audio formats (accept types)
         ///
@@ -265,8 +265,7 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// For more information about specifying an audio format, including additional details about some of the
         /// formats, see [Audio
-        /// formats](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
-        ///
+        /// formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
         ///
         /// ### Warning messages
         ///
@@ -339,6 +338,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/synthesize";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -367,7 +367,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// Dutch languages.
         ///
         /// **See also:** [Querying a word from a
-        /// language](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
+        /// language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">The word for which the pronunciation is requested.</param>
@@ -430,6 +430,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/pronunciation";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -468,7 +469,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// for the Arabic, Chinese, and Dutch languages.
         ///
         /// **See also:** [Creating a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the new custom voice model.</param>
@@ -519,6 +520,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/customizations";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -557,7 +559,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying all custom
-        /// models](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
+        /// models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The language for which custom voice models that are owned by the requesting
@@ -597,6 +599,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/customizations";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -648,11 +651,11 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **See also:**
         /// * [Updating a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsUpdate)
         /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
         /// * [Understanding
-        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+        /// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -705,6 +708,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -742,7 +746,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -779,6 +783,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -815,7 +820,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Deleting a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsDelete).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -852,6 +857,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}", customizationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -902,11 +908,11 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **See also:**
         /// * [Adding multiple words to a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsAdd)
         /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
         /// * [Understanding
-        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+        /// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -958,6 +964,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words", customizationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -995,7 +1002,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying all words from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryModel).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1032,6 +1039,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words", customizationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1082,11 +1090,11 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **See also:**
         /// * [Adding a single word to a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordAdd)
         /// * [Adding words to a Japanese custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuJapaneseAdd)
         /// * [Understanding
-        /// customization](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customIntro#customIntro).
+        /// customization](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customIntro#customIntro).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1099,8 +1107,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// produce the correct intonation for the word. You can create only a single entry, with or without a single
         /// part of speech, for any word; you cannot create multiple entries with different parts of speech for the same
         /// word. For more information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
-        /// (optional)</param>
+        /// entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes). (optional)</param>
         /// <returns><see cref="object" />object</returns>
         public bool AddWord(Callback<object> callback, string customizationId, string word, string translation, string partOfSpeech = null)
         {
@@ -1145,6 +1152,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1182,7 +1190,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Querying a single word from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordQueryModel).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1222,6 +1230,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1258,7 +1267,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Note:** This method is currently a beta release.
         ///
         /// **See also:** [Deleting a word from a custom
-        /// model](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
+        /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordDelete).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom voice model. You must make the
@@ -1298,6 +1307,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/customizations/{0}/words/{1}", customizationId, word);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1337,7 +1347,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// the data.
         ///
         /// **See also:** [Information
-        /// security](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-information-security#information-security).
+        /// security](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-information-security#information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -1377,6 +1387,7 @@ namespace IBM.Watson.TextToSpeech.V1
 
             Connector.URL = GetServiceUrl() + "/v1/user_data";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

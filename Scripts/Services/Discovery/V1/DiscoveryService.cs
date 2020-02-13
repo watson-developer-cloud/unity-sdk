@@ -72,6 +72,7 @@ namespace IBM.Watson.Discovery.V1
         public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of DiscoveryService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.Discovery.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -146,6 +146,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/environments";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -215,6 +216,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/environments";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -280,6 +282,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -363,6 +366,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -428,6 +432,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -502,6 +507,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/fields", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -603,6 +609,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -675,6 +682,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -743,6 +751,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -846,6 +855,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -919,6 +929,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/configurations/{1}", environmentId, configurationId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1005,6 +1016,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1077,6 +1089,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1145,6 +1158,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1230,6 +1244,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1298,6 +1313,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1368,6 +1384,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/fields", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1439,6 +1456,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1532,6 +1550,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1603,6 +1622,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/expansions", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1673,6 +1693,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1753,6 +1774,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1823,6 +1845,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/tokenization_dictionary", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1893,6 +1916,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1974,6 +1998,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2045,6 +2070,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/word_lists/stopwords", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2156,6 +2182,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2231,6 +2258,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2327,6 +2355,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2401,6 +2430,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/documents/{2}", environmentId, collectionId, documentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2582,6 +2612,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/query", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2766,6 +2797,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/notices", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2942,6 +2974,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/query", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3106,6 +3139,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/notices", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3196,6 +3230,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/autocompletion", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3266,6 +3301,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3352,6 +3388,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3422,6 +3459,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data", environmentId, collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3495,6 +3533,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3568,6 +3607,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}", environmentId, collectionId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3641,6 +3681,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3728,6 +3769,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples", environmentId, collectionId, queryId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3804,6 +3846,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3891,6 +3934,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3967,6 +4011,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/collections/{1}/training_data/{2}/examples/{3}", environmentId, collectionId, queryId, exampleId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4043,6 +4088,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/user_data";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4123,6 +4169,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/events";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4221,6 +4268,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/logs";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4302,6 +4350,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4385,6 +4434,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries_with_event";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4467,6 +4517,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/metrics/number_of_queries_with_no_search_results";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4550,6 +4601,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/metrics/event_rate";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4622,6 +4674,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + "/v1/metrics/top_query_tokens_with_event_rate";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4691,6 +4744,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4786,6 +4840,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4859,6 +4914,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4956,6 +5012,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -5026,6 +5083,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/credentials/{1}", environmentId, credentialId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -5093,6 +5151,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -5168,6 +5227,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways", environmentId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -5238,6 +5298,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -5308,6 +5369,7 @@ namespace IBM.Watson.Discovery.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/environments/{0}/gateways/{1}", environmentId, gatewayId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

@@ -72,6 +72,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         public PersonalityInsightsService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of PersonalityInsightsService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -97,10 +97,9 @@ namespace IBM.Watson.PersonalityInsights.V3
         ///
         /// **See also:**
         /// * [Requesting a
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#input)
         /// * [Providing sufficient
-        /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
-        ///
+        /// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient)
         ///
         /// ### Content types
         ///
@@ -114,7 +113,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// character encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
         ///
         /// **See also:** [Specifying request and response
-        /// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
+        /// formats](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#formats)
         ///
         /// ### Accept types
         ///
@@ -124,15 +123,15 @@ namespace IBM.Watson.PersonalityInsights.V3
         ///
         /// **See also:**
         /// * [Understanding a JSON
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-output#output)
         /// * [Understanding a CSV
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="content">A maximum of 20 MB of content to analyze, though the service requires much less text;
         /// for more information, see [Providing sufficient
-        /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient).
-        /// For JSON input, provide an object of type `Content`.</param>
+        /// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For
+        /// JSON input, provide an object of type `Content`.</param>
         /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
         /// description. (optional, default to text/plain)</param>
         /// <param name="contentLanguage">The language of the input text for the request: Arabic, English, Japanese,
@@ -219,6 +218,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             Connector.URL = GetServiceUrl() + "/v3/profile";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -255,10 +255,9 @@ namespace IBM.Watson.PersonalityInsights.V3
         ///
         /// **See also:**
         /// * [Requesting a
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#input)
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#input)
         /// * [Providing sufficient
-        /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient)
-        ///
+        /// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient)
         ///
         /// ### Content types
         ///
@@ -272,7 +271,7 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// character encoding of the input text; for example, `Content-Type: text/plain;charset=utf-8`.
         ///
         /// **See also:** [Specifying request and response
-        /// formats](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#formats)
+        /// formats](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#formats)
         ///
         /// ### Accept types
         ///
@@ -282,15 +281,15 @@ namespace IBM.Watson.PersonalityInsights.V3
         ///
         /// **See also:**
         /// * [Understanding a JSON
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-output#output)
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-output#output)
         /// * [Understanding a CSV
-        /// profile](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-outputCSV#outputCSV).
+        /// profile](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-outputCSV#outputCSV).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="content">A maximum of 20 MB of content to analyze, though the service requires much less text;
         /// for more information, see [Providing sufficient
-        /// input](https://cloud.ibm.com/docs/services/personality-insights?topic=personality-insights-input#sufficient).
-        /// For JSON input, provide an object of type `Content`.</param>
+        /// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For
+        /// JSON input, provide an object of type `Content`.</param>
         /// <param name="contentType">The type of the input. For more information, see **Content types** in the method
         /// description. (optional, default to text/plain)</param>
         /// <param name="contentLanguage">The language of the input text for the request: Arabic, English, Japanese,
@@ -377,6 +376,7 @@ namespace IBM.Watson.PersonalityInsights.V3
 
             Connector.URL = GetServiceUrl() + "/v3/profile";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

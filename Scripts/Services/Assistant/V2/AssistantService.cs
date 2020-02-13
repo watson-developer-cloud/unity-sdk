@@ -72,6 +72,7 @@ namespace IBM.Watson.Assistant.V2
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.Assistant.V2
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -94,13 +94,13 @@ namespace IBM.Watson.Assistant.V2
         /// Create a new session. A session is used to send user input to a skill and receive responses. It also
         /// maintains the state of the conversation. A session persists until it is deleted, or until it times out
         /// because of inactivity. (For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-settings).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-settings).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
         /// Assistant user interface, open the assistant settings and click **API Details**. For information about
         /// creating assistants, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <returns><see cref="SessionResponse" />SessionResponse</returns>
@@ -136,6 +136,7 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions", assistantId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -167,14 +168,13 @@ namespace IBM.Watson.Assistant.V2
         /// Delete session.
         ///
         /// Deletes a session explicitly before it times out. (For more information about the session inactivity
-        /// timeout, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-settings)).
+        /// timeout, see the [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-settings)).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
         /// Assistant user interface, open the assistant settings and click **API Details**. For information about
         /// creating assistants, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
@@ -213,6 +213,7 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}", assistantId, sessionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -251,7 +252,7 @@ namespace IBM.Watson.Assistant.V2
         /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
         /// Assistant user interface, open the assistant settings and click **API Details**. For information about
         /// creating assistants, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-assistant-add#assistant-add-task).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
         ///
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
@@ -303,6 +304,7 @@ namespace IBM.Watson.Assistant.V2
 
             Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/sessions/{1}/message", assistantId, sessionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// intonation for the word. You can create only a single entry, with or without a single part of speech, for
         /// any word; you cannot create multiple entries with different parts of speech for the same word. For more
         /// information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+        /// entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
         /// </summary>
         public class PartOfSpeechValue
         {
@@ -109,7 +109,7 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// intonation for the word. You can create only a single entry, with or without a single part of speech, for
         /// any word; you cannot create multiple entries with different parts of speech for the same word. For more
         /// information, see [Working with Japanese
-        /// entries](https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-rules#jaNotes).
+        /// entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
         /// Constants for possible values can be found using Translation.PartOfSpeechValue
         /// </summary>
         [JsonProperty("part_of_speech", NullValueHandling = NullValueHandling.Ignore)]

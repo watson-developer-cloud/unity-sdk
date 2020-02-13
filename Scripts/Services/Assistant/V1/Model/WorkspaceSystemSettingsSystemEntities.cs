@@ -1,4 +1,4 @@
-﻿/**
+/**
 * (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,19 @@
 *
 */
 
-using IBM.Cloud.SDK;
-using UnityEngine;
+using Newtonsoft.Json;
 
-namespace IBM.Watson.Editor
+namespace IBM.Watson.Assistant.V1.Model
 {
-    public class IBMCloudSignup : MonoBehaviour
+    /// <summary>
+    /// Workspace settings related to the behavior of system entities.
+    /// </summary>
+    public class WorkspaceSystemSettingsSystemEntities
     {
-        public static void OpenIBMCloudWebsite()
-        {
-            Application.OpenURL(Constants.String.IBM_CLOUD_URL + "?" + Common.TrackingQueryParam);
-        }
+        /// <summary>
+        /// Whether the new system entities are enabled for the workspace.
+        /// </summary>
+        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Enabled { get; set; }
     }
 }

@@ -72,6 +72,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -106,7 +106,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// For `text/html`, the service removes HTML tags and analyzes only the textual content.
         ///
         /// **See also:** [Using the general-purpose
-        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
+        /// endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utgpe#utgpe).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="toneInput">JSON, plain text, or HTML input that contains the content to be analyzed. For JSON
@@ -190,6 +190,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             Connector.URL = GetServiceUrl() + "/v3/tone";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -231,7 +232,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// JSON content is effectively always UTF-8.
         ///
         /// **See also:** [Using the customer-engagement
-        /// endpoint](https://cloud.ibm.com/docs/services/tone-analyzer?topic=tone-analyzer-utco#utco).
+        /// endpoint](https://cloud.ibm.com/docs/tone-analyzer?topic=tone-analyzer-utco#utco).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="utterances">An array of `Utterance` objects that provides the input content that the service is
@@ -295,6 +296,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
 
             Connector.URL = GetServiceUrl() + "/v3/tone_chat";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

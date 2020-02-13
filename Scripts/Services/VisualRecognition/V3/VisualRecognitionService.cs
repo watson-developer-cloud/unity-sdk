@@ -71,6 +71,7 @@ namespace IBM.Watson.VisualRecognition.V3
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -79,7 +80,6 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -177,6 +177,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classify";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -293,6 +294,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classifiers";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -361,6 +363,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/classifiers";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -428,6 +431,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -461,7 +465,7 @@ namespace IBM.Watson.VisualRecognition.V3
         /// Update a custom classifier by adding new positive or negative classes or by adding new images to existing
         /// classes. You must supply at least one set of positive or negative examples. For details, see [Updating
         /// custom
-        /// classifiers](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-customizing#updating-custom-classifiers).
+        /// classifiers](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-customizing#updating-custom-classifiers).
         ///
         /// Encode all names in UTF-8 if they contain non-ASCII characters (.zip and image file names, and classifier
         /// and class names). The service assumes UTF-8 encoding if it encounters non-ASCII characters.
@@ -541,6 +545,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -606,6 +611,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -674,6 +680,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + string.Format("/v3/classifiers/{0}/core_ml_model", classifierId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -699,7 +706,7 @@ namespace IBM.Watson.VisualRecognition.V3
         ///
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-information-security).
+        /// security](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -740,6 +747,7 @@ namespace IBM.Watson.VisualRecognition.V3
 
             Connector.URL = GetServiceUrl() + "/v3/user_data";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
