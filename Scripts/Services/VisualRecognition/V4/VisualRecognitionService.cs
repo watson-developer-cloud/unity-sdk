@@ -73,6 +73,7 @@ namespace IBM.Watson.VisualRecognition.V4
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
@@ -81,7 +82,6 @@ namespace IBM.Watson.VisualRecognition.V4
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -262,6 +262,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + "/v4/collections";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -326,6 +327,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + "/v4/collections";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -393,6 +395,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -475,6 +478,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -542,6 +546,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -649,6 +654,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -716,6 +722,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -786,6 +793,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -856,6 +864,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}", collectionId, imageId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -933,6 +942,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}/jpeg", collectionId, imageId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -949,6 +959,300 @@ namespace IBM.Watson.VisualRecognition.V4
 
             if (((RequestObject<byte[]>)req).Callback != null)
                 ((RequestObject<byte[]>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List object metadata.
+        ///
+        /// Retrieves a list of object names in a collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="collectionId">The identifier of the collection.</param>
+        /// <returns><see cref="ObjectMetadataList" />ObjectMetadataList</returns>
+        public bool ListObjectMetadata(Callback<ObjectMetadataList> callback, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListObjectMetadata`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `ListObjectMetadata`");
+
+            RequestObject<ObjectMetadataList> req = new RequestObject<ObjectMetadataList>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "ListObjectMetadata"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListObjectMetadataResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/objects", collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnListObjectMetadataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ObjectMetadataList> response = new DetailedResponse<ObjectMetadataList>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ObjectMetadataList>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnListObjectMetadataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ObjectMetadataList>)req).Callback != null)
+                ((RequestObject<ObjectMetadataList>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Update an object name.
+        ///
+        /// Update the name of an object. A successful request updates the training data for all images that use the
+        /// object.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="collectionId">The identifier of the collection.</param>
+        /// <param name="_object">The name of the object.</param>
+        /// <param name="newObject">The updated name of the object. The name can contain alphanumeric, underscore,
+        /// hyphen, space, and dot characters. It cannot begin with the reserved prefix `sys-`.</param>
+        /// <returns><see cref="UpdateObjectMetadata" />UpdateObjectMetadata</returns>
+        public bool UpdateObjectMetadata(Callback<UpdateObjectMetadata> callback, string collectionId, string _object, string newObject)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `UpdateObjectMetadata`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `UpdateObjectMetadata`");
+            if (string.IsNullOrEmpty(_object))
+                throw new ArgumentNullException("`_object` is required for `UpdateObjectMetadata`");
+            if (string.IsNullOrEmpty(newObject))
+                throw new ArgumentNullException("`newObject` is required for `UpdateObjectMetadata`");
+
+            RequestObject<UpdateObjectMetadata> req = new RequestObject<UpdateObjectMetadata>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "UpdateObjectMetadata"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(newObject))
+                bodyObject["object"] = newObject;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnUpdateObjectMetadataResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/objects/{1}", collectionId, _object);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnUpdateObjectMetadataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<UpdateObjectMetadata> response = new DetailedResponse<UpdateObjectMetadata>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<UpdateObjectMetadata>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnUpdateObjectMetadataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<UpdateObjectMetadata>)req).Callback != null)
+                ((RequestObject<UpdateObjectMetadata>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get object metadata.
+        ///
+        /// Get the number of bounding boxes for a single object in a collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="collectionId">The identifier of the collection.</param>
+        /// <param name="_object">The name of the object.</param>
+        /// <returns><see cref="ObjectMetadata" />ObjectMetadata</returns>
+        public bool GetObjectMetadata(Callback<ObjectMetadata> callback, string collectionId, string _object)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetObjectMetadata`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetObjectMetadata`");
+            if (string.IsNullOrEmpty(_object))
+                throw new ArgumentNullException("`_object` is required for `GetObjectMetadata`");
+
+            RequestObject<ObjectMetadata> req = new RequestObject<ObjectMetadata>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "GetObjectMetadata"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetObjectMetadataResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/objects/{1}", collectionId, _object);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetObjectMetadataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ObjectMetadata> response = new DetailedResponse<ObjectMetadata>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ObjectMetadata>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnGetObjectMetadataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ObjectMetadata>)req).Callback != null)
+                ((RequestObject<ObjectMetadata>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete an object.
+        ///
+        /// Delete one object from a collection. A successful request deletes the training data from all images that use
+        /// the object.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="collectionId">The identifier of the collection.</param>
+        /// <param name="_object">The name of the object.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteObject(Callback<object> callback, string collectionId, string _object)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteObject`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteObject`");
+            if (string.IsNullOrEmpty(_object))
+                throw new ArgumentNullException("`_object` is required for `DeleteObject`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "DeleteObject"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteObjectResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/objects/{1}", collectionId, _object);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnDeleteObjectResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("VisualRecognitionService.OnDeleteObjectResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// Train a collection.
@@ -992,6 +1296,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/train", collectionId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1077,6 +1382,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/images/{1}/training_data", collectionId, imageId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1155,6 +1461,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + "/v4/training_usage";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1190,7 +1497,7 @@ namespace IBM.Watson.VisualRecognition.V4
         ///
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/visual-recognition?topic=visual-recognition-information-security).
+        /// security](https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-information-security).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
@@ -1231,6 +1538,7 @@ namespace IBM.Watson.VisualRecognition.V4
 
             Connector.URL = GetServiceUrl() + "/v4/user_data";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
