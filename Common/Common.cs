@@ -26,7 +26,7 @@ namespace IBM.Watson
         /// <summary>
         /// The SDK version.
         /// </summary>
-        public const string Version = "watson-apis-unity-sdk-4.3.0";
+        public const string Version = "watson-apis-unity-sdk-4.4.0";
         /// <summary>
         /// Tracking for onboarding.
         /// </summary>
