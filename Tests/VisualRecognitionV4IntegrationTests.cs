@@ -283,6 +283,7 @@ namespace IBM.Watson.Tests
                 }
             }
         }
+
         [UnityTest, Order(7)]
         public IEnumerator TestListImages()
         {
@@ -451,6 +452,49 @@ namespace IBM.Watson.Tests
             );
 
             while (trainingEvents == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(13)]
+        public IEnumerator TestListObjectMetadata()
+        {
+            Log.Debug("VisualRecognitionServiceV4IntegrationTests", "Attempting to List ObjectMetadata...");
+            ObjectMetadataList objectList = null;
+            service.ListObjectMetadata(
+                callback: (DetailedResponse<ObjectMetadataList> response, IBMError error) =>
+                {
+                    Log.Debug("VisualRecognitionServiceV4IntegrationTests", "ListObjectMetadata result: {0}", response.Response);
+                    objectList = response.Result;
+                    Assert.IsNotNull(objectList.Objects);
+                    Assert.IsTrue(objectList.Objects.Count > 0);
+                    Assert.IsNull(error);
+                },
+                collectionId: "7ae67016-1cae-479d-871e-0432dcda4f35"
+            );
+
+            while (objectList == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(13)]
+        public IEnumerator TestGetObjectMetadata()
+        {
+            Log.Debug("VisualRecognitionServiceV4IntegrationTests", "Attempting to Get ObjectMetadata...");
+            ObjectMetadata objectMetadata = null;
+            service.GetObjectMetadata(
+                callback: (DetailedResponse<ObjectMetadata> response, IBMError error) =>
+                {
+                    Log.Debug("VisualRecognitionServiceV4IntegrationTests", "GetObjectMetadata result: {0}", response.Response);
+                    objectMetadata = response.Result;
+                    Assert.IsNotNull(objectMetadata._Object);
+                    Assert.IsTrue(objectMetadata.Count > 0);
+                    Assert.IsNull(error);
+                },
+                collectionId: "7ae67016-1cae-479d-871e-0432dcda4f35",
+                _object: "turtle"
+            );
+
+            while (objectMetadata == null)
                 yield return null;
         }
         #endregion
