@@ -44,7 +44,6 @@ namespace IBM.Watson.Examples
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string synthesizeMimeType = "audio/wav";
         public Text textInput;
-        private int _recordingRoutine = 0;
         private bool _textEntered = false;
         private AudioClip _recording = null;
         #endregion
@@ -84,9 +83,13 @@ namespace IBM.Watson.Examples
                         textInput.text = textInput.text.Substring(0, textInput.text.Length - 1);
                     }
                 }
-                else if ((c == '\n') || (c == '\r')) // enter/return
+                else if ((c == '\n') || (c == '\r')) // send text when user enter or return
                 {
                     print("User entered the text: " + textInput.text);
+                    if (!_service.IsListening)
+                    {
+                        StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
+                    }
                     _service.OnListen(textInput.text);
                     textInput.text = "";
                 }
@@ -118,8 +121,6 @@ namespace IBM.Watson.Examples
             }
 
             Active = true;
-            StartListening();
-            // Runnable.Run(ExampleSynthesize());
         }
 
         private void OnError(string error)
@@ -129,6 +130,14 @@ namespace IBM.Watson.Examples
             Log.Debug("ExampleTextToSpeech.OnError()", "Error! {0}", error);
         }
 
+        private void StartListening()
+        {
+            Log.Debug("start-", "listening");
+            _service.Voice = allisionVoice;
+            _service.OnError = OnError;
+            _service.StartListening(OnSynthesize);
+        }
+
         public bool Active
         {
             get { return _service.IsListening; }
@@ -136,10 +145,7 @@ namespace IBM.Watson.Examples
             {
                 if (value && !_service.IsListening)
                 {
-                    Log.Debug("start-", "listening");
-                    _service.Voice = allisionVoice;
-                    _service.OnError = OnError;
-                    _service.StartListening(OnSynthesize);
+                    StartListening();
                 }
                 else if (!value && _service.IsListening)
                 {
@@ -149,40 +155,13 @@ namespace IBM.Watson.Examples
             }
         }
 
-        private void StartListening()
-        {
-            if (_recordingRoutine == 0)
-            {
-                UnityObjectUtil.StartDestroyQueue();
-                // _recordingRoutine = Runnable.Run(SynthesizeHandler());
-            }
-        }
-
-        // private IEnumerator SynthesizeHandler()
-        // {
-        //     yield return null;      // let _recordingRoutine get set..
-
-        //     Log.Debug("ExampleTextToSpeechV1", "Text entered: {0}, {1}", synthesizeText, _textEntered);
-        //     while (_recordingRoutine != 0)
-        //     {
-        //         Log.Debug("ExampleTextToSpeechV1", "Text entered: {0}", synthesizeText);
-        //         if (_textEntered)
-        //         {
-        //             _service.OnListen(synthesizeText);
-        //             _textEntered = false;
-        //             textInput.text = "";
-        //         }
-        //     }
-        //     yield break;
-        // }
-
         private void OnSynthesize(byte[] result) {
             Log.Debug("ExampleTextToSpeechV1", "Synthesize done!");
             _recording = WaveFile.ParseWAV("myClip", result);
             PlayClip(_recording);
         }
 
-        #region Synthesize
+        #region Synthesize Without Websocket Connection
         private IEnumerator ExampleSynthesize()
         {
             byte[] synthesizeResponse = null;

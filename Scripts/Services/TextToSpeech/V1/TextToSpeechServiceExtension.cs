@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -33,13 +33,6 @@ namespace IBM.Watson.TextToSpeech.V1
 {
     public partial class TextToSpeechService : BaseService
     {
-        #region Constants
-        /// <summary>
-        /// How many recording Texts will we queue before we enter a error state.
-        /// </summary>
-        private const int MaxQueuedRecordings = 1000;
-        #endregion
-
         #region Public Types
         /// <summary>
         /// This callback is used to return errors through the OnError property.
@@ -50,14 +43,15 @@ namespace IBM.Watson.TextToSpeech.V1
 
         #region Private Data
         private OnSynthesize _listenCallback = null;        // Callback is set by StartListening()
-        private WSConnector _listenSocket = null;          // WebSocket object used when StartAnalyzing() is invoked
+        private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked
         private bool _listenActive = false;
         private bool _isListening = false;
         private Queue<string> _listenTexts = new Queue<string>();
         private string _text = null;
-        private string _accept = "audio/basic";
+        private string _accept = "audio/wav";
         private string _voice = "en-US_AllisonV3Voice";   // Voice to use.
         private string _customization_id = null;
+        private string _timings = null;
 
         private string _url = "https://stream.watsonplatform.net/text-to-speech/api";
         #endregion
@@ -78,6 +72,12 @@ namespace IBM.Watson.TextToSpeech.V1
         /// audio/ogg;codecs=opus).
         /// </summary>
         public string Accept { get { return _accept; } set { _accept = value; } }
+        /// <summary>
+        /// Specifies that the service is to return word timing information for all strings of the input text.
+        /// The service returns the start and end time of each token of the input. Specify words as the lone element of the array to request word timings.
+        /// Specify an empty array or omit the parameter to receive no word timings.
+        /// </summary>
+        public string Timings { get { return _timings; } set { _timings = value; } }
         /// <summary>
         /// The voice to use for synthesis. (optional, default to en-US_MichaelVoice).
         /// </summary>
@@ -100,8 +100,8 @@ namespace IBM.Watson.TextToSpeech.V1
 
 
         /// <summary>
-        /// This starts the service listening and it will invoke the callback for any recognized speech.
-        /// OnListen() must be called by the user to queue audio data to send to the service. 
+        /// This starts the service listening and it will invoke the callback for any recognized text.
+        /// OnSynthesize() must be called by the user to queue audio data to send to the service.
         /// StopListening() should be called when you want to stop listening.
         /// </summary>
         /// <param name="callback">All recognize results are passed to this callback.</param>
@@ -127,7 +127,6 @@ namespace IBM.Watson.TextToSpeech.V1
                     _listenSocket.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            // _listenSocket.Send(new WSConnector.TextMessage("start"));
             _isListening = true;
             _listenCallback = callback;
 
@@ -149,6 +148,7 @@ namespace IBM.Watson.TextToSpeech.V1
                 Log.Debug("ExampleTextToSpeechV1", "on listen: {0}", text);
                 Dictionary<string, string> data = new Dictionary<string, string>();
                 data["text"] = text;
+                data["accept"] = Accept;
                 _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(data)));
                 textSentOrEnqueued = true;
             }
@@ -182,19 +182,14 @@ namespace IBM.Watson.TextToSpeech.V1
                 {
                     queryParams["customization_id"] = CustomizationId;
                 }
-                if (!string.IsNullOrEmpty(Voice))
-                {
-                    queryParams["voice"] = Voice;
-                }
-
                 string parsedParams = "";
 
                 foreach (KeyValuePair<string, string> kvp in queryParams)
                 {
-                    parsedParams += string.Format("{0}={1}", kvp.Key, kvp.Value);
+                    parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
 
-                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/synthesize?",  parsedParams, serviceUrl);
+                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/synthesize?voice=" + Voice ,  parsedParams, serviceUrl);
                 _listenSocket.Headers.Add("Content-Type", "application/json");
                 _listenSocket.Headers.Add("Accept", Accept);
 
@@ -252,10 +247,8 @@ namespace IBM.Watson.TextToSpeech.V1
             }
             else if (msg is WSConnector.BinaryMessage)
             {
-                Log.Debug("TextToSpeech.OnListenMessage()", "got message");
                 WSConnector.BinaryMessage message = (WSConnector.BinaryMessage)msg;
-                // OnSynthesize(message);
-                // handle audio clip
+                _listenCallback(message.Data);
             }
 
         }
