@@ -43,7 +43,7 @@ namespace IBM.Watson.Examples
         private string allisionVoice = "en-US_AllisonV3Voice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string synthesizeMimeType = "audio/wav";
-        public Text textInput;
+        public InputField textInput;
         private bool _textEntered = false;
         private AudioClip _recording = null;
         #endregion
@@ -69,34 +69,44 @@ namespace IBM.Watson.Examples
         {
             LogSystem.InstallDefaultReactors();
             Runnable.Run(CreateService());
-            textInput = GetComponent<Text>();
+            //textInput = GetComponent<Text>();
         }
 
         void Update()
         {
-            foreach (char c in Input.inputString)
+            //foreach (char c in Input.inputString)
+            //{
+            //    if (c == '\b') // has backspace/delete been pressed?
+            //    {
+            //        if (textInput.text.Length != 0)
+            //        {
+            //            textInput.text = textInput.text.Substring(0, textInput.text.Length - 1);
+            //        }
+            //    }
+            //    else if ((c == '\n') || (c == '\r')) // send text when user enter or return
+            //    {
+            //        print("User entered the text: " + textInput.text);
+            //        if (!_service.IsListening)
+            //        {
+            //            StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
+            //        }
+            //        _service.OnListen(textInput.text);
+            //        textInput.text = "";
+            //    }
+            //    else
+            //    {
+            //        textInput.text += c;
+            //    }
+            //}
+
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                if (c == '\b') // has backspace/delete been pressed?
+                if (!_service.IsListening)
                 {
-                    if (textInput.text.Length != 0)
-                    {
-                        textInput.text = textInput.text.Substring(0, textInput.text.Length - 1);
-                    }
+                    StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
                 }
-                else if ((c == '\n') || (c == '\r')) // send text when user enter or return
-                {
-                    print("User entered the text: " + textInput.text);
-                    if (!_service.IsListening)
-                    {
-                        StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
-                    }
-                    _service.OnListen(textInput.text);
-                    textInput.text = "";
-                }
-                else
-                {
-                    textInput.text += c;
-                }
+                _service.OnListen(textInput.text);
+                textInput.text = "";
             }
         }
 
