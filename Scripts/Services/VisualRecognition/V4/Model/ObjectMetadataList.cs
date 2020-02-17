@@ -16,26 +16,24 @@
 */
 
 using System.Collections.Generic;
-using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Assistant.V1.Model
+namespace IBM.Watson.VisualRecognition.V4.Model
 {
     /// <summary>
-    /// The output of the dialog node. For more information about how to specify dialog node output, see the
-    /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+    /// List of objects.
     /// </summary>
-    public class DialogNodeOutput: DynamicModel<object>
+    public class ObjectMetadataList
     {
         /// <summary>
-        /// An array of objects describing the output defined for the dialog node.
+        /// Number of unique named objects in the collection.
         /// </summary>
-        [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogNodeOutputGeneric> Generic { get; set; }
+        [JsonProperty("object_count", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual long? ObjectCount { get; private set; }
         /// <summary>
-        /// Options that modify how specified output is handled.
+        /// The objects in the collection.
         /// </summary>
-        [JsonProperty("modifiers", NullValueHandling = NullValueHandling.Ignore)]
-        public DialogNodeOutputModifiers Modifiers { get; set; }
+        [JsonProperty("objects", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ObjectMetadata> Objects { get; set; }
     }
 }

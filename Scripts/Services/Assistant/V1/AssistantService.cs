@@ -72,6 +72,7 @@ namespace IBM.Watson.Assistant.V1
         public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.Assistant.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -96,7 +96,7 @@ namespace IBM.Watson.Assistant.V1
         /// **Important:** This method has been superseded by the new v2 runtime API. The v2 API offers significant
         /// advantages, including ease of deployment, automatic state management, versioning, and search capabilities.
         /// For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-api-overview).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-api-overview).
         ///
         /// There is no rate limit for this operation.
         /// </summary>
@@ -171,6 +171,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/message", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -259,6 +260,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/workspaces";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -312,8 +314,10 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
         /// <param name="webhooks"> (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, List<Webhook> webhooks = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, List<Webhook> webhooks = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -338,6 +342,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -370,6 +378,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/workspaces";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -460,6 +469,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -513,16 +523,18 @@ namespace IBM.Watson.Assistant.V1
         /// (optional)</param>
         /// <param name="counterexamples">An array of objects defining input examples that have been marked as
         /// irrelevant input. (optional)</param>
-        /// <param name="webhooks"> (optional)</param>
-        /// <param name="append">Whether the new data is to be appended to the existing data in the workspace. If
+        /// <param name="append">Whether the new data is to be appended to the existing data in the object. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
-        /// elements, including all subelements. For example, if the new data includes **entities** and
+        /// elements, including all subelements. For example, if the new data for a workspace includes **entities** and
         /// **append**=`false`, all existing entities in the workspace are discarded and replaced with the new entities.
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
+        /// <param name="webhooks"> (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -552,6 +564,10 @@ namespace IBM.Watson.Assistant.V1
             if (append != null)
             {
                 req.Parameters["append"] = (bool)append ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
             }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
@@ -585,6 +601,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -654,6 +671,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -753,6 +771,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -798,8 +817,10 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the intent. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="examples">An array of user input examples for the intent. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null)
+        public bool CreateIntent(Callback<Intent> callback, string workspaceId, string intent, string description = null, List<Example> examples = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateIntent`");
@@ -828,6 +849,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -844,6 +869,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -930,6 +956,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -977,8 +1004,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newDescription">The description of the intent. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="newExamples">An array of user input examples for the intent. (optional)</param>
+        /// <param name="append">Whether the new data is to be appended to the existing data in the object. If
+        /// **append**=`false`, elements included in the new data completely replace the corresponding existing
+        /// elements, including all subelements. For example, if the new data for the intent includes **examples** and
+        /// **append**=`false`, all existing examples for the intent are discarded and replaced with the new examples.
+        ///
+        /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
+        /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Intent" />Intent</returns>
-        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<Example> newExamples = null)
+        public bool UpdateIntent(Callback<Intent> callback, string workspaceId, string intent, string newIntent = null, string newDescription = null, List<Example> newExamples = null, bool? append = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateIntent`");
@@ -1007,6 +1043,14 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (append != null)
+            {
+                req.Parameters["append"] = (bool)append ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1023,6 +1067,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1095,6 +1140,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}", workspaceId, intent);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1189,6 +1235,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1233,8 +1280,10 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.</param>
         /// <param name="mentions">An array of contextual entity mentions. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null)
+        public bool CreateExample(Callback<Example> callback, string workspaceId, string intent, string text, List<Mention> mentions = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExample`");
@@ -1265,6 +1314,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1279,6 +1332,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples", workspaceId, intent);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1360,6 +1414,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1406,8 +1461,10 @@ namespace IBM.Watson.Assistant.V1
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters. (optional)</param>
         /// <param name="newMentions">An array of contextual entity mentions. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Example" />Example</returns>
-        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mention> newMentions = null)
+        public bool UpdateExample(Callback<Example> callback, string workspaceId, string intent, string text, string newText = null, List<Mention> newMentions = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateExample`");
@@ -1438,6 +1495,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1452,6 +1513,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1527,6 +1589,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/intents/{1}/examples/{2}", workspaceId, intent, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1619,6 +1682,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1663,8 +1727,10 @@ namespace IBM.Watson.Assistant.V1
         /// following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text)
+        public bool CreateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
@@ -1693,6 +1759,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1705,6 +1775,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1784,6 +1855,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1828,8 +1900,10 @@ namespace IBM.Watson.Assistant.V1
         /// following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Counterexample" />Counterexample</returns>
-        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, string newText = null)
+        public bool UpdateCounterexample(Callback<Counterexample> callback, string workspaceId, string text, string newText = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCounterexample`");
@@ -1858,6 +1932,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1870,6 +1948,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -1943,6 +2022,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/counterexamples/{1}", workspaceId, text);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2042,6 +2122,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2090,8 +2171,10 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="metadata">Any metadata related to the entity. (optional)</param>
         /// <param name="fuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="values">An array of objects describing the entity values. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null)
+        public bool CreateEntity(Callback<Entity> callback, string workspaceId, string entity, string description = null, Dictionary<string, object> metadata = null, bool? fuzzyMatch = null, List<CreateValue> values = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEntity`");
@@ -2120,6 +2203,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -2140,6 +2227,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2226,6 +2314,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2275,8 +2364,17 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newMetadata">Any metadata related to the entity. (optional)</param>
         /// <param name="newFuzzyMatch">Whether to use fuzzy matching for the entity. (optional)</param>
         /// <param name="newValues">An array of objects describing the entity values. (optional)</param>
+        /// <param name="append">Whether the new data is to be appended to the existing data in the entity. If
+        /// **append**=`false`, elements included in the new data completely replace the corresponding existing
+        /// elements, including all subelements. For example, if the new data for the entity includes **values** and
+        /// **append**=`false`, all existing values for the entity are discarded and replaced with the new values.
+        ///
+        /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
+        /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Entity" />Entity</returns>
-        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null)
+        public bool UpdateEntity(Callback<Entity> callback, string workspaceId, string entity, string newEntity = null, string newDescription = null, Dictionary<string, object> newMetadata = null, bool? newFuzzyMatch = null, List<CreateValue> newValues = null, bool? append = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEntity`");
@@ -2305,6 +2403,14 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (append != null)
+            {
+                req.Parameters["append"] = (bool)append ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -2325,6 +2431,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2397,6 +2504,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2483,6 +2591,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/mentions", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2584,6 +2693,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2636,10 +2746,12 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="patterns">An array of patterns for the entity value. A value can specify either synonyms or
         /// patterns (depending on the value type), but not both. A pattern is a regular expression; for more
         /// information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
         /// (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string type = null, List<string> synonyms = null, List<string> patterns = null)
+        public bool CreateValue(Callback<Value> callback, string workspaceId, string entity, string value, Dictionary<string, object> metadata = null, string type = null, List<string> synonyms = null, List<string> patterns = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateValue`");
@@ -2670,6 +2782,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -2690,6 +2806,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values", workspaceId, entity);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2778,6 +2895,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2832,10 +2950,20 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newPatterns">An array of patterns for the entity value. A value can specify either synonyms or
         /// patterns (depending on the value type), but not both. A pattern is a regular expression; for more
         /// information about how to specify a pattern, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-entities#entities-create-dictionary-based).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
         /// (optional)</param>
+        /// <param name="append">Whether the new data is to be appended to the existing data in the entity value. If
+        /// **append**=`false`, elements included in the new data completely replace the corresponding existing
+        /// elements, including all subelements. For example, if the new data for the entity value includes **synonyms**
+        /// and **append**=`false`, all existing synonyms for the entity value are discarded and replaced with the new
+        /// synonyms.
+        ///
+        /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
+        /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Value" />Value</returns>
-        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, Dictionary<string, object> newMetadata = null, string newType = null, List<string> newSynonyms = null, List<string> newPatterns = null)
+        public bool UpdateValue(Callback<Value> callback, string workspaceId, string entity, string value, string newValue = null, Dictionary<string, object> newMetadata = null, string newType = null, List<string> newSynonyms = null, List<string> newPatterns = null, bool? append = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateValue`");
@@ -2866,6 +2994,14 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (append != null)
+            {
+                req.Parameters["append"] = (bool)append ? "true" : "false";
+            }
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -2886,6 +3022,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -2961,6 +3098,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3058,6 +3196,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3102,8 +3241,10 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="synonym">The text of the synonym. This string must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters.</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym)
+        public bool CreateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateSynonym`");
@@ -3136,6 +3277,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3148,6 +3293,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms", workspaceId, entity, value);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3232,6 +3378,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3277,8 +3424,10 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newSynonym">The text of the synonym. This string must conform to the following restrictions:
         /// - It cannot contain carriage return, newline, or tab characters.
         /// - It cannot consist of only whitespace characters. (optional)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="Synonym" />Synonym</returns>
-        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, string newSynonym = null)
+        public bool UpdateSynonym(Callback<Synonym> callback, string workspaceId, string entity, string value, string synonym, string newSynonym = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateSynonym`");
@@ -3311,6 +3460,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3323,6 +3476,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3401,6 +3555,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/entities/{1}/values/{2}/synonyms/{3}", workspaceId, entity, value, synonym);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3492,6 +3647,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3543,7 +3699,7 @@ namespace IBM.Watson.Assistant.V1
         /// dialog node has no previous sibling. (optional)</param>
         /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="context">The context for the dialog node. (optional)</param>
         /// <param name="metadata">The metadata for the dialog node. (optional)</param>
@@ -3565,8 +3721,10 @@ namespace IBM.Watson.Assistant.V1
         /// users. (optional)</param>
         /// <param name="disambiguationOptOut">Whether the dialog node should be excluded from disambiguation
         /// suggestions. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3595,6 +3753,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3643,6 +3805,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3721,6 +3884,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3774,7 +3938,7 @@ namespace IBM.Watson.Assistant.V1
         /// dialog node has no previous sibling. (optional)</param>
         /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
         /// (optional)</param>
         /// <param name="newContext">The context for the dialog node. (optional)</param>
         /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
@@ -3797,8 +3961,10 @@ namespace IBM.Watson.Assistant.V1
         /// users. (optional)</param>
         /// <param name="newDisambiguationOptOut">Whether the dialog node should be excluded from disambiguation
         /// suggestions. (optional, default to false)</param>
+        /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
+        /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -3827,6 +3993,10 @@ namespace IBM.Watson.Assistant.V1
             }
 
             req.Parameters["version"] = VersionDate;
+            if (includeAudit != null)
+            {
+                req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3875,6 +4045,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3947,6 +4118,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/dialog_nodes/{1}", workspaceId, dialogNode);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -3988,7 +4160,7 @@ namespace IBM.Watson.Assistant.V1
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// For more information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
         /// (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
@@ -4041,6 +4213,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/logs", workspaceId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4081,7 +4254,7 @@ namespace IBM.Watson.Assistant.V1
         /// You must specify a filter query that includes a value for `language`, as well as a value for
         /// `request.context.system.assistant_id`, `workspace_id`, or `request.context.metadata.deployment`. For more
         /// information, see the
-        /// [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-filter-reference#filter-reference).</param>
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
@@ -4135,6 +4308,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/logs";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -4170,7 +4344,7 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
-        /// security](https://cloud.ibm.com/docs/services/assistant?topic=assistant-information-security#information-security).
+        /// security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
         ///
         /// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
         /// </summary>
@@ -4213,6 +4387,7 @@ namespace IBM.Watson.Assistant.V1
 
             Connector.URL = GetServiceUrl() + "/v1/user_data";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

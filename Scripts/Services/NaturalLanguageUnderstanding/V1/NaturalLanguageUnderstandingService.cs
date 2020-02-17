@@ -72,6 +72,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         public NaturalLanguageUnderstandingService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
             Authenticator = authenticator;
+
             if (string.IsNullOrEmpty(versionDate))
             {
                 throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of NaturalLanguageUnderstandingService");
@@ -80,7 +81,6 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             {
                 VersionDate = versionDate;
             }
-
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
             {
@@ -193,6 +193,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + "/v1/analyze";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -259,6 +260,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + "/v1/models";
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 
@@ -326,6 +328,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
             Connector.URL = GetServiceUrl() + string.Format("/v1/models/{0}", modelId);
             Authenticator.Authenticate(Connector);
+
             return Connector.Send(req);
         }
 

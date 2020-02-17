@@ -1,3 +1,12 @@
+# [4.4.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.3.0...v4.4.0) (2020-02-13)
+
+
+### Features
+
+* **Assistant:** add support for include audit and append ([cb1f3cc](https://github.com/watson-developer-cloud/unity-sdk/commit/cb1f3cc2bffba864333326b976c3168d8c19845d))
+* **VisualRecognitionV4:** add support for object metadata ([7a4c8bb](https://github.com/watson-developer-cloud/unity-sdk/commit/7a4c8bb503ef342c3305e17283769c6e9a173605))
+* Regenerate service using current api defs ([0b0c0a4](https://github.com/watson-developer-cloud/unity-sdk/commit/0b0c0a40ca892bef0b70b2833ff87dd7b8cab9af))
+
 # [4.3.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.2.1...v4.3.0) (2020-01-23)
 
 
