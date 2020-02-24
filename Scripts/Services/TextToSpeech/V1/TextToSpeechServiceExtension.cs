@@ -15,6 +15,8 @@
 *
 */
 
+// #define ENABLE_DEBUGGING
+
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Connection;
@@ -124,7 +126,9 @@ namespace IBM.Watson.TextToSpeech.V1
             if (customHeaders != null && _listenSocket != null)
             {
                 foreach (KeyValuePair<string, string> kvp in customHeaders)
+                {
                     _listenSocket.Headers.Add(kvp.Key, kvp.Value);
+                }
             }
 
             _isListening = true;
@@ -149,6 +153,7 @@ namespace IBM.Watson.TextToSpeech.V1
                 Dictionary<string, string> data = new Dictionary<string, string>();
                 data["text"] = text;
                 data["accept"] = Accept;
+                data["timings"] = Timings;
                 _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(data)));
                 textSentOrEnqueued = true;
             }

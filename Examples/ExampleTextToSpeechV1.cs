@@ -39,7 +39,7 @@ namespace IBM.Watson.Examples
         [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/text-to-speech/api\"")]
         [SerializeField]
         private string serviceUrl;
-        private TextToSpeechService _service;
+        private TextToSpeechService service;
         private string allisionVoice = "en-US_AllisonV3Voice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string placeholderText = "Please type text here and press enter.";
@@ -49,45 +49,6 @@ namespace IBM.Watson.Examples
         private bool _textEntered = false;
         private AudioClip _recording = null;
         private byte[] audioStream = null;
-        #endregion
-
-        #region PlayClip
-        private void PlayClip(AudioClip clip)
-        {
-            if (Application.isPlaying && clip != null)
-            {
-                GameObject audioObject = new GameObject("AudioObject");
-                AudioSource source = audioObject.AddComponent<AudioSource>();
-                source.spatialBlend = 0.0f;
-                source.loop = false;
-                source.clip = clip;
-                source.Play();
-
-                GameObject.Destroy(audioObject, clip.length);
-            }
-        }
-        #endregion
-
-        #region Concatenate Byte Arrays
-        private byte[] concatenateByteArrays(byte[] a, byte[] b)
-        {
-            if (a == null || a.Length == 0)
-            {
-                return b;
-            }
-            else if (b ==null || b.Length == 0)
-            {
-                return a;
-            }
-            else
-            {
-                List<byte> list1 = new List<byte>(a);
-                List<byte> list2 = new List<byte>(b);
-                list1.AddRange(list2);
-                byte[] result = list1.ToArray();
-                return result;
-            }
-        }
         #endregion
 
         private void Start()
@@ -100,11 +61,11 @@ namespace IBM.Watson.Examples
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                _service.OnListen(textInput.text);
+                service.OnListen(textInput.text);
                 textInput.text = waitingText;
             }
 
-            while(_service != null && !_service.IsListening)
+            while(service != null && !service.IsListening)
             {
                 if (audioStream != null && audioStream.Length > 0)
                 {
@@ -133,10 +94,10 @@ namespace IBM.Watson.Examples
                 yield return null;
             }
 
-            _service = new TextToSpeechService(authenticator);
+            service = new TextToSpeechService(authenticator);
             if (!string.IsNullOrEmpty(serviceUrl))
             {
-                _service.SetServiceUrl(serviceUrl);
+                service.SetServiceUrl(serviceUrl);
             }
 
             Active = true;
@@ -151,32 +112,32 @@ namespace IBM.Watson.Examples
 
         private void StartListening()
         {
-            Log.Debug("start-", "listening");
-            _service.Voice = allisionVoice;
-            _service.OnError = OnError;
-            _service.StartListening(OnSynthesize);
+            Log.Debug("ExampleTextToSpeech", "start-listening");
+            service.Voice = allisionVoice;
+            service.OnError = OnError;
+            service.StartListening(OnSynthesize);
         }
 
         public bool Active
         {
-            get { return _service.IsListening; }
+            get { return service.IsListening; }
             set
             {
-                if (value && !_service.IsListening)
+                if (value && !service.IsListening)
                 {
                     StartListening();
                 }
-                else if (!value && _service.IsListening)
+                else if (!value && service.IsListening)
                 {
-                    Log.Debug("stop", "listening");
-                    _service.StopListening();
+                    Log.Debug("ExampleTextToSpeech", "stop-listening");
+                    service.StopListening();
                 }
             }
         }
 
         private void OnSynthesize(byte[] result) {
             Log.Debug("ExampleTextToSpeechV1", "Binary data received!");
-            audioStream = concatenateByteArrays(audioStream, result);
+            audioStream = ConcatenateByteArrays(audioStream, result);
         }
 
         #region Synthesize Without Websocket Connection
@@ -184,7 +145,7 @@ namespace IBM.Watson.Examples
         {
             byte[] synthesizeResponse = null;
             AudioClip clip = null;
-            _service.Synthesize(
+            service.Synthesize(
                 callback: (DetailedResponse<byte[]> response, IBMError error) =>
                 {
                     synthesizeResponse = response.Result;
@@ -201,6 +162,45 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             yield return new WaitForSeconds(clip.length);
+        }
+        #endregion
+
+        #region PlayClip
+        private void PlayClip(AudioClip clip)
+        {
+            if (Application.isPlaying && clip != null)
+            {
+                GameObject audioObject = new GameObject("AudioObject");
+                AudioSource source = audioObject.AddComponent<AudioSource>();
+                source.spatialBlend = 0.0f;
+                source.loop = false;
+                source.clip = clip;
+                source.Play();
+
+                GameObject.Destroy(audioObject, clip.length);
+            }
+        }
+        #endregion
+
+        #region Concatenate Byte Arrays
+        private byte[] ConcatenateByteArrays(byte[] a, byte[] b)
+        {
+            if (a == null || a.Length == 0)
+            {
+                return b;
+            }
+            else if (b == null || b.Length == 0)
+            {
+                return a;
+            }
+            else
+            {
+                List<byte> list1 = new List<byte>(a);
+                List<byte> list2 = new List<byte>(b);
+                list1.AddRange(list2);
+                byte[] result = list1.ToArray();
+                return result;
+            }
         }
         #endregion
     }
