@@ -61,7 +61,7 @@ namespace IBM.Watson.Examples
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                service.OnListen(textInput.text);
+                service.SynthesizeUsingWebsockets(textInput.text);
                 textInput.text = waitingText;
             }
 
@@ -69,7 +69,7 @@ namespace IBM.Watson.Examples
             {
                 if (audioStream != null && audioStream.Length > 0)
                 {
-                    Log.Debug("Update", "Audio received: ", audioStream.Length.ToString()); // Use audioStream and play audio
+                    Log.Debug("ExampleTextToSpeech", "Audio stream of {0} bytes received!", audioStream.Length.ToString()); // Use audioStream and play audio
                     // _recording = WaveFile.ParseWAV("myClip", audioStream);
                     // PlayClip(_recording);
                 }
@@ -77,7 +77,6 @@ namespace IBM.Watson.Examples
                 audioStream = null;
                 StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
             }
-
         }
 
         private IEnumerator CreateService()

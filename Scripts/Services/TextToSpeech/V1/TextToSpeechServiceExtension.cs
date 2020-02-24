@@ -44,25 +44,25 @@ namespace IBM.Watson.TextToSpeech.V1
         #endregion
 
         #region Private Data
-        private OnSynthesize _listenCallback = null;        // Callback is set by StartListening()
-        private WSConnector _listenSocket = null;          // WebSocket object used when StartListening() is invoked
-        private bool _listenActive = false;
-        private bool _isListening = false;
-        private Queue<string> _listenTexts = new Queue<string>();
-        private string _text = null;
-        private string _accept = "audio/wav";
-        private string _voice = "en-US_AllisonV3Voice";   // Voice to use.
-        private string _customization_id = null;
-        private string _timings = null;
+        private OnSynthesize listenCallback = null;        // Callback is set by StartListening()
+        private WSConnector listenSocket = null;          // WebSocket object used when StartListening() is invoked
+        private bool listenActive = false;
+        private bool isListening = false;
+        private Queue<string> listenTexts = new Queue<string>();
+        private string accept = "audio/wav";
+        private string voice = "en-US_AllisonV3Voice";   // Voice to use.
+        private string customization_id = null;
+        private string[] timings = null;
 
-        private string _url = "https://stream.watsonplatform.net/text-to-speech/api";
+        private string url = "https://stream.watsonplatform.net/text-to-speech/api";
         #endregion
 
         #region Public Properties
+        public string Url { get { return url; } set { url = value; } }
         /// <summary>
         /// True if StartListening() has been called.
         /// </summary>
-        public bool IsListening { get { return _isListening; } private set { _isListening = value; } }
+        public bool IsListening { get { return isListening; } private set { isListening = value; } }
         /// <summary>
         /// This delegate is invoked when an error occurs.
         /// </summary>
@@ -73,24 +73,24 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Audio formats (accept types)** in the method description. (optional, default to
         /// audio/ogg;codecs=opus).
         /// </summary>
-        public string Accept { get { return _accept; } set { _accept = value; } }
+        public string Accept { get { return accept; } set { accept = value; } }
         /// <summary>
         /// Specifies that the service is to return word timing information for all strings of the input text.
         /// The service returns the start and end time of each token of the input. Specify words as the lone element of the array to request word timings.
         /// Specify an empty array or omit the parameter to receive no word timings.
         /// </summary>
-        public string Timings { get { return _timings; } set { _timings = value; } }
+        public string[] Timings { get { return timings; } set { timings = value; } }
         /// <summary>
         /// The voice to use for synthesis. (optional, default to en-US_MichaelVoice).
         /// </summary>
-        public string Voice { get { return _voice; } set { _voice = value; } }
+        public string Voice { get { return voice; } set { voice = value; } }
         /// <summary>
         /// The customization ID (GUID) of a custom voice model to use for the synthesis.
         /// If a custom voice model is specified, it is guaranteed to work only if it matches the language of the
         /// indicated voice. You must make the request with credentials for the instance of the service that owns the
         /// custom model. Omit the parameter to use the specified voice with no customization. (optional).
         /// </summary>
-        public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
+        public string CustomizationId { get { return customization_id; } set { customization_id = value; } }
         #endregion
 
         #region Sessionless - Streaming
@@ -112,7 +112,7 @@ namespace IBM.Watson.TextToSpeech.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("callback");
-            if (_isListening)
+            if (isListening)
                 return false;
             if (!CreateListenConnector())
                 return false;
@@ -123,16 +123,16 @@ namespace IBM.Watson.TextToSpeech.V1
                 customHeaders.Add(kvp.Key, kvp.Value);
             }
 
-            if (customHeaders != null && _listenSocket != null)
+            if (customHeaders != null && listenSocket != null)
             {
                 foreach (KeyValuePair<string, string> kvp in customHeaders)
                 {
-                    _listenSocket.Headers.Add(kvp.Key, kvp.Value);
+                    listenSocket.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
 
-            _isListening = true;
-            _listenCallback = callback;
+            isListening = true;
+            listenCallback = callback;
 
             return true;
         }
@@ -143,18 +143,21 @@ namespace IBM.Watson.TextToSpeech.V1
         /// </summary>
         /// <param name="text">.</param>
         /// <returns>True if text was sent or enqueued, false if text was discarded.</returns>
-        public bool OnListen(string text)
+        public bool SynthesizeUsingWebsockets(string text)
         {
             bool textSentOrEnqueued = false;
 
-            if (_isListening)
+            if (isListening)
             {
                 Log.Debug("ExampleTextToSpeechV1", "on listen: {0}", text);
-                Dictionary<string, string> data = new Dictionary<string, string>();
+                Dictionary<string, object> data = new Dictionary<string, object>();
                 data["text"] = text;
                 data["accept"] = Accept;
-                data["timings"] = Timings;
-                _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(data)));
+                if (Timings != null)
+                {
+                    data["timings"] = Timings;
+                }
+                listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(data)));
                 textSentOrEnqueued = true;
             }
             return textSentOrEnqueued;
@@ -166,21 +169,21 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <returns>Returns true on success, false on failure.</returns>
         public bool StopListening()
         {
-            if (!_isListening)
+            if (!isListening)
                 return false;
 
-            _isListening = false;
+            isListening = false;
             CloseListenConnector();
 
-            _listenTexts.Clear();
-            _listenCallback = null;
+            listenTexts.Clear();
+            listenCallback = null;
 
             return true;
         }
 
         private bool CreateListenConnector()
         {
-            if (_listenSocket == null)
+            if (listenSocket == null)
             {
                 Dictionary<string, string> queryParams = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(CustomizationId))
@@ -194,13 +197,13 @@ namespace IBM.Watson.TextToSpeech.V1
                     parsedParams += string.Format("&{0}={1}", kvp.Key, kvp.Value);
                 }
 
-                _listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/synthesize?voice=" + Voice ,  parsedParams, serviceUrl);
-                _listenSocket.Headers.Add("Content-Type", "application/json");
-                _listenSocket.Headers.Add("Accept", Accept);
+                listenSocket = WSConnector.CreateConnector(Authenticator, "/v1/synthesize?voice=" + Voice ,  parsedParams, serviceUrl);
+                listenSocket.Headers.Add("Content-Type", "application/json");
+                listenSocket.Headers.Add("Accept", Accept);
 
                 Log.Debug("TextToSpeech.CreateListenConnector()", "Created listen socket. parsedParams: {0}", parsedParams);
-                _listenSocket.DisableSslVerification = DisableSslVerification;
-                if (_listenSocket == null)
+                listenSocket.DisableSslVerification = DisableSslVerification;
+                if (listenSocket == null)
                 {
                     return false;
                 }
@@ -211,8 +214,8 @@ namespace IBM.Watson.TextToSpeech.V1
 #endif
                 }
 
-                _listenSocket.OnMessage = OnListenMessage;
-                _listenSocket.OnClose = OnListenClosed;
+                listenSocket.OnMessage = OnListenMessage;
+                listenSocket.OnClose = OnListenClosed;
             }
 
             return true;
@@ -220,10 +223,10 @@ namespace IBM.Watson.TextToSpeech.V1
 
         private void CloseListenConnector()
         {
-            if (_listenSocket != null)
+            if (listenSocket != null)
             {
-                _listenSocket.Close();
-                _listenSocket = null;
+                listenSocket.Close();
+                listenSocket = null;
             }
         }
 
@@ -253,7 +256,7 @@ namespace IBM.Watson.TextToSpeech.V1
             else if (msg is WSConnector.BinaryMessage)
             {
                 WSConnector.BinaryMessage message = (WSConnector.BinaryMessage)msg;
-                _listenCallback(message.Data);
+                listenCallback(message.Data);
             }
 
         }
@@ -264,7 +267,7 @@ namespace IBM.Watson.TextToSpeech.V1
             Log.Debug("TextToSpeech.OnListenClosed()", "OnListenClosed(), State = {0}", connector.State.ToString());
 #endif
 
-            _listenActive = false;
+            listenActive = false;
             StopListening();
 
             if (connector.State == WSConnector.ConnectionState.DISCONNECTED)
