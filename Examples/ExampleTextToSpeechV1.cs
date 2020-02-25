@@ -23,6 +23,7 @@ using IBM.Cloud.SDK.Authentication.Iam;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using IBM.Cloud.SDK;
 
 
@@ -39,32 +40,43 @@ namespace IBM.Watson.Examples
         [SerializeField]
         private string serviceUrl;
         private TextToSpeechService service;
-        private string allisionVoice = "en-US_AllisonVoice";
+        private string allisionVoice = "en-US_AllisonV3Voice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
+        private string placeholderText = "Please type text here and press enter.";
+        private string waitingText = "Watson Text to Speech service is synthesizing the audio!";
         private string synthesizeMimeType = "audio/wav";
-        #endregion
-
-        #region PlayClip
-        private void PlayClip(AudioClip clip)
-        {
-            if (Application.isPlaying && clip != null)
-            {
-                GameObject audioObject = new GameObject("AudioObject");
-                AudioSource source = audioObject.AddComponent<AudioSource>();
-                source.spatialBlend = 0.0f;
-                source.loop = false;
-                source.clip = clip;
-                source.Play();
-
-                GameObject.Destroy(audioObject, clip.length);
-            }
-        }
+        public InputField textInput;
+        private bool _textEntered = false;
+        private AudioClip _recording = null;
+        private byte[] audioStream = null;
         #endregion
 
         private void Start()
         {
             LogSystem.InstallDefaultReactors();
             Runnable.Run(CreateService());
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                service.SynthesizeUsingWebsockets(textInput.text);
+                textInput.text = waitingText;
+            }
+
+            while(service != null && !service.IsListening)
+            {
+                if (audioStream != null && audioStream.Length > 0)
+                {
+                    Log.Debug("ExampleTextToSpeech", "Audio stream of {0} bytes received!", audioStream.Length.ToString()); // Use audioStream and play audio
+                    // _recording = WaveFile.ParseWAV("myClip", audioStream);
+                    // PlayClip(_recording);
+                }
+                textInput.text = placeholderText;
+                audioStream = null;
+                StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
+            }
         }
 
         private IEnumerator CreateService()
@@ -87,10 +99,47 @@ namespace IBM.Watson.Examples
                 service.SetServiceUrl(serviceUrl);
             }
 
-            Runnable.Run(ExampleSynthesize());
+            Active = true;
         }
 
-        #region Synthesize
+        private void OnError(string error)
+        {
+            Active = false;
+
+            Log.Debug("ExampleTextToSpeech.OnError()", "Error! {0}", error);
+        }
+
+        private void StartListening()
+        {
+            Log.Debug("ExampleTextToSpeech", "start-listening");
+            service.Voice = allisionVoice;
+            service.OnError = OnError;
+            service.StartListening(OnSynthesize);
+        }
+
+        public bool Active
+        {
+            get { return service.IsListening; }
+            set
+            {
+                if (value && !service.IsListening)
+                {
+                    StartListening();
+                }
+                else if (!value && service.IsListening)
+                {
+                    Log.Debug("ExampleTextToSpeech", "stop-listening");
+                    service.StopListening();
+                }
+            }
+        }
+
+        private void OnSynthesize(byte[] result) {
+            Log.Debug("ExampleTextToSpeechV1", "Binary data received!");
+            audioStream = ConcatenateByteArrays(audioStream, result);
+        }
+
+        #region Synthesize Without Websocket Connection
         private IEnumerator ExampleSynthesize()
         {
             byte[] synthesizeResponse = null;
@@ -112,6 +161,45 @@ namespace IBM.Watson.Examples
                 yield return null;
 
             yield return new WaitForSeconds(clip.length);
+        }
+        #endregion
+
+        #region PlayClip
+        private void PlayClip(AudioClip clip)
+        {
+            if (Application.isPlaying && clip != null)
+            {
+                GameObject audioObject = new GameObject("AudioObject");
+                AudioSource source = audioObject.AddComponent<AudioSource>();
+                source.spatialBlend = 0.0f;
+                source.loop = false;
+                source.clip = clip;
+                source.Play();
+
+                GameObject.Destroy(audioObject, clip.length);
+            }
+        }
+        #endregion
+
+        #region Concatenate Byte Arrays
+        private byte[] ConcatenateByteArrays(byte[] a, byte[] b)
+        {
+            if (a == null || a.Length == 0)
+            {
+                return b;
+            }
+            else if (b == null || b.Length == 0)
+            {
+                return a;
+            }
+            else
+            {
+                List<byte> list1 = new List<byte>(a);
+                List<byte> list2 = new List<byte>(b);
+                list1.AddRange(list2);
+                byte[] result = list1.ToArray();
+                return result;
+            }
         }
         #endregion
     }
