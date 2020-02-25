@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.4.0...v4.5.0) (2020-02-25)
+
+
+### Features
+
+* **TextToSpeech:** add websocket support for text to speech ([42a28d6](https://github.com/watson-developer-cloud/unity-sdk/commit/42a28d6fa72a609208e1bd6b157e5b0c428b455b))
+
 # [4.4.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.3.0...v4.4.0) (2020-02-13)
 
 
