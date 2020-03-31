@@ -483,9 +483,7 @@ You can view Getting Started videos for the IBM Watson SDK for Unity on [YouTube
 
 ## Questions
 
-If you are having difficulties using the APIs or have a question about the IBM Watson Services, please ask a question on
-[dW Answers](https://developer.ibm.com/answers/questions/ask/?topics=watson)
-or [Stack Overflow](http://stackoverflow.com/questions/ask?tags=ibm-watson).
+If you have issues with the APIs or have a question about the Watson services, see [Stack Overflow](https://stackoverflow.com/questions/tagged/ibm-watson+unity).
 
 ## Open Source @ IBM
 Find more open source projects on the [IBM Github Page](http://ibm.github.io/).
