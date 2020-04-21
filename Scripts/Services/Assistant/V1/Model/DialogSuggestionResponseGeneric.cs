@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -136,14 +136,13 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("message_to_human_agent", NullValueHandling = NullValueHandling.Ignore)]
         public string MessageToHumanAgent { get; set; }
         /// <summary>
-        /// A label identifying the topic of the conversation, derived from the **user_label** property of the relevant
-        /// node.
+        /// A label identifying the topic of the conversation, derived from the **title** property of the relevant node.
         /// </summary>
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string Topic { get; private set; }
         /// <summary>
         /// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated
-        /// using the value of the dialog node's **user_label** property.
+        /// using the value of the dialog node's **title** property.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; set; }

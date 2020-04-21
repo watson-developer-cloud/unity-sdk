@@ -263,7 +263,8 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("user_label", NullValueHandling = NullValueHandling.Ignore)]
         public string UserLabel { get; set; }
         /// <summary>
-        /// Whether the dialog node should be excluded from disambiguation suggestions.
+        /// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when
+        /// **type**=`standard` or `frame`.
         /// </summary>
         [JsonProperty("disambiguation_opt_out", NullValueHandling = NullValueHandling.Ignore)]
         public bool? DisambiguationOptOut { get; set; }

@@ -66,6 +66,15 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("interpretation", NullValueHandling = NullValueHandling.Ignore)]
         public RuntimeEntityInterpretation Interpretation { get; set; }
         /// <summary>
+        /// An array of possible alternative values that the user might have intended instead of the value returned in
+        /// the **value** property. This property is returned only for `@sys-time` and `@sys-date` entities when the
+        /// user's input is ambiguous.
+        ///
+        /// This property is included only if the new system entities are enabled for the workspace.
+        /// </summary>
+        [JsonProperty("alternatives", NullValueHandling = NullValueHandling.Ignore)]
+        public List<RuntimeEntityAlternative> Alternatives { get; set; }
+        /// <summary>
         /// An object describing the role played by a system entity that is specifies the beginning or end of a range
         /// recognized in the user input. This property is included only if the new system entities are enabled for the
         /// workspace.

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -198,15 +198,15 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The text of the search query. This can be either a natural-language query or a query that uses the Discovery
         /// query language syntax, depending on the value of the **query_type** property. For more information, see the
         /// [Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery/query-operators.html#query-operators). Required
-        /// when **response_type**=`search_skill`.
+        /// documentation](https://cloud.ibm.com/docs/discovery/query-operators.html#query-operators). Required when
+        /// **response_type**=`search_skill`.
         /// </summary>
         [JsonProperty("query", NullValueHandling = NullValueHandling.Ignore)]
         public string Query { get; set; }
         /// <summary>
         /// An optional filter that narrows the set of documents to be searched. For more information, see the
         /// [Discovery service documentation]([Discovery service
-        /// documentation](https://cloud.ibm.com/docs/services/discovery/query-parameters.html#filter).
+        /// documentation](https://cloud.ibm.com/docs/discovery/query-parameters.html#filter).
         /// </summary>
         [JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
         public string Filter { get; set; }
