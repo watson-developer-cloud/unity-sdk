@@ -79,6 +79,12 @@ namespace IBM.Watson.LanguageTranslator.V3.Model
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public string Source { get; set; }
         /// <summary>
+        /// A score between 0 and 1 indicating the confidence of source language detection. A higher value indicates
+        /// greater confidence. This is returned only when the service automatically detects the source language.
+        /// </summary>
+        [JsonProperty("detected_language_confidence", NullValueHandling = NullValueHandling.Ignore)]
+        public double? DetectedLanguageConfidence { get; set; }
+        /// <summary>
         /// Translation target language code.
         /// </summary>
         [JsonProperty("target", NullValueHandling = NullValueHandling.Ignore)]
