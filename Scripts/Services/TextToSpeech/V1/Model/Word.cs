@@ -115,14 +115,15 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         [JsonProperty("part_of_speech", NullValueHandling = NullValueHandling.Ignore)]
         public string PartOfSpeech { get; set; }
         /// <summary>
-        /// The word for the custom voice model.
+        /// The word for the custom voice model. The maximum length of a word is 49 characters.
         /// </summary>
         [JsonProperty("word", NullValueHandling = NullValueHandling.Ignore)]
         public string _Word { get; set; }
         /// <summary>
         /// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
-        /// representing the phonetic string of a word either as an IPA or IBM SPR translation. A sounds-like
-        /// translation consists of one or more words that, when combined, sound like the word.
+        /// representing the phonetic string of a word either as an IPA or IBM SPR translation. The Arabic, Chinese,
+        /// Dutch, and Korean languages support only IPA. A sounds-like translation consists of one or more words that,
+        /// when combined, sound like the word. The maximum length of a translation is 499 characters.
         /// </summary>
         [JsonProperty("translation", NullValueHandling = NullValueHandling.Ignore)]
         public string Translation { get; set; }
