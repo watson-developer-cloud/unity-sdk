@@ -562,8 +562,10 @@ namespace IBM.Watson.SpeechToText.V1
                 start["speech_detector_sensitivity"] = SpeechDetectorSensitivity;
             if (BackgroundAudioSuppression != null)
                 start["background_audio_suppression"] = BackgroundAudioSuppression;
-            start["processing_metrics"] = ProcessingMetrics;
-            start["processing_metrics_interval"] = ProcessingMetricsInterval;
+            if (ProcessingMetrics != null)
+                start["processing_metrics"] = ProcessingMetrics;
+            if (ProcessingMetricsInterval != null)
+                start["processing_metrics_interval"] = ProcessingMetricsInterval;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING
