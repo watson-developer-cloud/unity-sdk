@@ -36,6 +36,17 @@ namespace IBM.Watson.LanguageTranslator.V3.Model
         [JsonProperty("character_count", NullValueHandling = NullValueHandling.Ignore)]
         public long? CharacterCount { get; set; }
         /// <summary>
+        /// The language code of the source text if the source language was automatically detected.
+        /// </summary>
+        [JsonProperty("detected_language", NullValueHandling = NullValueHandling.Ignore)]
+        public string DetectedLanguage { get; set; }
+        /// <summary>
+        /// A score between 0 and 1 indicating the confidence of source language detection. A higher value indicates
+        /// greater confidence. This is returned only when the service automatically detects the source language.
+        /// </summary>
+        [JsonProperty("detected_language_confidence", NullValueHandling = NullValueHandling.Ignore)]
+        public double? DetectedLanguageConfidence { get; set; }
+        /// <summary>
         /// List of translation output in UTF-8, corresponding to the input text entries.
         /// </summary>
         [JsonProperty("translations", NullValueHandling = NullValueHandling.Ignore)]

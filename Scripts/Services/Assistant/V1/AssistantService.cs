@@ -1268,7 +1268,7 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// Add a new user input example to an intent.
         ///
-        /// If you want to add multiple exaples with a single API call, consider using the **[Update
+        /// If you want to add multiple examples with a single API call, consider using the **[Update
         /// intent](#update-intent)** method instead.
         ///
         /// This operation is limited to 1000 requests per 30 minutes. For more information, see **Rate limiting**.
@@ -3720,7 +3720,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
         /// <param name="disambiguationOptOut">Whether the dialog node should be excluded from disambiguation
-        /// suggestions. (optional, default to false)</param>
+        /// suggestions. Valid only when **type**=`standard` or `frame`. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
@@ -3960,7 +3960,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
         /// users. (optional)</param>
         /// <param name="newDisambiguationOptOut">Whether the dialog node should be excluded from disambiguation
-        /// suggestions. (optional, default to false)</param>
+        /// suggestions. Valid only when **type**=`standard` or `frame`. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>

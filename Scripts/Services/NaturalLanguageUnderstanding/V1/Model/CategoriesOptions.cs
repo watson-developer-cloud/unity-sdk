@@ -39,7 +39,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         public long? Limit { get; set; }
         /// <summary>
         /// Enter a [custom
-        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+        /// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID to override the standard categories model.
         ///
         /// The custom categories experimental feature will be retired on 19 December 2019. On that date, deployed

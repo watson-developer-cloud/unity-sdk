@@ -105,7 +105,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         ///
         /// If a language for the input text is not specified with the `language` parameter, the service [automatically
         /// detects the
-        /// language](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
+        /// language](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-detectable-languages).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="features">Specific features to analyze the document for.</param>
@@ -117,10 +117,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// (optional)</param>
         /// <param name="clean">Set this to `false` to disable webpage cleaning. To learn more about webpage cleaning,
         /// see the [Analyzing
-        /// webpages](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
+        /// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages)
         /// documentation. (optional, default to true)</param>
         /// <param name="xpath">An [XPath
-        /// query](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
+        /// query](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
         /// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text
         /// before it is analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
         /// (optional)</param>
@@ -131,7 +131,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <param name="language">ISO 639-1 code that specifies the language of your text. This overrides automatic
         /// language detection. Language support differs depending on the features you include in your analysis. See
         /// [Language
-        /// support](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-language-support)
+        /// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support)
         /// for more information. (optional)</param>
         /// <param name="limitTextCharacters">Sets the maximum number of characters that are processed by the service.
         /// (optional)</param>
@@ -225,7 +225,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// List models.
         ///
         /// Lists Watson Knowledge Studio [custom entities and relations
-        /// models](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+        /// models](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// that are deployed to your Natural Language Understanding service.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>

@@ -155,7 +155,9 @@ namespace IBM.Watson.Tests
                 },
                 audio: audio,
                 model: usBroadbandModel,
-                contentType: "audio/wav"
+                contentType: "audio/wav",
+                speechDetectorSensitivity: 1,
+                backgroundAudioSuppression: 0
             );
 
             while (recognizeResponse == null)

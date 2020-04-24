@@ -31,7 +31,7 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> UserDefined { get; set; }
         /// <summary>
-        /// For internal use only.
+        /// System context data used by the skill.
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> System { get; set; }

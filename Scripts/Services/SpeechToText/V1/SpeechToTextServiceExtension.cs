@@ -207,32 +207,32 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         public int InactivityTimeout { get { return _inactivityTimeout; } set { _inactivityTimeout = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/speech-to-text/custom.html.
         /// </summary>
         [Obsolete("Use LanguageCustomizationId instead.")]
         public string CustomizationId { get { return _customization_id; } set { _customization_id = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom language model that is to be used for all requests sent over the connection. The base model of the custom language model must match the value of the model parameter. By default, no custom language model is used. For more information, see https://cloud.ibm.com/docs/speech-to-text/custom.html.
         /// </summary>
         public string LanguageCustomizationId { get { return _languageCustomizationId; } set { _languageCustomizationId = value; } }
         /// <summary>
-        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/custom.html.
+        /// Specifies the Globally Unique Identifier (GUID) of a custom acoustic model that is to be used for all requests sent over the connection. The base model of the custom acoustic model must match the value of the model parameter. By default, no custom acoustic model is used. For more information, see https://cloud.ibm.com/docs/speech-to-text/custom.html.
         /// </summary>
         public string AcousticCustomizationId { get { return _acoustic_customization_id; } set { _acoustic_customization_id = value; } }
         /// <summary>
-        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://cloud.ibm.com/docs/services/speech-to-text/language-use.html#weight.
+        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://cloud.ibm.com/docs/speech-to-text/language-use.html#weight.
         /// </summary>
         public float? CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
         /// <summary>
-        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/services/speech-to-text/input.html#transmission.
+        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/speech-to-text/input.html#transmission.
         /// </summary>
         public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
         /// <summary>
-        /// The name of a grammar that is to be used with the recognition request. If you specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize other custom words from the model's words resource. See [Grammars](https://cloud.ibm.com/docs/services/speech-to-text/output.html).
+        /// The name of a grammar that is to be used with the recognition request. If you specify a grammar, you must also use the `language_customization_id` parameter to specify the name of the custom language model for which the grammar is defined. The service recognizes only strings that are recognized by the specified grammar; it does not recognize other custom words from the model's words resource. See [Grammars](https://cloud.ibm.com/docs/speech-to-text/output.html).
         /// </summary>
         public string GrammarName { get; set; }
         /// <summary>
-        /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/services/speech-to-text/output.html#redaction).
+        /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/speech-to-text/output.html#redaction).
         /// </summary>
         public string Redaction { get; set; }
         /// <summary>
@@ -271,7 +271,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// The default pause interval for most languages is 0.8 seconds; the default for Chinese is 0.6 seconds.
         ///
         /// See [End of phrase silence
-        /// time](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#silence_time).
+        /// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#silence_time).
         /// <summary>
         public double? EndOfPhraseSilenceTime { get; set; }
         /// <summary>
@@ -282,10 +282,37 @@ namespace IBM.Watson.SpeechToText.V1
         /// service splits a transcript. By default, the service splits transcripts based solely on the pause interval.
         ///
         /// See [Split transcript at phrase
-        /// end](https://cloud.ibm.com/docs/services/speech-to-text?topic=speech-to-text-output#split_transcript).
+        /// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#split_transcript).
         /// (optional, default to false)
         /// <summary>
         public bool? SplitTranscriptAtPhraseEnd { get; set; }
+        /// <summary>The sensitivity of speech activity detection that the service is to
+        /// perform. Use the parameter to suppress word insertions from music, coughing, and other non-speech events.
+        /// The service biases the audio it passes for speech recognition by evaluating the input audio against prior
+        /// models of speech and non-speech activity.
+        ///
+        /// Specify a value between 0.0 and 1.0:
+        /// * 0.0 suppresses all audio (no speech is transcribed).
+        /// * 0.5 (the default) provides a reasonable compromise for the level of sensitivity.
+        /// * 1.0 suppresses no audio (speech detection sensitivity is disabled).
+        ///
+        /// The values increase on a monotonic curve. See [Speech Activity
+        /// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+        /// (optional)</summary>
+        public float? SpeechDetectorSensitivity { get; set; }
+        /// <summary>The level to which the service is to suppress background audio
+        /// based on its volume to prevent it from being transcribed as speech. Use the parameter to suppress side
+        /// conversations or background noise.
+        ///
+        /// Specify a value in the range of 0.0 to 1.0:
+        /// * 0.0 (the default) provides no suppression (background audio suppression is disabled).
+        /// * 0.5 provides a reasonable level of audio suppression for general usage.
+        /// * 1.0 suppresses all audio (no audio is transcribed).
+        ///
+        /// The values increase on a monotonic curve. See [Speech Activity
+        /// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
+        /// (optional)</summary>
+        public float? BackgroundAudioSuppression { get; set; }
         #endregion
 
         #region Sessionless - Streaming
@@ -531,8 +558,14 @@ namespace IBM.Watson.SpeechToText.V1
                 start["end_of_phrase_silence_time"] = EndOfPhraseSilenceTime;
             if (SplitTranscriptAtPhraseEnd != null)
                 start["split_transcript_at_phrase_end"] = SplitTranscriptAtPhraseEnd;
-            start["processing_metrics"] = ProcessingMetrics;
-            start["processing_metrics_interval"] = ProcessingMetricsInterval;
+            if (SpeechDetectorSensitivity != null)
+                start["speech_detector_sensitivity"] = SpeechDetectorSensitivity;
+            if (BackgroundAudioSuppression != null)
+                start["background_audio_suppression"] = BackgroundAudioSuppression;
+            if (ProcessingMetrics != null)
+                start["processing_metrics"] = ProcessingMetrics;
+            if (ProcessingMetricsInterval != null)
+                start["processing_metrics_interval"] = ProcessingMetricsInterval;
 
             _listenSocket.Send(new WSConnector.TextMessage(Json.Serialize(start)));
 #if ENABLE_DEBUGGING

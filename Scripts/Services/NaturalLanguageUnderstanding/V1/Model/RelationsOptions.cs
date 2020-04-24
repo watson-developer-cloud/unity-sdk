@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     /// <summary>
     /// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo`
     /// relation might connect the entities "Nobel Prize" and "Albert Einstein". See [Relation
-    /// types](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-relations).
+    /// types](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-relations).
     ///
     /// Supported languages: Arabic, English, German, Japanese, Korean, Spanish. Chinese, Dutch, French, Italian, and
     /// Portuguese custom models are also supported.
@@ -31,7 +31,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     {
         /// <summary>
         /// Enter a [custom
-        /// model](https://cloud.ibm.com/docs/services/natural-language-understanding?topic=natural-language-understanding-customizing)
+        /// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID to override the default model.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]

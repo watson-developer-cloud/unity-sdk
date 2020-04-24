@@ -75,7 +75,7 @@ namespace IBM.Watson.Examples
                 }
                 textInput.text = placeholderText;
                 audioStream = null;
-                StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/services/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
+                StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
             }
         }
 

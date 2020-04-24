@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -207,7 +207,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// The access key ID associated with the cloud object store. Only valid, and required, with a
         /// **credential_type** of `aws4_hmac`. This value is never returned and is only used when creating or modifying
         /// **credentials**. For more infomation, see the [cloud object store
-        /// documentation](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
+        /// documentation](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
         /// </summary>
         [JsonProperty("access_key_id", NullValueHandling = NullValueHandling.Ignore)]
         public string AccessKeyId { get; set; }
@@ -215,7 +215,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// The secret access key associated with the cloud object store. Only valid, and required, with a
         /// **credential_type** of `aws4_hmac`. This value is never returned and is only used when creating or modifying
         /// **credentials**. For more infomation, see the [cloud object store
-        /// documentation](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
+        /// documentation](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-using-hmac-credentials#using-hmac-credentials).
         /// </summary>
         [JsonProperty("secret_access_key", NullValueHandling = NullValueHandling.Ignore)]
         public string SecretAccessKey { get; set; }
