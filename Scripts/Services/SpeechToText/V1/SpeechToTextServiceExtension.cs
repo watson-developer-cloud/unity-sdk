@@ -220,11 +220,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         public string AcousticCustomizationId { get { return _acoustic_customization_id; } set { _acoustic_customization_id = value; } }
         /// <summary>
-        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://cloud.ibm.com/docs/speech-to-text/language-use.html#weight.
+        /// Specifies the weight the service gives to words from a specified custom language model compared to those from the base model for all requests sent over the connection. Specify a value between 0.0 and 1.0; the default value is 0.3. For more information, see https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse#weight.
         /// </summary>
         public float? CustomizationWeight { get { return _customization_weight; } set { _customization_weight = value; } }
         /// <summary>
-        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/speech-to-text/input.html#transmission.
+        /// If true sets `Transfer-Encoding` request header to `chunked` causing the audio to be streamed to the service. By default, audio is sent all at once as a one-shot delivery. See https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#transmission.
         /// </summary>
         public bool StreamMultipart { get { return _streamMultipart; } set { _streamMultipart = value; } }
         /// <summary>
@@ -232,7 +232,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         public string GrammarName { get; set; }
         /// <summary>
-        /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/speech-to-text/output.html#redaction).
+        /// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact sensitive numeric data, such as credit card numbers. By default, the service performs no redaction. \n\nWhen you enable redaction, the service automatically enables smart formatting, regardless of whether you explicitly disable that feature. To ensure maximum security, the service also disables keyword spotting (ignores the `keywords` and `keywords_threshold` parameters) and returns only a single final transcript (forces the `max_alternatives` parameter to be `1`). \n\n**Note:** Applies to US English, Japanese, and Korean transcription only. \n\nSee [Numeric redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#redaction).
         /// </summary>
         public string Redaction { get; set; }
         /// <summary>
