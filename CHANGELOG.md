@@ -1,3 +1,13 @@
+# [4.6.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.5.0...v4.6.0) (2020-04-24)
+
+
+### Features
+
+* **AssistantV1:** add support for runtime entity alternatives ([cd3a592](https://github.com/watson-developer-cloud/unity-sdk/commit/cd3a592dbe9cd016a7ddf579c719cf8430993366))
+* **LanguageTranslator:** add support for language detection ([ccca1da](https://github.com/watson-developer-cloud/unity-sdk/commit/ccca1da16685d26d1f1a52f445941b0409555db4))
+* **SpeechToText:** add support for speech detector sensitivity and background supression ([4e0e358](https://github.com/watson-developer-cloud/unity-sdk/commit/4e0e35816a7bbb187cd751759da4f1eb4a30be74))
+* regenerate services based on current api def ([53460d2](https://github.com/watson-developer-cloud/unity-sdk/commit/53460d215f512b15e742bf26bd5586bd68af4e25))
+
 # [4.5.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.4.0...v4.5.0) (2020-02-25)
 
 
