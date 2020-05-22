@@ -1,3 +1,10 @@
+## [4.6.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.6.0...v4.6.1) (2020-05-22)
+
+
+### Bug Fixes
+
+* **Speech to Text:** Revise SpeechRecognitionAlternative model ([01f0627](https://github.com/watson-developer-cloud/unity-sdk/commit/01f06279a242d740b4abe5256449a6dac900740e))
+
 # [4.6.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.5.0...v4.6.0) (2020-04-24)
 
 
