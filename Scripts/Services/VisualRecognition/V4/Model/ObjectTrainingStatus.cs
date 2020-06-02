@@ -45,6 +45,11 @@ namespace IBM.Watson.VisualRecognition.V4.Model
         [JsonProperty("latest_failed", NullValueHandling = NullValueHandling.Ignore)]
         public bool? LatestFailed { get; set; }
         /// <summary>
+        /// Whether the model can be downloaded after the training status is `ready`.
+        /// </summary>
+        [JsonProperty("rscnn_ready", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? RscnnReady { get; set; }
+        /// <summary>
         /// Details about the training. If training is in progress, includes information about the status. If training
         /// is not in progress, includes a success message or information about why training failed.
         /// </summary>
