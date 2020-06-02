@@ -53,6 +53,12 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// <summary>
         /// The model version, if it was manually provided in Watson Knowledge Studio.
         /// </summary>
+        [JsonProperty("model_version", NullValueHandling = NullValueHandling.Ignore)]
+        public string ModelVersion { get; set; }
+        /// <summary>
+        /// (Deprecated — use `model_version`) The model version, if it was manually provided in Watson Knowledge
+        /// Studio.
+        /// </summary>
         [JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
         public string Version { get; set; }
         /// <summary>
