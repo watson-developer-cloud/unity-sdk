@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An object containing segments of text from search results with query-matching text highlighted using HTML <em>
+    /// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
     /// tags.
     /// </summary>
     public class SearchResultHighlight: DynamicModel<List<string>>

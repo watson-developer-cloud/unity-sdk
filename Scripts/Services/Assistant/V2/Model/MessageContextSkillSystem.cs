@@ -15,24 +15,23 @@
 *
 */
 
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Session context data that is shared by all skills used by the Assistant.
+    /// System context data used by the skill.
     /// </summary>
-    public class MessageContextGlobal
+    public class MessageContextSkillSystem: DynamicModel<object>
     {
         /// <summary>
-        /// Built-in system properties that apply to all skills used by the assistant.
+        /// An encoded string representing the current conversation state. By saving this value and then sending it in
+        /// the context of a subsequent message request, you can restore the conversation to the same state. This can be
+        /// useful if you need to return to an earlier point in the conversation. If you are using stateful sessions,
+        /// you can also use a stored state value to restore a paused conversation whose session has expired.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextGlobalSystem System { get; set; }
-        /// <summary>
-        /// The session ID.
-        /// </summary>
-        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string SessionId { get; private set; }
+        [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
+        public string State { get; set; }
     }
 }

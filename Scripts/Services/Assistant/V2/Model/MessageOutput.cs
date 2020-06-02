@@ -57,5 +57,10 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> UserDefined { get; set; }
+        /// <summary>
+        /// Properties describing any spelling corrections in the user input that was received.
+        /// </summary>
+        [JsonProperty("spelling", NullValueHandling = NullValueHandling.Ignore)]
+        public MessageOutputSpelling Spelling { get; set; }
     }
 }

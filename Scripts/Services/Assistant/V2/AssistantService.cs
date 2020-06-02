@@ -242,9 +242,10 @@ namespace IBM.Watson.Assistant.V2
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Send user input to assistant.
+        /// Send user input to assistant (stateful).
         ///
-        /// Send user input to an assistant and receive a response.
+        /// Send user input to an assistant and receive a response, with conversation state (including context data)
+        /// stored by Watson Assistant for the duration of the session.
         ///
         /// There is no rate limit for this operation.
         /// </summary>
@@ -257,9 +258,12 @@ namespace IBM.Watson.Assistant.V2
         /// **Note:** Currently, the v2 API does not support creating assistants.</param>
         /// <param name="sessionId">Unique identifier of the session.</param>
         /// <param name="input">An input object that includes the input text. (optional)</param>
-        /// <param name="context">State information for the conversation. The context is stored by the assistant on a
-        /// per-session basis. You can use this property to set or modify context variables, which can also be accessed
-        /// by dialog nodes. (optional)</param>
+        /// <param name="context">Context data for the conversation. You can use this property to set or modify context
+        /// variables, which can also be accessed by dialog nodes. The context is stored by the assistant on a
+        /// per-session basis.
+        ///
+        /// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
+        /// (optional)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
         public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageInput input = null, MessageContext context = null)
         {
@@ -331,6 +335,97 @@ namespace IBM.Watson.Assistant.V2
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
                 ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Send user input to assistant (stateless).
+        ///
+        /// Send user input to an assistant and receive a response, with conversation state (including context data)
+        /// managed by your application.
+        ///
+        /// There is no rate limit for this operation.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
+        /// Assistant user interface, open the assistant settings and click **API Details**. For information about
+        /// creating assistants, see the
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
+        ///
+        /// **Note:** Currently, the v2 API does not support creating assistants.</param>
+        /// <param name="input">An input object that includes the input text. (optional)</param>
+        /// <param name="context">Context data for the conversation. You can use this property to set or modify context
+        /// variables, which can also be accessed by dialog nodes. The context is not stored by the assistant. To
+        /// maintain session state, include the context from the previous response.
+        ///
+        /// **Note:** The total size of the context data for a stateless session cannot exceed 250KB. (optional)</param>
+        /// <returns><see cref="MessageResponseStateless" />MessageResponseStateless</returns>
+        public bool MessageStateless(Callback<MessageResponseStateless> callback, string assistantId, MessageInputStateless input = null, MessageContextStateless context = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `MessageStateless`");
+            if (string.IsNullOrEmpty(assistantId))
+                throw new ArgumentNullException("`assistantId` is required for `MessageStateless`");
+
+            RequestObject<MessageResponseStateless> req = new RequestObject<MessageResponseStateless>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V2", "MessageStateless"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (input != null)
+                bodyObject["input"] = JToken.FromObject(input);
+            if (context != null)
+                bodyObject["context"] = JToken.FromObject(context);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnMessageStatelessResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/assistants/{0}/message", assistantId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnMessageStatelessResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<MessageResponseStateless> response = new DetailedResponse<MessageResponseStateless>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<MessageResponseStateless>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnMessageStatelessResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<MessageResponseStateless>)req).Callback != null)
+                ((RequestObject<MessageResponseStateless>)req).Callback(response, resp.Error);
         }
     }
 }

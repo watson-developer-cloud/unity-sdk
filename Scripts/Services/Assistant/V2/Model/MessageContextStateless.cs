@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,26 +15,27 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information specific to a particular skill used by the Assistant. The property name must be the same as
-    /// the name of the skill (for example, `main skill`).
+    /// MessageContextStateless.
     /// </summary>
-    public class MessageContextSkill
+    public class MessageContextStateless
     {
         /// <summary>
-        /// Arbitrary variables that can be read and written by a particular skill.
+        /// Session context data that is shared by all skills used by the Assistant.
         /// </summary>
-        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> UserDefined { get; set; }
+        [JsonProperty("global", NullValueHandling = NullValueHandling.Ignore)]
+        public MessageContextGlobalStateless Global { get; set; }
         /// <summary>
-        /// System context data used by the skill.
+        /// Information specific to particular skills used by the assistant.
+        ///
+        /// **Note:** Currently, only a single child property is supported, containing variables that apply to the
+        /// dialog skill used by the assistant.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> System { get; set; }
+        [JsonProperty("skills", NullValueHandling = NullValueHandling.Ignore)]
+        public MessageContextSkills Skills { get; set; }
     }
 }

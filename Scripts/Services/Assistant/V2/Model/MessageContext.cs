@@ -25,15 +25,15 @@ namespace IBM.Watson.Assistant.V2.Model
     public class MessageContext
     {
         /// <summary>
-        /// Information that is shared by all skills used by the Assistant.
+        /// Session context data that is shared by all skills used by the Assistant.
         /// </summary>
         [JsonProperty("global", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextGlobal Global { get; set; }
         /// <summary>
-        /// Information specific to particular skills used by the Assistant.
+        /// Information specific to particular skills used by the assistant.
         ///
-        /// **Note:** Currently, only a single property named `main skill` is supported. This object contains variables
-        /// that apply to the dialog skill used by the assistant.
+        /// **Note:** Currently, only a single child property is supported, containing variables that apply to the
+        /// dialog skill used by the assistant.
         /// </summary>
         [JsonProperty("skills", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextSkills Skills { get; set; }
