@@ -1,3 +1,13 @@
+# [4.7.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.6.1...v4.7.0) (2020-06-03)
+
+
+### Features
+
+* **AssistantV1:** add support for spelling suggestions ([7e5ea7c](https://github.com/watson-developer-cloud/unity-sdk/commit/7e5ea7c0a91284adc47b17f8df6a9e697e0b3985))
+* **AssistantV2:** add support for stateless messages ([9998de9](https://github.com/watson-developer-cloud/unity-sdk/commit/9998de97ef415ed2ffaf49ce1643fa9deb5df430))
+* **VisualRecognitionV4:** add support for download model file ([f9dede3](https://github.com/watson-developer-cloud/unity-sdk/commit/f9dede3172cc0f6e2b8b1948576382aaeccb30d0))
+* Regenerate the services based on current API def ([deb0f5e](https://github.com/watson-developer-cloud/unity-sdk/commit/deb0f5ec536bac0ac2dbf951c2c2cd61be4cfefb))
+
 ## [4.6.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.6.0...v4.6.1) (2020-05-22)
 
 
