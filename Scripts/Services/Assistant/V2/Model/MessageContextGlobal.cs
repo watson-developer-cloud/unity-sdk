@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Information that is shared by all skills used by the Assistant.
+    /// Session context data that is shared by all skills used by the Assistant.
     /// </summary>
     public class MessageContextGlobal
     {
@@ -29,5 +29,10 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContextGlobalSystem System { get; set; }
+        /// <summary>
+        /// The session ID.
+        /// </summary>
+        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string SessionId { get; private set; }
     }
 }

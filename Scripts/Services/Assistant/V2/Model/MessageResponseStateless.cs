@@ -15,26 +15,26 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information specific to a particular skill used by the Assistant. The property name must be the same as
-    /// the name of the skill (for example, `main skill`).
+    /// A stateless response from the Watson Assistant service.
     /// </summary>
-    public class MessageContextSkill
+    public class MessageResponseStateless
     {
         /// <summary>
-        /// Arbitrary variables that can be read and written by a particular skill.
+        /// Assistant output to be rendered or processed by the client.
         /// </summary>
-        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> UserDefined { get; set; }
+        [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
+        public MessageOutput Output { get; set; }
         /// <summary>
-        /// System context data used by the skill.
+        /// Context data for the conversation. You can use this property to access context variables. The context is not
+        /// stored by the assistant; to maintain session state, include the context from the response in the next
+        /// message.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> System { get; set; }
+        [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
+        public MessageContextStateless Context { get; set; }
     }
 }

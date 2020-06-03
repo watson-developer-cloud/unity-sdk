@@ -15,26 +15,24 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information specific to a particular skill used by the Assistant. The property name must be the same as
-    /// the name of the skill (for example, `main skill`).
+    /// Session context data that is shared by all skills used by the Assistant.
     /// </summary>
-    public class MessageContextSkill
+    public class MessageContextGlobalStateless
     {
         /// <summary>
-        /// Arbitrary variables that can be read and written by a particular skill.
-        /// </summary>
-        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> UserDefined { get; set; }
-        /// <summary>
-        /// System context data used by the skill.
+        /// Built-in system properties that apply to all skills used by the assistant.
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> System { get; set; }
+        public MessageContextGlobalSystem System { get; set; }
+        /// <summary>
+        /// The unique identifier of the session.
+        /// </summary>
+        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string SessionId { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An object containing segments of text from search results with query-matching text highlighted using HTML <em>
+    /// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
     /// tags.
     /// </summary>
     public class SearchResultHighlight: DynamicModel<List<string>>

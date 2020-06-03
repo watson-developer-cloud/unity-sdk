@@ -575,6 +575,84 @@ namespace IBM.Watson.VisualRecognition.V4
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Get a model.
+        ///
+        /// Download a model that you can deploy to detect objects in images. The collection must include a generated
+        /// model, which is indicated in the response for the collection details as `"rscnn_ready": true`. If the value
+        /// is `false`, train or retrain the collection to generate the model.
+        ///
+        /// Currently, the model format is specific to Android apps. For more information about how to deploy the model
+        /// to your app, see the [Watson Visual Recognition on Android](https://github.com/matt-ny/rscnn) project in
+        /// GitHub.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="collectionId">The identifier of the collection.</param>
+        /// <param name="feature">The feature for the model.</param>
+        /// <param name="modelFormat">The format of the returned model.</param>
+        /// <returns><see cref="byte[]" />byte[]</returns>
+        public bool GetModelFile(Callback<byte[]> callback, string collectionId, string feature, string modelFormat)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetModelFile`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetModelFile`");
+            if (string.IsNullOrEmpty(feature))
+                throw new ArgumentNullException("`feature` is required for `GetModelFile`");
+            if (string.IsNullOrEmpty(modelFormat))
+                throw new ArgumentNullException("`modelFormat` is required for `GetModelFile`");
+
+            RequestObject<byte[]> req = new RequestObject<byte[]>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("watson_vision_combined", "V4", "GetModelFile"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(feature))
+            {
+                req.Parameters["feature"] = feature;
+            }
+            if (!string.IsNullOrEmpty(modelFormat))
+            {
+                req.Parameters["model_format"] = modelFormat;
+            }
+
+            req.OnResponse = OnGetModelFileResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v4/collections/{0}/model", collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetModelFileResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<byte[]> response = new DetailedResponse<byte[]>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            response.Result = resp.Data;
+
+            if (((RequestObject<byte[]>)req).Callback != null)
+                ((RequestObject<byte[]>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Add images.
         ///
         /// Add images to a collection by URL, by file, or both.

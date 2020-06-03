@@ -43,6 +43,19 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("human_agent_assist", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> HumanAgentAssist { get; set; }
         /// <summary>
+        /// Whether spelling correction is enabled for the workspace.
+        /// </summary>
+        [JsonProperty("spelling_suggestions", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? SpellingSuggestions { get; set; }
+        /// <summary>
+        /// Whether autocorrection is enabled for the workspace. If spelling correction is enabled and this property is
+        /// `false`, any suggested corrections are returned in the **suggested_text** property of the message response.
+        /// If this property is `true`, any corrections are automatically applied to the user input, and the original
+        /// text is returned in the **original_text** property of the message response.
+        /// </summary>
+        [JsonProperty("spelling_auto_correct", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? SpellingAutoCorrect { get; set; }
+        /// <summary>
         /// Workspace settings related to the behavior of system entities.
         /// </summary>
         [JsonProperty("system_entities", NullValueHandling = NullValueHandling.Ignore)]

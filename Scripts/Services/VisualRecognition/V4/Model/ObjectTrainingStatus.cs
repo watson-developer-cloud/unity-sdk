@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -44,6 +44,11 @@ namespace IBM.Watson.VisualRecognition.V4.Model
         /// </summary>
         [JsonProperty("latest_failed", NullValueHandling = NullValueHandling.Ignore)]
         public bool? LatestFailed { get; set; }
+        /// <summary>
+        /// Whether the model can be downloaded after the training status is `ready`.
+        /// </summary>
+        [JsonProperty("rscnn_ready", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? RscnnReady { get; set; }
         /// <summary>
         /// Details about the training. If training is in progress, includes information about the status. If training
         /// is not in progress, includes a success message or information about why training failed.
