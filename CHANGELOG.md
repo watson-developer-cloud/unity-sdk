@@ -1,3 +1,10 @@
+## [4.7.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.7.0...v4.7.1) (2020-06-17)
+
+
+### Bug Fixes
+
+* **TTS:** update TTS example to play music and using normal synthesize ([9006680](https://github.com/watson-developer-cloud/unity-sdk/commit/90066801dca6200e7dcc802c421ce2e94e50f26e))
+
 # [4.7.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.6.1...v4.7.0) (2020-06-03)
 
 
