@@ -61,21 +61,7 @@ namespace IBM.Watson.Examples
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                service.SynthesizeUsingWebsockets(textInput.text);
-                textInput.text = waitingText;
-            }
-
-            while(service != null && !service.IsListening)
-            {
-                if (audioStream != null && audioStream.Length > 0)
-                {
-                    Log.Debug("ExampleTextToSpeech", "Audio stream of {0} bytes received!", audioStream.Length.ToString()); // Use audioStream and play audio
-                    // _recording = WaveFile.ParseWAV("myClip", audioStream);
-                    // PlayClip(_recording);
-                }
-                textInput.text = placeholderText;
-                audioStream = null;
-                StartListening(); // need to connect because service disconnect websocket after transcribing https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-usingWebSocket#WSsend
+                Runnable.Run(ExampleSynthesize(textInput.text));
             }
         }
 
@@ -98,50 +84,17 @@ namespace IBM.Watson.Examples
             {
                 service.SetServiceUrl(serviceUrl);
             }
-
-            Active = true;
         }
 
-        private void OnError(string error)
+        #region Synthesize Example
+        private IEnumerator ExampleSynthesize(string text)
         {
-            Active = false;
-
-            Log.Debug("ExampleTextToSpeech.OnError()", "Error! {0}", error);
-        }
-
-        private void StartListening()
-        {
-            Log.Debug("ExampleTextToSpeech", "start-listening");
-            service.Voice = allisionVoice;
-            service.OnError = OnError;
-            service.StartListening(OnSynthesize);
-        }
-
-        public bool Active
-        {
-            get { return service.IsListening; }
-            set
+            if (string.IsNullOrEmpty(text))
             {
-                if (value && !service.IsListening)
-                {
-                    StartListening();
-                }
-                else if (!value && service.IsListening)
-                {
-                    Log.Debug("ExampleTextToSpeech", "stop-listening");
-                    service.StopListening();
-                }
+                text = synthesizeText;
+                Log.Debug("ExampleTextToSpeechV1", "Using default text, please enter your own text in dialog box!");
+
             }
-        }
-
-        private void OnSynthesize(byte[] result) {
-            Log.Debug("ExampleTextToSpeechV1", "Binary data received!");
-            audioStream = ConcatenateByteArrays(audioStream, result);
-        }
-
-        #region Synthesize Without Websocket Connection
-        private IEnumerator ExampleSynthesize()
-        {
             byte[] synthesizeResponse = null;
             AudioClip clip = null;
             service.Synthesize(
@@ -152,7 +105,7 @@ namespace IBM.Watson.Examples
                     clip = WaveFile.ParseWAV("myClip", synthesizeResponse);
                     PlayClip(clip);
                 },
-                text: synthesizeText,
+                text: text,
                 voice: allisionVoice,
                 accept: synthesizeMimeType
             );
@@ -177,28 +130,6 @@ namespace IBM.Watson.Examples
                 source.Play();
 
                 GameObject.Destroy(audioObject, clip.length);
-            }
-        }
-        #endregion
-
-        #region Concatenate Byte Arrays
-        private byte[] ConcatenateByteArrays(byte[] a, byte[] b)
-        {
-            if (a == null || a.Length == 0)
-            {
-                return b;
-            }
-            else if (b == null || b.Length == 0)
-            {
-                return a;
-            }
-            else
-            {
-                List<byte> list1 = new List<byte>(a);
-                List<byte> list2 = new List<byte>(b);
-                list1.AddRange(list2);
-                byte[] result = list1.ToArray();
-                return result;
             }
         }
         #endregion
