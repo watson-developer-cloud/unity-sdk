@@ -33,7 +33,7 @@ namespace IBM.Watson.VisualRecognition.V4
     public partial class VisualRecognitionService : BaseService
     {
         private const string serviceId = "visual_recognition";
-        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/visual-recognition/api";
+        private const string defaultServiceUrl = "https://api.us-south.visual-recognition.watson.cloud.ibm.com";
 
         #region VersionDate
         private string versionDate;

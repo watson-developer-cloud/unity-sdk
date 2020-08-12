@@ -32,7 +32,7 @@ namespace IBM.Watson.SpeechToText.V1
     public partial class SpeechToTextService : BaseService
     {
         private const string serviceId = "speech_to_text";
-        private const string defaultServiceUrl = "https://stream.watsonplatform.net/speech-to-text/api";
+        private const string defaultServiceUrl = "https://api.us-south.speech-to-text.watson.cloud.ibm.com";
 
 
         #region DisableSslVerification
@@ -70,7 +70,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// List models.
         ///
         /// Lists all language models that are available for use with the service. The information includes the name of
-        /// the model and its minimum sampling rate in Hertz, among other things.
+        /// the model and its minimum sampling rate in Hertz, among other things. The ordering of the list of models can
+        /// change from call to call; do not rely on an alphabetized or static list of models.
         ///
         /// **See also:** [Languages and
         /// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
@@ -385,10 +386,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// `speaker_labels` to `true` forces the `timestamps` parameter to be `true`, regardless of whether you specify
         /// `false` for the parameter.
         ///
-        /// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband
-        /// models) and UK English (narrowband model) transcription only. To determine whether a language model supports
-        /// speaker labels, you can also use the **Get a model** method and check that the attribute `speaker_labels` is
-        /// set to `true`.
+        /// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband
+        /// and narrowband models) and UK English (narrowband model) transcription only.
         ///
         /// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
         /// (optional, default to false)</param>
@@ -634,7 +633,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// Register a callback.
         ///
         /// Registers a callback URL with the service for use with subsequent asynchronous recognition requests. The
-        /// service attempts to register, or white-list, the callback URL if it is not already registered by sending a
+        /// service attempts to register, or allowlist, the callback URL if it is not already registered by sending a
         /// `GET` request to the callback URL. The service passes a random alphanumeric challenge string via the
         /// `challenge_string` parameter of the request. The request includes an `Accept` header that specifies
         /// `text/plain` as the required response type.
@@ -646,8 +645,8 @@ namespace IBM.Watson.SpeechToText.V1
         ///
         /// The service sends only a single `GET` request to the callback URL. If the service does not receive a reply
         /// with a response code of 200 and a body that echoes the challenge string sent by the service within five
-        /// seconds, it does not white-list the URL; it instead sends status code 400 in response to the **Register a
-        /// callback** request. If the requested callback URL is already white-listed, the service responds to the
+        /// seconds, it does not allowlist the URL; it instead sends status code 400 in response to the **Register a
+        /// callback** request. If the requested callback URL is already allowlisted, the service responds to the
         /// initial registration request with response code 200.
         ///
         /// If you specify a user secret with the request, the service uses it as a key to calculate an HMAC-SHA1
@@ -664,7 +663,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="callbackUrl">An HTTP or HTTPS URL to which callback notifications are to be sent. To be
-        /// white-listed, the URL must successfully echo the challenge string during URL verification. During
+        /// allowlisted, the URL must successfully echo the challenge string during URL verification. During
         /// verification, the client can also check the signature that the service sends in the `X-Callback-Signature`
         /// header to verify the origin of the request.</param>
         /// <param name="userSecret">A user-specified string that the service uses to generate the HMAC-SHA1 signature
@@ -742,7 +741,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// <summary>
         /// Unregister a callback.
         ///
-        /// Unregisters a callback URL that was previously white-listed with a **Register a callback** request for use
+        /// Unregisters a callback URL that was previously allowlisted with a **Register a callback** request for use
         /// with the asynchronous interface. Once unregistered, the URL can no longer be used with asynchronous
         /// recognition requests.
         ///
@@ -908,7 +907,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// [Languages and models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models#models).
         /// (optional, default to en-US_BroadbandModel)</param>
         /// <param name="callbackUrl">A URL to which callback notifications are to be sent. The URL must already be
-        /// successfully white-listed by using the **Register a callback** method. You can include the same callback URL
+        /// successfully allowlisted by using the **Register a callback** method. You can include the same callback URL
         /// with any number of job creation requests. Omit the parameter to poll the service for job completion and
         /// results.
         ///
@@ -1034,10 +1033,8 @@ namespace IBM.Watson.SpeechToText.V1
         /// `speaker_labels` to `true` forces the `timestamps` parameter to be `true`, regardless of whether you specify
         /// `false` for the parameter.
         ///
-        /// **Note:** Applies to US English, German, Japanese, Korean, and Spanish (both broadband and narrowband
-        /// models) and UK English (narrowband model) transcription only. To determine whether a language model supports
-        /// speaker labels, you can also use the **Get a model** method and check that the attribute `speaker_labels` is
-        /// set to `true`.
+        /// **Note:** Applies to US English, Australian English, German, Japanese, Korean, and Spanish (both broadband
+        /// and narrowband models) and UK English (narrowband model) transcription only.
         ///
         /// See [Speaker labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-output#speaker_labels).
         /// (optional, default to false)</param>
@@ -1684,8 +1681,9 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
-        /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
-        /// models that are owned by the requesting credentials. (optional)</param>
+        /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
+        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
+        /// languages are not available for language model customization. (optional)</param>
         /// <returns><see cref="LanguageModels" />LanguageModels</returns>
         public bool ListLanguageModels(Callback<LanguageModels> callback, string language = null)
         {
@@ -3561,8 +3559,9 @@ namespace IBM.Watson.SpeechToText.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
-        /// are to be returned (for example, `en-US`). Omit the parameter to see all custom language or custom acoustic
-        /// models that are owned by the requesting credentials. (optional)</param>
+        /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
+        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
+        /// languages are not available for language model customization. (optional)</param>
         /// <returns><see cref="AcousticModels" />AcousticModels</returns>
         public bool ListAcousticModels(Callback<AcousticModels> callback, string language = null)
         {
@@ -4543,10 +4542,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// Deletes all data that is associated with a specified customer ID. The method deletes all data for the
         /// customer ID, regardless of the method by which the information was added. The method has no effect if no
         /// data is associated with the customer ID. You must issue the request with credentials for the same instance
-        /// of the service that was used to associate the customer ID with the data.
+        /// of the service that was used to associate the customer ID with the data. You associate a customer ID with
+        /// data by passing the `X-Watson-Metadata` header with a request that passes the data.
         ///
-        /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
-        /// the data.
+        /// **Note:** If you delete an instance of the service from the service console, all data associated with that
+        /// service instance is automatically deleted. This includes all custom language models, corpora, grammars, and
+        /// words; all custom acoustic models and audio resources; all registered endpoints for the asynchronous HTTP
+        /// interface; and all data related to speech recognition requests.
         ///
         /// **See also:** [Information
         /// security](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-information-security#information-security).

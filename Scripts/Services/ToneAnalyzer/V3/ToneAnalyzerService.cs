@@ -32,7 +32,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
     public partial class ToneAnalyzerService : BaseService
     {
         private const string serviceId = "tone_analyzer";
-        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/tone-analyzer/api";
+        private const string defaultServiceUrl = "https://api.us-south.tone-analyzer.watson.cloud.ibm.com";
 
         #region VersionDate
         private string versionDate;

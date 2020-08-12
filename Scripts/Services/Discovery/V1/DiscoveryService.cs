@@ -32,7 +32,7 @@ namespace IBM.Watson.Discovery.V1
     public partial class DiscoveryService : BaseService
     {
         private const string serviceId = "discovery";
-        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/discovery/api";
+        private const string defaultServiceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com";
 
         #region VersionDate
         private string versionDate;

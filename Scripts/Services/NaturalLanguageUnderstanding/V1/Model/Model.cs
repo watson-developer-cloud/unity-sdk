@@ -28,6 +28,39 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// <summary>
         /// When the status is `available`, the model is ready to use.
         /// </summary>
+        public class StatusValue
+        {
+            /// <summary>
+            /// Constant STARTING for starting
+            /// </summary>
+            public const string STARTING = "starting";
+            /// <summary>
+            /// Constant TRAINING for training
+            /// </summary>
+            public const string TRAINING = "training";
+            /// <summary>
+            /// Constant DEPLOYING for deploying
+            /// </summary>
+            public const string DEPLOYING = "deploying";
+            /// <summary>
+            /// Constant AVAILABLE for available
+            /// </summary>
+            public const string AVAILABLE = "available";
+            /// <summary>
+            /// Constant ERROR for error
+            /// </summary>
+            public const string ERROR = "error";
+            /// <summary>
+            /// Constant DELETED for deleted
+            /// </summary>
+            public const string DELETED = "deleted";
+            
+        }
+
+        /// <summary>
+        /// When the status is `available`, the model is ready to use.
+        /// Constants for possible values can be found using Model.StatusValue
+        /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
@@ -36,7 +69,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         [JsonProperty("model_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ModelId { get; set; }
         /// <summary>
-        /// ISO 639-1 code indicating the language of the model.
+        /// ISO 639-1 code that indicates the language of the model.
         /// </summary>
         [JsonProperty("language", NullValueHandling = NullValueHandling.Ignore)]
         public string Language { get; set; }

@@ -32,7 +32,7 @@ namespace IBM.Watson.PersonalityInsights.V3
     public partial class PersonalityInsightsService : BaseService
     {
         private const string serviceId = "personality_insights";
-        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/personality-insights/api";
+        private const string defaultServiceUrl = "https://api.us-south.personality-insights.watson.cloud.ibm.com";
 
         #region VersionDate
         private string versionDate;
