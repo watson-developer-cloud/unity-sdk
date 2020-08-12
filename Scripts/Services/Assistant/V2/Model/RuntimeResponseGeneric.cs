@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -28,9 +28,6 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
-        ///
-        /// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available
-        /// for Premium users.
         /// </summary>
         public class ResponseTypeValue
         {
@@ -84,9 +81,6 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
-        ///
-        /// **Note:** The **suggestion** response type is part of the disambiguation feature, which is only available
-        /// for Premium users.
         /// Constants for possible values can be found using RuntimeResponseGeneric.ResponseTypeValue
         /// </summary>
         [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
@@ -145,9 +139,6 @@ namespace IBM.Watson.Assistant.V2.Model
         public virtual string Topic { get; private set; }
         /// <summary>
         /// An array of objects describing the possible matching dialog nodes from which the user can choose.
-        ///
-        /// **Note:** The **suggestions** property is part of the disambiguation feature, which is only available for
-        /// Premium users.
         /// </summary>
         [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; set; }
