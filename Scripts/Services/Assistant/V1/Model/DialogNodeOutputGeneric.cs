@@ -29,8 +29,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
         ///
-        /// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only
-        /// by the v2 runtime API.
+        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
         /// </summary>
         public class ResponseTypeValue
         {
@@ -119,8 +118,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
         ///
-        /// **Note:** The **search_skill** response type is available only for Plus and Premium users, and is used only
-        /// by the v2 runtime API.
+        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.ResponseTypeValue
         /// </summary>
         [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]

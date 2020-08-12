@@ -32,8 +32,6 @@ namespace IBM.Watson.Assistant.V1.Model
         public WorkspaceSystemSettingsTooling Tooling { get; set; }
         /// <summary>
         /// Workspace settings related to the disambiguation feature.
-        ///
-        /// **Note:** This feature is available only to Plus and Premium users.
         /// </summary>
         [JsonProperty("disambiguation", NullValueHandling = NullValueHandling.Ignore)]
         public WorkspaceSystemSettingsDisambiguation Disambiguation { get; set; }
