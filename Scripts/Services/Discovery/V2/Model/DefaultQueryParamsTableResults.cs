@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,19 +20,24 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Configuration for suggested refinements.
+    /// Default project query settings for table results.
     /// </summary>
-    public class QueryLargeSuggestedRefinements: QueryAggregation
+    public class DefaultQueryParamsTableResults
     {
         /// <summary>
-        /// Whether to perform suggested refinements.
+        /// When `true`, a table results for the query are retuned by default.
         /// </summary>
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
         /// <summary>
-        /// Maximum number of suggested refinements texts to be returned. The maximum is `100`.
+        /// The number of table results to return by default.
         /// </summary>
         [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
         public long? Count { get; set; }
+        /// <summary>
+        /// The number of table results to include in each result document.
+        /// </summary>
+        [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
+        public long? PerDocument { get; set; }
     }
 }

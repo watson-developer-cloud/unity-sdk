@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,24 +15,25 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Configuration for suggested refinements.
+    /// An object describing an Enrichment for a collection.
     /// </summary>
-    public class QueryLargeSuggestedRefinements: QueryAggregation
+    public class CollectionEnrichment
     {
         /// <summary>
-        /// Whether to perform suggested refinements.
+        /// The unique identifier of this enrichment.
         /// </summary>
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Enabled { get; set; }
+        [JsonProperty("enrichment_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string EnrichmentId { get; set; }
         /// <summary>
-        /// Maximum number of suggested refinements texts to be returned. The maximum is `100`.
+        /// An array of field names that the enrichment is applied to.
         /// </summary>
-        [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Count { get; set; }
+        [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Fields { get; set; }
     }
 }

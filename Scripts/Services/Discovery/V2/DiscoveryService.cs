@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ namespace IBM.Watson.Discovery.V2
     public partial class DiscoveryService : BaseService
     {
         private const string serviceId = "discovery";
+        private const string defaultServiceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com";
 
         #region VersionDate
         private string versionDate;
@@ -79,6 +80,11 @@ namespace IBM.Watson.Discovery.V2
             else
             {
                 VersionDate = versionDate;
+            }
+
+            if (string.IsNullOrEmpty(GetServiceUrl()))
+            {
+                SetServiceUrl(defaultServiceUrl);
             }
         }
 
@@ -152,10 +158,333 @@ namespace IBM.Watson.Discovery.V2
                 ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
+        /// Create a collection.
+        ///
+        /// Create a new collection in the specified project.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="name">The name of the collection.</param>
+        /// <param name="description">A description of the collection. (optional)</param>
+        /// <param name="language">The language of the collection. (optional, default to en)</param>
+        /// <param name="enrichments">An array of enrichments that are applied to this collection. (optional)</param>
+        /// <returns><see cref="CollectionDetails" />CollectionDetails</returns>
+        public bool CreateCollection(Callback<CollectionDetails> callback, string projectId, string name, string description = null, string language = null, List<CollectionEnrichment> enrichments = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateCollection`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `CreateCollection`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateCollection`");
+
+            RequestObject<CollectionDetails> req = new RequestObject<CollectionDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "CreateCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (!string.IsNullOrEmpty(language))
+                bodyObject["language"] = language;
+            if (enrichments != null && enrichments.Count > 0)
+                bodyObject["enrichments"] = JToken.FromObject(enrichments);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateCollectionResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnCreateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<CollectionDetails> response = new DetailedResponse<CollectionDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<CollectionDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnCreateCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<CollectionDetails>)req).Callback != null)
+                ((RequestObject<CollectionDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get collection.
+        ///
+        /// Get details about the specified collection.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="CollectionDetails" />CollectionDetails</returns>
+        public bool GetCollection(Callback<CollectionDetails> callback, string projectId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `GetCollection`");
+
+            RequestObject<CollectionDetails> req = new RequestObject<CollectionDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "GetCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetCollectionResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}", projectId, collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<CollectionDetails> response = new DetailedResponse<CollectionDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<CollectionDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<CollectionDetails>)req).Callback != null)
+                ((RequestObject<CollectionDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Update a collection.
+        ///
+        /// Updates the specified collection's name, description, and enrichments.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="name">The name of the collection. (optional)</param>
+        /// <param name="description">A description of the collection. (optional)</param>
+        /// <param name="enrichments">An array of enrichments that are applied to this collection. (optional)</param>
+        /// <returns><see cref="CollectionDetails" />CollectionDetails</returns>
+        public bool UpdateCollection(Callback<CollectionDetails> callback, string projectId, string collectionId, string name = null, string description = null, List<CollectionEnrichment> enrichments = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `UpdateCollection`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `UpdateCollection`");
+
+            RequestObject<CollectionDetails> req = new RequestObject<CollectionDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "UpdateCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            if (enrichments != null && enrichments.Count > 0)
+                bodyObject["enrichments"] = JToken.FromObject(enrichments);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnUpdateCollectionResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}", projectId, collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnUpdateCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<CollectionDetails> response = new DetailedResponse<CollectionDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<CollectionDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnUpdateCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<CollectionDetails>)req).Callback != null)
+                ((RequestObject<CollectionDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete a collection.
+        ///
+        /// Deletes the specified collection from the project. All documents stored in the specified collection and not
+        /// shared is also deleted.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteCollection(Callback<object> callback, string projectId, string collectionId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `DeleteCollection`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "DeleteCollection"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteCollectionResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}", projectId, collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnDeleteCollectionResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteCollectionResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
         /// Query a project.
         ///
         /// By using this method, you can construct queries. For details, see the [Discovery
-        /// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-query-concepts).
+        /// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-query-concepts). The default
+        /// query parameters are defined by the settings for this project, see the [Discovery
+        /// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-project-defaults) for an
+        /// overview of the standard default settings, and see [the Projects API documentation](#create-project) for
+        /// details about how to set custom default query settings.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
@@ -183,11 +512,10 @@ namespace IBM.Watson.Discovery.V2
         /// sort direction if no prefix is specified. This parameter cannot be used in the same query as the **bias**
         /// parameter. (optional)</param>
         /// <param name="highlight">When `true`, a highlight field is returned for each result which contains the fields
-        /// which match the query with `<em></em>` tags around the matching query terms. (optional, default to
-        /// false)</param>
+        /// which match the query with `<em></em>` tags around the matching query terms. (optional)</param>
         /// <param name="spellingSuggestions">When `true` and the **natural_language_query** parameter is used, the
         /// **natural_language_query** parameter is spell checked. The most likely correction is returned in the
-        /// **suggested_query** field of the response (if one exists). (optional, default to false)</param>
+        /// **suggested_query** field of the response (if one exists). (optional)</param>
         /// <param name="tableResults">Configuration for table retrieval. (optional)</param>
         /// <param name="suggestedRefinements">Configuration for suggested refinements. (optional)</param>
         /// <param name="passages">Configuration for passage retrieval. (optional)</param>
@@ -557,7 +885,7 @@ namespace IBM.Watson.Discovery.V2
                 ((RequestObject<ListFieldsResponse>)req).Callback(response, resp.Error);
         }
         /// <summary>
-        /// Configuration settings for components.
+        /// List component settings.
         ///
         /// Returns default configuration settings for components.
         /// </summary>
@@ -666,7 +994,10 @@ namespace IBM.Watson.Discovery.V2
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
-        /// rejected. Example:  ``` {
+        /// rejected.
+        ///
+        ///
+        /// Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
@@ -773,7 +1104,10 @@ namespace IBM.Watson.Discovery.V2
         /// <param name="filename">The filename for file. (optional)</param>
         /// <param name="fileContentType">The content type of file. (optional)</param>
         /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
-        /// rejected. Example:  ``` {
+        /// rejected.
+        ///
+        ///
+        /// Example:  ``` {
         ///   "Creator": "Johnny Appleseed",
         ///   "Subject": "Apples"
         /// } ```. (optional)</param>
@@ -1326,6 +1660,834 @@ namespace IBM.Watson.Discovery.V2
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
                 ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List Enrichments.
+        ///
+        /// List the enrichments available to this project.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <returns><see cref="Enrichments" />Enrichments</returns>
+        public bool ListEnrichments(Callback<Enrichments> callback, string projectId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListEnrichments`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `ListEnrichments`");
+
+            RequestObject<Enrichments> req = new RequestObject<Enrichments>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "ListEnrichments"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListEnrichmentsResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/enrichments", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnListEnrichmentsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Enrichments> response = new DetailedResponse<Enrichments>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Enrichments>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListEnrichmentsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Enrichments>)req).Callback != null)
+                ((RequestObject<Enrichments>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Create an enrichment.
+        ///
+        /// Create an enrichment for use with the specified project/.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="enrichment"></param>
+        /// <param name="file">The enrichment file to upload. (optional)</param>
+        /// <returns><see cref="Enrichment" />Enrichment</returns>
+        public bool CreateEnrichment(Callback<Enrichment> callback, string projectId, CreateEnrichment enrichment, System.IO.MemoryStream file = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateEnrichment`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `CreateEnrichment`");
+            if (enrichment == null)
+                throw new ArgumentNullException("`enrichment` is required for `CreateEnrichment`");
+
+            RequestObject<Enrichment> req = new RequestObject<Enrichment>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "CreateEnrichment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if (enrichment != null)
+            {
+                req.Forms["enrichment"] = new RESTConnector.Form(JsonConvert.SerializeObject(enrichment));
+            }
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, "filename", "application/octet-stream");
+            }
+
+            req.OnResponse = OnCreateEnrichmentResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/enrichments", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnCreateEnrichmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Enrichment> response = new DetailedResponse<Enrichment>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Enrichment>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnCreateEnrichmentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Enrichment>)req).Callback != null)
+                ((RequestObject<Enrichment>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get enrichment.
+        ///
+        /// Get details about a specific enrichment.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="enrichmentId">The ID of the enrichment.</param>
+        /// <returns><see cref="Enrichment" />Enrichment</returns>
+        public bool GetEnrichment(Callback<Enrichment> callback, string projectId, string enrichmentId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetEnrichment`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `GetEnrichment`");
+            if (string.IsNullOrEmpty(enrichmentId))
+                throw new ArgumentNullException("`enrichmentId` is required for `GetEnrichment`");
+
+            RequestObject<Enrichment> req = new RequestObject<Enrichment>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "GetEnrichment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetEnrichmentResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/enrichments/{1}", projectId, enrichmentId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetEnrichmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Enrichment> response = new DetailedResponse<Enrichment>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Enrichment>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetEnrichmentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Enrichment>)req).Callback != null)
+                ((RequestObject<Enrichment>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Update an enrichment.
+        ///
+        /// Updates an existing enrichment's name and description.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="enrichmentId">The ID of the enrichment.</param>
+        /// <param name="name">A new name for the enrichment.</param>
+        /// <param name="description">A new description for the enrichment. (optional)</param>
+        /// <returns><see cref="Enrichment" />Enrichment</returns>
+        public bool UpdateEnrichment(Callback<Enrichment> callback, string projectId, string enrichmentId, string name, string description = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `UpdateEnrichment`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `UpdateEnrichment`");
+            if (string.IsNullOrEmpty(enrichmentId))
+                throw new ArgumentNullException("`enrichmentId` is required for `UpdateEnrichment`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `UpdateEnrichment`");
+
+            RequestObject<Enrichment> req = new RequestObject<Enrichment>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "UpdateEnrichment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(description))
+                bodyObject["description"] = description;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnUpdateEnrichmentResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/enrichments/{1}", projectId, enrichmentId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnUpdateEnrichmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<Enrichment> response = new DetailedResponse<Enrichment>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<Enrichment>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnUpdateEnrichmentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<Enrichment>)req).Callback != null)
+                ((RequestObject<Enrichment>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete an enrichment.
+        ///
+        /// Deletes an existing enrichment from the specified project.
+        ///
+        /// **Note:** Only enrichments that have been manually created can be deleted.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="enrichmentId">The ID of the enrichment.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteEnrichment(Callback<object> callback, string projectId, string enrichmentId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteEnrichment`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `DeleteEnrichment`");
+            if (string.IsNullOrEmpty(enrichmentId))
+                throw new ArgumentNullException("`enrichmentId` is required for `DeleteEnrichment`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "DeleteEnrichment"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteEnrichmentResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/enrichments/{1}", projectId, enrichmentId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnDeleteEnrichmentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteEnrichmentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// List projects.
+        ///
+        /// Lists existing projects for this instance.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <returns><see cref="ListProjectsResponse" />ListProjectsResponse</returns>
+        public bool ListProjects(Callback<ListProjectsResponse> callback)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `ListProjects`");
+
+            RequestObject<ListProjectsResponse> req = new RequestObject<ListProjectsResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "ListProjects"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnListProjectsResponse;
+
+            Connector.URL = GetServiceUrl() + "/v2/projects";
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnListProjectsResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ListProjectsResponse> response = new DetailedResponse<ListProjectsResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ListProjectsResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnListProjectsResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ListProjectsResponse>)req).Callback != null)
+                ((RequestObject<ListProjectsResponse>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Create a Project.
+        ///
+        /// Create a new project for this instance.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="name">The human readable name of this project.</param>
+        /// <param name="type">The project type of this project.</param>
+        /// <param name="defaultQueryParameters">Default query parameters for this project. (optional)</param>
+        /// <returns><see cref="ProjectDetails" />ProjectDetails</returns>
+        public bool CreateProject(Callback<ProjectDetails> callback, string name, string type, DefaultQueryParams defaultQueryParameters = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `CreateProject`");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("`name` is required for `CreateProject`");
+            if (string.IsNullOrEmpty(type))
+                throw new ArgumentNullException("`type` is required for `CreateProject`");
+
+            RequestObject<ProjectDetails> req = new RequestObject<ProjectDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "CreateProject"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            if (!string.IsNullOrEmpty(type))
+                bodyObject["type"] = type;
+            if (defaultQueryParameters != null)
+                bodyObject["default_query_parameters"] = JToken.FromObject(defaultQueryParameters);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnCreateProjectResponse;
+
+            Connector.URL = GetServiceUrl() + "/v2/projects";
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnCreateProjectResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ProjectDetails> response = new DetailedResponse<ProjectDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ProjectDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnCreateProjectResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ProjectDetails>)req).Callback != null)
+                ((RequestObject<ProjectDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Get project.
+        ///
+        /// Get details on the specified project.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <returns><see cref="ProjectDetails" />ProjectDetails</returns>
+        public bool GetProject(Callback<ProjectDetails> callback, string projectId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `GetProject`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `GetProject`");
+
+            RequestObject<ProjectDetails> req = new RequestObject<ProjectDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbGET,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "GetProject"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnGetProjectResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnGetProjectResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ProjectDetails> response = new DetailedResponse<ProjectDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ProjectDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnGetProjectResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ProjectDetails>)req).Callback != null)
+                ((RequestObject<ProjectDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Update a project.
+        ///
+        /// Update the specified project's name.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="name">The new name to give this project. (optional)</param>
+        /// <returns><see cref="ProjectDetails" />ProjectDetails</returns>
+        public bool UpdateProject(Callback<ProjectDetails> callback, string projectId, string name = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `UpdateProject`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `UpdateProject`");
+
+            RequestObject<ProjectDetails> req = new RequestObject<ProjectDetails>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "UpdateProject"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (!string.IsNullOrEmpty(name))
+                bodyObject["name"] = name;
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnUpdateProjectResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnUpdateProjectResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<ProjectDetails> response = new DetailedResponse<ProjectDetails>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<ProjectDetails>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnUpdateProjectResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<ProjectDetails>)req).Callback != null)
+                ((RequestObject<ProjectDetails>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete a project.
+        ///
+        /// Deletes the specified project.
+        ///
+        /// **Important:** Deleting a project deletes everything that is part of the specified project, including all
+        /// collections.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteProject(Callback<object> callback, string projectId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteProject`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `DeleteProject`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "DeleteProject"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+
+            req.OnResponse = OnDeleteProjectResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}", projectId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnDeleteProjectResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteProjectResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Delete labeled data.
+        ///
+        /// Deletes all data associated with a specified customer ID. The method has no effect if no data is associated
+        /// with the customer ID.
+        ///
+        /// You associate a customer ID with data by passing the **X-Watson-Metadata** header with a request that passes
+        /// data. For more information about personal data and customer IDs, see [Information
+        /// security](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-information-security#information-security).
+        ///
+        ///
+        /// **Note:** This method is only supported on IBM Cloud instances of Discovery.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="customerId">The customer ID for which all data is to be deleted.</param>
+        /// <returns><see cref="object" />object</returns>
+        public bool DeleteUserData(Callback<object> callback, string customerId)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(customerId))
+                throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
+
+            RequestObject<object> req = new RequestObject<object>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbDELETE,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "DeleteUserData"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(customerId))
+            {
+                req.Parameters["customer_id"] = customerId;
+            }
+
+            req.OnResponse = OnDeleteUserDataResponse;
+
+            Connector.URL = GetServiceUrl() + "/v2/user_data";
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnDeleteUserDataResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<object> response = new DetailedResponse<object>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<object>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnDeleteUserDataResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<object>)req).Callback != null)
+                ((RequestObject<object>)req).Callback(response, resp.Error);
         }
     }
 }

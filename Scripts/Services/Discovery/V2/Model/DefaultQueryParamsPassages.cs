@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,41 +21,41 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Configuration for passage retrieval.
+    /// Default settings configuration for passage search options.
     /// </summary>
-    public class QueryLargePassages: QueryAggregation
+    public class DefaultQueryParamsPassages
     {
         /// <summary>
-        /// A passages query that returns the most relevant passages from the results.
+        /// When `true`, a passage search is performed by default.
         /// </summary>
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
         /// <summary>
-        /// When `true`, passages will be returned within their respective result.
-        /// </summary>
-        [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? PerDocument { get; set; }
-        /// <summary>
-        /// Maximum number of passages to return per result.
-        /// </summary>
-        [JsonProperty("max_per_document", NullValueHandling = NullValueHandling.Ignore)]
-        public long? MaxPerDocument { get; set; }
-        /// <summary>
-        /// A list of fields that passages are drawn from. If this parameter not specified, then all top-level fields
-        /// are included.
-        /// </summary>
-        [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Fields { get; set; }
-        /// <summary>
-        /// The maximum number of passages to return. The search returns fewer passages if the requested total is not
-        /// found. The maximum is `100`.
+        /// The number of passages to return.
         /// </summary>
         [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
         public long? Count { get; set; }
         /// <summary>
-        /// The approximate number of characters that any one passage will have.
+        /// An array of field names to perfom the passage search on.
+        /// </summary>
+        [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Fields { get; set; }
+        /// <summary>
+        /// The approximate number of characters that each returned passage will contain.
         /// </summary>
         [JsonProperty("characters", NullValueHandling = NullValueHandling.Ignore)]
         public long? Characters { get; set; }
+        /// <summary>
+        /// When `true` the number of passages that can be returned from a single document is restricted to the
+        /// *max_per_document* value.
+        /// </summary>
+        [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? PerDocument { get; set; }
+        /// <summary>
+        /// The default maximum number of passages that can be taken from a single document as the result of a passage
+        /// query.
+        /// </summary>
+        [JsonProperty("max_per_document", NullValueHandling = NullValueHandling.Ignore)]
+        public long? MaxPerDocument { get; set; }
     }
 }
