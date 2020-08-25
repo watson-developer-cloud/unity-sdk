@@ -1,3 +1,14 @@
+# [4.8.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.7.1...v4.8.0) (2020-08-25)
+
+
+### Features
+
+* **AssistantV1:** change default URL ([21283bc](https://github.com/watson-developer-cloud/unity-sdk/commit/21283bc78c3ff14432f4cf7a409f3b7bc8f6c125))
+* **AssistantV2:** add support for ListLogs and DeleteUserData ([369e7fd](https://github.com/watson-developer-cloud/unity-sdk/commit/369e7fd7414f1d4d825bc2e60b5c7d72af8d7dab))
+* regenerate services and add new default URLs ([e484113](https://github.com/watson-developer-cloud/unity-sdk/commit/e484113de45dccd7623f1616dc3b04eaa4b6d292))
+* **DiscoveryV2:** add new apis for projects, enrichments and collections ([abc28ba](https://github.com/watson-developer-cloud/unity-sdk/commit/abc28bad54e43397d4ae08d04c45c5ccc2bebb64))
+* **LanguageTranslatorV3:** add support for ListLanguages ([0570cdb](https://github.com/watson-developer-cloud/unity-sdk/commit/0570cdba89631679d8a3412120c1881138b9b3fd))
+
 ## [4.7.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.7.0...v4.7.1) (2020-06-17)
 
 
