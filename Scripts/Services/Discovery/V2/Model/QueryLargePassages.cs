@@ -48,7 +48,7 @@ namespace IBM.Watson.Discovery.V2.Model
         public List<string> Fields { get; set; }
         /// <summary>
         /// The maximum number of passages to return. The search returns fewer passages if the requested total is not
-        /// found. The default is `10`. The maximum is `100`.
+        /// found. The maximum is `100`.
         /// </summary>
         [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
         public long? Count { get; set; }

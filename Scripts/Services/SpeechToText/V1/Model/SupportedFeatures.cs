@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,10 @@ namespace IBM.Watson.SpeechToText.V1.Model
         public bool? CustomLanguageModel { get; set; }
         /// <summary>
         /// Indicates whether the `speaker_labels` parameter can be used with the language model.
+        ///
+        /// **Note:** The field returns `true` for all models. However, speaker labels are supported only for US
+        /// English, Australian English, German, Japanese, Korean, and Spanish (both broadband and narrowband models)
+        /// and UK English (narrowband model only). Speaker labels are not supported for any other models.
         /// </summary>
         [JsonProperty("speaker_labels", NullValueHandling = NullValueHandling.Ignore)]
         public bool? SpeakerLabels { get; set; }

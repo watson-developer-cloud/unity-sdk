@@ -25,10 +25,9 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     public class CategoriesResult
     {
         /// <summary>
-        /// The path to the category through the 5-level taxonomy hierarchy. For the complete list of categories, see
-        /// the [Categories
-        /// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy)
-        /// documentation.
+        /// The path to the category through the 5-level taxonomy hierarchy. For more information about the categories,
+        /// see [Categories
+        /// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy).
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; set; }

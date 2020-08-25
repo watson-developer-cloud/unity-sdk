@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,6 +35,23 @@ namespace IBM.Watson.Discovery.V2.Model
         /// </summary>
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
+        /// <summary>
+        /// The relevancy for this term.
+        /// </summary>
+        [JsonProperty("relevancy", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Relevancy { get; set; }
+        /// <summary>
+        /// The number of documents which have the term as the value of specified field in the whole set of documents in
+        /// this collection. Returned only when the `relevancy` parameter is set to `true`.
+        /// </summary>
+        [JsonProperty("total_matching_documents", NullValueHandling = NullValueHandling.Ignore)]
+        public long? TotalMatchingDocuments { get; set; }
+        /// <summary>
+        /// The estimated number of documents which would match the query and also meet the condition. Returned only
+        /// when the `relevancy` parameter is set to `true`.
+        /// </summary>
+        [JsonProperty("estimated_matching_documents", NullValueHandling = NullValueHandling.Ignore)]
+        public long? EstimatedMatchingDocuments { get; set; }
         /// <summary>
         /// An array of sub aggregations.
         /// </summary>

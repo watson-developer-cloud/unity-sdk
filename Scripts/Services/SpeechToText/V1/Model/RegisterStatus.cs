@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ namespace IBM.Watson.SpeechToText.V1.Model
     {
         /// <summary>
         /// The current status of the job:
-        /// * `created`: The service successfully white-listed the callback URL as a result of the call.
-        /// * `already created`: The URL was already white-listed.
+        /// * `created`: The service successfully allowlisted the callback URL as a result of the call.
+        /// * `already created`: The URL was already allowlisted.
         /// </summary>
         public class StatusValue
         {
@@ -44,8 +44,8 @@ namespace IBM.Watson.SpeechToText.V1.Model
 
         /// <summary>
         /// The current status of the job:
-        /// * `created`: The service successfully white-listed the callback URL as a result of the call.
-        /// * `already created`: The URL was already white-listed.
+        /// * `created`: The service successfully allowlisted the callback URL as a result of the call.
+        /// * `already created`: The URL was already allowlisted.
         /// Constants for possible values can be found using RegisterStatus.StatusValue
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]

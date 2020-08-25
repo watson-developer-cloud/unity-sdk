@@ -27,8 +27,8 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The unique identifier of the document in the Discovery service collection.
         ///
-        /// This property is included in responses from search skills, which are a beta feature available only to Plus
-        /// or Premium plan users.
+        /// This property is included in responses from search skills, which are available only to Plus or Premium plan
+        /// users.
         /// </summary>
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }

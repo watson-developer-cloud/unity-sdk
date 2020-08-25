@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -326,6 +326,29 @@ namespace IBM.Watson.Tests
             );
 
             while (documentStatus == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListLanguages
+        [UnityTest, Order(11)]
+        public IEnumerator TestListLanguages()
+        {
+            Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "Attempting to ListLanguages...");
+            Languages ListLanguagesResponse = null;
+            service.ListLanguages(
+                callback: (DetailedResponse<Languages> response, IBMError error) =>
+                {
+                    Log.Debug("LanguageTranslatorServiceV3IntegrationTests", "ListLanguages result: {0}", response.Response);
+                    ListLanguagesResponse = response.Result;
+                    Assert.IsNotNull(ListLanguagesResponse);
+                    Assert.IsNotNull(ListLanguagesResponse._Languages);
+                    Assert.IsTrue(ListLanguagesResponse._Languages.Count > 0);
+                    Assert.IsNull(error);
+                }
+            );
+
+            while (ListLanguagesResponse == null)
                 yield return null;
         }
         #endregion

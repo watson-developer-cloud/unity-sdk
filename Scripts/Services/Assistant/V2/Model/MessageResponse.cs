@@ -34,7 +34,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// stored by the assistant on a per-session basis.
         ///
         /// **Note:** The context is included in message responses only if **return_context**=`true` in the message
-        /// request.
+        /// request. Full context is always included in logs.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
         public MessageContext Context { get; set; }

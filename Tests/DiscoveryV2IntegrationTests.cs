@@ -35,12 +35,15 @@ namespace IBM.Watson.Tests
     public class DiscoveryV2IntegrationTests
     {
         private DiscoveryService service;
-        private string versionDate = "2019-11-25";
+        private string versionDate = "2020-08-12";
 
-        private string projectId = "{project_id}";
+        private string projectId;
         private string documentId;
-        private string collectionId = "{collection_id}";
+        private string collectionId;
+        private string enrichmentId;
         private string addDocumentFile;
+        private string enrichmentFile;
+        private string analyzeDocumentFile;
         private string queryId;
 
         [OneTimeSetUp]
@@ -48,18 +51,16 @@ namespace IBM.Watson.Tests
         {
             LogSystem.InstallDefaultReactors();
             addDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestAddDoc.pdf";
+            enrichmentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestEnrichments.csv";
         }
 
         [UnitySetUp]
         public IEnumerator UnityTestSetup()
         {
-            BearerTokenAuthenticator authenticator = new BearerTokenAuthenticator(bearerToken: "{bearer_token}");
             if (service == null)
             {
-                service = new DiscoveryService(versionDate, authenticator);
+                service = new DiscoveryService(versionDate);
             }
-            service.SetServiceUrl("service_url");
-            service.DisableSslVerification = true;
 
             while (!service.Authenticator.CanAuthenticate())
                 yield return null;
@@ -71,8 +72,59 @@ namespace IBM.Watson.Tests
             service.WithHeader("X-Watson-Test", "1");
         }
 
-        #region ListCollections
+        #region CreateProject
+        [UnityTest, Order(0)]
+        public IEnumerator TestCreateProject()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateProject...");
+            ProjectDetails createProjectResponse = null;
+            service.CreateProject(
+                callback: (DetailedResponse<ProjectDetails> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "CreateProject result: {0}", response.Response);
+                    createProjectResponse = response.Result;
+                    Assert.IsNotNull(createProjectResponse);
+                    projectId = createProjectResponse.ProjectId;
+                    Assert.IsNotNull(projectId);
+                    Assert.IsNull(error);
+                },
+                name: "Unity SDK test project",
+                type: "other"
+            );
+
+            while (createProjectResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateCollection
         [UnityTest, Order(1)]
+        public IEnumerator TestCreateCollection()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateCollection...");
+            CollectionDetails createCollectionResponse = null;
+            service.CreateCollection(
+                callback: (DetailedResponse<CollectionDetails> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "CreateCollection result: {0}", response.Response);
+                    createCollectionResponse = response.Result;
+                    Assert.IsNotNull(createCollectionResponse);
+                    collectionId = createCollectionResponse.CollectionId;
+                    Assert.IsNotNull(createCollectionResponse.CollectionId);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                name: "Unity SDK test collection",
+                description: "test collection"
+            );
+
+            while (createCollectionResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListCollections
+        [UnityTest, Order(2)]
         public IEnumerator TestListCollections()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListCollections...");
@@ -96,7 +148,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region Query
-        [UnityTest, Order(2)]
+        [UnityTest, Order(4)]
         public IEnumerator TestQuery()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to Query...");
@@ -122,7 +174,7 @@ namespace IBM.Watson.Tests
 
 
         #region GetAutocompletion
-        [UnityTest, Order(3)]
+        [UnityTest, Order(5)]
         public IEnumerator TestGetAutocompletion()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetAutocompletion...");
@@ -146,7 +198,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetComponentSettings
-        [UnityTest, Order(4)]
+        [UnityTest, Order(6)]
         public IEnumerator TestGetComponentSettings()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetComponentSettings...");
@@ -170,7 +222,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region AddDocument
-        [UnityTest, Order(5)]
+        [UnityTest, Order(3)]
         public IEnumerator TestAddDocument()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to AddDocument...");
@@ -205,7 +257,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region UpdateDocument
-        [UnityTest, Order(6)]
+        [UnityTest, Order(7)]
         public IEnumerator TestUpdateDocument()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to UpdateDocument...");
@@ -432,6 +484,209 @@ namespace IBM.Watson.Tests
             );
 
             while (listFieldsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region CreateEnrichment
+        [UnityTest, Order(13)]
+        public IEnumerator TestCreateEnrichment()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateEnrichment...");
+            Enrichment createEnrichmentResponse = null;
+            var languages = new List<string>();
+            languages.Add("en");
+            CreateEnrichment enrichment = new CreateEnrichment()
+            {
+                Name = "Dictionary Unity",
+                Description = "test dictionary",
+                Type = "dictionary",
+                Options = new EnrichmentOptions()
+                {
+                    EntityType = "keyword",
+                    Languages = languages
+                }
+            };
+
+            using (FileStream fs = File.OpenRead(enrichmentFile))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.CreateEnrichment(
+                        callback: (DetailedResponse<Enrichment> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV2IntegrationTests", "CreateEnrichment result: {0}", response.Response);
+                            createEnrichmentResponse = response.Result;
+                            enrichmentId = createEnrichmentResponse.EnrichmentId;
+                            Assert.IsNotNull(createEnrichmentResponse);
+                            Assert.IsNotNull(createEnrichmentResponse.EnrichmentId);
+                            Assert.IsNull(error);
+                        },
+                        projectId: projectId,
+                        file: ms,
+                        enrichment: enrichment
+                    );
+
+                    while (createEnrichmentResponse == null)
+                        yield return null;
+                }
+            }
+        }
+        #endregion
+
+        #region GetEnrichment
+        [UnityTest, Order(14)]
+        public IEnumerator TestGetEnrichment()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetEnrichment...");
+            Enrichment getEnrichmentResponse = null;
+            service.GetEnrichment(
+                callback: (DetailedResponse<Enrichment> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "GetEnrichment result: {0}", response.Response);
+                    getEnrichmentResponse = response.Result;
+                    Assert.IsNotNull(getEnrichmentResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                enrichmentId: enrichmentId
+            );
+
+            while (getEnrichmentResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region ListEnrichments
+        [UnityTest, Order(2)]
+        public IEnumerator TestListEnrichments()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListEnrichments...");
+            Enrichments listEnrichmentsResponse = null;
+            service.ListEnrichments(
+                callback: (DetailedResponse<Enrichments> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "ListEnrichments result: {0}", response.Response);
+                    listEnrichmentsResponse = response.Result;
+                    Assert.IsNotNull(listEnrichmentsResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId
+            );
+
+            while (listEnrichmentsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+
+        #region DeleteEnrichment
+        [UnityTest, Order(17)]
+        public IEnumerator TestDeleteEnrichment()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteEnrichment...");
+            bool deleteEnrichmentResponse = false;
+            service.DeleteEnrichment(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "DeleteEnrichment result: {0}", response.Response);
+                    deleteEnrichmentResponse = true;
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                enrichmentId: enrichmentId
+            );
+
+            while (!deleteEnrichmentResponse)
+                yield return null;
+        }
+        #endregion
+
+        #region GetCollection
+        [UnityTest, Order(18)]
+        public IEnumerator TestGetCollection()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetCollection...");
+            CollectionDetails collectionDetailsResponse = null;
+            service.GetCollection(
+                callback: (DetailedResponse<CollectionDetails> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "GetCollection result: {0}", response.Response);
+                    collectionDetailsResponse = response.Result;
+                    Assert.IsNotNull(collectionDetailsResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                collectionId: collectionId
+            );
+
+            while (collectionDetailsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region GetProject
+        [UnityTest, Order(19)]
+        public IEnumerator TestGetProject()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetProject...");
+            ProjectDetails projectDetailsResponse = null;
+            service.GetProject(
+                callback: (DetailedResponse<ProjectDetails> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "GetProject result: {0}", response.Response);
+                    projectDetailsResponse = response.Result;
+                    Assert.IsNotNull(projectDetailsResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId
+            );
+
+            while (projectDetailsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteCollection
+        [UnityTest, Order(101)]
+        public IEnumerator TestDeleteCollection()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteCollection...");
+            bool deleteCollectionResponse = false;
+            service.DeleteCollection(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "DeleteCollection result: {0}", response.Response);
+                    deleteCollectionResponse = true;
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                collectionId: collectionId
+            );
+
+            while (!deleteCollectionResponse)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteProject
+        [UnityTest, Order(102)]
+        public IEnumerator TestDeleteProject()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteProject...");
+            bool deleteProjectResponse = false;
+            service.DeleteProject(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "DeleteProject result: {0}", response.Response);
+                    deleteProjectResponse = true;
+                    Assert.IsNull(error);
+                },
+                projectId: projectId
+            );
+
+            while (!deleteProjectResponse)
                 yield return null;
         }
         #endregion

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ namespace IBM.Watson.Assistant.V2.Model
     public class DialogSuggestion
     {
         /// <summary>
-        /// The user-facing label for the disambiguation option. This label is taken from the **title** or
-        /// **user_label** property of the corresponding dialog node, depending on the disambiguation options.
+        /// The user-facing label for the suggestion. This label is taken from the **title** or **user_label** property
+        /// of the corresponding dialog node, depending on the disambiguation options.
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; set; }

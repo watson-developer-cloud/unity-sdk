@@ -32,7 +32,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
     public partial class NaturalLanguageClassifierService : BaseService
     {
         private const string serviceId = "natural_language_classifier";
-        private const string defaultServiceUrl = "https://gateway.watsonplatform.net/natural-language-classifier/api";
+        private const string defaultServiceUrl = "https://api.us-south.natural-language-classifier.watson.cloud.ibm.com";
 
 
         #region DisableSslVerification

@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ namespace IBM.Watson.Tests
             LogSystem.InstallDefaultReactors();
         }
 
-        [UnityTest]
+        [UnityTest, Order(0)]
         public IEnumerator TestMessage()
         {
             service = new AssistantService(versionDate);
@@ -240,7 +240,7 @@ namespace IBM.Watson.Tests
             service.Message(
                 callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
                 {
-                Log.Debug("AssistantV2IntegrationTests", "result: {0} {1}", response.Response, assistantId);
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0} {1}", response.Response, assistantId);
                     messageResponse = response.Result;
                     Assert.IsNotNull(messageResponse);
                     Assert.IsNull(error);
@@ -269,6 +269,31 @@ namespace IBM.Watson.Tests
             );
 
             while (deleteSessionResponse == null)
+                yield return null;
+        }
+
+        // [UnityTest, Order(1)]
+        public IEnumerator TestListLogs()
+        {
+            service = new AssistantService(versionDate);
+
+            while (!service.Authenticator.CanAuthenticate())
+                yield return null;
+
+            Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to GetWorkspace...");
+            LogCollection listLogResponse = null;
+            service.ListLogs(
+                callback: (DetailedResponse<LogCollection> response, IBMError error) =>
+                {
+                    Log.Debug("AssistantServiceV2IntegrationTests", "GetWorkspace result: {0}", response.Response);
+                    listLogResponse = response.Result;
+                    Assert.IsNotNull(listLogResponse);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId
+            );
+
+            while (listLogResponse == null)
                 yield return null;
         }
 
