@@ -402,7 +402,7 @@ private void OnMessage(DetailedResponse<MessageResponse> response, IBMError erro
 ```
 
 ## Transaction IDs
-Every SDK call returns a response with a transaction ID in the x-global-transaction-id header. This transaction ID is useful for troubleshooting and accessing relevant logs from your service instance.
+Every SDK call returns a response with a transaction ID in the `X-Global-Transaction-Id` header. Together the service instance region, this ID helps support teams troubleshoot issues from relevant logs.
 
 ```cs
 public void ExampleGetTransactionId()
@@ -413,11 +413,34 @@ public void ExampleGetTransactionId()
         {
             if(error != null)
             {
-                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", error.ResponseHeaders["x-global-transaction-id"]);
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", error.ResponseHeaders["X-Global-Transaction-Id"]);
             }
             else
             {
-                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", response.Headers["x-global-transaction-id"]);
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", response.Headers["X-Global-Transaction-Id"]);
+            }
+        }
+    );
+}
+```
+
+However, the transaction ID isn't available when the API doesn't return a response for some reason. In that case, you can set your own transaction ID in the request. For example, replace `<my-unique-transaction-id>` in the following example with a unique transaction ID.
+
+```cs
+public void ExampleSetTransactionId()
+{
+    AssistantService service = new AssistantService("{version-date}");
+    service.WithHeader("X-Global-Transaction-Id", "<my-unique-transaction-id>");
+    service.ListWorkspaces(
+        callback: (DetailedResponse<Workspace> response, IBMError error) =>
+        {
+            if(error != null)
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", error.ResponseHeaders["X-Global-Transaction-Id"]);
+            }
+            else
+            {
+                Log.Debug("AssistantServiceV1", "Transaction Id: {0}", response.Headers["X-Global-Transaction-Id"]);
             }
         }
     );
