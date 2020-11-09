@@ -35,7 +35,7 @@ namespace IBM.Watson.Examples
         [Tooltip("The IAM apikey.")]
         [SerializeField]
         private string iamApikey;
-		[Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/natural-language-understanding/api\"")]
+		[Tooltip("The service URL (optional). This defaults to \"https://api.us-south.natural-language-classifier.watson.cloud.ibm.com\"")]
         [SerializeField]
         private string serviceUrl;
         #endregion

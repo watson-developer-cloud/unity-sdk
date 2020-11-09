@@ -105,7 +105,7 @@ namespace IBM.Watson.SpeechToText.V1
         private float _silenceDuration = 0.0f;
         private float _silenceCutoff = 1.0f;
 
-        private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
+        private string _url = "https://api.us-south.speech-to-text.watson.cloud.ibm.com";
         #endregion
 
         #region Public Properties
