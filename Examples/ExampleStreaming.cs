@@ -33,7 +33,7 @@ namespace IBM.Watsson.Examples
     {
         #region PLEASE SET THESE VARIABLES IN THE INSPECTOR
         [Space(10)]
-        [Tooltip("The service URL (optional). This defaults to \"https://stream.watsonplatform.net/speech-to-text/api\"")]
+        [Tooltip("The service URL (optional). This defaults to \"https://api.us-south.speech-to-text.watson.cloud.ibm.com\"")]
         [SerializeField]
         private string _serviceUrl;
         [Tooltip("Text field to display the results of streaming.")]

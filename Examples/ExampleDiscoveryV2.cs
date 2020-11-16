@@ -15,7 +15,7 @@ public class ExampleDiscoveryV2 : MonoBehaviour
     [Tooltip("The Bearer Token.")]
     [SerializeField]
     private string bearerToken;
-    [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/discovery/api\"")]
+    [Tooltip("The service URL (optional). This defaults to \"https://api.us-south.discovery.watson.cloud.ibm.com\"")]
     [SerializeField]
     private string serviceUrl;
     [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]

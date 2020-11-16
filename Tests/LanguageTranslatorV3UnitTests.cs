@@ -66,7 +66,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(req.Headers["Accept"] == "application/json");
                     if (((RequestObject<TranslationResult>)req).Callback != null)
                     {
-                        Assert.IsTrue(conn.URL == "https://gateway.watsonplatform.net/language-translator/api/v3/translate");
+                        Assert.IsTrue(conn.URL == "https://api.us-south.language-translator.watson.cloud.ibm.com/v3/translate");
                         ((RequestObject<TranslationResult>)req).Callback(translationResponse, null);
                     }
                 }
@@ -118,7 +118,7 @@ namespace IBM.Watson.Tests
                 req => {
                     if (((RequestObject<IdentifiableLanguages>)req).Callback != null)
                     {
-                        Assert.IsTrue(conn.URL == "https://gateway.watsonplatform.net/language-translator/api/v3/identifiable_languages");
+                        Assert.IsTrue(conn.URL == "https://api.us-south.language-translator.watson.cloud.ibm.com/v3/identifiable_languages");
                         ((RequestObject<IdentifiableLanguages>)req).Callback(identifiableLanguagesResponse, null);
                     }
                 }
@@ -168,7 +168,7 @@ namespace IBM.Watson.Tests
                 req => {
                     if (((RequestObject<IdentifiedLanguages>)req).Callback != null)
                     {
-                        Assert.IsTrue(conn.URL == "https://gateway.watsonplatform.net/language-translator/api/v3/identify");
+                        Assert.IsTrue(conn.URL == "https://api.us-south.language-translator.watson.cloud.ibm.com/v3/identify");
                         ((RequestObject<IdentifiedLanguages>)req).Callback(identifyMockResponse, null);
                     }
                 }
@@ -227,7 +227,7 @@ namespace IBM.Watson.Tests
                 req => {
                     if (((RequestObject<TranslationModels>)req).Callback != null)
                     {
-                        Assert.IsTrue(conn.URL == "https://gateway.watsonplatform.net/language-translator/api/v3/models");
+                        Assert.IsTrue(conn.URL == "https://api.us-south.language-translator.watson.cloud.ibm.com/v3/models");
                         ((RequestObject<TranslationModels>)req).Callback(translationModelsResponse, null);
                     }
                 }

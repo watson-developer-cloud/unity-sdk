@@ -34,7 +34,7 @@ namespace IBM.Watson.Examples
         [Tooltip("The IAM apikey.")]
         [SerializeField]
         private string iamApikey;
-        [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/assistant/api\"")]
+        [Tooltip("The service URL (optional). This defaults to \"https://api.us-south.assistant.watson.cloud.ibm.com\"")]
         [SerializeField]
         private string serviceUrl;
         [Tooltip("The version date with which you would like to use the service in the form YYYY-MM-DD.")]

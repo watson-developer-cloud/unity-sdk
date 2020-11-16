@@ -54,7 +54,7 @@ namespace IBM.Watson.TextToSpeech.V1
         private string customization_id = null;
         private string[] timings = null;
 
-        private string url = "https://stream.watsonplatform.net/text-to-speech/api";
+        private string url = "https://api.us-south.text-to-speech.watson.cloud.ibm.com";
         #endregion
 
         #region Public Properties

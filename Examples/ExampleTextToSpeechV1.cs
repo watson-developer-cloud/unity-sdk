@@ -36,7 +36,7 @@ namespace IBM.Watson.Examples
         [Tooltip("The IAM apikey.")]
         [SerializeField]
         private string iamApikey;
-        [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/text-to-speech/api\"")]
+        [Tooltip("The service URL (optional). This defaults to \"https://api.us-south.text-to-speech.watson.cloud.ibm.com\"")]
         [SerializeField]
         private string serviceUrl;
         private TextToSpeechService service;

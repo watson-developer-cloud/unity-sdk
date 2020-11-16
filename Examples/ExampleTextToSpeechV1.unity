@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iamApikey: 
-  serviceUrl: https://stream.watsonplatform.net/text-to-speech/api
+  serviceUrl: https://api.us-south.text-to-speech.watson.cloud.ibm.com
   textInput: {fileID: 1552819768}
 --- !u!224 &275913467
 RectTransform:
