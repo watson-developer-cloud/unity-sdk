@@ -15,23 +15,19 @@
 *
 */
 
-using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// System context data used by the skill.
+    /// The user input utterance to classify.
     /// </summary>
-    public class MessageContextSkillSystem: DynamicModel<object>
+    public class BulkClassifyUtterance
     {
         /// <summary>
-        /// An encoded string that represents the current conversation state. By saving this value and then sending it
-        /// in the context of a subsequent message request, you can return to an earlier point in the conversation. If
-        /// you are using stateful sessions, you can also use a stored state value to restore a paused conversation
-        /// whose session is expired.
+        /// The text of the input utterance.
         /// </summary>
-        [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-        public string State { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
     }
 }

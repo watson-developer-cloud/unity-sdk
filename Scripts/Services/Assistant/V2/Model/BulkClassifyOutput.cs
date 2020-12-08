@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,20 +21,24 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information specific to a particular skill used by the Assistant. The property name must be the same as
-    /// the name of the skill (for example, `main skill`).
+    /// BulkClassifyOutput.
     /// </summary>
-    public class MessageContextSkill
+    public class BulkClassifyOutput
     {
         /// <summary>
-        /// Arbitrary variables that can be read and written by a particular skill.
+        /// The user input utterance to classify.
         /// </summary>
-        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> UserDefined { get; set; }
+        [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
+        public BulkClassifyUtterance Input { get; set; }
         /// <summary>
-        /// System context data used by the skill.
+        /// An array of entities identified in the utterance.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextSkillSystem System { get; set; }
+        [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
+        public List<RuntimeEntity> Entities { get; set; }
+        /// <summary>
+        /// An array of intents recognized in the utterance.
+        /// </summary>
+        [JsonProperty("intents", NullValueHandling = NullValueHandling.Ignore)]
+        public List<RuntimeIntent> Intents { get; set; }
     }
 }

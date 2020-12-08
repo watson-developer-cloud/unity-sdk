@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,26 +15,35 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Contains information specific to a particular skill used by the Assistant. The property name must be the same as
-    /// the name of the skill (for example, `main skill`).
+    /// An object that describes a response with response type `text`.
     /// </summary>
-    public class MessageContextSkill
+    public class RuntimeResponseGenericRuntimeResponseTypeText : RuntimeResponseGeneric
     {
         /// <summary>
-        /// Arbitrary variables that can be read and written by a particular skill.
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
         /// </summary>
-        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> UserDefined { get; set; }
+        public class ResponseTypeValue
+        {
+            /// <summary>
+            /// Constant TEXT for text
+            /// </summary>
+            public const string TEXT = "text";
+            
+        }
+
         /// <summary>
-        /// System context data used by the skill.
+        /// The text of the response.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextSkillSystem System { get; set; }
+        public new string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
     }
 }
