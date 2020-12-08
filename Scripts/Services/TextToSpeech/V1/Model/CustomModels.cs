@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,16 +21,16 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Information about existing custom voice models.
+    /// Information about existing custom models.
     /// </summary>
-    public class VoiceModels
+    public class CustomModels
     {
         /// <summary>
-        /// An array of `VoiceModel` objects that provides information about each available custom voice model. The
-        /// array is empty if the requesting credentials own no custom voice models (if no language is specified) or own
-        /// no custom voice models for the specified language.
+        /// An array of `CustomModel` objects that provides information about each available custom model. The array is
+        /// empty if the requesting credentials own no custom models (if no language is specified) or own no custom
+        /// models for the specified language.
         /// </summary>
         [JsonProperty("customizations", NullValueHandling = NullValueHandling.Ignore)]
-        public List<VoiceModel> Customizations { get; set; }
+        public List<CustomModel> Customizations { get; set; }
     }
 }
