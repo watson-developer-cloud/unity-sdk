@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// A query response containing the matching documents for the preceding aggregations.
+    /// An object containing the converted document and any identified enrichments.
     /// </summary>
-    public class QueryTopHitsAggregationResult
+    public class AnalyzedDocument
     {
         /// <summary>
-        /// Number of matching results.
+        /// Array of document results that match the query.
         /// </summary>
-        [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
-        public long? MatchingResults { get; set; }
+        [JsonProperty("notices", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Notice> Notices { get; set; }
         /// <summary>
-        /// An array of the document results.
+        /// Result of the document analysis.
         /// </summary>
-        [JsonProperty("hits", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Dictionary<string, object>> Hits { get; set; }
+        [JsonProperty("result", NullValueHandling = NullValueHandling.Ignore)]
+        public AnalyzedResult Result { get; set; }
     }
 }

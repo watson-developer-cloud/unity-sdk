@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,15 +20,30 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// A passage query result.
+    /// A passage query response.
     /// </summary>
-    public class QueryResultPassage
+    public class QueryResponsePassage
     {
         /// <summary>
         /// The content of the extracted passage.
         /// </summary>
         [JsonProperty("passage_text", NullValueHandling = NullValueHandling.Ignore)]
         public string PassageText { get; set; }
+        /// <summary>
+        /// The confidence score of the passage's analysis. A higher score indicates greater confidence.
+        /// </summary>
+        [JsonProperty("passage_score", NullValueHandling = NullValueHandling.Ignore)]
+        public double? PassageScore { get; set; }
+        /// <summary>
+        /// The unique identifier of the ingested document.
+        /// </summary>
+        [JsonProperty("document_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string DocumentId { get; set; }
+        /// <summary>
+        /// The unique identifier of the collection.
+        /// </summary>
+        [JsonProperty("collection_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string CollectionId { get; set; }
         /// <summary>
         /// The position of the first character of the extracted passage in the originating field.
         /// </summary>

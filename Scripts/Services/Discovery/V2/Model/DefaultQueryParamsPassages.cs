@@ -36,7 +36,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
         public long? Count { get; set; }
         /// <summary>
-        /// An array of field names to perfom the passage search on.
+        /// An array of field names to perform the passage search on.
         /// </summary>
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Fields { get; set; }

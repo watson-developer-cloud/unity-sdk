@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,24 +16,20 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// A query response containing the matching documents for the preceding aggregations.
+    /// Result of the document analysis.
     /// </summary>
-    public class QueryTopHitsAggregationResult
+    public class AnalyzedResult: DynamicModel<object>
     {
         /// <summary>
-        /// Number of matching results.
+        /// Metadata of the document.
         /// </summary>
-        [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
-        public long? MatchingResults { get; set; }
-        /// <summary>
-        /// An array of the document results.
-        /// </summary>
-        [JsonProperty("hits", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Dictionary<string, object>> Hits { get; set; }
+        [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> Metadata { get; set; }
     }
 }
