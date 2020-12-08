@@ -15,24 +15,25 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Object containing suggested refinement settings.
+    /// An object containing the converted document and any identified enrichments.
     /// </summary>
-    public class DefaultQueryParamsSuggestedRefinements
+    public class AnalyzedDocument
     {
         /// <summary>
-        /// When `true`, a suggested refinements for the query are returned by default.
+        /// Array of document results that match the query.
         /// </summary>
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Enabled { get; set; }
+        [JsonProperty("notices", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Notice> Notices { get; set; }
         /// <summary>
-        /// The number of suggested refinements to return by default.
+        /// Result of the document analysis.
         /// </summary>
-        [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Count { get; set; }
+        [JsonProperty("result", NullValueHandling = NullValueHandling.Ignore)]
+        public AnalyzedResult Result { get; set; }
     }
 }

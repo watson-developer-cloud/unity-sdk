@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -1660,6 +1660,104 @@ namespace IBM.Watson.Discovery.V2
 
             if (((RequestObject<TrainingQuery>)req).Callback != null)
                 ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Analyze a Document.
+        ///
+        /// Process a document using the specified collection's settings and return it for realtime use.
+        ///
+        /// **Note:** Documents processed using this method are not added to the specified collection.
+        ///
+        /// **Note:** This method is only supported on IBM Cloud Pak for Data instances of Discovery.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="projectId">The ID of the project. This information can be found from the deploy page of the
+        /// Discovery administrative tooling.</param>
+        /// <param name="collectionId">The ID of the collection.</param>
+        /// <param name="file">The content of the document to ingest. The maximum supported file size when adding a file
+        /// to a collection is 50 megabytes, the maximum supported file size when testing a configuration is 1 megabyte.
+        /// Files larger than the supported size are rejected. (optional)</param>
+        /// <param name="filename">The filename for file. (optional)</param>
+        /// <param name="fileContentType">The content type of file. (optional)</param>
+        /// <param name="metadata">The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are
+        /// rejected.
+        ///
+        ///
+        /// Example:  ``` {
+        ///   "Creator": "Johnny Appleseed",
+        ///   "Subject": "Apples"
+        /// } ```. (optional)</param>
+        /// <returns><see cref="AnalyzedDocument" />AnalyzedDocument</returns>
+        public bool AnalyzeDocument(Callback<AnalyzedDocument> callback, string projectId, string collectionId, System.IO.MemoryStream file = null, string filename = null, string fileContentType = null, string metadata = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `AnalyzeDocument`");
+            if (string.IsNullOrEmpty(projectId))
+                throw new ArgumentNullException("`projectId` is required for `AnalyzeDocument`");
+            if (string.IsNullOrEmpty(collectionId))
+                throw new ArgumentNullException("`collectionId` is required for `AnalyzeDocument`");
+
+            RequestObject<AnalyzedDocument> req = new RequestObject<AnalyzedDocument>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("discovery", "V2", "AnalyzeDocument"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if (file != null)
+            {
+                req.Forms["file"] = new RESTConnector.Form(file, filename, fileContentType);
+            }
+            if (!string.IsNullOrEmpty(metadata))
+            {
+                req.Forms["metadata"] = new RESTConnector.Form(metadata);
+            }
+
+            req.OnResponse = OnAnalyzeDocumentResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v2/projects/{0}/collections/{1}/analyze", projectId, collectionId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnAnalyzeDocumentResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<AnalyzedDocument> response = new DetailedResponse<AnalyzedDocument>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<AnalyzedDocument>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("DiscoveryService.OnAnalyzeDocumentResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<AnalyzedDocument>)req).Callback != null)
+                ((RequestObject<AnalyzedDocument>)req).Callback(response, resp.Error);
         }
         /// <summary>
         /// List Enrichments.

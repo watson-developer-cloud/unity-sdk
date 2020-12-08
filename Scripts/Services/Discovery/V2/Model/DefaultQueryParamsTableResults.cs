@@ -25,7 +25,7 @@ namespace IBM.Watson.Discovery.V2.Model
     public class DefaultQueryParamsTableResults
     {
         /// <summary>
-        /// When `true`, a table results for the query are retuned by default.
+        /// When `true`, a table results for the query are returned by default.
         /// </summary>
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }

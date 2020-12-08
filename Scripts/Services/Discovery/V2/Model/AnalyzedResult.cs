@@ -15,24 +15,21 @@
 *
 */
 
+using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Object containing suggested refinement settings.
+    /// Result of the document analysis.
     /// </summary>
-    public class DefaultQueryParamsSuggestedRefinements
+    public class AnalyzedResult: DynamicModel<object>
     {
         /// <summary>
-        /// When `true`, a suggested refinements for the query are returned by default.
+        /// Metadata of the document.
         /// </summary>
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Enabled { get; set; }
-        /// <summary>
-        /// The number of suggested refinements to return by default.
-        /// </summary>
-        [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Count { get; set; }
+        [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> Metadata { get; set; }
     }
 }
