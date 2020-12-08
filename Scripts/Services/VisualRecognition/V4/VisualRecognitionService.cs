@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -72,6 +72,7 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <param name="authenticator">The service authenticator.</param>
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
+            Log.Warning("VisualRecognition Deprecation Warning:", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation.");
             Authenticator = authenticator;
 
             if (string.IsNullOrEmpty(versionDate))
@@ -1501,7 +1502,7 @@ namespace IBM.Watson.VisualRecognition.V4
         /// All events for the day are included. If empty or not specified, the current day is used. Specify the same
         /// value as `start_time` to request events for a single day. (optional)</param>
         /// <returns><see cref="TrainingEvents" />TrainingEvents</returns>
-        public bool GetTrainingUsage(Callback<TrainingEvents> callback, string startTime = null, string endTime = null)
+        public bool GetTrainingUsage(Callback<TrainingEvents> callback, DateTime? startTime = null, DateTime? endTime = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingUsage`");
@@ -1526,11 +1527,11 @@ namespace IBM.Watson.VisualRecognition.V4
             }
 
             req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(startTime))
+            if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
             }
-            if (!string.IsNullOrEmpty(endTime))
+            if (endTime != null)
             {
                 req.Parameters["end_time"] = endTime;
             }
