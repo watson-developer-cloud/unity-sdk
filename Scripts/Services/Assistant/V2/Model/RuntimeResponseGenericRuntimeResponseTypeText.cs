@@ -20,19 +20,30 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An alternative value for the recognized entity.
+    /// An object that describes a response with response type `text`.
     /// </summary>
-    public class RuntimeEntityAlternative
+    public class RuntimeResponseGenericRuntimeResponseTypeText : RuntimeResponseGeneric
     {
         /// <summary>
-        /// The entity value that was recognized in the user input.
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
         /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
+        public class ResponseTypeValue
+        {
+            /// <summary>
+            /// Constant TEXT for text
+            /// </summary>
+            public const string TEXT = "text";
+            
+        }
+
         /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the recognized entity.
+        /// The text of the response.
         /// </summary>
-        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Confidence { get; set; }
+        public new string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
     }
 }

@@ -15,24 +15,20 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An alternative value for the recognized entity.
+    /// Routing or other contextual information to be used by target service desk systems.
     /// </summary>
-    public class RuntimeEntityAlternative
+    public class DialogNodeOutputConnectToAgentTransferInfo
     {
         /// <summary>
-        /// The entity value that was recognized in the user input.
+        /// Gets or Sets Target
         /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
-        /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the recognized entity.
-        /// </summary>
-        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Confidence { get; set; }
+        [JsonProperty("target", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, Dictionary<string, object>> Target { get; set; }
     }
 }

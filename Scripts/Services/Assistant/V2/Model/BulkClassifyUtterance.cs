@@ -20,19 +20,14 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An alternative value for the recognized entity.
+    /// The user input utterance to classify.
     /// </summary>
-    public class RuntimeEntityAlternative
+    public class BulkClassifyUtterance
     {
         /// <summary>
-        /// The entity value that was recognized in the user input.
+        /// The text of the input utterance.
         /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
-        /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the recognized entity.
-        /// </summary>
-        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Confidence { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
     }
 }

@@ -15,24 +15,20 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An alternative value for the recognized entity.
+    /// BulkClassifyResponse.
     /// </summary>
-    public class RuntimeEntityAlternative
+    public class BulkClassifyResponse
     {
         /// <summary>
-        /// The entity value that was recognized in the user input.
+        /// An array of objects that contain classification information for the submitted input utterances.
         /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
-        /// <summary>
-        /// A decimal percentage that represents Watson's confidence in the recognized entity.
-        /// </summary>
-        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Confidence { get; set; }
+        [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
+        public List<BulkClassifyOutput> Output { get; set; }
     }
 }
