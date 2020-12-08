@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -526,10 +526,6 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="feedbackType">An optional string that filters the output to include only feedback with the
         /// specified feedback type. The only permitted value is `element_classification`. (optional)</param>
-        /// <param name="before">An optional string in the format `YYYY-MM-DD` that filters the output to include only
-        /// feedback that was added before the specified date. (optional)</param>
-        /// <param name="after">An optional string in the format `YYYY-MM-DD` that filters the output to include only
-        /// feedback that was added after the specified date. (optional)</param>
         /// <param name="documentTitle">An optional string that filters the output to include only feedback from the
         /// document with the specified `document_title`. (optional)</param>
         /// <param name="modelId">An optional string that filters the output to include only feedback with the specified
@@ -565,7 +561,7 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="includeTotal">An optional boolean value. If specified as `true`, the `pagination` object in the
         /// output includes a value called `total` that gives the total count of feedback created. (optional)</param>
         /// <returns><see cref="FeedbackList" />FeedbackList</returns>
-        public bool ListFeedback(Callback<FeedbackList> callback, string feedbackType = null, DateTime? before = null, DateTime? after = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
+        public bool ListFeedback(Callback<FeedbackList> callback, string feedbackType = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListFeedback`");
@@ -593,14 +589,6 @@ namespace IBM.Watson.CompareComply.V1
             if (!string.IsNullOrEmpty(feedbackType))
             {
                 req.Parameters["feedback_type"] = feedbackType;
-            }
-            if (before != null)
-            {
-                req.Parameters["before"] = before;
-            }
-            if (after != null)
-            {
-                req.Parameters["after"] = after;
             }
             if (!string.IsNullOrEmpty(documentTitle))
             {
