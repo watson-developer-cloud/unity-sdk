@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -1682,8 +1682,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
-        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
-        /// languages are not available for language model customization. (optional)</param>
+        /// by the requesting credentials.
+        ///
+        /// To determine the languages for which customization is available, see [Language support for
+        /// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
+        /// (optional)</param>
         /// <returns><see cref="LanguageModels" />LanguageModels</returns>
         public bool ListLanguageModels(Callback<LanguageModels> callback, string language = null)
         {
@@ -3560,8 +3563,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
-        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
-        /// languages are not available for language model customization. (optional)</param>
+        /// by the requesting credentials.
+        ///
+        /// To determine the languages for which customization is available, see [Language support for
+        /// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
+        /// (optional)</param>
         /// <returns><see cref="AcousticModels" />AcousticModels</returns>
         public bool ListAcousticModels(Callback<AcousticModels> callback, string language = null)
         {
@@ -3779,12 +3785,12 @@ namespace IBM.Watson.SpeechToText.V1
         /// model on the latest audio data. The custom acoustic model does not reflect its changed data until you train
         /// it. You must use credentials for the instance of the service that owns a model to train it.
         ///
-        /// The training method is asynchronous. It can take on the order of minutes or hours to complete depending on
-        /// the total amount of audio data on which the custom acoustic model is being trained and the current load on
-        /// the service. Typically, training a custom acoustic model takes approximately two to four times the length of
-        /// its audio data. The actual time depends on the model being trained and the nature of the audio, such as
-        /// whether the audio is clean or noisy. The method returns an HTTP 200 response code to indicate that the
-        /// training process has begun.
+        /// The training method is asynchronous. Training time depends on the cumulative amount of audio data that the
+        /// custom acoustic model contains and the current load on the service. When you train or retrain a model, the
+        /// service uses all of the model's audio data in the training. Training a custom acoustic model takes
+        /// approximately as long as the length of its cumulative audio data. For example, it takes approximately 2
+        /// hours to train a model that contains a total of 2 hours of audio. The method returns an HTTP 200 response
+        /// code to indicate that the training process has begun.
         ///
         /// You can monitor the status of the training by using the **Get a custom acoustic model** method to poll the
         /// model's status. Use a loop to check the status once a minute. The method returns an `AcousticModel` object

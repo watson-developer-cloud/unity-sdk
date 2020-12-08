@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -101,7 +101,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// - Relations
         /// - Semantic roles
         /// - Sentiment
-        /// - Syntax.
+        /// - Syntax
+        /// - Summarization (Experimental)
         ///
         /// If a language for the input text is not specified with the `language` parameter, the service [automatically
         /// detects the
