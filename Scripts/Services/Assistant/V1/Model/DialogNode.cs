@@ -230,7 +230,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The context for the dialog node.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Context { get; set; }
+        public DialogNodeContext Context { get; set; }
         /// <summary>
         /// The metadata for the dialog node.
         /// </summary>
