@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,12 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("generic", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeOutputGeneric> Generic { get; set; }
+        /// <summary>
+        /// Output intended for specific integrations. For more information, see the
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-responses-json).
+        /// </summary>
+        [JsonProperty("integrations", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, Dictionary<string, object>> Integrations { get; set; }
         /// <summary>
         /// Options that modify how specified output is handled.
         /// </summary>

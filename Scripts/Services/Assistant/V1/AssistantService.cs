@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -204,13 +204,16 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned workspaces will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
-        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
@@ -238,6 +241,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -296,22 +303,22 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
         /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
         /// data is not to be used. (optional, default to false)</param>
         /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
         /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
-        /// (optional)</param>
-        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
-        /// irrelevant input. (optional)</param>
-        /// <param name="webhooks"> (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, List<Webhook> webhooks = null, bool? includeAudit = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<Webhook> webhooks = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
@@ -350,22 +357,22 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (learningOptOut != null)
                 bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
             if (systemSettings != null)
                 bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
                 bodyObject["entities"] = JToken.FromObject(entities);
-            if (dialogNodes != null && dialogNodes.Count > 0)
-                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
-            if (counterexamples != null && counterexamples.Count > 0)
-                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (webhooks != null && webhooks.Count > 0)
-                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
@@ -501,17 +508,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
         /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
         /// data is not to be used. (optional, default to false)</param>
         /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
         /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
-        /// (optional)</param>
-        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
-        /// irrelevant input. (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the object. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data for a workspace includes **entities** and
@@ -519,11 +527,10 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
-        /// <param name="webhooks"> (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null, bool? includeAudit = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<Webhook> webhooks = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, bool? append = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
@@ -568,22 +575,22 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (learningOptOut != null)
                 bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
             if (systemSettings != null)
                 bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
                 bodyObject["entities"] = JToken.FromObject(entities);
-            if (dialogNodes != null && dialogNodes.Count > 0)
-                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
-            if (counterexamples != null && counterexamples.Count > 0)
-                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (webhooks != null && webhooks.Count > 0)
-                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
@@ -697,13 +704,16 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned intents will be sorted. To reverse the sort order, prefix
         /// the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="IntentCollection" />IntentCollection</returns>
-        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListIntents`");
@@ -737,6 +747,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -1152,13 +1166,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned examples will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="ExampleCollection" />ExampleCollection</returns>
-        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListExamples`");
@@ -1190,6 +1207,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -1591,13 +1612,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned counterexamples will be sorted. To reverse the sort
         /// order, prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="CounterexampleCollection" />CounterexampleCollection</returns>
-        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCounterexamples`");
@@ -1627,6 +1651,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -2013,13 +2041,16 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entities will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="EntityCollection" />EntityCollection</returns>
-        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListEntities`");
@@ -2053,6 +2084,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -2569,13 +2604,16 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entity values will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="ValueCollection" />ValueCollection</returns>
-        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListValues`");
@@ -2611,6 +2649,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -3064,13 +3106,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entity value synonyms will be sorted. To reverse the sort
         /// order, prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="SynonymCollection" />SynonymCollection</returns>
-        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListSynonyms`");
@@ -3104,6 +3149,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -3509,13 +3558,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned dialog nodes will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
-        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
@@ -3545,6 +3597,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -3638,7 +3694,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null, bool? includeAudit = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, DialogNodeContext context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
@@ -3874,7 +3930,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null, bool? includeAudit = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, DialogNodeContext newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -4314,6 +4370,86 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+        /// <summary>
+        /// Identify intents and entities in multiple user utterances.
+        ///
+        /// Send multiple user inputs to a workspace in a single request and receive information about the intents and
+        /// entities recognized in each input. This method is useful for testing and comparing the performance of
+        /// different workspaces.
+        ///
+        /// This method is available only with Premium plans.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="input">An array of input utterances to classify. (optional)</param>
+        /// <returns><see cref="BulkClassifyResponse" />BulkClassifyResponse</returns>
+        public bool BulkClassify(Callback<BulkClassifyResponse> callback, string workspaceId, List<BulkClassifyUtterance> input = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `BulkClassify`");
+
+            RequestObject<BulkClassifyResponse> req = new RequestObject<BulkClassifyResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "BulkClassify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            req.Parameters["version"] = VersionDate;
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (input != null && input.Count > 0)
+                bodyObject["input"] = JToken.FromObject(input);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnBulkClassifyResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/bulk_classify", workspaceId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnBulkClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<BulkClassifyResponse> response = new DetailedResponse<BulkClassifyResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<BulkClassifyResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnBulkClassifyResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<BulkClassifyResponse>)req).Callback != null)
+                ((RequestObject<BulkClassifyResponse>)req).Callback(response, resp.Error);
         }
     }
 }

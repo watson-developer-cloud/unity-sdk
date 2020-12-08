@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -230,7 +230,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// The context for the dialog node.
         /// </summary>
         [JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Context { get; set; }
+        public DialogNodeContext Context { get; set; }
         /// <summary>
         /// The metadata for the dialog node.
         /// </summary>

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,14 +22,31 @@ namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
     /// DialogNodeOutputGeneric.
+    /// Classes which extend this class:
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeText
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypePause
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeImage
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeOption
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
     /// </summary>
     public class DialogNodeOutputGeneric
     {
+        /// This ctor is protected to prevent instantiation of this base class.
+        /// Instead, users should instantiate one of the subclasses listed below:
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeText
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypePause
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeImage
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeOption
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
+        protected DialogNodeOutputGeneric()
+        {
+        }
+
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
-        ///
-        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
         /// </summary>
         public class ResponseTypeValue
         {
@@ -37,32 +54,11 @@ namespace IBM.Watson.Assistant.V1.Model
             /// Constant TEXT for text
             /// </summary>
             public const string TEXT = "text";
-            /// <summary>
-            /// Constant PAUSE for pause
-            /// </summary>
-            public const string PAUSE = "pause";
-            /// <summary>
-            /// Constant IMAGE for image
-            /// </summary>
-            public const string IMAGE = "image";
-            /// <summary>
-            /// Constant OPTION for option
-            /// </summary>
-            public const string OPTION = "option";
-            /// <summary>
-            /// Constant CONNECT_TO_AGENT for connect_to_agent
-            /// </summary>
-            public const string CONNECT_TO_AGENT = "connect_to_agent";
-            /// <summary>
-            /// Constant SEARCH_SKILL for search_skill
-            /// </summary>
-            public const string SEARCH_SKILL = "search_skill";
             
         }
 
         /// <summary>
-        /// How a response is selected from the list, if more than one response is specified. Valid only when
-        /// **response_type**=`text`.
+        /// How a response is selected from the list, if more than one response is specified.
         /// </summary>
         public class SelectionPolicyValue
         {
@@ -82,8 +78,7 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// The preferred type of control to display, if supported by the channel. Valid only when
-        /// **response_type**=`option`.
+        /// The preferred type of control to display, if supported by the channel.
         /// </summary>
         public class PreferenceValue
         {
@@ -99,7 +94,7 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// The type of the search query. Required when **response_type**=`search_skill`.
+        /// The type of the search query.
         /// </summary>
         public class QueryTypeValue
         {
@@ -117,101 +112,110 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
-        ///
-        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.ResponseTypeValue
         /// </summary>
         [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
         public string ResponseType { get; set; }
         /// <summary>
-        /// How a response is selected from the list, if more than one response is specified. Valid only when
-        /// **response_type**=`text`.
+        /// How a response is selected from the list, if more than one response is specified.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.SelectionPolicyValue
         /// </summary>
         [JsonProperty("selection_policy", NullValueHandling = NullValueHandling.Ignore)]
         public string SelectionPolicy { get; set; }
         /// <summary>
-        /// The preferred type of control to display, if supported by the channel. Valid only when
-        /// **response_type**=`option`.
+        /// The preferred type of control to display, if supported by the channel.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.PreferenceValue
         /// </summary>
         [JsonProperty("preference", NullValueHandling = NullValueHandling.Ignore)]
         public string Preference { get; set; }
         /// <summary>
-        /// The type of the search query. Required when **response_type**=`search_skill`.
+        /// The type of the search query.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.QueryTypeValue
         /// </summary>
         [JsonProperty("query_type", NullValueHandling = NullValueHandling.Ignore)]
         public string QueryType { get; set; }
         /// <summary>
-        /// A list of one or more objects defining text responses. Required when **response_type**=`text`.
+        /// A list of one or more objects defining text responses.
         /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogNodeOutputTextValuesElement> Values { get; set; }
+        public List<DialogNodeOutputTextValuesElement> Values { get; protected set; }
         /// <summary>
         /// The delimiter to use as a separator between responses when `selection_policy`=`multiline`.
         /// </summary>
         [JsonProperty("delimiter", NullValueHandling = NullValueHandling.Ignore)]
-        public string Delimiter { get; set; }
+        public string Delimiter { get; protected set; }
         /// <summary>
-        /// How long to pause, in milliseconds. The valid values are from 0 to 10000. Valid only when
-        /// **response_type**=`pause`.
+        /// How long to pause, in milliseconds. The valid values are from 0 to 10000.
         /// </summary>
         [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Time { get; set; }
+        public long? Time { get; protected set; }
         /// <summary>
         /// Whether to send a "user is typing" event during the pause. Ignored if the channel does not support this
-        /// event. Valid only when **response_type**=`pause`.
+        /// event.
         /// </summary>
         [JsonProperty("typing", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Typing { get; set; }
+        public bool? Typing { get; protected set; }
         /// <summary>
-        /// The URL of the image. Required when **response_type**=`image`.
+        /// The URL of the image.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
-        public string Source { get; set; }
+        public string Source { get; protected set; }
         /// <summary>
-        /// An optional title to show before the response. Valid only when **response_type**=`image` or `option`.
+        /// An optional title to show before the response.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-        public string Title { get; set; }
+        public string Title { get; protected set; }
         /// <summary>
-        /// An optional description to show with the response. Valid only when **response_type**=`image` or `option`.
+        /// An optional description to show with the response.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; set; }
+        public string Description { get; protected set; }
         /// <summary>
         /// An array of objects describing the options from which the user can choose. You can include up to 20 options.
-        /// Required when **response_type**=`option`.
         /// </summary>
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogNodeOutputOptionsElement> Options { get; set; }
+        public List<DialogNodeOutputOptionsElement> Options { get; protected set; }
         /// <summary>
-        /// An optional message to be sent to the human agent who will be taking over the conversation. Valid only when
-        /// **reponse_type**=`connect_to_agent`.
+        /// An optional message to be sent to the human agent who will be taking over the conversation.
         /// </summary>
         [JsonProperty("message_to_human_agent", NullValueHandling = NullValueHandling.Ignore)]
-        public string MessageToHumanAgent { get; set; }
+        public string MessageToHumanAgent { get; protected set; }
+        /// <summary>
+        /// An optional message to be displayed to the user to indicate that the conversation will be transferred to the
+        /// next available agent.
+        /// </summary>
+        [JsonProperty("agent_available", NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentAvailable { get; protected set; }
+        /// <summary>
+        /// An optional message to be displayed to the user to indicate that no online agent is available to take over
+        /// the conversation.
+        /// </summary>
+        [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
+        public string AgentUnavailable { get; protected set; }
+        /// <summary>
+        /// Routing or other contextual information to be used by target service desk systems.
+        /// </summary>
+        [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
+        public DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
         /// <summary>
         /// The text of the search query. This can be either a natural-language query or a query that uses the Discovery
         /// query language syntax, depending on the value of the **query_type** property. For more information, see the
         /// [Discovery service
         /// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-operators#query-operators).
-        /// Required when **response_type**=`search_skill`.
         /// </summary>
         [JsonProperty("query", NullValueHandling = NullValueHandling.Ignore)]
-        public string Query { get; set; }
+        public string Query { get; protected set; }
         /// <summary>
         /// An optional filter that narrows the set of documents to be searched. For more information, see the
         /// [Discovery service documentation]([Discovery service
         /// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-parameters#filter).
         /// </summary>
         [JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
-        public string Filter { get; set; }
+        public string Filter { get; protected set; }
         /// <summary>
         /// The version of the Discovery service API to use for the query.
         /// </summary>
         [JsonProperty("discovery_version", NullValueHandling = NullValueHandling.Ignore)]
-        public string DiscoveryVersion { get; set; }
+        public string DiscoveryVersion { get; protected set; }
     }
 }
