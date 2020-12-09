@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Returns the top documents ranked by the score of the query.
     /// </summary>
-    public class QueryTopHitsAggregation
+    public class QueryTopHitsAggregation : QueryAggregation
     {
         /// <summary>
         /// The number of documents to return.

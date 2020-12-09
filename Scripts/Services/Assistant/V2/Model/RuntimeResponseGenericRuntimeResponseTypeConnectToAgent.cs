@@ -40,6 +40,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// A message to be sent to the human agent who will be taking over the conversation.
         /// </summary>
+        [JsonProperty("message_to_human_agent", NullValueHandling = NullValueHandling.Ignore)]
         public new string MessageToHumanAgent
         {
             get { return base.MessageToHumanAgent; }
@@ -49,6 +50,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// An optional message to be displayed to the user to indicate that the conversation will be transferred to the
         /// next available agent.
         /// </summary>
+        [JsonProperty("agent_available", NullValueHandling = NullValueHandling.Ignore)]
         public new string AgentAvailable
         {
             get { return base.AgentAvailable; }
@@ -58,6 +60,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// An optional message to be displayed to the user to indicate that no online agent is available to take over
         /// the conversation.
         /// </summary>
+        [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
         public new string AgentUnavailable
         {
             get { return base.AgentUnavailable; }
@@ -66,6 +69,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// Routing or other contextual information to be used by target service desk systems.
         /// </summary>
+        [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
         public new DialogNodeOutputConnectToAgentTransferInfo TransferInfo
         {
             get { return base.TransferInfo; }
@@ -75,6 +79,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// A label identifying the topic of the conversation, derived from the **title** property of the relevant node
         /// or the **topic** property of the dialog node response.
         /// </summary>
+        [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public new string Topic
         {
             get { return base.Topic; }

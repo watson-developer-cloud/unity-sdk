@@ -24,7 +24,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Result of the document analysis.
     /// </summary>
-    public class AnalyzedResult: DynamicModel<object>
+    public class AnalyzedResult : DynamicModel<object>
     {
         /// <summary>
         /// Metadata of the document.

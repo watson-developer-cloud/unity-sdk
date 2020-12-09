@@ -20,25 +20,29 @@ using Newtonsoft.Json;
 namespace IBM.Watson.VisualRecognition.V4.Model
 {
     /// <summary>
-    /// Details about an object in the collection.
+    /// Defines the location of the bounding box around the object.
     /// </summary>
-    public class ObjectDetail
+    public class ObjectDetailLocation
     {
         /// <summary>
-        /// The label for the object.
+        /// Y-position of top-left pixel of the bounding box.
         /// </summary>
-        [JsonProperty("object", NullValueHandling = NullValueHandling.Ignore)]
-        public string _Object { get; set; }
+        [JsonProperty("top", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Top { get; set; }
         /// <summary>
-        /// Defines the location of the bounding box around the object.
+        /// X-position of top-left pixel of the bounding box.
         /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public ObjectDetailLocation Location { get; set; }
+        [JsonProperty("left", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Left { get; set; }
         /// <summary>
-        /// Confidence score for the object in the range of 0 to 1. A higher score indicates greater likelihood that the
-        /// object is depicted at this location in the image.
+        /// Width in pixels of of the bounding box.
         /// </summary>
-        [JsonProperty("score", NullValueHandling = NullValueHandling.Ignore)]
-        public float? Score { get; set; }
+        [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Width { get; set; }
+        /// <summary>
+        /// Height in pixels of the bounding box.
+        /// </summary>
+        [JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Height { get; set; }
     }
 }

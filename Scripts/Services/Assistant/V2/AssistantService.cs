@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.Assistant.V2
 {
     public partial class AssistantService : BaseService
     {
-        private const string serviceId = "assistant";
+        private const string defaultServiceName = "assistant";
         private const string defaultServiceUrl = "https://api.us-south.assistant.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+        /// `2020-04-01`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.Assistant.V2
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public AssistantService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        public AssistantService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public AssistantService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// AssistantService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public AssistantService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// AssistantService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public AssistantService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -110,6 +135,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`callback` is required for `CreateSession`");
             if (string.IsNullOrEmpty(assistantId))
                 throw new ArgumentNullException("`assistantId` is required for `CreateSession`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<SessionResponse> req = new RequestObject<SessionResponse>
             {
@@ -130,7 +157,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnCreateSessionResponse;
 
@@ -164,6 +194,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<SessionResponse>)req).Callback != null)
                 ((RequestObject<SessionResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete session.
         ///
@@ -185,6 +216,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`callback` is required for `DeleteSession`");
             if (string.IsNullOrEmpty(assistantId))
                 throw new ArgumentNullException("`assistantId` is required for `DeleteSession`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(sessionId))
                 throw new ArgumentNullException("`sessionId` is required for `DeleteSession`");
 
@@ -207,7 +240,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteSessionResponse;
 
@@ -241,6 +277,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Send user input to assistant (stateful).
         ///
@@ -271,6 +308,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`assistantId` is required for `Message`");
             if (string.IsNullOrEmpty(sessionId))
                 throw new ArgumentNullException("`sessionId` is required for `Message`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
@@ -291,7 +330,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -334,6 +376,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<MessageResponse>)req).Callback != null)
                 ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Send user input to assistant (stateless).
         ///
@@ -360,6 +403,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`callback` is required for `MessageStateless`");
             if (string.IsNullOrEmpty(assistantId))
                 throw new ArgumentNullException("`assistantId` is required for `MessageStateless`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MessageResponseStateless> req = new RequestObject<MessageResponseStateless>
             {
@@ -380,7 +425,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -423,6 +471,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<MessageResponseStateless>)req).Callback != null)
                 ((RequestObject<MessageResponseStateless>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List log events for an assistant.
         ///
@@ -452,6 +501,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`callback` is required for `ListLogs`");
             if (string.IsNullOrEmpty(assistantId))
                 throw new ArgumentNullException("`assistantId` is required for `ListLogs`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<LogCollection> req = new RequestObject<LogCollection>
             {
@@ -472,7 +523,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(sort))
             {
                 req.Parameters["sort"] = sort;
@@ -522,6 +576,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<LogCollection>)req).Callback != null)
                 ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///
@@ -541,6 +596,8 @@ namespace IBM.Watson.Assistant.V2
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(customerId))
                 throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
@@ -563,7 +620,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;
@@ -601,6 +661,7 @@ namespace IBM.Watson.Assistant.V2
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Identify intents and entities in multiple user utterances.
         ///
@@ -621,6 +682,8 @@ namespace IBM.Watson.Assistant.V2
                 throw new ArgumentNullException("`callback` is required for `BulkClassify`");
             if (string.IsNullOrEmpty(skillId))
                 throw new ArgumentNullException("`skillId` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<BulkClassifyResponse> req = new RequestObject<BulkClassifyResponse>
             {
@@ -641,7 +704,10 @@ namespace IBM.Watson.Assistant.V2
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 

@@ -41,6 +41,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The title or introductory text to show before the response.
         /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public new string Title
         {
             get { return base.Title; }
@@ -49,6 +50,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// An array of objects describing the possible matching dialog nodes from which the user can choose.
         /// </summary>
+        [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public new List<DialogSuggestion> Suggestions
         {
             get { return base.Suggestions; }

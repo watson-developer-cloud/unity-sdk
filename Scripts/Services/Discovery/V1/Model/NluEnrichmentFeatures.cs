@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
@@ -48,7 +49,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// An object that indicates the Categories enrichment will be applied to the specified field.
         /// </summary>
         [JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
-        public NluEnrichmentCategories Categories { get; set; }
+        public Dictionary<string, object> Categories { get; set; }
         /// <summary>
         /// An object specifiying the semantic roles enrichment and related parameters.
         /// </summary>

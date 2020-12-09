@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
@@ -23,7 +24,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// <summary>
     /// State information for the conversation. To maintain state, include the context from the previous response.
     /// </summary>
-    public class Context: DynamicModel<object>
+    public class Context : DynamicModel<object>
     {
         /// <summary>
         /// The unique identifier of the conversation.
@@ -34,7 +35,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// For internal use only.
         /// </summary>
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public SystemResponse System { get; set; }
+        public Dictionary<string, object> System { get; set; }
         /// <summary>
         /// Metadata related to the message.
         /// </summary>

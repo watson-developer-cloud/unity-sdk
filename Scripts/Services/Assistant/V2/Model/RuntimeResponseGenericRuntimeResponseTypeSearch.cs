@@ -42,6 +42,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// The title or introductory text to show before the response. This text is defined in the search skill
         /// configuration.
         /// </summary>
+        [JsonProperty("header", NullValueHandling = NullValueHandling.Ignore)]
         public new string Header
         {
             get { return base.Header; }
@@ -50,6 +51,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// An array of objects that contains the search results to be displayed in the initial response to the user.
         /// </summary>
+        [JsonProperty("primary_results", NullValueHandling = NullValueHandling.Ignore)]
         public new List<SearchResult> PrimaryResults
         {
             get { return base.PrimaryResults; }
@@ -58,6 +60,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// An array of objects that contains additional search results that can be displayed to the user upon request.
         /// </summary>
+        [JsonProperty("additional_results", NullValueHandling = NullValueHandling.Ignore)]
         public new List<SearchResult> AdditionalResults
         {
             get { return base.AdditionalResults; }

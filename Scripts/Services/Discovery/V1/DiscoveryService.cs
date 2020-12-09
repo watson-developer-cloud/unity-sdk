@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.Discovery.V1
 {
     public partial class DiscoveryService : BaseService
     {
-        private const string serviceId = "discovery";
+        private const string defaultServiceName = "discovery";
         private const string defaultServiceUrl = "https://api.us-south.discovery.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current
+        /// version is `2019-04-30`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.Discovery.V1
         /// <summary>
         /// DiscoveryService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public DiscoveryService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2019-04-30`.</param>
+        public DiscoveryService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// DiscoveryService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2019-04-30`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public DiscoveryService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public DiscoveryService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// DiscoveryService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2019-04-30`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public DiscoveryService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// DiscoveryService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2019-04-30`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public DiscoveryService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of DiscoveryService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -107,6 +132,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEnvironment`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("`name` is required for `CreateEnvironment`");
 
@@ -129,7 +156,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -174,6 +204,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
                 ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List environments.
         ///
@@ -186,6 +217,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListEnvironments`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<ListEnvironmentsResponse> req = new RequestObject<ListEnvironmentsResponse>
             {
@@ -206,7 +239,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(name))
             {
                 req.Parameters["name"] = name;
@@ -244,6 +280,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ListEnvironmentsResponse>)req).Callback != null)
                 ((RequestObject<ListEnvironmentsResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get environment info.
         /// </summary>
@@ -254,6 +291,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetEnvironment`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetEnvironment`");
 
@@ -276,7 +315,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetEnvironmentResponse;
 
@@ -310,6 +352,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
                 ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update an environment.
         ///
@@ -327,6 +370,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateEnvironment`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateEnvironment`");
 
@@ -349,7 +394,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -394,6 +442,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelEnvironment>)req).Callback != null)
                 ((RequestObject<ModelEnvironment>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete environment.
         /// </summary>
@@ -404,6 +453,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteEnvironment`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteEnvironment`");
 
@@ -426,7 +477,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteEnvironmentResponse;
 
@@ -460,6 +514,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DeleteEnvironmentResponse>)req).Callback != null)
                 ((RequestObject<DeleteEnvironmentResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List fields across collections.
         ///
@@ -473,6 +528,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListFields`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListFields`");
             if (collectionIds == null)
@@ -497,7 +554,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (collectionIds != null && collectionIds.Count > 0)
             {
                 req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
@@ -535,6 +595,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
                 ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add configuration.
         ///
@@ -562,6 +623,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateConfiguration`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateConfiguration`");
             if (string.IsNullOrEmpty(name))
@@ -586,7 +649,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -637,6 +703,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Configuration>)req).Callback != null)
                 ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List configurations.
         ///
@@ -650,6 +717,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListConfigurations`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListConfigurations`");
 
@@ -672,7 +741,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(name))
             {
                 req.Parameters["name"] = name;
@@ -710,6 +782,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ListConfigurationsResponse>)req).Callback != null)
                 ((RequestObject<ListConfigurationsResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get configuration details.
         /// </summary>
@@ -721,6 +794,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetConfiguration`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
@@ -745,7 +820,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetConfigurationResponse;
 
@@ -779,6 +857,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Configuration>)req).Callback != null)
                 ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a configuration.
         ///
@@ -806,6 +885,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateConfiguration`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
@@ -832,7 +913,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -883,6 +967,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Configuration>)req).Callback != null)
                 ((RequestObject<Configuration>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a configuration.
         ///
@@ -899,6 +984,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteConfiguration`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteConfiguration`");
             if (string.IsNullOrEmpty(configurationId))
@@ -923,7 +1010,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteConfigurationResponse;
 
@@ -957,6 +1047,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DeleteConfigurationResponse>)req).Callback != null)
                 ((RequestObject<DeleteConfigurationResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a collection.
         /// </summary>
@@ -973,6 +1064,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateCollection`");
             if (string.IsNullOrEmpty(name))
@@ -997,7 +1090,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1044,6 +1140,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List collections.
         ///
@@ -1057,6 +1154,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCollections`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListCollections`");
 
@@ -1079,7 +1178,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(name))
             {
                 req.Parameters["name"] = name;
@@ -1117,6 +1219,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ListCollectionsResponse>)req).Callback != null)
                 ((RequestObject<ListCollectionsResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get collection details.
         /// </summary>
@@ -1128,6 +1231,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetCollection`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1152,7 +1257,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetCollectionResponse;
 
@@ -1186,6 +1294,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a collection.
         /// </summary>
@@ -1201,6 +1310,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateCollection`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1227,7 +1338,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1272,6 +1386,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a collection.
         /// </summary>
@@ -1283,6 +1398,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteCollection`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1307,7 +1424,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteCollectionResponse;
 
@@ -1341,6 +1461,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DeleteCollectionResponse>)req).Callback != null)
                 ((RequestObject<DeleteCollectionResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List collection fields.
         ///
@@ -1354,6 +1475,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCollectionFields`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListCollectionFields`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1378,7 +1501,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListCollectionFieldsResponse;
 
@@ -1412,6 +1538,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ListCollectionFieldsResponse>)req).Callback != null)
                 ((RequestObject<ListCollectionFieldsResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get the expansion list.
         ///
@@ -1426,6 +1553,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListExpansions`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListExpansions`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1450,7 +1579,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListExpansionsResponse;
 
@@ -1484,6 +1616,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Expansions>)req).Callback != null)
                 ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create or update expansion list.
         ///
@@ -1511,6 +1644,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateExpansions`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateExpansions`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1537,7 +1672,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1578,6 +1716,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Expansions>)req).Callback != null)
                 ((RequestObject<Expansions>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete the expansion list.
         ///
@@ -1592,6 +1731,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteExpansions`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteExpansions`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1616,7 +1757,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteExpansionsResponse;
 
@@ -1650,6 +1794,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get tokenization dictionary status.
         ///
@@ -1663,6 +1808,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTokenizationDictionaryStatus`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetTokenizationDictionaryStatus`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1687,7 +1834,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetTokenizationDictionaryStatusResponse;
 
@@ -1721,6 +1871,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create tokenization dictionary.
         ///
@@ -1737,6 +1888,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateTokenizationDictionary`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateTokenizationDictionary`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1761,7 +1914,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1802,6 +1958,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete tokenization dictionary.
         ///
@@ -1815,6 +1972,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTokenizationDictionary`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteTokenizationDictionary`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1839,7 +1998,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteTokenizationDictionaryResponse;
 
@@ -1873,6 +2035,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get stopword list status.
         ///
@@ -1886,6 +2049,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetStopwordListStatus`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetStopwordListStatus`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1910,7 +2075,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetStopwordListStatusResponse;
 
@@ -1944,6 +2112,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create stopword list.
         ///
@@ -1959,6 +2128,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateStopwordList`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
@@ -1987,11 +2158,14 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (stopwordFile != null)
             {
                 req.Forms["stopword_file"] = new RESTConnector.Form(stopwordFile, stopwordFilename, "application/octet-stream");
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnCreateStopwordListResponse;
@@ -2026,6 +2200,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TokenDictStatusResponse>)req).Callback != null)
                 ((RequestObject<TokenDictStatusResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom stopword list.
         ///
@@ -2040,6 +2215,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteStopwordList`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteStopwordList`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2064,7 +2241,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteStopwordListResponse;
 
@@ -2098,6 +2278,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add a document.
         ///
@@ -2143,6 +2324,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `AddDocument`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2167,7 +2350,6 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
@@ -2176,6 +2358,10 @@ namespace IBM.Watson.Discovery.V1
             if (!string.IsNullOrEmpty(metadata))
             {
                 req.Forms["metadata"] = new RESTConnector.Form(metadata);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnAddDocumentResponse;
@@ -2210,6 +2396,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
                 ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get document details.
         ///
@@ -2226,6 +2413,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetDocumentStatus`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetDocumentStatus`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2252,7 +2441,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
@@ -2286,6 +2478,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DocumentStatus>)req).Callback != null)
                 ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a document.
         ///
@@ -2314,6 +2507,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateDocument`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2340,7 +2535,6 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
@@ -2349,6 +2543,10 @@ namespace IBM.Watson.Discovery.V1
             if (!string.IsNullOrEmpty(metadata))
             {
                 req.Forms["metadata"] = new RESTConnector.Form(metadata);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnUpdateDocumentResponse;
@@ -2383,6 +2581,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DocumentAccepted>)req).Callback != null)
                 ((RequestObject<DocumentAccepted>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a document.
         ///
@@ -2398,6 +2597,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteDocument`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2424,7 +2625,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteDocumentResponse;
 
@@ -2458,6 +2662,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DeleteDocumentResponse>)req).Callback != null)
                 ((RequestObject<DeleteDocumentResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Query a collection.
         ///
@@ -2532,6 +2737,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Query`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `Query`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2556,7 +2763,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -2640,6 +2850,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<QueryResponse>)req).Callback != null)
                 ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Query system notices.
         ///
@@ -2699,6 +2910,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryNotices`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `QueryNotices`");
             if (string.IsNullOrEmpty(collectionId))
@@ -2723,7 +2936,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(filter))
             {
                 req.Parameters["filter"] = filter;
@@ -2825,6 +3041,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
                 ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Query multiple collections.
         ///
@@ -2894,6 +3111,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQuery`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `FederatedQuery`");
             if (string.IsNullOrEmpty(collectionIds))
@@ -2918,7 +3137,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3002,6 +3224,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<QueryResponse>)req).Callback != null)
                 ((RequestObject<QueryResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Query multiple collection system notices.
         ///
@@ -3053,6 +3276,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `FederatedQueryNotices`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `FederatedQueryNotices`");
             if (collectionIds == null)
@@ -3077,7 +3302,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (collectionIds != null && collectionIds.Count > 0)
             {
                 req.Parameters["collection_ids"] = string.Join(",", collectionIds.ToArray());
@@ -3167,6 +3395,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<QueryNoticesResponse>)req).Callback != null)
                 ((RequestObject<QueryNoticesResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get Autocomplete Suggestions.
         ///
@@ -3186,6 +3415,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetAutocompletion`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetAutocompletion`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3212,7 +3443,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(prefix))
             {
                 req.Parameters["prefix"] = prefix;
@@ -3258,6 +3492,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Completions>)req).Callback != null)
                 ((RequestObject<Completions>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List training data.
         ///
@@ -3271,6 +3506,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3295,7 +3532,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListTrainingDataResponse;
 
@@ -3329,6 +3569,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingDataSet>)req).Callback != null)
                 ((RequestObject<TrainingDataSet>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add query to training data.
         ///
@@ -3347,6 +3588,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `AddTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3371,7 +3614,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3416,6 +3662,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingQuery>)req).Callback != null)
                 ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete all training data.
         ///
@@ -3429,6 +3676,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteAllTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteAllTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3453,7 +3702,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteAllTrainingDataResponse;
 
@@ -3487,6 +3739,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get details about a query.
         ///
@@ -3501,6 +3754,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3527,7 +3782,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetTrainingDataResponse;
 
@@ -3561,6 +3819,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingQuery>)req).Callback != null)
                 ((RequestObject<TrainingQuery>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a training data query.
         ///
@@ -3575,6 +3834,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingData`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3601,7 +3862,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteTrainingDataResponse;
 
@@ -3635,6 +3899,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List examples for a training data query.
         ///
@@ -3649,6 +3914,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListTrainingExamples`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListTrainingExamples`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3675,7 +3942,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListTrainingExamplesResponse;
 
@@ -3709,6 +3979,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingExampleList>)req).Callback != null)
                 ((RequestObject<TrainingExampleList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add example to training data query.
         ///
@@ -3726,6 +3997,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateTrainingExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3752,7 +4025,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3797,6 +4073,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingExample>)req).Callback != null)
                 ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete example for training data query.
         ///
@@ -3812,6 +4089,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteTrainingExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3840,7 +4119,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteTrainingExampleResponse;
 
@@ -3874,6 +4156,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Change label or cross reference for example.
         ///
@@ -3891,6 +4174,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateTrainingExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
@@ -3919,7 +4204,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -3962,6 +4250,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingExample>)req).Callback != null)
                 ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get details for training data example.
         ///
@@ -3977,6 +4266,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetTrainingExample`");
             if (string.IsNullOrEmpty(collectionId))
@@ -4005,7 +4296,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetTrainingExampleResponse;
 
@@ -4039,6 +4333,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<TrainingExample>)req).Callback != null)
                 ((RequestObject<TrainingExample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///
@@ -4056,6 +4351,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(customerId))
                 throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
@@ -4078,7 +4375,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;
@@ -4116,6 +4416,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create event.
         ///
@@ -4130,6 +4431,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateEvent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(type))
                 throw new ArgumentNullException("`type` is required for `CreateEvent`");
             if (data == null)
@@ -4154,7 +4457,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -4197,6 +4503,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<CreateEventResponse>)req).Callback != null)
                 ((RequestObject<CreateEventResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Search the query and event log.
         ///
@@ -4222,6 +4529,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `QueryLog`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<LogQueryResponse> req = new RequestObject<LogQueryResponse>
             {
@@ -4242,7 +4551,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(filter))
             {
                 req.Parameters["filter"] = filter;
@@ -4296,6 +4608,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<LogQueryResponse>)req).Callback != null)
                 ((RequestObject<LogQueryResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Number of queries over time.
         ///
@@ -4312,6 +4625,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQuery`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4332,7 +4647,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
@@ -4378,6 +4696,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<MetricResponse>)req).Callback != null)
                 ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Number of queries with an event over time.
         ///
@@ -4396,6 +4715,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryEvent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4416,7 +4737,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
@@ -4462,6 +4786,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<MetricResponse>)req).Callback != null)
                 ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Number of queries with no search results over time.
         ///
@@ -4479,6 +4804,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryNoResults`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4499,7 +4826,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
@@ -4545,6 +4875,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<MetricResponse>)req).Callback != null)
                 ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Percentage of queries with an associated event.
         ///
@@ -4563,6 +4894,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsEventRate`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MetricResponse> req = new RequestObject<MetricResponse>
             {
@@ -4583,7 +4916,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
@@ -4629,6 +4965,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<MetricResponse>)req).Callback != null)
                 ((RequestObject<MetricResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Most frequent query tokens with an event.
         ///
@@ -4644,6 +4981,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetMetricsQueryTokenEvent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MetricTokenResponse> req = new RequestObject<MetricTokenResponse>
             {
@@ -4664,7 +5003,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (count != null)
             {
                 req.Parameters["count"] = count;
@@ -4702,6 +5044,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<MetricTokenResponse>)req).Callback != null)
                 ((RequestObject<MetricTokenResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List credentials.
         ///
@@ -4716,6 +5059,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCredentials`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListCredentials`");
 
@@ -4738,7 +5083,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListCredentialsResponse;
 
@@ -4772,6 +5120,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<CredentialsList>)req).Callback != null)
                 ((RequestObject<CredentialsList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create credentials.
         ///
@@ -4801,6 +5150,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateCredentials`");
 
@@ -4823,7 +5174,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -4868,6 +5222,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelCredentials>)req).Callback != null)
                 ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// View Credentials.
         ///
@@ -4884,6 +5239,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCredentials`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetCredentials`");
             if (string.IsNullOrEmpty(credentialId))
@@ -4908,7 +5265,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetCredentialsResponse;
 
@@ -4942,6 +5302,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelCredentials>)req).Callback != null)
                 ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update credentials.
         ///
@@ -4971,6 +5332,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `UpdateCredentials`");
             if (string.IsNullOrEmpty(credentialId))
@@ -4995,7 +5358,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -5040,6 +5406,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<ModelCredentials>)req).Callback != null)
                 ((RequestObject<ModelCredentials>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete credentials.
         ///
@@ -5053,6 +5420,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCredentials`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteCredentials`");
             if (string.IsNullOrEmpty(credentialId))
@@ -5077,7 +5446,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteCredentialsResponse;
 
@@ -5111,6 +5483,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<DeleteCredentials>)req).Callback != null)
                 ((RequestObject<DeleteCredentials>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List Gateways.
         ///
@@ -5123,6 +5496,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListGateways`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `ListGateways`");
 
@@ -5145,7 +5520,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListGatewaysResponse;
 
@@ -5179,6 +5557,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<GatewayList>)req).Callback != null)
                 ((RequestObject<GatewayList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create Gateway.
         ///
@@ -5192,6 +5571,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateGateway`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `CreateGateway`");
 
@@ -5214,7 +5595,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -5255,6 +5639,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Gateway>)req).Callback != null)
                 ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List Gateway Details.
         ///
@@ -5268,6 +5653,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetGateway`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `GetGateway`");
             if (string.IsNullOrEmpty(gatewayId))
@@ -5292,7 +5679,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetGatewayResponse;
 
@@ -5326,6 +5716,7 @@ namespace IBM.Watson.Discovery.V1
             if (((RequestObject<Gateway>)req).Callback != null)
                 ((RequestObject<Gateway>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete Gateway.
         ///
@@ -5339,6 +5730,8 @@ namespace IBM.Watson.Discovery.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteGateway`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(environmentId))
                 throw new ArgumentNullException("`environmentId` is required for `DeleteGateway`");
             if (string.IsNullOrEmpty(gatewayId))
@@ -5363,7 +5756,10 @@ namespace IBM.Watson.Discovery.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteGatewayResponse;
 
