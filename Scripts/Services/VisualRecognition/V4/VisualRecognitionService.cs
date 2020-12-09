@@ -30,6 +30,9 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.VisualRecognition.V4
 {
+    [System.Obsolete("On 1 December 2021, Visual Recognition will no longer be available. " +
+        "For more information, see Visual Recognition Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation).")]
     public partial class VisualRecognitionService : BaseService
     {
         private const string serviceId = "visual_recognition";
@@ -72,7 +75,6 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <param name="authenticator">The service authenticator.</param>
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
-            Log.Warning("VisualRecognition Deprecation Warning:", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation.");
             Authenticator = authenticator;
 
             if (string.IsNullOrEmpty(versionDate))
@@ -1529,11 +1531,11 @@ namespace IBM.Watson.VisualRecognition.V4
             req.Parameters["version"] = VersionDate;
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime?.ToString("yyyy-MM-dd");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime?.ToString("yyyy-MM-dd");
             }
 
             req.OnResponse = OnGetTrainingUsageResponse;

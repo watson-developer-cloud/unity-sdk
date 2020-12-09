@@ -29,6 +29,11 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.PersonalityInsights.V3
 {
+    [System.Obsolete("On 1 December 2021, Personality Insights will no longer be available." +
+        " Consider migrating to Watson Natural Language Understanding." +
+        "\nFor more information, see Personality Insights Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#personality-insights-deprecation).")]
+
     public partial class PersonalityInsightsService : BaseService
     {
         private const string serviceId = "personality_insights";
