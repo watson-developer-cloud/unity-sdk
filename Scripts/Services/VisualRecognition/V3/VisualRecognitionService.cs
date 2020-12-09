@@ -28,6 +28,9 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.VisualRecognition.V3
 {
+    [System.Obsolete("On 1 December 2021, Visual Recognition will no longer be available. " +
+        "For more information, see Visual Recognition Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation).")]
     public partial class VisualRecognitionService : BaseService
     {
         private const string serviceId = "visual_recognition";
@@ -70,7 +73,6 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <param name="authenticator">The service authenticator.</param>
         public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
         {
-            Log.Warning("Visual Recognition Deprecation Warning:", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation.");
             Authenticator = authenticator;
 
             if (string.IsNullOrEmpty(versionDate))

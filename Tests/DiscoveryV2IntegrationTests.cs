@@ -50,7 +50,7 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
-            analyzeDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/WatsonBeatsJeopardy.html";
+            analyzeDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV1/exampleConfigurationData.json";
 
             addDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestAddDoc.pdf";
             enrichmentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestEnrichments.csv";
@@ -680,9 +680,8 @@ namespace IBM.Watson.Tests
                         projectId: "{projectId}",
                         collectionId: "{collectionId}",
                         file: ms,
-                        filename: "WatsonBeatsJeopardy.html",
-                        fileContentType: "text/html",
-                        metadata: "{ \"metadata\": \"value\" }"
+                        filename: "exampleConfigurationData.json",
+                        fileContentType: "application/json"
                     );
                 }
             }
