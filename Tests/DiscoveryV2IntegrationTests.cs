@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
+            analyzeDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/WatsonBeatsJeopardy.html";
+
             addDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestAddDoc.pdf";
             enrichmentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestEnrichments.csv";
         }
@@ -644,6 +646,48 @@ namespace IBM.Watson.Tests
             );
 
             while (projectDetailsResponse == null)
+                yield return null;
+        }
+        #endregion
+
+        #region AnalyzeDocument
+        [UnityTest, Order(20)]
+        public IEnumerator TestAnalyzeDocument()
+        {
+            BearerTokenAuthenticator authenticator = new BearerTokenAuthenticator(
+                bearerToken: "{BEARER_TOKEN}"
+            );
+            DiscoveryService cpdService = new DiscoveryService(versionDate, authenticator);
+            cpdService.SetServiceUrl("{SERVICE_URL}");
+            cpdService.WithHeader("X-Watson-Test", "1");
+
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to AnalyzeDocument...");
+            AnalyzedDocument analyzeDocumentResponse = null;
+            using (FileStream fs = File.OpenRead(analyzeDocumentFile))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+
+                    cpdService.AnalyzeDocument(
+                        callback: (DetailedResponse<AnalyzedDocument> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV2IntegrationTests", "AnalyzeDocument result: {0}", response.Response);
+                            analyzeDocumentResponse = response.Result;
+                            Assert.IsNull(error);
+                            Assert.IsNotNull(analyzeDocumentResponse);
+                        },
+                        projectId: "{projectId}",
+                        collectionId: "{collectionId}",
+                        file: ms,
+                        filename: "WatsonBeatsJeopardy.html",
+                        fileContentType: "text/html",
+                        metadata: "{ \"metadata\": \"value\" }"
+                    );
+                }
+            }
+
+            while (analyzeDocumentResponse == null)
                 yield return null;
         }
         #endregion

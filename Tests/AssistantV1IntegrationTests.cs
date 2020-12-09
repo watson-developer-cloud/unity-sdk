@@ -1140,6 +1140,40 @@ namespace IBM.Watson.Tests
                 yield return null;
         }
 
+        [UnityTest, Order(36)]
+        public IEnumerator TestBulkClassify()
+        {
+            IamAuthenticator auth = new IamAuthenticator(
+                apikey: "{IAM_APIKEY}"
+            );
+            //  Wait for tokendata
+            while (!auth.CanAuthenticate())
+                yield return null;
+            AssistantService premiumService = new AssistantService(versionDate, auth);
+            premiumService.SetServiceUrl("{SERVICE_URL}");
+
+            Log.Debug("AssistantServiceV1IntegrationTests", "Attempting to BulkClassify...");
+            BulkClassifyUtterance bulkClassifyUtterance = new BulkClassifyUtterance()
+            {
+              Text = "help I need help"
+            };
+            List<BulkClassifyUtterance> bulkClassifyUtterances = new List<BulkClassifyUtterance>() { bulkClassifyUtterance };
+            BulkClassifyResponse bulkClassifyResponse = null;
+            premiumService.BulkClassify(
+                callback: (DetailedResponse<BulkClassifyResponse> response, IBMError error) =>
+                {
+                    Log.Debug("AssistantServiceV1IntegrationTests", "BulkClassify result: {0}", response.Response);
+                    bulkClassifyResponse = response.Result;
+                    Assert.IsNull(error);
+                    Assert.IsNotNull(bulkClassifyResponse);
+                },
+                workspaceId: "f84c20fd-2c2d-4065-abcc-7a9ecc6da124",
+                input: bulkClassifyUtterances
+            );
+            while (bulkClassifyResponse == null)
+                yield return null;
+        }
+
         [UnityTest, Order(91)]
         public IEnumerator TestDeleteUserData()
         {

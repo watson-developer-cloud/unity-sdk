@@ -934,12 +934,11 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(queryResultTimeslice.Aggregations);
                     Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Field == "product.sales");
                     Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Interval == "2d");
-                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Anomaly == true);
                 },
                 environmentId: "system",
                 collectionId: "news-en",
                 naturalLanguageQuery: naturalLanguageQuery,
-                aggregation: "timeslice(product.sales,2day,anomaly:true)"
+                aggregation: "timeslice(product.sales,2day)"
             );
 
             QueryResponse queryResultTerm = null;
