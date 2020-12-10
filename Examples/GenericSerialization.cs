@@ -34,7 +34,7 @@ namespace IBM.Watson.Examples
 
             MessageResponse messageResponse = JsonConvert.DeserializeObject<MessageResponse>(responseJson);
 
-            var name = messageResponse.Context.Skills.Get("main skill").UserDefined["name"].ToString();
+            var name = messageResponse.Context.Skills["main skill"].UserDefined["name"].ToString();
             Log.Debug("GenericSerialization", "name: {0}", name);
 
         }

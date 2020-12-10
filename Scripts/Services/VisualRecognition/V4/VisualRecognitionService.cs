@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -150,11 +150,14 @@ namespace IBM.Watson.VisualRecognition.V4
                 throw new ArgumentNullException("`callback` is required for `Analyze`");
             if (string.IsNullOrEmpty(Version))
                 throw new ArgumentNullException("`Version` is required");
-            if (string.IsNullOrEmpty(collectionIds))
+            if (collectionIds == null || collectionIds.Count == 0)
+            {
                 throw new ArgumentNullException("`collectionIds` is required for `Analyze`");
-            if (string.IsNullOrEmpty(features))
+            }
+            if (features == null || features.Count == 0)
+            {
                 throw new ArgumentNullException("`features` is required for `Analyze`");
-
+            }
             RequestObject<AnalyzeResponse> req = new RequestObject<AnalyzeResponse>
             {
                 Callback = callback,

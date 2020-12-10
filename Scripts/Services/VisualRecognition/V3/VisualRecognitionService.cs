@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -193,19 +193,13 @@ namespace IBM.Watson.VisualRecognition.V3
             {
                 req.Forms["threshold"] = new RESTConnector.Form(threshold.ToString());
             }
-            if (owners != null)
+            if (owners != null && owners.Count > 0)
             {
-                    foreach (string item in owners)
-                    {
-                            req.Forms["owners"] = new RESTConnector.Form(item);
-                    }
+                req.Forms["owners"] = new RESTConnector.Form(string.Join(", ", owners.ToArray()));
             }
-            if (classifierIds != null)
+            if (classifierIds != null && classifierIds.Count > 0)
             {
-                    foreach (string item in classifierIds)
-                    {
-                            req.Forms["classifier_ids"] = new RESTConnector.Form(item);
-                    }
+                req.Forms["classifier_ids"] = new RESTConnector.Form(string.Join(", ", classifierIds.ToArray()));
             }
             if (!string.IsNullOrEmpty(Version))
             {
