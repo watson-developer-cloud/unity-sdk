@@ -23,6 +23,9 @@ using IBM.Watson.ToneAnalyzer.V3;
 using IBM.Watson.ToneAnalyzer.V3.Model;
 using NUnit.Framework;
 using UnityEngine.TestTools;
+using System.Text;
+using System.IO;
+
 
 namespace IBM.Watson.Tests
 {
@@ -63,10 +66,8 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("ToneAnalyzerServiceV3IntegrationTests", "Attempting to Tone...");
             ToneAnalysis toneResponse = null;
-            ToneInput toneInput = new ToneInput()
-            {
-                Text = inputText
-            };
+            byte[] bytes = Encoding.ASCII.GetBytes(inputText);
+            MemoryStream toneInput = new MemoryStream(bytes);
             service.Tone(
                 callback: (DetailedResponse<ToneAnalysis> response, IBMError error) =>
                 {

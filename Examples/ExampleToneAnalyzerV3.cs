@@ -24,6 +24,8 @@ using UnityEngine;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Authentication.Iam;
+using System.Text;
+using System.IO;
 
 namespace IBM.Watson.Examples
 {
@@ -79,10 +81,8 @@ namespace IBM.Watson.Examples
 
         private IEnumerator Examples()
         {
-            ToneInput toneInput = new ToneInput()
-            {
-                Text = stringToTestTone
-            };
+            byte[] bytes = Encoding.ASCII.GetBytes(stringToTestTone);
+            MemoryStream toneInput = new MemoryStream(bytes);
 
             List<string> tones = new List<string>()
             {
