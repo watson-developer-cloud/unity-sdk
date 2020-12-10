@@ -1,3 +1,25 @@
+# [5.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.8.0...v5.0.0) (2020-12-10)
+
+
+### Features
+
+* **AssistantV1:** Add support for BulkClassify ([20e42e3](https://github.com/watson-developer-cloud/unity-sdk/commit/20e42e3c26d16ed3257874e3244c5ccf4d83a0b0))
+* **AssistantV2:** Add support for BulkClassify and refactor context skill system ([52f0cf9](https://github.com/watson-developer-cloud/unity-sdk/commit/52f0cf940865fc28cbe14833c69bed8293149a1a))
+* **CompareComply:** add support for Modification in TypeLabel ([bd6d619](https://github.com/watson-developer-cloud/unity-sdk/commit/bd6d619e73f9e50873767457406b782d694b7098))
+* **DiscoveryV2:** Add support for AnalyzeDocuments ([fa97def](https://github.com/watson-developer-cloud/unity-sdk/commit/fa97def7cf4bac9468050a7c9b6db064647fedd0))
+* regenrate services using current API def ([30eb7de](https://github.com/watson-developer-cloud/unity-sdk/commit/30eb7debb1d46fec979a603810459c324087b53b))
+* **regeneration:** regenerated with generator 3.21.0 and api def sdk-major-release-2020 ([5de83ec](https://github.com/watson-developer-cloud/unity-sdk/commit/5de83ec432d1878d3f9edb98f47689a79f49a3bb))
+* **TextToSpeechV1:** add support for CustomModel and CustomModels ([235aef2](https://github.com/watson-developer-cloud/unity-sdk/commit/235aef25527060e89c40d4e4fa93c1aaa0660796))
+* **VisualRecognition:** Add deprecation warning and change starte and endtimes to DateTime ([d99b69a](https://github.com/watson-developer-cloud/unity-sdk/commit/d99b69add5d6d42ed733ccde176615f79e788491))
+
+
+### BREAKING CHANGES
+
+* **VisualRecognition:** change startTime and encTime to DateTime for GetTrainingUsave for
+VisualRecognitionV4
+* **TextToSpeechV1:** Moved from VoiceModel and VoiceModels to CustomModel and CustomModels
+* **AssistantV2:** MessageContextSkill
+
 # [4.8.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.7.1...v4.8.0) (2020-08-25)
 
 
