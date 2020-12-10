@@ -22,7 +22,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Configuration for suggested refinements.
     /// </summary>
-    public class QueryLargeSuggestedRefinements: QueryAggregation
+    public class QueryLargeSuggestedRefinements
     {
         /// <summary>
         /// Whether to perform suggested refinements.

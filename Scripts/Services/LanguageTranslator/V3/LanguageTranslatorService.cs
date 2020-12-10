@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.LanguageTranslator.V3
 {
     public partial class LanguageTranslatorService : BaseService
     {
-        private const string serviceId = "language_translator";
+        private const string defaultServiceName = "language_translator";
         private const string defaultServiceUrl = "https://api.us-south.language-translator.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current
+        /// version is `2018-05-01`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.LanguageTranslator.V3
         /// <summary>
         /// LanguageTranslatorService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public LanguageTranslatorService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-05-01`.</param>
+        public LanguageTranslatorService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// LanguageTranslatorService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-05-01`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public LanguageTranslatorService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public LanguageTranslatorService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// LanguageTranslatorService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-05-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public LanguageTranslatorService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// LanguageTranslatorService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-05-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public LanguageTranslatorService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of LanguageTranslatorService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -103,6 +128,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListLanguages`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Languages> req = new RequestObject<Languages>
             {
@@ -123,7 +150,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListLanguagesResponse;
 
@@ -157,6 +187,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<Languages>)req).Callback != null)
                 ((RequestObject<Languages>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Translate.
         ///
@@ -186,6 +217,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Translate`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (text == null)
                 throw new ArgumentNullException("`text` is required for `Translate`");
 
@@ -208,7 +241,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -255,6 +291,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<TranslationResult>)req).Callback != null)
                 ((RequestObject<TranslationResult>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List identifiable languages.
         ///
@@ -267,6 +304,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListIdentifiableLanguages`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<IdentifiableLanguages> req = new RequestObject<IdentifiableLanguages>
             {
@@ -287,7 +326,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListIdentifiableLanguagesResponse;
 
@@ -321,6 +363,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<IdentifiableLanguages>)req).Callback != null)
                 ((RequestObject<IdentifiableLanguages>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Identify language.
         ///
@@ -333,6 +376,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Identify`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `Identify`");
 
@@ -355,7 +400,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "text/plain";
             req.Headers["Accept"] = "application/json";
             req.Send = Encoding.UTF8.GetBytes(text);
@@ -392,6 +440,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<IdentifiedLanguages>)req).Callback != null)
                 ((RequestObject<IdentifiedLanguages>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List models.
         ///
@@ -409,6 +458,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<TranslationModels> req = new RequestObject<TranslationModels>
             {
@@ -429,7 +480,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(source))
             {
                 req.Parameters["source"] = source;
@@ -475,6 +529,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<TranslationModels>)req).Callback != null)
                 ((RequestObject<TranslationModels>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create model.
         ///
@@ -572,6 +627,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateModel`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(baseModelId))
                 throw new ArgumentNullException("`baseModelId` is required for `CreateModel`");
 
@@ -594,7 +651,6 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (forcedGlossary != null)
             {
@@ -603,6 +659,10 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (parallelCorpus != null)
             {
                 req.Forms["parallel_corpus"] = new RESTConnector.Form(parallelCorpus, "filename", "application/octet-stream");
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(baseModelId))
             {
@@ -645,6 +705,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<TranslationModel>)req).Callback != null)
                 ((RequestObject<TranslationModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete model.
         ///
@@ -657,6 +718,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteModel`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(modelId))
                 throw new ArgumentNullException("`modelId` is required for `DeleteModel`");
 
@@ -679,7 +742,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteModelResponse;
 
@@ -713,6 +779,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<DeleteModelResult>)req).Callback != null)
                 ((RequestObject<DeleteModelResult>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get model details.
         ///
@@ -727,6 +794,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetModel`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(modelId))
                 throw new ArgumentNullException("`modelId` is required for `GetModel`");
 
@@ -749,7 +818,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetModelResponse;
 
@@ -783,6 +855,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<TranslationModel>)req).Callback != null)
                 ((RequestObject<TranslationModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List documents.
         ///
@@ -794,6 +867,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListDocuments`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<DocumentList> req = new RequestObject<DocumentList>
             {
@@ -814,7 +889,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListDocumentsResponse;
 
@@ -848,6 +926,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<DocumentList>)req).Callback != null)
                 ((RequestObject<DocumentList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Translate document.
         ///
@@ -879,6 +958,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `TranslateDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `TranslateDocument`");
             if (string.IsNullOrEmpty(filename))
@@ -903,7 +984,6 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
@@ -924,6 +1004,10 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (!string.IsNullOrEmpty(documentId))
             {
                 req.Forms["document_id"] = new RESTConnector.Form(documentId);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnTranslateDocumentResponse;
@@ -958,6 +1042,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<DocumentStatus>)req).Callback != null)
                 ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get document status.
         ///
@@ -970,6 +1055,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetDocumentStatus`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(documentId))
                 throw new ArgumentNullException("`documentId` is required for `GetDocumentStatus`");
 
@@ -992,7 +1079,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetDocumentStatusResponse;
 
@@ -1026,6 +1116,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<DocumentStatus>)req).Callback != null)
                 ((RequestObject<DocumentStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete document.
         ///
@@ -1038,6 +1129,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(documentId))
                 throw new ArgumentNullException("`documentId` is required for `DeleteDocument`");
 
@@ -1060,7 +1153,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteDocumentResponse;
 
@@ -1094,6 +1190,7 @@ namespace IBM.Watson.LanguageTranslator.V3
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get translated document.
         ///
@@ -1115,6 +1212,8 @@ namespace IBM.Watson.LanguageTranslator.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTranslatedDocument`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(documentId))
                 throw new ArgumentNullException("`documentId` is required for `GetTranslatedDocument`");
 
@@ -1137,7 +1236,10 @@ namespace IBM.Watson.LanguageTranslator.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetTranslatedDocumentResponse;
 

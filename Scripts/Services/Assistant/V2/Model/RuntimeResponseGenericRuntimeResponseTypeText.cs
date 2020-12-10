@@ -40,6 +40,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The text of the response.
         /// </summary>
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public new string Text
         {
             get { return base.Text; }

@@ -142,7 +142,7 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to Recognize...");
             SpeechRecognitionResults recognizeResponse = null;
-            byte[] audio = File.ReadAllBytes(testAudioPath);
+            MemoryStream audio = new MemoryStream(File.ReadAllBytes(testAudioPath));
 
             service.Recognize(
                 callback: (DetailedResponse<SpeechRecognitionResults> response, IBMError error) =>
@@ -171,7 +171,7 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("SpeechToTextServiceV1IntegrationTests", "Attempting to CreateJob...");
             RecognitionJob createJobResponse = null;
-            byte[] audio = File.ReadAllBytes(testAudioPath);
+            MemoryStream audio = new MemoryStream(File.ReadAllBytes(testAudioPath));
 
             service.CreateJob(
                 callback: (DetailedResponse<RecognitionJob> response, IBMError error) =>
@@ -687,7 +687,7 @@ namespace IBM.Watson.Tests
                 },
                 customizationId: customizationId,
                 grammarName: grammarName,
-                grammarFile: File.ReadAllText(grammarPath),
+                grammarFile: new MemoryStream(File.ReadAllBytes(grammarPath)),
                 contentType: grammarsContentType,
                 allowOverwrite: true
             );
@@ -933,7 +933,7 @@ namespace IBM.Watson.Tests
                 },
                 customizationId: acousticModelCustomizationId,
                 audioName: acousticResourceName,
-                audioResource: acousticResourceData,
+                audioResource: new MemoryStream(acousticResourceData),
                 allowOverwrite: true,
                 contentType: acousticResourceMimeType,
                 containedContentType: acousticResourceMimeType

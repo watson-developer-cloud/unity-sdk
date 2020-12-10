@@ -61,6 +61,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// A list of one or more objects defining text responses.
         /// </summary>
+        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public new List<DialogNodeOutputTextValuesElement> Values
         {
             get { return base.Values; }
@@ -69,6 +70,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// The delimiter to use as a separator between responses when `selection_policy`=`multiline`.
         /// </summary>
+        [JsonProperty("delimiter", NullValueHandling = NullValueHandling.Ignore)]
         public new string Delimiter
         {
             get { return base.Delimiter; }

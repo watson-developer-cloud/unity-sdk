@@ -61,6 +61,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// [Discovery service
         /// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-operators#query-operators).
         /// </summary>
+        [JsonProperty("query", NullValueHandling = NullValueHandling.Ignore)]
         public new string Query
         {
             get { return base.Query; }
@@ -71,6 +72,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// [Discovery service documentation]([Discovery service
         /// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-query-parameters#filter).
         /// </summary>
+        [JsonProperty("filter", NullValueHandling = NullValueHandling.Ignore)]
         public new string Filter
         {
             get { return base.Filter; }
@@ -79,6 +81,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// <summary>
         /// The version of the Discovery service API to use for the query.
         /// </summary>
+        [JsonProperty("discovery_version", NullValueHandling = NullValueHandling.Ignore)]
         public new string DiscoveryVersion
         {
             get { return base.DiscoveryVersion; }

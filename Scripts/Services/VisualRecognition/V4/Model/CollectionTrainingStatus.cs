@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,25 +15,19 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
+namespace IBM.Watson.VisualRecognition.V4.Model
 {
     /// <summary>
-    /// The extracted object from the sentence.
+    /// Training status information for the collection.
     /// </summary>
-    public class SemanticRolesResultModelObject
+    public class CollectionTrainingStatus
     {
         /// <summary>
-        /// Object text.
+        /// Training status for the objects in the collection.
         /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public string Text { get; set; }
-        /// <summary>
-        /// An array of extracted keywords.
-        /// </summary>
-        [JsonProperty("keywords", NullValueHandling = NullValueHandling.Ignore)]
-        public List<SemanticRolesKeyword> Keywords { get; set; }
+        [JsonProperty("objects", NullValueHandling = NullValueHandling.Ignore)]
+        public ObjectTrainingStatus Objects { get; set; }
     }
 }
