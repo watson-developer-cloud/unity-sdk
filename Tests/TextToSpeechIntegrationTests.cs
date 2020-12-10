@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,11 +35,11 @@ namespace IBM.Watson.Tests
         private string allisionVoice = "en-US_AllisonVoice";
         private string synthesizeText = "Hello, welcome to the Watson Unity SDK!";
         private string synthesizeMimeType = "audio/wav";
-        private string voiceModelName = "unity-sdk-voice-model";
-        private string voiceModelNameUpdated = "unity-sdk-voice-model-updated";
-        private string voiceModelDescription = "Custom voice model for the Unity SDK integration tests. Safe to delete";
-        private string voiceModelDescriptionUpdated = "Custom voice model for the Unity SDK integration tests. Safe to delete. (Updated)";
-        private string voiceModelLanguage = "en-US";
+        private string customModelName = "unity-sdk-voice-model";
+        private string customModelNameUpdated = "unity-sdk-voice-model-updated";
+        private string customModelDescription = "Custom voice model for the Unity SDK integration tests. Safe to delete";
+        private string customModelDescriptionUpdated = "Custom voice model for the Unity SDK integration tests. Safe to delete. (Updated)";
+        private string customModelLanguage = "en-US";
         private string customizationId;
         private string customWord = "IBM";
         private string customWordTranslation = "eye bee m";
@@ -168,102 +168,102 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region CreateVoiceModel
+        #region CreateCustomModel
         [UnityTest, Order(4)]
-        public IEnumerator TestCreateVoiceModel()
+        public IEnumerator TestCreateCustomModel()
         {
-            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to CreateVoiceModel...");
-            VoiceModel createVoiceModelResponse = null;
-            service.CreateVoiceModel(
-                callback: (DetailedResponse<VoiceModel> response, IBMError error) =>
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to CreateCustomModel...");
+            CustomModel createCustomModelResponse = null;
+            service.CreateCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateVoiceModel result: {0}", response.Response);
-                    createVoiceModelResponse = response.Result;
-                    customizationId = createVoiceModelResponse.CustomizationId;
-                    Assert.IsNotNull(createVoiceModelResponse);
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateCustomModel result: {0}", response.Response);
+                    createCustomModelResponse = response.Result;
+                    customizationId = createCustomModelResponse.CustomizationId;
+                    Assert.IsNotNull(createCustomModelResponse);
                     Assert.IsNotNull(customizationId);
                     Assert.IsNull(error);
                 },
-                name: voiceModelName,
-                language: voiceModelLanguage,
-                description: voiceModelDescription
+                name: customModelName,
+                language: customModelLanguage,
+                description: customModelDescription
             );
 
-            while (createVoiceModelResponse == null)
+            while (createCustomModelResponse == null)
                 yield return null;
         }
         #endregion
 
-        #region GetVoiceModel
+        #region GetCustomModel
         [UnityTest, Order(5)]
-        public IEnumerator TestGetVoiceModel()
+        public IEnumerator TestGetCustomModel()
         {
-            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetVoiceModel...");
-            VoiceModel getVoiceModelResponse = null;
-            service.GetVoiceModel(
-                callback: (DetailedResponse<VoiceModel> response, IBMError error) =>
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetCustomModel...");
+            CustomModel getCustomModelResponse = null;
+            service.GetCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetVoiceModel result: {0}", response.Response);
-                    getVoiceModelResponse = response.Result;
-                    Assert.IsNotNull(getVoiceModelResponse);
-                    Assert.IsTrue(getVoiceModelResponse.CustomizationId == customizationId);
-                    Assert.IsTrue(getVoiceModelResponse.Name == voiceModelName);
-                    Assert.IsTrue(getVoiceModelResponse.Language == voiceModelLanguage);
-                    Assert.IsTrue(getVoiceModelResponse.Description == voiceModelDescription);
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetCustomModel result: {0}", response.Response);
+                    getCustomModelResponse = response.Result;
+                    Assert.IsNotNull(getCustomModelResponse);
+                    Assert.IsTrue(getCustomModelResponse.CustomizationId == customizationId);
+                    Assert.IsTrue(getCustomModelResponse.Name == customModelName);
+                    Assert.IsTrue(getCustomModelResponse.Language == customModelLanguage);
+                    Assert.IsTrue(getCustomModelResponse.Description == customModelDescription);
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId
             );
 
-            while (getVoiceModelResponse == null)
+            while (getCustomModelResponse == null)
                 yield return null;
         }
         #endregion
 
-        #region ListVoiceModels
+        #region ListCustomModels
         [UnityTest, Order(6)]
-        public IEnumerator TestListVoiceModels()
+        public IEnumerator TestListCustomModels()
         {
-            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListVoiceModels...");
-            VoiceModels listVoiceModelsResponse = null;
-            service.ListVoiceModels(
-                callback: (DetailedResponse<VoiceModels> response, IBMError error) =>
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListCustomModels...");
+            CustomModels listCustomModelsResponse = null;
+            service.ListCustomModels(
+                callback: (DetailedResponse<CustomModels> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListVoiceModels result: {0}", response.Response);
-                    listVoiceModelsResponse = response.Result;
-                    Assert.IsNotNull(listVoiceModelsResponse);
-                    Assert.IsNotNull(listVoiceModelsResponse.Customizations);
-                    Assert.IsTrue(listVoiceModelsResponse.Customizations.Count > 0);
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListCustomModels result: {0}", response.Response);
+                    listCustomModelsResponse = response.Result;
+                    Assert.IsNotNull(listCustomModelsResponse);
+                    Assert.IsNotNull(listCustomModelsResponse.Customizations);
+                    Assert.IsTrue(listCustomModelsResponse.Customizations.Count > 0);
                     Assert.IsNull(error);
                 },
-                language: voiceModelLanguage
+                language: customModelLanguage
             );
 
-            while (listVoiceModelsResponse == null)
+            while (listCustomModelsResponse == null)
                 yield return null;
         }
         #endregion
 
-        #region UpdateVoiceModel
+        #region UpdateCustomModel
         [UnityTest, Order(7)]
-        public IEnumerator TestUpdateVoiceModel()
+        public IEnumerator TestUpdateCustomModel()
         {
-            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to UpdateVoiceModel...");
-            object updateVoiceModelResponse = null;
-            service.UpdateVoiceModel(
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to UpdateCustomModel...");
+            object updateCustomModelResponse = null;
+            service.UpdateCustomModel(
                 callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "UpdateVoiceModel result: {0}", response.Response);
-                    updateVoiceModelResponse = response.Result;
-                    Assert.IsNotNull(updateVoiceModelResponse);
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "UpdateCustomModel result: {0}", response.Response);
+                    updateCustomModelResponse = response.Result;
+                    Assert.IsNotNull(updateCustomModelResponse);
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                name: voiceModelNameUpdated,
-                description: voiceModelDescriptionUpdated
+                name: customModelNameUpdated,
+                description: customModelDescriptionUpdated
             );
 
-            while (updateVoiceModelResponse == null)
+            while (updateCustomModelResponse == null)
                 yield return null;
         }
         #endregion
@@ -405,16 +405,16 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
-        #region DeleteVoiceModel
+        #region DeleteCustomModel
         [UnityTest, Order(98)]
-        public IEnumerator TestDeleteVoiceModel()
+        public IEnumerator TestDeleteCustomModel()
         {
-            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to DeleteVoiceModel...");
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to DeleteCustomModel...");
             bool isComplete = false;
-            service.DeleteVoiceModel(
+            service.DeleteCustomModel(
                 callback: (DetailedResponse<object> response, IBMError error) =>
                 {
-                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteVoiceModel result: {0}", response.Response);
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomModel result: {0}", response.Response);
                     Assert.IsTrue(response.StatusCode == 204);
                     Assert.IsNull(error);
                     isComplete = true;

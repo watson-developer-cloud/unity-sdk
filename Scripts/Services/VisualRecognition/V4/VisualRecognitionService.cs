@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -30,20 +34,25 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.VisualRecognition.V4
 {
+    [System.Obsolete("On 1 December 2021, Visual Recognition will no longer be available. " +
+        "For more information, see Visual Recognition Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation).")]
     public partial class VisualRecognitionService : BaseService
     {
-        private const string serviceId = "visual_recognition";
+        private const string defaultServiceName = "visual_recognition";
         private const string defaultServiceUrl = "https://api.us-south.visual-recognition.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+        /// `2019-02-11`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -62,25 +71,44 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <summary>
         /// VisualRecognitionService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public VisualRecognitionService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2019-02-11`.</param>
+        public VisualRecognitionService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// VisualRecognitionService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2019-02-11`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public VisualRecognitionService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// VisualRecognitionService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2019-02-11`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public VisualRecognitionService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// VisualRecognitionService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2019-02-11`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public VisualRecognitionService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -118,6 +146,10 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <returns><see cref="AnalyzeResponse" />AnalyzeResponse</returns>
         public bool Analyze(Callback<AnalyzeResponse> callback, List<string> collectionIds, List<string> features, List<FileWithMetadata> imagesFile = null, List<string> imageUrl = null, float? threshold = null)
         {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `Analyze`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (collectionIds == null || collectionIds.Count == 0)
             {
                 throw new ArgumentNullException("`collectionIds` is required for `Analyze`");
@@ -126,7 +158,6 @@ namespace IBM.Watson.VisualRecognition.V4
             {
                 throw new ArgumentNullException("`features` is required for `Analyze`");
             }
-
             RequestObject<AnalyzeResponse> req = new RequestObject<AnalyzeResponse>
             {
                 Callback = callback,
@@ -146,15 +177,20 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (collectionIds != null)
             {
-                req.Forms["collection_ids"] = new RESTConnector.Form(string.Join(",", collectionIds.ToArray()));
+                    foreach (string item in collectionIds)
+                    {
+                            req.Forms["collection_ids"] = new RESTConnector.Form(item);
+                    }
             }
             if (features != null)
             {
-                req.Forms["features"] = new RESTConnector.Form(string.Join(",", features.ToArray()));
+                    foreach (string item in features)
+                    {
+                            req.Forms["features"] = new RESTConnector.Form(item);
+                    }
             }
             if (imagesFile != null)
             {
@@ -173,6 +209,10 @@ namespace IBM.Watson.VisualRecognition.V4
             if (threshold != null)
             {
                 req.Forms["threshold"] = new RESTConnector.Form(threshold.ToString());
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnAnalyzeResponse;
@@ -207,6 +247,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<AnalyzeResponse>)req).Callback != null)
                 ((RequestObject<AnalyzeResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a collection.
         ///
@@ -222,11 +263,14 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <param name="name">The name of the collection. The name can contain alphanumeric, underscore, hyphen, and
         /// dot characters. It cannot begin with the reserved prefix `sys-`. (optional)</param>
         /// <param name="description">The description of the collection. (optional)</param>
+        /// <param name="trainingStatus">Training status information for the collection. (optional)</param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool CreateCollection(Callback<Collection> callback, string name = null, string description = null)
+        public bool CreateCollection(Callback<Collection> callback, string name = null, string description = null, TrainingStatus trainingStatus = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Collection> req = new RequestObject<Collection>
             {
@@ -247,7 +291,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -256,6 +303,8 @@ namespace IBM.Watson.VisualRecognition.V4
                 bodyObject["name"] = name;
             if (!string.IsNullOrEmpty(description))
                 bodyObject["description"] = description;
+            if (trainingStatus != null)
+                bodyObject["training_status"] = JToken.FromObject(trainingStatus);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCollectionResponse;
@@ -290,6 +339,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List collections.
         ///
@@ -301,6 +351,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCollections`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<CollectionsList> req = new RequestObject<CollectionsList>
             {
@@ -321,7 +373,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListCollectionsResponse;
 
@@ -355,6 +410,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<CollectionsList>)req).Callback != null)
                 ((RequestObject<CollectionsList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get collection details.
         ///
@@ -367,6 +423,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetCollection`");
 
@@ -389,7 +447,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetCollectionResponse;
 
@@ -423,6 +484,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a collection.
         ///
@@ -436,11 +498,14 @@ namespace IBM.Watson.VisualRecognition.V4
         /// <param name="name">The name of the collection. The name can contain alphanumeric, underscore, hyphen, and
         /// dot characters. It cannot begin with the reserved prefix `sys-`. (optional)</param>
         /// <param name="description">The description of the collection. (optional)</param>
+        /// <param name="trainingStatus">Training status information for the collection. (optional)</param>
         /// <returns><see cref="Collection" />Collection</returns>
-        public bool UpdateCollection(Callback<Collection> callback, string collectionId, string name = null, string description = null)
+        public bool UpdateCollection(Callback<Collection> callback, string collectionId, string name = null, string description = null, TrainingStatus trainingStatus = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `UpdateCollection`");
 
@@ -463,7 +528,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -472,6 +540,8 @@ namespace IBM.Watson.VisualRecognition.V4
                 bodyObject["name"] = name;
             if (!string.IsNullOrEmpty(description))
                 bodyObject["description"] = description;
+            if (trainingStatus != null)
+                bodyObject["training_status"] = JToken.FromObject(trainingStatus);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateCollectionResponse;
@@ -506,6 +576,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a collection.
         ///
@@ -518,6 +589,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteCollection`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `DeleteCollection`");
 
@@ -540,7 +613,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteCollectionResponse;
 
@@ -574,6 +650,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a model.
         ///
@@ -594,6 +671,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetModelFile`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetModelFile`");
             if (string.IsNullOrEmpty(feature))
@@ -620,7 +699,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(feature))
             {
                 req.Parameters["feature"] = feature;
@@ -652,6 +734,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<byte[]>)req).Callback != null)
                 ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add images.
         ///
@@ -685,6 +768,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddImages`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `AddImages`");
 
@@ -707,7 +792,6 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
@@ -726,6 +810,10 @@ namespace IBM.Watson.VisualRecognition.V4
             if (!string.IsNullOrEmpty(trainingData))
             {
                 req.Forms["training_data"] = new RESTConnector.Form(trainingData);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnAddImagesResponse;
@@ -760,6 +848,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<ImageDetailsList>)req).Callback != null)
                 ((RequestObject<ImageDetailsList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List images.
         ///
@@ -772,6 +861,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListImages`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `ListImages`");
 
@@ -794,7 +885,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListImagesResponse;
 
@@ -828,6 +922,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<ImageSummaryList>)req).Callback != null)
                 ((RequestObject<ImageSummaryList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get image details.
         ///
@@ -841,6 +936,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetImageDetails`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetImageDetails`");
             if (string.IsNullOrEmpty(imageId))
@@ -865,7 +962,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetImageDetailsResponse;
 
@@ -899,6 +999,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<ImageDetails>)req).Callback != null)
                 ((RequestObject<ImageDetails>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete an image.
         ///
@@ -912,6 +1013,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteImage`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `DeleteImage`");
             if (string.IsNullOrEmpty(imageId))
@@ -936,7 +1039,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteImageResponse;
 
@@ -970,6 +1076,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a JPEG file of an image.
         ///
@@ -986,6 +1093,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetJpegImage`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetJpegImage`");
             if (string.IsNullOrEmpty(imageId))
@@ -1010,7 +1119,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(size))
             {
                 req.Parameters["size"] = size;
@@ -1038,6 +1150,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<byte[]>)req).Callback != null)
                 ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List object metadata.
         ///
@@ -1050,6 +1163,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListObjectMetadata`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `ListObjectMetadata`");
 
@@ -1072,7 +1187,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListObjectMetadataResponse;
 
@@ -1106,6 +1224,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<ObjectMetadataList>)req).Callback != null)
                 ((RequestObject<ObjectMetadataList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update an object name.
         ///
@@ -1122,6 +1241,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateObjectMetadata`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `UpdateObjectMetadata`");
             if (string.IsNullOrEmpty(_object))
@@ -1148,7 +1269,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1189,6 +1313,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<UpdateObjectMetadata>)req).Callback != null)
                 ((RequestObject<UpdateObjectMetadata>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get object metadata.
         ///
@@ -1202,6 +1327,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetObjectMetadata`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `GetObjectMetadata`");
             if (string.IsNullOrEmpty(_object))
@@ -1226,7 +1353,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetObjectMetadataResponse;
 
@@ -1260,6 +1390,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<ObjectMetadata>)req).Callback != null)
                 ((RequestObject<ObjectMetadata>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete an object.
         ///
@@ -1274,6 +1405,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteObject`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `DeleteObject`");
             if (string.IsNullOrEmpty(_object))
@@ -1298,7 +1431,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteObjectResponse;
 
@@ -1332,6 +1468,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Train a collection.
         ///
@@ -1346,6 +1483,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Train`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `Train`");
 
@@ -1368,7 +1507,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnTrainResponse;
 
@@ -1402,6 +1544,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<Collection>)req).Callback != null)
                 ((RequestObject<Collection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add training data to an image.
         ///
@@ -1423,6 +1566,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddImageTrainingData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(collectionId))
                 throw new ArgumentNullException("`collectionId` is required for `AddImageTrainingData`");
             if (string.IsNullOrEmpty(imageId))
@@ -1447,7 +1592,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -1488,6 +1636,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<TrainingDataObjects>)req).Callback != null)
                 ((RequestObject<TrainingDataObjects>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get training usage.
         ///
@@ -1501,10 +1650,12 @@ namespace IBM.Watson.VisualRecognition.V4
         /// All events for the day are included. If empty or not specified, the current day is used. Specify the same
         /// value as `start_time` to request events for a single day. (optional)</param>
         /// <returns><see cref="TrainingEvents" />TrainingEvents</returns>
-        public bool GetTrainingUsage(Callback<TrainingEvents> callback, string startTime = null, string endTime = null)
+        public bool GetTrainingUsage(Callback<TrainingEvents> callback, DateTime? startTime = null, DateTime? endTime = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetTrainingUsage`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<TrainingEvents> req = new RequestObject<TrainingEvents>
             {
@@ -1525,12 +1676,15 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
-            if (!string.IsNullOrEmpty(startTime))
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
+            if (startTime != null)
             {
                 req.Parameters["start_time"] = startTime;
             }
-            if (!string.IsNullOrEmpty(endTime))
+            if (endTime != null)
             {
                 req.Parameters["end_time"] = endTime;
             }
@@ -1567,6 +1721,7 @@ namespace IBM.Watson.VisualRecognition.V4
             if (((RequestObject<TrainingEvents>)req).Callback != null)
                 ((RequestObject<TrainingEvents>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///
@@ -1584,6 +1739,8 @@ namespace IBM.Watson.VisualRecognition.V4
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(customerId))
                 throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
@@ -1606,7 +1763,10 @@ namespace IBM.Watson.VisualRecognition.V4
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;

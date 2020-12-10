@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Text;
 
 namespace IBM.Watson.Examples
 {
@@ -62,18 +63,8 @@ namespace IBM.Watson.Examples
 
         private IEnumerator Examples()
         {
-            Content content = new Content()
-            {
-                ContentItems = new List<ContentItem>()
-                {
-                    new ContentItem()
-                    {
-                        Content = testString,
-                        Contenttype = ContentItem.ContenttypeValue.TEXT_PLAIN,
-                        Language = ContentItem.LanguageValue.EN
-                    }
-                }
-            };
+            byte[] bytes = Encoding.ASCII.GetBytes(testString);
+            MemoryStream content = new MemoryStream(bytes);
 
             Log.Debug("ExamplePersonalityInsights.Examples()", "Attempting to Profile...");
             service.Profile(OnProfile, content: content);

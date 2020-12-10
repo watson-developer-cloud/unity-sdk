@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 {
     public partial class NaturalLanguageUnderstandingService : BaseService
     {
-        private const string serviceId = "natural_language_understanding";
+        private const string defaultServiceName = "natural_language_understanding";
         private const string defaultServiceUrl = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+        /// `2020-08-01`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public NaturalLanguageUnderstandingService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-08-01`.</param>
+        public NaturalLanguageUnderstandingService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-08-01`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public NaturalLanguageUnderstandingService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public NaturalLanguageUnderstandingService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// NaturalLanguageUnderstandingService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-08-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public NaturalLanguageUnderstandingService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// NaturalLanguageUnderstandingService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-08-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public NaturalLanguageUnderstandingService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of NaturalLanguageUnderstandingService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -101,7 +126,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// - Relations
         /// - Semantic roles
         /// - Sentiment
-        /// - Syntax.
+        /// - Syntax
+        /// - Summarization (Experimental)
         ///
         /// If a language for the input text is not specified with the `language` parameter, the service [automatically
         /// detects the
@@ -140,6 +166,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Analyze`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (features == null)
                 throw new ArgumentNullException("`features` is required for `Analyze`");
 
@@ -162,7 +190,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -221,6 +252,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             if (((RequestObject<AnalysisResults>)req).Callback != null)
                 ((RequestObject<AnalysisResults>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List models.
         ///
@@ -234,6 +266,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListModels`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<ListModelsResults> req = new RequestObject<ListModelsResults>
             {
@@ -254,7 +288,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListModelsResponse;
 
@@ -288,6 +325,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             if (((RequestObject<ListModelsResults>)req).Callback != null)
                 ((RequestObject<ListModelsResults>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete model.
         ///
@@ -300,6 +338,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteModel`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(modelId))
                 throw new ArgumentNullException("`modelId` is required for `DeleteModel`");
 
@@ -322,7 +362,10 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteModelResponse;
 

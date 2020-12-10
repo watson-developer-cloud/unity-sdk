@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,9 +35,8 @@ namespace IBM.Watson.SpeechToText.V1
 {
     public partial class SpeechToTextService : BaseService
     {
-        private const string serviceId = "speech_to_text";
+        private const string defaultServiceName = "speech_to_text";
         private const string defaultServiceUrl = "https://api.us-south.speech-to-text.watson.cloud.ibm.com";
-
 
         #region DisableSslVerification
         private bool disableSslVerification = false;
@@ -50,13 +53,26 @@ namespace IBM.Watson.SpeechToText.V1
         /// <summary>
         /// SpeechToTextService constructor.
         /// </summary>
-        public SpeechToTextService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        public SpeechToTextService() : this(defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// SpeechToTextService constructor.
         /// </summary>
         /// <param name="authenticator">The service authenticator.</param>
-        public SpeechToTextService(Authenticator authenticator) : base(authenticator, serviceId)
+        public SpeechToTextService(Authenticator authenticator) : this(defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// SpeechToTextService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public SpeechToTextService(string serviceName) : this(serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// SpeechToTextService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public SpeechToTextService(string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
@@ -135,6 +151,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<SpeechModels>)req).Callback != null)
                 ((RequestObject<SpeechModels>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a model.
         ///
@@ -207,6 +224,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<SpeechModel>)req).Callback != null)
                 ((RequestObject<SpeechModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Recognize audio.
         ///
@@ -471,7 +489,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
         /// (optional)</param>
         /// <returns><see cref="SpeechRecognitionResults" />SpeechRecognitionResults</returns>
-        public bool Recognize(Callback<SpeechRecognitionResults> callback, byte[] audio, string contentType = null, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, bool? audioMetrics = null, double? endOfPhraseSilenceTime = null, bool? splitTranscriptAtPhraseEnd = null, float? speechDetectorSensitivity = null, float? backgroundAudioSuppression = null)
+        public bool Recognize(Callback<SpeechRecognitionResults> callback, System.IO.MemoryStream audio, string contentType = null, string model = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, bool? audioMetrics = null, double? endOfPhraseSilenceTime = null, bool? splitTranscriptAtPhraseEnd = null, float? speechDetectorSensitivity = null, float? backgroundAudioSuppression = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Recognize`");
@@ -595,7 +613,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Headers["Content-Type"] = contentType;
             }
-            req.Send = audio;
+            req.Send = audio.ToArray();
 
             req.OnResponse = OnRecognizeResponse;
 
@@ -629,6 +647,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<SpeechRecognitionResults>)req).Callback != null)
                 ((RequestObject<SpeechRecognitionResults>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Register a callback.
         ///
@@ -738,6 +757,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<RegisterStatus>)req).Callback != null)
                 ((RequestObject<RegisterStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Unregister a callback.
         ///
@@ -814,6 +834,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a job.
         ///
@@ -1141,7 +1162,7 @@ namespace IBM.Watson.SpeechToText.V1
         /// Detection](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#detection).
         /// (optional)</param>
         /// <returns><see cref="RecognitionJob" />RecognitionJob</returns>
-        public bool CreateJob(Callback<RecognitionJob> callback, byte[] audio, string contentType = null, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, bool? processingMetrics = null, float? processingMetricsInterval = null, bool? audioMetrics = null, double? endOfPhraseSilenceTime = null, bool? splitTranscriptAtPhraseEnd = null, float? speechDetectorSensitivity = null, float? backgroundAudioSuppression = null)
+        public bool CreateJob(Callback<RecognitionJob> callback, System.IO.MemoryStream audio, string contentType = null, string model = null, string callbackUrl = null, string events = null, string userToken = null, long? resultsTtl = null, string languageCustomizationId = null, string acousticCustomizationId = null, string baseModelVersion = null, double? customizationWeight = null, long? inactivityTimeout = null, List<string> keywords = null, float? keywordsThreshold = null, long? maxAlternatives = null, float? wordAlternativesThreshold = null, bool? wordConfidence = null, bool? timestamps = null, bool? profanityFilter = null, bool? smartFormatting = null, bool? speakerLabels = null, string customizationId = null, string grammarName = null, bool? redaction = null, bool? processingMetrics = null, float? processingMetricsInterval = null, bool? audioMetrics = null, double? endOfPhraseSilenceTime = null, bool? splitTranscriptAtPhraseEnd = null, float? speechDetectorSensitivity = null, float? backgroundAudioSuppression = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateJob`");
@@ -1289,7 +1310,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Headers["Content-Type"] = contentType;
             }
-            req.Send = audio;
+            req.Send = audio.ToArray();
 
             req.OnResponse = OnCreateJobResponse;
 
@@ -1323,6 +1344,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<RecognitionJob>)req).Callback != null)
                 ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Check jobs.
         ///
@@ -1395,6 +1417,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<RecognitionJobs>)req).Callback != null)
                 ((RequestObject<RecognitionJobs>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Check a job.
         ///
@@ -1474,6 +1497,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<RecognitionJob>)req).Callback != null)
                 ((RequestObject<RecognitionJob>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a job.
         ///
@@ -1548,6 +1572,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a custom language model.
         ///
@@ -1668,6 +1693,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<LanguageModel>)req).Callback != null)
                 ((RequestObject<LanguageModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List custom language models.
         ///
@@ -1682,8 +1708,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
-        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
-        /// languages are not available for language model customization. (optional)</param>
+        /// by the requesting credentials.
+        ///
+        /// To determine the languages for which customization is available, see [Language support for
+        /// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
+        /// (optional)</param>
         /// <returns><see cref="LanguageModels" />LanguageModels</returns>
         public bool ListLanguageModels(Callback<LanguageModels> callback, string language = null)
         {
@@ -1746,6 +1775,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<LanguageModels>)req).Callback != null)
                 ((RequestObject<LanguageModels>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a custom language model.
         ///
@@ -1819,6 +1849,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<LanguageModel>)req).Callback != null)
                 ((RequestObject<LanguageModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom language model.
         ///
@@ -1893,6 +1924,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Train a custom language model.
         ///
@@ -2016,6 +2048,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<TrainingResponse>)req).Callback != null)
                 ((RequestObject<TrainingResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Reset a custom language model.
         ///
@@ -2091,6 +2124,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Upgrade a custom language model.
         ///
@@ -2174,6 +2208,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List corpora.
         ///
@@ -2248,6 +2283,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Corpora>)req).Callback != null)
                 ((RequestObject<Corpora>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add a corpus.
         ///
@@ -2393,6 +2429,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a corpus.
         ///
@@ -2470,6 +2507,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Corpus>)req).Callback != null)
                 ((RequestObject<Corpus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a corpus.
         ///
@@ -2550,6 +2588,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List custom words.
         ///
@@ -2646,6 +2685,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Words>)req).Callback != null)
                 ((RequestObject<Words>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add custom words.
         ///
@@ -2775,6 +2815,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add a custom word.
         ///
@@ -2913,6 +2954,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a custom word.
         ///
@@ -2991,6 +3033,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Word>)req).Callback != null)
                 ((RequestObject<Word>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom word.
         ///
@@ -3073,6 +3116,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List grammars.
         ///
@@ -3147,6 +3191,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Grammars>)req).Callback != null)
                 ((RequestObject<Grammars>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add a grammar.
         ///
@@ -3214,17 +3259,17 @@ namespace IBM.Watson.SpeechToText.V1
         /// name. If `false`, the request fails if a grammar with the same name already exists. The parameter has no
         /// effect if a grammar with the same name does not already exist. (optional, default to false)</param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, string grammarFile, string contentType, bool? allowOverwrite = null)
+        public bool AddGrammar(Callback<object> callback, string customizationId, string grammarName, System.IO.MemoryStream grammarFile, string contentType, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddGrammar`");
-            if (string.IsNullOrEmpty(customizationId))
+            if (customizationId == null)
                 throw new ArgumentNullException("`customizationId` is required for `AddGrammar`");
-            if (string.IsNullOrEmpty(grammarName))
+            if (grammarName == null)
                 throw new ArgumentNullException("`grammarName` is required for `AddGrammar`");
-            if (string.IsNullOrEmpty(grammarFile))
+            if (grammarFile == null)
                 throw new ArgumentNullException("`grammarFile` is required for `AddGrammar`");
-            if (string.IsNullOrEmpty(contentType))
+            if (contentType == null)
                 throw new ArgumentNullException("`contentType` is required for `AddGrammar`");
 
             RequestObject<object> req = new RequestObject<object>
@@ -3256,7 +3301,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Headers["Content-Type"] = contentType;
             }
-            req.Send = Encoding.UTF8.GetBytes(grammarFile);
+            req.Send = grammarFile.ToArray();
 
             req.OnResponse = OnAddGrammarResponse;
 
@@ -3290,6 +3335,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a grammar.
         ///
@@ -3367,6 +3413,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<Grammar>)req).Callback != null)
                 ((RequestObject<Grammar>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a grammar.
         ///
@@ -3447,6 +3494,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a custom acoustic model.
         ///
@@ -3546,6 +3594,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<AcousticModel>)req).Callback != null)
                 ((RequestObject<AcousticModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List custom acoustic models.
         ///
@@ -3560,8 +3609,11 @@ namespace IBM.Watson.SpeechToText.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The identifier of the language for which custom language or custom acoustic models
         /// are to be returned. Omit the parameter to see all custom language or custom acoustic models that are owned
-        /// by the requesting credentials. **Note:** The `ar-AR` (Modern Standard Arabic) and `zh-CN` (Mandarin Chinese)
-        /// languages are not available for language model customization. (optional)</param>
+        /// by the requesting credentials.
+        ///
+        /// To determine the languages for which customization is available, see [Language support for
+        /// customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-customization#languageSupport).
+        /// (optional)</param>
         /// <returns><see cref="AcousticModels" />AcousticModels</returns>
         public bool ListAcousticModels(Callback<AcousticModels> callback, string language = null)
         {
@@ -3624,6 +3676,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<AcousticModels>)req).Callback != null)
                 ((RequestObject<AcousticModels>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a custom acoustic model.
         ///
@@ -3697,6 +3750,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<AcousticModel>)req).Callback != null)
                 ((RequestObject<AcousticModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom acoustic model.
         ///
@@ -3771,6 +3825,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Train a custom acoustic model.
         ///
@@ -3779,12 +3834,12 @@ namespace IBM.Watson.SpeechToText.V1
         /// model on the latest audio data. The custom acoustic model does not reflect its changed data until you train
         /// it. You must use credentials for the instance of the service that owns a model to train it.
         ///
-        /// The training method is asynchronous. It can take on the order of minutes or hours to complete depending on
-        /// the total amount of audio data on which the custom acoustic model is being trained and the current load on
-        /// the service. Typically, training a custom acoustic model takes approximately two to four times the length of
-        /// its audio data. The actual time depends on the model being trained and the nature of the audio, such as
-        /// whether the audio is clean or noisy. The method returns an HTTP 200 response code to indicate that the
-        /// training process has begun.
+        /// The training method is asynchronous. Training time depends on the cumulative amount of audio data that the
+        /// custom acoustic model contains and the current load on the service. When you train or retrain a model, the
+        /// service uses all of the model's audio data in the training. Training a custom acoustic model takes
+        /// approximately as long as the length of its cumulative audio data. For example, it takes approximately 2
+        /// hours to train a model that contains a total of 2 hours of audio. The method returns an HTTP 200 response
+        /// code to indicate that the training process has begun.
         ///
         /// You can monitor the status of the training by using the **Get a custom acoustic model** method to poll the
         /// model's status. Use a loop to check the status once a minute. The method returns an `AcousticModel` object
@@ -3895,6 +3950,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<TrainingResponse>)req).Callback != null)
                 ((RequestObject<TrainingResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Reset a custom acoustic model.
         ///
@@ -3972,6 +4028,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Upgrade a custom acoustic model.
         ///
@@ -4080,6 +4137,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List audio resources.
         ///
@@ -4156,6 +4214,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<AudioResources>)req).Callback != null)
                 ((RequestObject<AudioResources>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add an audio resource.
         ///
@@ -4285,13 +4344,13 @@ namespace IBM.Watson.SpeechToText.V1
         /// The parameter has no effect if an audio resource with the same name does not already exist. (optional,
         /// default to false)</param>
         /// <returns><see cref="object" />object</returns>
-        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, byte[] audioResource, string contentType = null, string containedContentType = null, bool? allowOverwrite = null)
+        public bool AddAudio(Callback<object> callback, string customizationId, string audioName, System.IO.MemoryStream audioResource, string contentType = null, string containedContentType = null, bool? allowOverwrite = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddAudio`");
-            if (string.IsNullOrEmpty(customizationId))
+            if (customizationId == null)
                 throw new ArgumentNullException("`customizationId` is required for `AddAudio`");
-            if (string.IsNullOrEmpty(audioName))
+            if (audioName == null)
                 throw new ArgumentNullException("`audioName` is required for `AddAudio`");
             if (audioResource == null)
                 throw new ArgumentNullException("`audioResource` is required for `AddAudio`");
@@ -4330,7 +4389,7 @@ namespace IBM.Watson.SpeechToText.V1
             {
                 req.Headers["Contained-Content-Type"] = containedContentType;
             }
-            req.Send = audioResource;
+            req.Send = audioResource.ToArray();
 
             req.OnResponse = OnAddAudioResponse;
 
@@ -4364,6 +4423,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get an audio resource.
         ///
@@ -4454,6 +4514,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<AudioListing>)req).Callback != null)
                 ((RequestObject<AudioListing>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete an audio resource.
         ///
@@ -4536,6 +4597,7 @@ namespace IBM.Watson.SpeechToText.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///

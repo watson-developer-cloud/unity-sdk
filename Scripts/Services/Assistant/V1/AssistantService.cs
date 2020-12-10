@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.Assistant.V1
 {
     public partial class AssistantService : BaseService
     {
-        private const string serviceId = "assistant";
+        private const string defaultServiceName = "assistant";
         private const string defaultServiceUrl = "https://api.us-south.assistant.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+        /// `2020-04-01`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.Assistant.V1
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public AssistantService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        public AssistantService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public AssistantService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public AssistantService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// AssistantService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public AssistantService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// AssistantService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2020-04-01`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public AssistantService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of AssistantService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -122,6 +147,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `Message`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `Message`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<MessageResponse> req = new RequestObject<MessageResponse>
             {
@@ -142,7 +169,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (nodesVisitedDetails != null)
             {
                 req.Parameters["nodes_visited_details"] = (bool)nodesVisitedDetails ? "true" : "false";
@@ -197,6 +227,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<MessageResponse>)req).Callback != null)
                 ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List workspaces.
         ///
@@ -204,16 +235,21 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned workspaces will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="WorkspaceCollection" />WorkspaceCollection</returns>
-        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListWorkspaces(Callback<WorkspaceCollection> callback, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListWorkspaces`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<WorkspaceCollection> req = new RequestObject<WorkspaceCollection>
             {
@@ -234,10 +270,17 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -284,6 +327,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<WorkspaceCollection>)req).Callback != null)
                 ((RequestObject<WorkspaceCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create workspace.
         ///
@@ -296,25 +340,27 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
         /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
         /// data is not to be used. (optional, default to false)</param>
         /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
         /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
-        /// (optional)</param>
-        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
-        /// irrelevant input. (optional)</param>
-        /// <param name="webhooks"> (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, List<Webhook> webhooks = null, bool? includeAudit = null)
+        public bool CreateWorkspace(Callback<Workspace> callback, string name = null, string description = null, string language = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<Webhook> webhooks = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateWorkspace`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Workspace> req = new RequestObject<Workspace>
             {
@@ -335,7 +381,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -350,22 +399,22 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (learningOptOut != null)
                 bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
             if (systemSettings != null)
                 bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
                 bodyObject["entities"] = JToken.FromObject(entities);
-            if (dialogNodes != null && dialogNodes.Count > 0)
-                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
-            if (counterexamples != null && counterexamples.Count > 0)
-                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (webhooks != null && webhooks.Count > 0)
-                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateWorkspaceResponse;
@@ -400,6 +449,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Workspace>)req).Callback != null)
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get information about a workspace.
         ///
@@ -422,6 +472,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `GetWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `GetWorkspace`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Workspace> req = new RequestObject<Workspace>
             {
@@ -442,7 +494,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -488,6 +543,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Workspace>)req).Callback != null)
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update workspace.
         ///
@@ -501,17 +557,18 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="description">The description of the workspace. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="language">The language of the workspace. (optional)</param>
+        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
+        /// (optional)</param>
+        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
+        /// irrelevant input. (optional)</param>
         /// <param name="metadata">Any metadata related to the workspace. (optional)</param>
         /// <param name="learningOptOut">Whether training data from the workspace (including artifacts such as intents
         /// and entities) can be used by IBM for general service improvements. `true` indicates that workspace training
         /// data is not to be used. (optional, default to false)</param>
         /// <param name="systemSettings">Global settings for the workspace. (optional)</param>
+        /// <param name="webhooks"> (optional)</param>
         /// <param name="intents">An array of objects defining the intents for the workspace. (optional)</param>
         /// <param name="entities">An array of objects describing the entities for the workspace. (optional)</param>
-        /// <param name="dialogNodes">An array of objects describing the dialog nodes in the workspace.
-        /// (optional)</param>
-        /// <param name="counterexamples">An array of objects defining input examples that have been marked as
-        /// irrelevant input. (optional)</param>
         /// <param name="append">Whether the new data is to be appended to the existing data in the object. If
         /// **append**=`false`, elements included in the new data completely replace the corresponding existing
         /// elements, including all subelements. For example, if the new data for a workspace includes **entities** and
@@ -519,16 +576,17 @@ namespace IBM.Watson.Assistant.V1
         ///
         /// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in
         /// the new data collide with existing elements, the update request fails. (optional, default to false)</param>
-        /// <param name="webhooks"> (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="Workspace" />Workspace</returns>
-        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, bool? append = null, List<Webhook> webhooks = null, bool? includeAudit = null)
+        public bool UpdateWorkspace(Callback<Workspace> callback, string workspaceId, string name = null, string description = null, string language = null, List<DialogNode> dialogNodes = null, List<Counterexample> counterexamples = null, Dictionary<string, object> metadata = null, bool? learningOptOut = null, WorkspaceSystemSettings systemSettings = null, List<Webhook> webhooks = null, List<CreateIntent> intents = null, List<CreateEntity> entities = null, bool? append = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `UpdateWorkspace`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Workspace> req = new RequestObject<Workspace>
             {
@@ -549,7 +607,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (append != null)
             {
                 req.Parameters["append"] = (bool)append ? "true" : "false";
@@ -568,22 +629,22 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["description"] = description;
             if (!string.IsNullOrEmpty(language))
                 bodyObject["language"] = language;
+            if (dialogNodes != null && dialogNodes.Count > 0)
+                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
+            if (counterexamples != null && counterexamples.Count > 0)
+                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
             if (metadata != null)
                 bodyObject["metadata"] = JToken.FromObject(metadata);
             if (learningOptOut != null)
                 bodyObject["learning_opt_out"] = JToken.FromObject(learningOptOut);
             if (systemSettings != null)
                 bodyObject["system_settings"] = JToken.FromObject(systemSettings);
+            if (webhooks != null && webhooks.Count > 0)
+                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             if (intents != null && intents.Count > 0)
                 bodyObject["intents"] = JToken.FromObject(intents);
             if (entities != null && entities.Count > 0)
                 bodyObject["entities"] = JToken.FromObject(entities);
-            if (dialogNodes != null && dialogNodes.Count > 0)
-                bodyObject["dialog_nodes"] = JToken.FromObject(dialogNodes);
-            if (counterexamples != null && counterexamples.Count > 0)
-                bodyObject["counterexamples"] = JToken.FromObject(counterexamples);
-            if (webhooks != null && webhooks.Count > 0)
-                bodyObject["webhooks"] = JToken.FromObject(webhooks);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateWorkspaceResponse;
@@ -618,6 +679,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Workspace>)req).Callback != null)
                 ((RequestObject<Workspace>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete workspace.
         ///
@@ -632,6 +694,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `DeleteWorkspace`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `DeleteWorkspace`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -652,7 +716,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteWorkspaceResponse;
 
@@ -686,6 +753,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List intents.
         ///
@@ -697,18 +765,23 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned intents will be sorted. To reverse the sort order, prefix
         /// the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="IntentCollection" />IntentCollection</returns>
-        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListIntents(Callback<IntentCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListIntents`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `ListIntents`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<IntentCollection> req = new RequestObject<IntentCollection>
             {
@@ -729,7 +802,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -737,6 +813,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -783,6 +863,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<IntentCollection>)req).Callback != null)
                 ((RequestObject<IntentCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create intent.
         ///
@@ -808,6 +889,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `CreateIntent`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `CreateIntent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `CreateIntent`");
 
@@ -830,7 +913,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -879,6 +965,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Intent>)req).Callback != null)
                 ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get intent.
         ///
@@ -901,6 +988,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `GetIntent`");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `GetIntent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Intent> req = new RequestObject<Intent>
             {
@@ -921,7 +1010,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -963,6 +1055,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Intent>)req).Callback != null)
                 ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update intent.
         ///
@@ -999,6 +1092,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `UpdateIntent`");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `UpdateIntent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Intent> req = new RequestObject<Intent>
             {
@@ -1019,7 +1114,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (append != null)
             {
                 req.Parameters["append"] = (bool)append ? "true" : "false";
@@ -1072,6 +1170,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Intent>)req).Callback != null)
                 ((RequestObject<Intent>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete intent.
         ///
@@ -1089,6 +1188,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `DeleteIntent`");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `DeleteIntent`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1109,7 +1210,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteIntentResponse;
 
@@ -1143,6 +1247,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List user input examples.
         ///
@@ -1152,13 +1257,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="intent">The intent name.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned examples will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="ExampleCollection" />ExampleCollection</returns>
-        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListExamples(Callback<ExampleCollection> callback, string workspaceId, string intent, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListExamples`");
@@ -1166,6 +1274,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `ListExamples`");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `ListExamples`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<ExampleCollection> req = new RequestObject<ExampleCollection>
             {
@@ -1186,10 +1296,17 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -1236,6 +1353,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<ExampleCollection>)req).Callback != null)
                 ((RequestObject<ExampleCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create user input example.
         ///
@@ -1262,6 +1380,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `CreateExample`");
             if (string.IsNullOrEmpty(intent))
                 throw new ArgumentNullException("`intent` is required for `CreateExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `CreateExample`");
 
@@ -1284,7 +1404,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1331,6 +1454,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Example>)req).Callback != null)
                 ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get user input example.
         ///
@@ -1353,6 +1477,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`intent` is required for `GetExample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `GetExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Example> req = new RequestObject<Example>
             {
@@ -1373,7 +1499,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1411,6 +1540,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Example>)req).Callback != null)
                 ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update user input example.
         ///
@@ -1441,6 +1571,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`intent` is required for `UpdateExample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `UpdateExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Example> req = new RequestObject<Example>
             {
@@ -1461,7 +1593,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1508,6 +1643,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Example>)req).Callback != null)
                 ((RequestObject<Example>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete user input example.
         ///
@@ -1528,6 +1664,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`intent` is required for `DeleteExample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `DeleteExample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1548,7 +1686,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteExampleResponse;
 
@@ -1582,6 +1723,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List counterexamples.
         ///
@@ -1591,18 +1733,23 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned counterexamples will be sorted. To reverse the sort
         /// order, prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="CounterexampleCollection" />CounterexampleCollection</returns>
-        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListCounterexamples(Callback<CounterexampleCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListCounterexamples`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `ListCounterexamples`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<CounterexampleCollection> req = new RequestObject<CounterexampleCollection>
             {
@@ -1623,10 +1770,17 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -1673,6 +1827,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<CounterexampleCollection>)req).Callback != null)
                 ((RequestObject<CounterexampleCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create counterexample.
         ///
@@ -1697,6 +1852,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `CreateCounterexample`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `CreateCounterexample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `CreateCounterexample`");
 
@@ -1719,7 +1876,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1764,6 +1924,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Counterexample>)req).Callback != null)
                 ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get counterexample.
         ///
@@ -1784,6 +1945,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `GetCounterexample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `GetCounterexample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Counterexample> req = new RequestObject<Counterexample>
             {
@@ -1804,7 +1967,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1842,6 +2008,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Counterexample>)req).Callback != null)
                 ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update counterexample.
         ///
@@ -1865,6 +2032,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `UpdateCounterexample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `UpdateCounterexample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Counterexample> req = new RequestObject<Counterexample>
             {
@@ -1885,7 +2054,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -1930,6 +2102,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Counterexample>)req).Callback != null)
                 ((RequestObject<Counterexample>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete counterexample.
         ///
@@ -1948,6 +2121,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `DeleteCounterexample`");
             if (string.IsNullOrEmpty(text))
                 throw new ArgumentNullException("`text` is required for `DeleteCounterexample`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -1968,7 +2143,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteCounterexampleResponse;
 
@@ -2002,6 +2180,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List entities.
         ///
@@ -2013,18 +2192,23 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entities will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="EntityCollection" />EntityCollection</returns>
-        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListEntities(Callback<EntityCollection> callback, string workspaceId, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListEntities`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `ListEntities`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<EntityCollection> req = new RequestObject<EntityCollection>
             {
@@ -2045,7 +2229,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -2053,6 +2240,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -2099,6 +2290,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<EntityCollection>)req).Callback != null)
                 ((RequestObject<EntityCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create entity.
         ///
@@ -2127,6 +2319,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `CreateEntity`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `CreateEntity`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `CreateEntity`");
 
@@ -2149,7 +2343,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -2202,6 +2399,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Entity>)req).Callback != null)
                 ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get entity.
         ///
@@ -2224,6 +2422,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `GetEntity`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `GetEntity`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Entity> req = new RequestObject<Entity>
             {
@@ -2244,7 +2444,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -2286,6 +2489,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Entity>)req).Callback != null)
                 ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update entity.
         ///
@@ -2324,6 +2528,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `UpdateEntity`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `UpdateEntity`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Entity> req = new RequestObject<Entity>
             {
@@ -2344,7 +2550,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (append != null)
             {
                 req.Parameters["append"] = (bool)append ? "true" : "false";
@@ -2401,6 +2610,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Entity>)req).Callback != null)
                 ((RequestObject<Entity>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete entity.
         ///
@@ -2418,6 +2628,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `DeleteEntity`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `DeleteEntity`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -2438,7 +2650,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteEntityResponse;
 
@@ -2472,6 +2687,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List entity mentions.
         ///
@@ -2495,6 +2711,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `ListMentions`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `ListMentions`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<EntityMentionCollection> req = new RequestObject<EntityMentionCollection>
             {
@@ -2515,7 +2733,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -2557,6 +2778,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<EntityMentionCollection>)req).Callback != null)
                 ((RequestObject<EntityMentionCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List entity values.
         ///
@@ -2569,13 +2791,16 @@ namespace IBM.Watson.Assistant.V1
         /// returned data includes only information about the element itself. If **export**=`true`, all content,
         /// including subelements, is included. (optional, default to false)</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entity values will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="ValueCollection" />ValueCollection</returns>
-        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListValues(Callback<ValueCollection> callback, string workspaceId, string entity, bool? export = null, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListValues`");
@@ -2583,6 +2808,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `ListValues`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `ListValues`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<ValueCollection> req = new RequestObject<ValueCollection>
             {
@@ -2603,7 +2830,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -2611,6 +2841,10 @@ namespace IBM.Watson.Assistant.V1
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -2657,6 +2891,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<ValueCollection>)req).Callback != null)
                 ((RequestObject<ValueCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create entity value.
         ///
@@ -2693,6 +2928,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `CreateValue`");
             if (string.IsNullOrEmpty(entity))
                 throw new ArgumentNullException("`entity` is required for `CreateValue`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `CreateValue`");
 
@@ -2715,7 +2952,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -2768,6 +3008,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Value>)req).Callback != null)
                 ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get entity value.
         ///
@@ -2793,6 +3034,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`entity` is required for `GetValue`");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `GetValue`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Value> req = new RequestObject<Value>
             {
@@ -2813,7 +3056,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (export != null)
             {
                 req.Parameters["export"] = (bool)export ? "true" : "false";
@@ -2855,6 +3101,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Value>)req).Callback != null)
                 ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update entity value.
         ///
@@ -2903,6 +3150,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`entity` is required for `UpdateValue`");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `UpdateValue`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Value> req = new RequestObject<Value>
             {
@@ -2923,7 +3172,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (append != null)
             {
                 req.Parameters["append"] = (bool)append ? "true" : "false";
@@ -2980,6 +3232,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Value>)req).Callback != null)
                 ((RequestObject<Value>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete entity value.
         ///
@@ -3000,6 +3253,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`entity` is required for `DeleteValue`");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `DeleteValue`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3020,7 +3275,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteValueResponse;
 
@@ -3054,6 +3312,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List entity value synonyms.
         ///
@@ -3064,13 +3323,16 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="entity">The name of the entity.</param>
         /// <param name="value">The text of the entity value.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned entity value synonyms will be sorted. To reverse the sort
         /// order, prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="SynonymCollection" />SynonymCollection</returns>
-        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListSynonyms(Callback<SynonymCollection> callback, string workspaceId, string entity, string value, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListSynonyms`");
@@ -3080,6 +3342,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`entity` is required for `ListSynonyms`");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `ListSynonyms`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<SynonymCollection> req = new RequestObject<SynonymCollection>
             {
@@ -3100,10 +3364,17 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -3150,6 +3421,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<SynonymCollection>)req).Callback != null)
                 ((RequestObject<SynonymCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create entity value synonym.
         ///
@@ -3178,6 +3450,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`entity` is required for `CreateSynonym`");
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException("`value` is required for `CreateSynonym`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(synonym))
                 throw new ArgumentNullException("`synonym` is required for `CreateSynonym`");
 
@@ -3200,7 +3474,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3245,6 +3522,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Synonym>)req).Callback != null)
                 ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get entity value synonym.
         ///
@@ -3270,6 +3548,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`value` is required for `GetSynonym`");
             if (string.IsNullOrEmpty(synonym))
                 throw new ArgumentNullException("`synonym` is required for `GetSynonym`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Synonym> req = new RequestObject<Synonym>
             {
@@ -3290,7 +3570,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3328,6 +3611,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Synonym>)req).Callback != null)
                 ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update entity value synonym.
         ///
@@ -3359,6 +3643,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`value` is required for `UpdateSynonym`");
             if (string.IsNullOrEmpty(synonym))
                 throw new ArgumentNullException("`synonym` is required for `UpdateSynonym`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Synonym> req = new RequestObject<Synonym>
             {
@@ -3379,7 +3665,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3424,6 +3713,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<Synonym>)req).Callback != null)
                 ((RequestObject<Synonym>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete entity value synonym.
         ///
@@ -3447,6 +3737,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`value` is required for `DeleteSynonym`");
             if (string.IsNullOrEmpty(synonym))
                 throw new ArgumentNullException("`synonym` is required for `DeleteSynonym`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -3467,7 +3759,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteSynonymResponse;
 
@@ -3501,6 +3796,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List dialog nodes.
         ///
@@ -3509,18 +3805,23 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
         /// <param name="pageLimit">The number of records to return in each page of results. (optional)</param>
+        /// <param name="includeCount">Whether to include information about the number of records that satisfy the
+        /// request, regardless of the page limit. If this parameter is `true`, the `pagination` object in the response
+        /// includes the `total` property. (optional, default to false)</param>
         /// <param name="sort">The attribute by which returned dialog nodes will be sorted. To reverse the sort order,
         /// prefix the value with a minus sign (`-`). (optional)</param>
         /// <param name="cursor">A token identifying the page of results to retrieve. (optional)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNodeCollection" />DialogNodeCollection</returns>
-        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, string sort = null, string cursor = null, bool? includeAudit = null)
+        public bool ListDialogNodes(Callback<DialogNodeCollection> callback, string workspaceId, long? pageLimit = null, bool? includeCount = null, string sort = null, string cursor = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListDialogNodes`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `ListDialogNodes`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<DialogNodeCollection> req = new RequestObject<DialogNodeCollection>
             {
@@ -3541,10 +3842,17 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (pageLimit != null)
             {
                 req.Parameters["page_limit"] = pageLimit;
+            }
+            if (includeCount != null)
+            {
+                req.Parameters["include_count"] = (bool)includeCount ? "true" : "false";
             }
             if (!string.IsNullOrEmpty(sort))
             {
@@ -3591,6 +3899,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<DialogNodeCollection>)req).Callback != null)
                 ((RequestObject<DialogNodeCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create dialog node.
         ///
@@ -3638,12 +3947,14 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, Dictionary<string, object> context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null, bool? includeAudit = null)
+        public bool CreateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string description = null, string conditions = null, string parent = null, string previousSibling = null, DialogNodeOutput output = null, DialogNodeContext context = null, Dictionary<string, object> metadata = null, DialogNodeNextStep nextStep = null, string title = null, string type = null, string eventName = null, string variable = null, List<DialogNodeAction> actions = null, string digressIn = null, string digressOut = null, string digressOutSlots = null, string userLabel = null, bool? disambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateDialogNode`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `CreateDialogNode`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(dialogNode))
                 throw new ArgumentNullException("`dialogNode` is required for `CreateDialogNode`");
 
@@ -3666,7 +3977,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3747,6 +4061,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<DialogNode>)req).Callback != null)
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get dialog node.
         ///
@@ -3766,6 +4081,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `GetDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
                 throw new ArgumentNullException("`dialogNode` is required for `GetDialogNode`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<DialogNode> req = new RequestObject<DialogNode>
             {
@@ -3786,7 +4103,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3824,6 +4144,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<DialogNode>)req).Callback != null)
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update dialog node.
         ///
@@ -3874,7 +4195,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
-        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, Dictionary<string, object> newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null, bool? includeAudit = null)
+        public bool UpdateDialogNode(Callback<DialogNode> callback, string workspaceId, string dialogNode, string newDialogNode = null, string newDescription = null, string newConditions = null, string newParent = null, string newPreviousSibling = null, DialogNodeOutput newOutput = null, DialogNodeContext newContext = null, Dictionary<string, object> newMetadata = null, DialogNodeNextStep newNextStep = null, string newTitle = null, string newType = null, string newEventName = null, string newVariable = null, List<DialogNodeAction> newActions = null, string newDigressIn = null, string newDigressOut = null, string newDigressOutSlots = null, string newUserLabel = null, bool? newDisambiguationOptOut = null, bool? includeAudit = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateDialogNode`");
@@ -3882,6 +4203,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `UpdateDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
                 throw new ArgumentNullException("`dialogNode` is required for `UpdateDialogNode`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<DialogNode> req = new RequestObject<DialogNode>
             {
@@ -3902,7 +4225,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (includeAudit != null)
             {
                 req.Parameters["include_audit"] = (bool)includeAudit ? "true" : "false";
@@ -3983,6 +4309,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<DialogNode>)req).Callback != null)
                 ((RequestObject<DialogNode>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete dialog node.
         ///
@@ -4000,6 +4327,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`workspaceId` is required for `DeleteDialogNode`");
             if (string.IsNullOrEmpty(dialogNode))
                 throw new ArgumentNullException("`dialogNode` is required for `DeleteDialogNode`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<object> req = new RequestObject<object>
             {
@@ -4020,7 +4349,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteDialogNodeResponse;
 
@@ -4054,6 +4386,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List log events in a workspace.
         ///
@@ -4076,6 +4409,8 @@ namespace IBM.Watson.Assistant.V1
                 throw new ArgumentNullException("`callback` is required for `ListLogs`");
             if (string.IsNullOrEmpty(workspaceId))
                 throw new ArgumentNullException("`workspaceId` is required for `ListLogs`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<LogCollection> req = new RequestObject<LogCollection>
             {
@@ -4096,7 +4431,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(sort))
             {
                 req.Parameters["sort"] = sort;
@@ -4146,6 +4484,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<LogCollection>)req).Callback != null)
                 ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List log events in all workspaces.
         ///
@@ -4166,6 +4505,8 @@ namespace IBM.Watson.Assistant.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListAllLogs`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(filter))
                 throw new ArgumentNullException("`filter` is required for `ListAllLogs`");
 
@@ -4188,7 +4529,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(filter))
             {
                 req.Parameters["filter"] = filter;
@@ -4238,6 +4582,7 @@ namespace IBM.Watson.Assistant.V1
             if (((RequestObject<LogCollection>)req).Callback != null)
                 ((RequestObject<LogCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///
@@ -4255,6 +4600,8 @@ namespace IBM.Watson.Assistant.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(customerId))
                 throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
@@ -4277,7 +4624,10 @@ namespace IBM.Watson.Assistant.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;
@@ -4314,6 +4664,92 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
+        }
+
+        /// <summary>
+        /// Identify intents and entities in multiple user utterances.
+        ///
+        /// Send multiple user inputs to a workspace in a single request and receive information about the intents and
+        /// entities recognized in each input. This method is useful for testing and comparing the performance of
+        /// different workspaces.
+        ///
+        /// This method is available only with Premium plans.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="input">An array of input utterances to classify. (optional)</param>
+        /// <returns><see cref="BulkClassifyResponse" />BulkClassifyResponse</returns>
+        public bool BulkClassify(Callback<BulkClassifyResponse> callback, string workspaceId, List<BulkClassifyUtterance> input = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
+
+            RequestObject<BulkClassifyResponse> req = new RequestObject<BulkClassifyResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "BulkClassify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (input != null && input.Count > 0)
+                bodyObject["input"] = JToken.FromObject(input);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnBulkClassifyResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/bulk_classify", workspaceId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnBulkClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<BulkClassifyResponse> response = new DetailedResponse<BulkClassifyResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<BulkClassifyResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnBulkClassifyResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<BulkClassifyResponse>)req).Callback != null)
+                ((RequestObject<BulkClassifyResponse>)req).Callback(response, resp.Error);
         }
     }
 }

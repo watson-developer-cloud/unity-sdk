@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// A specialized histogram aggregation that uses dates to create interval segments.
     /// </summary>
-    public class QueryTimesliceAggregation
+    public class QueryTimesliceAggregation : QueryAggregation
     {
         /// <summary>
         /// The date field name used to create the timeslice.

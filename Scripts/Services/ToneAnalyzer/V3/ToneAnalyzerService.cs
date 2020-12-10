@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.ToneAnalyzer.V3
 {
     public partial class ToneAnalyzerService : BaseService
     {
-        private const string serviceId = "tone_analyzer";
+        private const string defaultServiceName = "tone_analyzer";
         private const string defaultServiceUrl = "https://api.us-south.tone-analyzer.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current
+        /// version is `2017-09-21`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// <summary>
         /// ToneAnalyzerService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public ToneAnalyzerService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-09-21`.</param>
+        public ToneAnalyzerService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// ToneAnalyzerService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-09-21`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public ToneAnalyzerService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public ToneAnalyzerService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// ToneAnalyzerService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-09-21`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public ToneAnalyzerService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// ToneAnalyzerService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-09-21`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public ToneAnalyzerService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of ToneAnalyzerService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -133,10 +158,12 @@ namespace IBM.Watson.ToneAnalyzer.V3
         /// variants are treated as their parent language; for example, `en-US` is interpreted as `en`. You can use
         /// different languages for **Content-Language** and **Accept-Language**. (optional, default to en)</param>
         /// <returns><see cref="ToneAnalysis" />ToneAnalysis</returns>
-        public bool Tone(Callback<ToneAnalysis> callback, ToneInput toneInput, string contentType = null, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null)
+        public bool Tone(Callback<ToneAnalysis> callback, System.IO.MemoryStream toneInput, string contentType = null, bool? sentences = null, List<string> tones = null, string contentLanguage = null, string acceptLanguage = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Tone`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (toneInput == null)
                 throw new ArgumentNullException("`toneInput` is required for `Tone`");
 
@@ -159,7 +186,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (sentences != null)
             {
                 req.Parameters["sentences"] = (bool)sentences ? "true" : "false";
@@ -184,7 +214,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(toneInput));
+            req.Send = toneInput.ToArray();
 
             req.OnResponse = OnToneResponse;
 
@@ -218,6 +248,7 @@ namespace IBM.Watson.ToneAnalyzer.V3
             if (((RequestObject<ToneAnalysis>)req).Callback != null)
                 ((RequestObject<ToneAnalysis>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Analyze customer-engagement tone.
         ///
@@ -251,6 +282,8 @@ namespace IBM.Watson.ToneAnalyzer.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ToneChat`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (utterances == null)
                 throw new ArgumentNullException("`utterances` is required for `ToneChat`");
 
@@ -273,7 +306,10 @@ namespace IBM.Watson.ToneAnalyzer.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 

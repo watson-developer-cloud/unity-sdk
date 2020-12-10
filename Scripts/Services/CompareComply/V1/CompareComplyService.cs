@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,18 +35,20 @@ namespace IBM.Watson.CompareComply.V1
 {
     public partial class CompareComplyService : BaseService
     {
-        private const string serviceId = "compare_comply";
+        private const string defaultServiceName = "compare_comply";
         private const string defaultServiceUrl = "https://api.us-south.compare-comply.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current
+        /// version is `2018-10-15`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -61,25 +67,44 @@ namespace IBM.Watson.CompareComply.V1
         /// <summary>
         /// CompareComplyService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public CompareComplyService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-10-15`.</param>
+        public CompareComplyService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// CompareComplyService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-10-15`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public CompareComplyService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public CompareComplyService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// CompareComplyService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-10-15`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public CompareComplyService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// CompareComplyService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2018-10-15`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public CompareComplyService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of CompareComplyService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -105,6 +130,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ConvertToHtml`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `ConvertToHtml`");
 
@@ -127,11 +154,14 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
                 req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(model))
             {
@@ -170,6 +200,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<HTMLReturn>)req).Callback != null)
                 ((RequestObject<HTMLReturn>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Classify the elements of a document.
         ///
@@ -187,6 +218,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ClassifyElements`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `ClassifyElements`");
 
@@ -209,11 +242,14 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
                 req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(model))
             {
@@ -252,6 +288,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<ClassifyReturn>)req).Callback != null)
                 ((RequestObject<ClassifyReturn>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Extract a document's tables.
         ///
@@ -269,6 +306,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ExtractTables`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (file == null)
                 throw new ArgumentNullException("`file` is required for `ExtractTables`");
 
@@ -291,11 +330,14 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file != null)
             {
                 req.Forms["file"] = new RESTConnector.Form(file, "filename", fileContentType);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(model))
             {
@@ -334,6 +376,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<TableReturn>)req).Callback != null)
                 ((RequestObject<TableReturn>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Compare two documents.
         ///
@@ -355,6 +398,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CompareDocuments`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (file1 == null)
                 throw new ArgumentNullException("`file1` is required for `CompareDocuments`");
             if (file2 == null)
@@ -379,7 +424,6 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (file1 != null)
             {
@@ -388,6 +432,10 @@ namespace IBM.Watson.CompareComply.V1
             if (file2 != null)
             {
                 req.Forms["file_2"] = new RESTConnector.Form(file2, "filename", file2ContentType);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(file1Label))
             {
@@ -434,6 +482,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<CompareReturn>)req).Callback != null)
                 ((RequestObject<CompareReturn>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add feedback.
         ///
@@ -451,6 +500,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `AddFeedback`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (feedbackData == null)
                 throw new ArgumentNullException("`feedbackData` is required for `AddFeedback`");
 
@@ -473,7 +524,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             req.Headers["Content-Type"] = "application/json";
             req.Headers["Accept"] = "application/json";
 
@@ -518,6 +572,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<FeedbackReturn>)req).Callback != null)
                 ((RequestObject<FeedbackReturn>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List the feedback in a document.
         ///
@@ -526,10 +581,6 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="feedbackType">An optional string that filters the output to include only feedback with the
         /// specified feedback type. The only permitted value is `element_classification`. (optional)</param>
-        /// <param name="before">An optional string in the format `YYYY-MM-DD` that filters the output to include only
-        /// feedback that was added before the specified date. (optional)</param>
-        /// <param name="after">An optional string in the format `YYYY-MM-DD` that filters the output to include only
-        /// feedback that was added after the specified date. (optional)</param>
         /// <param name="documentTitle">An optional string that filters the output to include only feedback from the
         /// document with the specified `document_title`. (optional)</param>
         /// <param name="modelId">An optional string that filters the output to include only feedback with the specified
@@ -565,10 +616,12 @@ namespace IBM.Watson.CompareComply.V1
         /// <param name="includeTotal">An optional boolean value. If specified as `true`, the `pagination` object in the
         /// output includes a value called `total` that gives the total count of feedback created. (optional)</param>
         /// <returns><see cref="FeedbackList" />FeedbackList</returns>
-        public bool ListFeedback(Callback<FeedbackList> callback, string feedbackType = null, DateTime? before = null, DateTime? after = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
+        public bool ListFeedback(Callback<FeedbackList> callback, string feedbackType = null, string documentTitle = null, string modelId = null, string modelVersion = null, string categoryRemoved = null, string categoryAdded = null, string categoryNotChanged = null, string typeRemoved = null, string typeAdded = null, string typeNotChanged = null, long? pageLimit = null, string cursor = null, string sort = null, bool? includeTotal = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListFeedback`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<FeedbackList> req = new RequestObject<FeedbackList>
             {
@@ -589,18 +642,13 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(feedbackType))
             {
                 req.Parameters["feedback_type"] = feedbackType;
-            }
-            if (before != null)
-            {
-                req.Parameters["before"] = before;
-            }
-            if (after != null)
-            {
-                req.Parameters["after"] = after;
             }
             if (!string.IsNullOrEmpty(documentTitle))
             {
@@ -687,6 +735,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<FeedbackList>)req).Callback != null)
                 ((RequestObject<FeedbackList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a specified feedback entry.
         ///
@@ -703,6 +752,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetFeedback`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(feedbackId))
                 throw new ArgumentNullException("`feedbackId` is required for `GetFeedback`");
 
@@ -725,7 +776,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -763,6 +817,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<GetFeedback>)req).Callback != null)
                 ((RequestObject<GetFeedback>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a specified feedback entry.
         ///
@@ -779,6 +834,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteFeedback`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(feedbackId))
                 throw new ArgumentNullException("`feedbackId` is required for `DeleteFeedback`");
 
@@ -801,7 +858,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(model))
             {
                 req.Parameters["model"] = model;
@@ -839,6 +899,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<FeedbackDeleted>)req).Callback != null)
                 ((RequestObject<FeedbackDeleted>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Submit a batch-processing request.
         ///
@@ -874,6 +935,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateBatch`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(function))
                 throw new ArgumentNullException("`function` is required for `CreateBatch`");
             if (inputCredentialsFile == null)
@@ -908,7 +971,6 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (inputCredentialsFile != null)
             {
@@ -933,6 +995,10 @@ namespace IBM.Watson.CompareComply.V1
             if (!string.IsNullOrEmpty(outputBucketName))
             {
                 req.Forms["output_bucket_name"] = new RESTConnector.Form(outputBucketName);
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
             if (!string.IsNullOrEmpty(function))
             {
@@ -975,6 +1041,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<BatchStatus>)req).Callback != null)
                 ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List submitted batch-processing jobs.
         ///
@@ -986,6 +1053,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListBatches`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Batches> req = new RequestObject<Batches>
             {
@@ -1006,7 +1075,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnListBatchesResponse;
 
@@ -1040,6 +1112,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<Batches>)req).Callback != null)
                 ((RequestObject<Batches>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get information about a specific batch-processing job.
         ///
@@ -1052,6 +1125,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetBatch`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(batchId))
                 throw new ArgumentNullException("`batchId` is required for `GetBatch`");
 
@@ -1074,7 +1149,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetBatchResponse;
 
@@ -1108,6 +1186,7 @@ namespace IBM.Watson.CompareComply.V1
             if (((RequestObject<BatchStatus>)req).Callback != null)
                 ((RequestObject<BatchStatus>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a pending or active batch-processing job.
         ///
@@ -1126,6 +1205,8 @@ namespace IBM.Watson.CompareComply.V1
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateBatch`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(batchId))
                 throw new ArgumentNullException("`batchId` is required for `UpdateBatch`");
             if (string.IsNullOrEmpty(action))
@@ -1150,7 +1231,10 @@ namespace IBM.Watson.CompareComply.V1
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(action))
             {
                 req.Parameters["action"] = action;

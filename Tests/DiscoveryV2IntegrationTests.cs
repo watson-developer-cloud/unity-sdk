@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ namespace IBM.Watson.Tests
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
+            analyzeDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV1/exampleConfigurationData.json";
+
             addDocumentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestAddDoc.pdf";
             enrichmentFile = Application.dataPath + "/Watson/Tests/TestData/DiscoveryV2/TestEnrichments.csv";
         }
@@ -73,7 +75,7 @@ namespace IBM.Watson.Tests
         }
 
         #region CreateProject
-        [UnityTest, Order(0)]
+        //[UnityTest, Order(0)]
         public IEnumerator TestCreateProject()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateProject...");
@@ -98,7 +100,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CreateCollection
-        [UnityTest, Order(1)]
+        //[UnityTest, Order(1)]
         public IEnumerator TestCreateCollection()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateCollection...");
@@ -124,7 +126,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region ListCollections
-        [UnityTest, Order(2)]
+        //[UnityTest, Order(2)]
         public IEnumerator TestListCollections()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListCollections...");
@@ -148,7 +150,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region Query
-        [UnityTest, Order(4)]
+        //[UnityTest, Order(4)]
         public IEnumerator TestQuery()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to Query...");
@@ -174,7 +176,7 @@ namespace IBM.Watson.Tests
 
 
         #region GetAutocompletion
-        [UnityTest, Order(5)]
+        //[UnityTest, Order(5)]
         public IEnumerator TestGetAutocompletion()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetAutocompletion...");
@@ -198,7 +200,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetComponentSettings
-        [UnityTest, Order(6)]
+        //[UnityTest, Order(6)]
         public IEnumerator TestGetComponentSettings()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetComponentSettings...");
@@ -222,7 +224,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region AddDocument
-        [UnityTest, Order(3)]
+        //[UnityTest, Order(3)]
         public IEnumerator TestAddDocument()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to AddDocument...");
@@ -257,7 +259,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region UpdateDocument
-        [UnityTest, Order(7)]
+        //[UnityTest, Order(7)]
         public IEnumerator TestUpdateDocument()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to UpdateDocument...");
@@ -282,7 +284,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region DeleteDocument
-        [UnityTest, Order(99)]
+        //[UnityTest, Order(99)]
         public IEnumerator TestDeleteDocument()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteDocument...");
@@ -306,7 +308,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region ListTrainingQueries
-        [UnityTest, Order(7)]
+        //[UnityTest, Order(7)]
         public IEnumerator TestListTrainingQueries()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListTrainingQueries...");
@@ -329,7 +331,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CreateTrainingQuery
-        [UnityTest, Order(8)]
+        //[UnityTest, Order(8)]
         public IEnumerator TestCreateTrainingQuery()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateTrainingQuery...{0}???", documentId);
@@ -360,7 +362,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region UpdateTrainingQuery
-        [UnityTest, Order(9)]
+        //[UnityTest, Order(9)]
         public IEnumerator TestUpdateTrainingQuery()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to UpdateTrainingQuery...");
@@ -392,7 +394,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetTrainingQuery
-        [UnityTest, Order(10)]
+        //[UnityTest, Order(10)]
         public IEnumerator TestGetTrainingQuery()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetTrainingQuery...");
@@ -420,7 +422,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region DeleteTrainingQueries
-        [UnityTest, Order(98)]
+        //[UnityTest, Order(98)]
         public IEnumerator TestDeleteTrainingQueries()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteTrainingQueries...");
@@ -442,7 +444,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region QueryNotices
-        [UnityTest, Order(11)]
+        //[UnityTest, Order(11)]
         public IEnumerator TestQueryNotices()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to QueryNotices...");
@@ -466,7 +468,7 @@ namespace IBM.Watson.Tests
 
 
         #region ListFields
-        [UnityTest, Order(12)]
+        //[UnityTest, Order(12)]
         public IEnumerator TestListFields()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListFields...");
@@ -489,7 +491,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region CreateEnrichment
-        [UnityTest, Order(13)]
+        //[UnityTest, Order(13)]
         public IEnumerator TestCreateEnrichment()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to CreateEnrichment...");
@@ -536,7 +538,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetEnrichment
-        [UnityTest, Order(14)]
+        //[UnityTest, Order(14)]
         public IEnumerator TestGetEnrichment()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetEnrichment...");
@@ -559,7 +561,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region ListEnrichments
-        [UnityTest, Order(2)]
+        //[UnityTest, Order(2)]
         public IEnumerator TestListEnrichments()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to ListEnrichments...");
@@ -582,7 +584,7 @@ namespace IBM.Watson.Tests
 
 
         #region DeleteEnrichment
-        [UnityTest, Order(17)]
+        //[UnityTest, Order(17)]
         public IEnumerator TestDeleteEnrichment()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteEnrichment...");
@@ -604,7 +606,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetCollection
-        [UnityTest, Order(18)]
+        //[UnityTest, Order(18)]
         public IEnumerator TestGetCollection()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetCollection...");
@@ -627,7 +629,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region GetProject
-        [UnityTest, Order(19)]
+        //[UnityTest, Order(19)]
         public IEnumerator TestGetProject()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to GetProject...");
@@ -648,8 +650,49 @@ namespace IBM.Watson.Tests
         }
         #endregion
 
+        #region AnalyzeDocument
+        //[UnityTest, Order(20)]
+        public IEnumerator TestAnalyzeDocument()
+        {
+            BearerTokenAuthenticator authenticator = new BearerTokenAuthenticator(
+                bearerToken: "{BEARER_TOKEN}"
+            );
+            DiscoveryService cpdService = new DiscoveryService(versionDate, authenticator);
+            cpdService.SetServiceUrl("{SERVICE_URL}");
+            cpdService.WithHeader("X-Watson-Test", "1");
+
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to AnalyzeDocument...");
+            AnalyzedDocument analyzeDocumentResponse = null;
+            using (FileStream fs = File.OpenRead(analyzeDocumentFile))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+
+                    cpdService.AnalyzeDocument(
+                        callback: (DetailedResponse<AnalyzedDocument> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV2IntegrationTests", "AnalyzeDocument result: {0}", response.Response);
+                            analyzeDocumentResponse = response.Result;
+                            Assert.IsNull(error);
+                            Assert.IsNotNull(analyzeDocumentResponse);
+                        },
+                        projectId: "{projectId}",
+                        collectionId: "{collectionId}",
+                        file: ms,
+                        filename: "exampleConfigurationData.json",
+                        fileContentType: "application/json"
+                    );
+                }
+            }
+
+            while (analyzeDocumentResponse == null)
+                yield return null;
+        }
+        #endregion
+
         #region DeleteCollection
-        [UnityTest, Order(101)]
+        //[UnityTest, Order(101)]
         public IEnumerator TestDeleteCollection()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteCollection...");
@@ -671,7 +714,7 @@ namespace IBM.Watson.Tests
         #endregion
 
         #region DeleteProject
-        [UnityTest, Order(102)]
+        //[UnityTest, Order(102)]
         public IEnumerator TestDeleteProject()
         {
             Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteProject...");

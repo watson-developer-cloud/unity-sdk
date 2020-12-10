@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("next_url", NullValueHandling = NullValueHandling.Ignore)]
         public string NextUrl { get; set; }
         /// <summary>
-        /// Reserved for future use.
+        /// The total number of objects that satisfy the request. This total includes all results, not just those
+        /// included in the current page.
         /// </summary>
         [JsonProperty("total", NullValueHandling = NullValueHandling.Ignore)]
         public long? Total { get; set; }

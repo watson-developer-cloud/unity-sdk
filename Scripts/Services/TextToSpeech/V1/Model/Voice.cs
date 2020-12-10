@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Information about an available voice model.
+    /// Information about an available voice.
     /// </summary>
     public class Voice
     {
@@ -61,10 +61,10 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         [JsonProperty("supported_features", NullValueHandling = NullValueHandling.Ignore)]
         public SupportedFeatures SupportedFeatures { get; set; }
         /// <summary>
-        /// Returns information about a specified custom voice model. This field is returned only by the **Get a voice**
-        /// method and only when you specify the customization ID of a custom voice model.
+        /// Returns information about a specified custom model. This field is returned only by the **Get a voice**
+        /// method and only when you specify the customization ID of a custom model.
         /// </summary>
         [JsonProperty("customization", NullValueHandling = NullValueHandling.Ignore)]
-        public VoiceModel Customization { get; set; }
+        public CustomModel Customization { get; set; }
     }
 }

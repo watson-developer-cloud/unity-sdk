@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Configuration for passage retrieval.
     /// </summary>
-    public class QueryLargePassages: QueryAggregation
+    public class QueryLargePassages
     {
         /// <summary>
         /// A passages query that returns the most relevant passages from the results.

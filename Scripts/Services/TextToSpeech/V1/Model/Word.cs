@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.TextToSpeech.V1.Model
 {
     /// <summary>
-    /// Information about a word for the custom voice model.
+    /// Information about a word for the custom model.
     /// </summary>
     public class Word
     {
@@ -115,7 +115,7 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         [JsonProperty("part_of_speech", NullValueHandling = NullValueHandling.Ignore)]
         public string PartOfSpeech { get; set; }
         /// <summary>
-        /// The word for the custom voice model. The maximum length of a word is 49 characters.
+        /// The word for the custom model. The maximum length of a word is 49 characters.
         /// </summary>
         [JsonProperty("word", NullValueHandling = NullValueHandling.Ignore)]
         public string _Word { get; set; }

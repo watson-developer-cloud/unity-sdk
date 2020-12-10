@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -76,6 +76,31 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("language", NullValueHandling = NullValueHandling.Ignore)]
         public string Language { get; set; }
         /// <summary>
+        /// The workspace ID of the workspace.
+        /// </summary>
+        [JsonProperty("workspace_id", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string WorkspaceId { get; private set; }
+        /// <summary>
+        /// An array of objects describing the dialog nodes in the workspace.
+        /// </summary>
+        [JsonProperty("dialog_nodes", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DialogNode> DialogNodes { get; set; }
+        /// <summary>
+        /// An array of objects defining input examples that have been marked as irrelevant input.
+        /// </summary>
+        [JsonProperty("counterexamples", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Counterexample> Counterexamples { get; set; }
+        /// <summary>
+        /// The timestamp for creation of the object.
+        /// </summary>
+        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Created { get; private set; }
+        /// <summary>
+        /// The timestamp for the most recent update to the object.
+        /// </summary>
+        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTime? Updated { get; private set; }
+        /// <summary>
         /// Any metadata related to the workspace.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
@@ -92,20 +117,10 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("system_settings", NullValueHandling = NullValueHandling.Ignore)]
         public WorkspaceSystemSettings SystemSettings { get; set; }
         /// <summary>
-        /// The workspace ID of the workspace.
+        /// Gets or Sets Webhooks
         /// </summary>
-        [JsonProperty("workspace_id", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string WorkspaceId { get; private set; }
-        /// <summary>
-        /// The timestamp for creation of the object.
-        /// </summary>
-        [JsonProperty("created", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Created { get; private set; }
-        /// <summary>
-        /// The timestamp for the most recent update to the object.
-        /// </summary>
-        [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual DateTime? Updated { get; private set; }
+        [JsonProperty("webhooks", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Webhook> Webhooks { get; set; }
         /// <summary>
         /// An array of intents.
         /// </summary>
@@ -116,20 +131,5 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("entities", NullValueHandling = NullValueHandling.Ignore)]
         public List<Entity> Entities { get; set; }
-        /// <summary>
-        /// An array of objects describing the dialog nodes in the workspace.
-        /// </summary>
-        [JsonProperty("dialog_nodes", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogNode> DialogNodes { get; set; }
-        /// <summary>
-        /// An array of counterexamples.
-        /// </summary>
-        [JsonProperty("counterexamples", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Counterexample> Counterexamples { get; set; }
-        /// <summary>
-        /// Gets or Sets Webhooks
-        /// </summary>
-        [JsonProperty("webhooks", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Webhook> Webhooks { get; set; }
     }
 }

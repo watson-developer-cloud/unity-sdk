@@ -40,9 +40,8 @@ namespace IBM.Watson.Tests
         private string giraffeImageFilepath;
         private string turtleImageFilepath;
         private string imageMetadataFilepath;
-        private string giraffeCollectionId = "d31d6534-3458-40c4-b6de-2185a5f3cbe4";
+        private string giraffeCollectionId = "a06f7036-0529-49ee-bdf6-82ddec276923";
         private string giraffeClassname = "giraffe";
-        private string turtleCollectionId = "760c8625-a456-4b73-b71d-d1619a6daf84";
         private string collectionId;
         private string imageId;
 
@@ -116,7 +115,7 @@ namespace IBM.Watson.Tests
                             Assert.IsTrue(analyzeResponse.Images[0].Objects.Collections.Count > 0);
                             Assert.IsNull(error);
                         },
-                        collectionIds: new List<string>() { giraffeCollectionId, turtleCollectionId },
+                        collectionIds: new List<string>() { giraffeCollectionId },
                         features: new List<string>() { "objects" },
                         imagesFile: imagesFile
                     );
@@ -435,7 +434,9 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("VisualRecognitionServiceV4IntegrationTests", "Attempting to Train...");
             var startTime = "2019-11-18";
-            var endTime = "2019-11-20";
+            var endTime = "2020-11-20";
+            var dateStartTime = DateTime.Parse(startTime);
+            var dateEndTime = DateTime.Parse(endTime);
             TrainingEvents trainingEvents = null;
             service.GetTrainingUsage(
                 callback: (DetailedResponse<TrainingEvents> response, IBMError error) =>
@@ -447,8 +448,8 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(trainingEvents.Events.Count > 0);
                     Assert.IsNull(error);
                 },
-                startTime: startTime,
-                endTime: endTime
+                startTime: dateStartTime,
+                endTime: dateEndTime
             );
 
             while (trainingEvents == null)
@@ -469,7 +470,7 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(objectList.Objects.Count > 0);
                     Assert.IsNull(error);
                 },
-                collectionId: "7ae67016-1cae-479d-871e-0432dcda4f35"
+                collectionId: giraffeCollectionId
             );
 
             while (objectList == null)
@@ -490,8 +491,8 @@ namespace IBM.Watson.Tests
                     Assert.IsTrue(objectMetadata.Count > 0);
                     Assert.IsNull(error);
                 },
-                collectionId: "7ae67016-1cae-479d-871e-0432dcda4f35",
-                _object: "turtle"
+                collectionId: giraffeCollectionId,
+                _object: "giraffe"
             );
 
             while (objectMetadata == null)

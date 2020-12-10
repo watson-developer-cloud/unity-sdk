@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -28,20 +32,25 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.VisualRecognition.V3
 {
+    [System.Obsolete("On 1 December 2021, Visual Recognition will no longer be available. " +
+        "For more information, see Visual Recognition Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#visual-recognition-deprecation).")]
     public partial class VisualRecognitionService : BaseService
     {
-        private const string serviceId = "visual_recognition";
+        private const string defaultServiceName = "visual_recognition";
         private const string defaultServiceUrl = "https://api.us-south.visual-recognition.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
+        /// `2018-03-19`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -60,25 +69,44 @@ namespace IBM.Watson.VisualRecognition.V3
         /// <summary>
         /// VisualRecognitionService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public VisualRecognitionService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2018-03-19`.</param>
+        public VisualRecognitionService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// VisualRecognitionService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2018-03-19`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public VisualRecognitionService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public VisualRecognitionService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// VisualRecognitionService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2018-03-19`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public VisualRecognitionService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// VisualRecognitionService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
+        /// The current version is `2018-03-19`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public VisualRecognitionService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of VisualRecognitionService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -130,6 +158,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Classify`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<ClassifiedImages> req = new RequestObject<ClassifiedImages>
             {
@@ -150,7 +180,6 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (imagesFile != null)
             {
@@ -171,6 +200,10 @@ namespace IBM.Watson.VisualRecognition.V3
             if (classifierIds != null && classifierIds.Count > 0)
             {
                 req.Forms["classifier_ids"] = new RESTConnector.Form(string.Join(", ", classifierIds.ToArray()));
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnClassifyResponse;
@@ -205,6 +238,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<ClassifiedImages>)req).Callback != null)
                 ((RequestObject<ClassifiedImages>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a classifier.
         ///
@@ -245,6 +279,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateClassifier`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException("`name` is required for `CreateClassifier`");
             if (positiveExamples == null)
@@ -271,7 +307,6 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (!string.IsNullOrEmpty(name))
             {
@@ -288,6 +323,10 @@ namespace IBM.Watson.VisualRecognition.V3
             if (negativeExamples != null)
             {
                 req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnCreateClassifierResponse;
@@ -322,6 +361,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<Classifier>)req).Callback != null)
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Retrieve a list of classifiers.
         /// </summary>
@@ -333,6 +373,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListClassifiers`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
 
             RequestObject<Classifiers> req = new RequestObject<Classifiers>
             {
@@ -353,7 +395,10 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (verbose != null)
             {
                 req.Parameters["verbose"] = (bool)verbose ? "true" : "false";
@@ -391,6 +436,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<Classifiers>)req).Callback != null)
                 ((RequestObject<Classifiers>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Retrieve classifier details.
         ///
@@ -403,6 +449,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetClassifier`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("`classifierId` is required for `GetClassifier`");
 
@@ -425,7 +473,10 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetClassifierResponse;
 
@@ -459,6 +510,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<Classifier>)req).Callback != null)
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a classifier.
         ///
@@ -504,6 +556,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateClassifier`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("`classifierId` is required for `UpdateClassifier`");
 
@@ -526,7 +580,6 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
             req.Forms = new Dictionary<string, RESTConnector.Form>();
             if (positiveExamples != null && positiveExamples.Count > 0)
             {
@@ -539,6 +592,10 @@ namespace IBM.Watson.VisualRecognition.V3
             if (negativeExamples != null)
             {
                 req.Forms["negative_examples"] = new RESTConnector.Form(negativeExamples, negativeExamplesFilename, "application/octet-stream");
+            }
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
             }
 
             req.OnResponse = OnUpdateClassifierResponse;
@@ -573,6 +630,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<Classifier>)req).Callback != null)
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a classifier.
         /// </summary>
@@ -583,6 +641,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteClassifier`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("`classifierId` is required for `DeleteClassifier`");
 
@@ -605,7 +665,10 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnDeleteClassifierResponse;
 
@@ -639,6 +702,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Retrieve a Core ML model of a classifier.
         ///
@@ -652,6 +716,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `GetCoreMlModel`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(classifierId))
                 throw new ArgumentNullException("`classifierId` is required for `GetCoreMlModel`");
 
@@ -674,7 +740,10 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
 
             req.OnResponse = OnGetCoreMlModelResponse;
 
@@ -698,6 +767,7 @@ namespace IBM.Watson.VisualRecognition.V3
             if (((RequestObject<byte[]>)req).Callback != null)
                 ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///
@@ -715,6 +785,8 @@ namespace IBM.Watson.VisualRecognition.V3
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `DeleteUserData`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (string.IsNullOrEmpty(customerId))
                 throw new ArgumentNullException("`customerId` is required for `DeleteUserData`");
 
@@ -737,7 +809,10 @@ namespace IBM.Watson.VisualRecognition.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (!string.IsNullOrEmpty(customerId))
             {
                 req.Parameters["customer_id"] = customerId;

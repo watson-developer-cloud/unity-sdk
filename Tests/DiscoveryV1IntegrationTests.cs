@@ -1,5 +1,5 @@
 ﻿/**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2018, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -934,12 +934,11 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(queryResultTimeslice.Aggregations);
                     Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Field == "product.sales");
                     Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Interval == "2d");
-                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Anomaly == true);
                 },
                 environmentId: "system",
                 collectionId: "news-en",
                 naturalLanguageQuery: naturalLanguageQuery,
-                aggregation: "timeslice(product.sales,2day,anomaly:true)"
+                aggregation: "timeslice(product.sales,2day)"
             );
 
             QueryResponse queryResultTerm = null;
