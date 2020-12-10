@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -59,6 +59,6 @@ namespace IBM.Watson.VisualRecognition.V4.Model
         /// Training status information for the collection.
         /// </summary>
         [JsonProperty("training_status", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual TrainingStatus TrainingStatus { get; private set; }
+        public CollectionTrainingStatus TrainingStatus { get; set; }
     }
 }

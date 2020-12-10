@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,9 +35,8 @@ namespace IBM.Watson.TextToSpeech.V1
 {
     public partial class TextToSpeechService : BaseService
     {
-        private const string serviceId = "text_to_speech";
+        private const string defaultServiceName = "text_to_speech";
         private const string defaultServiceUrl = "https://api.us-south.text-to-speech.watson.cloud.ibm.com";
-
 
         #region DisableSslVerification
         private bool disableSslVerification = false;
@@ -50,13 +53,26 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
-        public TextToSpeechService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        public TextToSpeechService() : this(defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// TextToSpeechService constructor.
         /// </summary>
         /// <param name="authenticator">The service authenticator.</param>
-        public TextToSpeechService(Authenticator authenticator) : base(authenticator, serviceId)
+        public TextToSpeechService(Authenticator authenticator) : this(defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// TextToSpeechService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public TextToSpeechService(string serviceName) : this(serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// TextToSpeechService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public TextToSpeechService(string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
@@ -136,6 +152,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<Voices>)req).Callback != null)
                 ((RequestObject<Voices>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a voice.
         ///
@@ -217,6 +234,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<Voice>)req).Callback != null)
                 ((RequestObject<Voice>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Synthesize audio.
         ///
@@ -357,6 +375,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<byte[]>)req).Callback != null)
                 ((RequestObject<byte[]>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get pronunciation.
         ///
@@ -457,6 +476,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<Pronunciation>)req).Callback != null)
                 ((RequestObject<Pronunciation>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create a custom model.
         ///
@@ -546,6 +566,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<CustomModel>)req).Callback != null)
                 ((RequestObject<CustomModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List custom models.
         ///
@@ -623,6 +644,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<CustomModels>)req).Callback != null)
                 ((RequestObject<CustomModels>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Update a custom model.
         ///
@@ -730,6 +752,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a custom model.
         ///
@@ -803,6 +826,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<CustomModel>)req).Callback != null)
                 ((RequestObject<CustomModel>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom model.
         ///
@@ -875,6 +899,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add custom words.
         ///
@@ -980,6 +1005,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List custom words.
         ///
@@ -1053,6 +1079,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<Words>)req).Callback != null)
                 ((RequestObject<Words>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Add a custom word.
         ///
@@ -1165,6 +1192,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get a custom word.
         ///
@@ -1241,6 +1269,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<Translation>)req).Callback != null)
                 ((RequestObject<Translation>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete a custom word.
         ///
@@ -1316,6 +1345,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete labeled data.
         ///

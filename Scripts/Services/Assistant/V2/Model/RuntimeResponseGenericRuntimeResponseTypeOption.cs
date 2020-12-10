@@ -57,6 +57,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The title or introductory text to show before the response.
         /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public new string Title
         {
             get { return base.Title; }
@@ -65,6 +66,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The description to show with the the response.
         /// </summary>
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public new string Description
         {
             get { return base.Description; }
@@ -73,6 +75,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// An array of objects describing the options from which the user can choose.
         /// </summary>
+        [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public new List<DialogNodeOutputOptionsElement> Options
         {
             get { return base.Options; }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -31,9 +35,8 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 {
     public partial class NaturalLanguageClassifierService : BaseService
     {
-        private const string serviceId = "natural_language_classifier";
+        private const string defaultServiceName = "natural_language_classifier";
         private const string defaultServiceUrl = "https://api.us-south.natural-language-classifier.watson.cloud.ibm.com";
-
 
         #region DisableSslVerification
         private bool disableSslVerification = false;
@@ -50,13 +53,26 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
-        public NaturalLanguageClassifierService() : this(ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        public NaturalLanguageClassifierService() : this(defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// NaturalLanguageClassifierService constructor.
         /// </summary>
         /// <param name="authenticator">The service authenticator.</param>
-        public NaturalLanguageClassifierService(Authenticator authenticator) : base(authenticator, serviceId)
+        public NaturalLanguageClassifierService(Authenticator authenticator) : this(defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// NaturalLanguageClassifierService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public NaturalLanguageClassifierService(string serviceName) : this(serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// NaturalLanguageClassifierService constructor.
+        /// </summary>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public NaturalLanguageClassifierService(string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
@@ -144,6 +160,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             if (((RequestObject<Classification>)req).Callback != null)
                 ((RequestObject<Classification>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Classify multiple phrases.
         ///
@@ -224,6 +241,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             if (((RequestObject<ClassificationCollection>)req).Callback != null)
                 ((RequestObject<ClassificationCollection>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Create classifier.
         ///
@@ -310,6 +328,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             if (((RequestObject<Classifier>)req).Callback != null)
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// List classifiers.
         ///
@@ -374,6 +393,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             if (((RequestObject<ClassifierList>)req).Callback != null)
                 ((RequestObject<ClassifierList>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get information about a classifier.
         ///
@@ -441,6 +461,7 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
             if (((RequestObject<Classifier>)req).Callback != null)
                 ((RequestObject<Classifier>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Delete classifier.
         /// </summary>

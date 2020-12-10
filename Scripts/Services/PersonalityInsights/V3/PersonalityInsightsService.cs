@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
 *
 */
 
+/**
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+*/
+ 
 using System.Collections.Generic;
 using System.Text;
 using IBM.Cloud.SDK;
@@ -36,18 +40,20 @@ namespace IBM.Watson.PersonalityInsights.V3
 
     public partial class PersonalityInsightsService : BaseService
     {
-        private const string serviceId = "personality_insights";
+        private const string defaultServiceName = "personality_insights";
         private const string defaultServiceUrl = "https://api.us-south.personality-insights.watson.cloud.ibm.com";
 
-        #region VersionDate
-        private string versionDate;
+        #region Version
+        private string version;
         /// <summary>
-        /// Gets and sets the versionDate of the service.
+        /// Gets and sets the version of the service.
+        /// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current
+        /// version is `2017-10-13`.
         /// </summary>
-        public string VersionDate
+        public string Version
         {
-            get { return versionDate; }
-            set { versionDate = value; }
+            get { return version; }
+            set { version = value; }
         }
         #endregion
 
@@ -66,25 +72,44 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <summary>
         /// PersonalityInsightsService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
-        public PersonalityInsightsService(string versionDate) : this(versionDate, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceId)) {}
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-10-13`.</param>
+        public PersonalityInsightsService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// PersonalityInsightsService constructor.
         /// </summary>
-        /// <param name="versionDate">The service version date in `yyyy-mm-dd` format.</param>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-10-13`.</param>
         /// <param name="authenticator">The service authenticator.</param>
-        public PersonalityInsightsService(string versionDate, Authenticator authenticator) : base(versionDate, authenticator, serviceId)
+        public PersonalityInsightsService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
+
+        /// <summary>
+        /// PersonalityInsightsService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-10-13`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        public PersonalityInsightsService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
+
+        /// <summary>
+        /// PersonalityInsightsService constructor.
+        /// </summary>
+        /// <param name="version">Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD
+        /// format. The current version is `2017-10-13`.</param>
+        /// <param name="serviceName">The service name to be used when configuring the client instance</param>
+        /// <param name="authenticator">The service authenticator.</param>
+        public PersonalityInsightsService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
         {
             Authenticator = authenticator;
 
-            if (string.IsNullOrEmpty(versionDate))
+            if (string.IsNullOrEmpty(version))
             {
-                throw new ArgumentNullException("A versionDate (format `yyyy-mm-dd`) is required to create an instance of PersonalityInsightsService");
+                throw new ArgumentNullException("`version` is required");
             }
             else
             {
-                VersionDate = versionDate;
+                Version = version;
             }
 
             if (string.IsNullOrEmpty(GetServiceUrl()))
@@ -162,10 +187,12 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
         /// <returns><see cref="Profile" />Profile</returns>
-        public bool Profile(Callback<Profile> callback, Content content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
+        public bool Profile(Callback<Profile> callback, System.IO.MemoryStream content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Profile`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (content == null)
                 throw new ArgumentNullException("`content` is required for `Profile`");
 
@@ -188,7 +215,10 @@ namespace IBM.Watson.PersonalityInsights.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (rawScores != null)
             {
                 req.Parameters["raw_scores"] = (bool)rawScores ? "true" : "false";
@@ -217,7 +247,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
+            req.Send = content.ToArray();
 
             req.OnResponse = OnProfileResponse;
 
@@ -251,6 +281,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             if (((RequestObject<Profile>)req).Callback != null)
                 ((RequestObject<Profile>)req).Callback(response, resp.Error);
         }
+
         /// <summary>
         /// Get profile as csv.
         ///
@@ -320,10 +351,12 @@ namespace IBM.Watson.PersonalityInsights.V3
         /// <param name="consumptionPreferences">Indicates whether consumption preferences are returned with the
         /// results. By default, no consumption preferences are returned. (optional, default to false)</param>
         /// <returns><see cref="System.IO.MemoryStream" />System.IO.MemoryStream</returns>
-        public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, Content content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
+        public bool ProfileAsCsv(Callback<System.IO.MemoryStream> callback, System.IO.MemoryStream content, string contentType = null, string contentLanguage = null, string acceptLanguage = null, bool? rawScores = null, bool? csvHeaders = null, bool? consumptionPreferences = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ProfileAsCsv`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
             if (content == null)
                 throw new ArgumentNullException("`content` is required for `ProfileAsCsv`");
 
@@ -346,7 +379,10 @@ namespace IBM.Watson.PersonalityInsights.V3
                 req.Headers.Add(kvp.Key, kvp.Value);
             }
 
-            req.Parameters["version"] = VersionDate;
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
             if (rawScores != null)
             {
                 req.Parameters["raw_scores"] = (bool)rawScores ? "true" : "false";
@@ -375,7 +411,7 @@ namespace IBM.Watson.PersonalityInsights.V3
             {
                 req.Headers["Accept-Language"] = acceptLanguage;
             }
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(content));
+            req.Send = content.ToArray();
 
             req.OnResponse = OnProfileAsCsvResponse;
 

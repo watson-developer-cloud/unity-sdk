@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// and publication date. Supports URL and HTML input types only.
         /// </summary>
         [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public MetadataOptions Metadata { get; set; }
+        public object Metadata { get; set; }
         /// <summary>
         /// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo`
         /// relation might connect the entities "Nobel Prize" and "Albert Einstein". For more information, see [Relation

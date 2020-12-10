@@ -24,7 +24,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// <summary>
     /// The context for the dialog node.
     /// </summary>
-    public class DialogNodeContext: DynamicModel<object>
+    public class DialogNodeContext : DynamicModel<object>
     {
         /// <summary>
         /// Context data intended for specific integrations.

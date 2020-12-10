@@ -25,6 +25,8 @@ using IBM.Watson.PersonalityInsights.V3.Model;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using System.Text;
+using System.IO;
 
 namespace IBM.Watson.Tests
 {
@@ -64,18 +66,8 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Attempting to Profile...");
             Profile profileResponse = null;
-            Content content = new Content()
-            {
-                ContentItems = new List<ContentItem>()
-                {
-                    new ContentItem()
-                    {
-                        Contenttype = ContentItem.ContenttypeValue.TEXT_PLAIN,
-                        Language = ContentItem.LanguageValue.EN,
-                        Content = contentToProfile
-                    }
-                }
-            };
+            byte[] bytes = Encoding.ASCII.GetBytes(contentToProfile);
+            MemoryStream content = new MemoryStream(bytes);
 
             service.Profile(
                 callback: (DetailedResponse<Profile> response, IBMError error) =>
@@ -106,18 +98,8 @@ namespace IBM.Watson.Tests
         {
             Log.Debug("PersonalityInsightsServiceV3IntegrationTests", "Attempting to ProfileAsCsv...");
             System.IO.MemoryStream profileAsCsvResponse = null;
-            Content content = new Content()
-            {
-                ContentItems = new List<ContentItem>()
-                {
-                    new ContentItem()
-                    {
-                        Contenttype = ContentItem.ContenttypeValue.TEXT_PLAIN,
-                        Language = ContentItem.LanguageValue.EN,
-                        Content = contentToProfile
-                    }
-                }
-            };
+            byte[] bytes = Encoding.ASCII.GetBytes(contentToProfile);
+            MemoryStream content = new MemoryStream(bytes);
 
             service.ProfileAsCsv(
                 callback: (DetailedResponse<System.IO.MemoryStream> response, IBMError error) =>

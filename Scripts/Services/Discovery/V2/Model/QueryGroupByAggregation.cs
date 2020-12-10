@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Returns the top values for the field specified.
     /// </summary>
-    public class QueryGroupByAggregation
+    public class QueryGroupByAggregation : QueryAggregation
     {
         /// <summary>
         /// Array of top values for the field.

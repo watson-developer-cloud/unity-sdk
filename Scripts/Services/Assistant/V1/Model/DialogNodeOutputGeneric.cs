@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using JsonSubTypes;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -30,6 +31,13 @@ namespace IBM.Watson.Assistant.V1.Model
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
     /// </summary>
+    [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent), "connect_to_agent")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeImage), "image")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeOption), "option")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypePause), "pause")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill), "search_skill")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeText), "text")]
     public class DialogNodeOutputGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.

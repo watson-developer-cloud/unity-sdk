@@ -40,6 +40,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// How long to pause, in milliseconds.
         /// </summary>
+        [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
         public new long? Time
         {
             get { return base.Time; }
@@ -48,6 +49,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// Whether to send a "user is typing" event during the pause.
         /// </summary>
+        [JsonProperty("typing", NullValueHandling = NullValueHandling.Ignore)]
         public new bool? Typing
         {
             get { return base.Typing; }

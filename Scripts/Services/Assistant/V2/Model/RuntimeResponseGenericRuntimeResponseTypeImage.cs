@@ -40,6 +40,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The URL of the image.
         /// </summary>
+        [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
         {
             get { return base.Source; }
@@ -48,6 +49,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The title to show before the response.
         /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public new string Title
         {
             get { return base.Title; }
@@ -56,6 +58,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The description to show with the the response.
         /// </summary>
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public new string Description
         {
             get { return base.Description; }

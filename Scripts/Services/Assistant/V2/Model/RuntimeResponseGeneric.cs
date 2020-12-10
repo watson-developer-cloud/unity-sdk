@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using JsonSubTypes;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
@@ -31,6 +32,14 @@ namespace IBM.Watson.Assistant.V2.Model
     /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
     /// - RuntimeResponseGenericRuntimeResponseTypeSearch
     /// </summary>
+    [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeConnectToAgent), "connect_to_agent")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeImage), "image")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeOption), "option")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeSuggestion), "suggestion")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypePause), "pause")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeSearch), "search")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeText), "text")]
     public class RuntimeResponseGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
