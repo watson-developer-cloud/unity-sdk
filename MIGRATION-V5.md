@@ -1,6 +1,9 @@
-## .Unity SDK V5 Migration guide
+## Unity SDK V5 Migration guide
 
-* Added Enums classes
+### Service changes
+
+#### All Services
+* `VersionDate` was renamed to `Version`
 
 #### Assistant v1
 
@@ -43,6 +46,9 @@
 `SystemResponse`
 
 ##### Model Properties Changed
+
+`Context`
+* `System` property type changed from `SystemResponse` to `Dictionary<string, object>`
 
 `DialogNode`
 * `context` property type changed from `Dictionary<string, object>` to `DialogNodeContext`
@@ -163,6 +169,12 @@ No changes
 `Features`
 * Changed `Metadata` property type from `MetadataOptions` to `object`
 
+#### Personality Insights
+
+* Added deprecation notice
+* Changed `content` parameter type from `Content` to `System.IO.MemoryStream` in `Profile()` method
+* Changed `content` parameter type from `Content` to `System.IO.MemoryStream` in `ProfileAsCsv()` method
+
 ##### Models Removed
 
 `Content`,
@@ -205,12 +217,17 @@ No changes
 `Voice`
 * Change return type of `Customization` from `VoiceModel` to `CustomModel`
 
+#### Tone Analyzer v3
+
+* Changed `toneInput` parameter type from `ToneInput` to `System.IO.MemoryStream` in `Tone()` method
+
 #### Visual Recognition v3
 
-No changes
+* Added deprecation notice
 
 #### Visual Recognition v4
 
+* Added deprecation notice
 * Changed `startTime` and `endTime` parameter types from `string` to `DateTime` in `GetTrainingUsage()` method
 
 ##### Models Added
@@ -219,6 +236,10 @@ No changes
 `ObjectDetailLocation`
 
 ##### Model Properties Changed
+
+`Collection`
+* `TrainingStatus` property is no longer virtual
+* Changed `TrainingStatus` property type from `TraningStatus` to `CollectionTrainingStatus`
 
 `ObjectDetail`
 * Changed `Location` property type from `Location` to `ObjectDetailLocation`
