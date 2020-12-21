@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from
     /// the log.
     /// </summary>
-    public class OutputData: DynamicModel<object>
+    public class OutputData : DynamicModel<object>
     {
         /// <summary>
         /// An array of the nodes that were triggered to create the response, in the order in which they were visited.

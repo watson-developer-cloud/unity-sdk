@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// <summary>
     /// An input object that includes the input text.
     /// </summary>
-    public class MessageInput: DynamicModel<object>
+    public class MessageInput : DynamicModel<object>
     {
         /// <summary>
         /// The text of the user input. This string cannot contain carriage return, newline, or tab characters.

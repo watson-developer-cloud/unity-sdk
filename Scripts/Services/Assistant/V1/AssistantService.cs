@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201221-120002
 */
  
 using System.Collections.Generic;
@@ -226,6 +226,92 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<MessageResponse>)req).Callback != null)
                 ((RequestObject<MessageResponse>)req).Callback(response, resp.Error);
+        }
+
+        /// <summary>
+        /// Identify intents and entities in multiple user utterances.
+        ///
+        /// Send multiple user inputs to a workspace in a single request and receive information about the intents and
+        /// entities recognized in each input. This method is useful for testing and comparing the performance of
+        /// different workspaces.
+        ///
+        /// This method is available only with Premium plans.
+        /// </summary>
+        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
+        /// <param name="workspaceId">Unique identifier of the workspace.</param>
+        /// <param name="input">An array of input utterances to classify. (optional)</param>
+        /// <returns><see cref="BulkClassifyResponse" />BulkClassifyResponse</returns>
+        public bool BulkClassify(Callback<BulkClassifyResponse> callback, string workspaceId, List<BulkClassifyUtterance> input = null)
+        {
+            if (callback == null)
+                throw new ArgumentNullException("`callback` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(workspaceId))
+                throw new ArgumentNullException("`workspaceId` is required for `BulkClassify`");
+            if (string.IsNullOrEmpty(Version))
+                throw new ArgumentNullException("`Version` is required");
+
+            RequestObject<BulkClassifyResponse> req = new RequestObject<BulkClassifyResponse>
+            {
+                Callback = callback,
+                HttpMethod = UnityWebRequest.kHttpVerbPOST,
+                DisableSslVerification = DisableSslVerification
+            };
+
+            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            ClearCustomRequestHeaders();
+
+            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "BulkClassify"))
+            {
+                req.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            if (!string.IsNullOrEmpty(Version))
+            {
+                req.Parameters["version"] = Version;
+            }
+            req.Headers["Content-Type"] = "application/json";
+            req.Headers["Accept"] = "application/json";
+
+            JObject bodyObject = new JObject();
+            if (input != null && input.Count > 0)
+                bodyObject["input"] = JToken.FromObject(input);
+            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
+
+            req.OnResponse = OnBulkClassifyResponse;
+
+            Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/bulk_classify", workspaceId);
+            Authenticator.Authenticate(Connector);
+
+            return Connector.Send(req);
+        }
+
+        private void OnBulkClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
+        {
+            DetailedResponse<BulkClassifyResponse> response = new DetailedResponse<BulkClassifyResponse>();
+            foreach (KeyValuePair<string, string> kvp in resp.Headers)
+            {
+                response.Headers.Add(kvp.Key, kvp.Value);
+            }
+            response.StatusCode = resp.HttpResponseCode;
+
+            try
+            {
+                string json = Encoding.UTF8.GetString(resp.Data);
+                response.Result = JsonConvert.DeserializeObject<BulkClassifyResponse>(json);
+                response.Response = json;
+            }
+            catch (Exception e)
+            {
+                Log.Error("AssistantService.OnBulkClassifyResponse()", "Exception: {0}", e.ToString());
+                resp.Success = false;
+            }
+
+            if (((RequestObject<BulkClassifyResponse>)req).Callback != null)
+                ((RequestObject<BulkClassifyResponse>)req).Callback(response, resp.Error);
         }
 
         /// <summary>
@@ -4664,92 +4750,6 @@ namespace IBM.Watson.Assistant.V1
 
             if (((RequestObject<object>)req).Callback != null)
                 ((RequestObject<object>)req).Callback(response, resp.Error);
-        }
-
-        /// <summary>
-        /// Identify intents and entities in multiple user utterances.
-        ///
-        /// Send multiple user inputs to a workspace in a single request and receive information about the intents and
-        /// entities recognized in each input. This method is useful for testing and comparing the performance of
-        /// different workspaces.
-        ///
-        /// This method is available only with Premium plans.
-        /// </summary>
-        /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="input">An array of input utterances to classify. (optional)</param>
-        /// <returns><see cref="BulkClassifyResponse" />BulkClassifyResponse</returns>
-        public bool BulkClassify(Callback<BulkClassifyResponse> callback, string workspaceId, List<BulkClassifyUtterance> input = null)
-        {
-            if (callback == null)
-                throw new ArgumentNullException("`callback` is required for `BulkClassify`");
-            if (string.IsNullOrEmpty(workspaceId))
-                throw new ArgumentNullException("`workspaceId` is required for `BulkClassify`");
-            if (string.IsNullOrEmpty(Version))
-                throw new ArgumentNullException("`Version` is required");
-
-            RequestObject<BulkClassifyResponse> req = new RequestObject<BulkClassifyResponse>
-            {
-                Callback = callback,
-                HttpMethod = UnityWebRequest.kHttpVerbPOST,
-                DisableSslVerification = DisableSslVerification
-            };
-
-            foreach (KeyValuePair<string, string> kvp in customRequestHeaders)
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            ClearCustomRequestHeaders();
-
-            foreach (KeyValuePair<string, string> kvp in Common.GetSdkHeaders("conversation", "V1", "BulkClassify"))
-            {
-                req.Headers.Add(kvp.Key, kvp.Value);
-            }
-
-            if (!string.IsNullOrEmpty(Version))
-            {
-                req.Parameters["version"] = Version;
-            }
-            req.Headers["Content-Type"] = "application/json";
-            req.Headers["Accept"] = "application/json";
-
-            JObject bodyObject = new JObject();
-            if (input != null && input.Count > 0)
-                bodyObject["input"] = JToken.FromObject(input);
-            req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
-
-            req.OnResponse = OnBulkClassifyResponse;
-
-            Connector.URL = GetServiceUrl() + string.Format("/v1/workspaces/{0}/bulk_classify", workspaceId);
-            Authenticator.Authenticate(Connector);
-
-            return Connector.Send(req);
-        }
-
-        private void OnBulkClassifyResponse(RESTConnector.Request req, RESTConnector.Response resp)
-        {
-            DetailedResponse<BulkClassifyResponse> response = new DetailedResponse<BulkClassifyResponse>();
-            foreach (KeyValuePair<string, string> kvp in resp.Headers)
-            {
-                response.Headers.Add(kvp.Key, kvp.Value);
-            }
-            response.StatusCode = resp.HttpResponseCode;
-
-            try
-            {
-                string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<BulkClassifyResponse>(json);
-                response.Response = json;
-            }
-            catch (Exception e)
-            {
-                Log.Error("AssistantService.OnBulkClassifyResponse()", "Exception: {0}", e.ToString());
-                resp.Success = false;
-            }
-
-            if (((RequestObject<BulkClassifyResponse>)req).Callback != null)
-                ((RequestObject<BulkClassifyResponse>)req).Callback(response, resp.Error);
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2020.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace IBM.Watson.Assistant.V2.Model
     /// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
     /// tags.
     /// </summary>
-    public class SearchResultHighlight: DynamicModel<List<string>>
+    public class SearchResultHighlight : DynamicModel<List<string>>
     {
         /// <summary>
         /// An array of strings containing segments taken from body text in the search results, with query-matching
