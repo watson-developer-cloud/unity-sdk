@@ -57,11 +57,10 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
         public List<CaptureGroup> Groups { get; set; }
         /// <summary>
-        /// An object containing detailed information about the entity recognized in the user input. This property is
-        /// included only if the new system entities are enabled for the workspace.
+        /// An object containing detailed information about the entity recognized in the user input.
         ///
-        /// For more information about how the new system entities are interpreted, see the
-        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-beta-system-entities).
+        /// For more information about how system entities are interpreted, see the
+        /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-system-entities).
         /// </summary>
         [JsonProperty("interpretation", NullValueHandling = NullValueHandling.Ignore)]
         public RuntimeEntityInterpretation Interpretation { get; set; }

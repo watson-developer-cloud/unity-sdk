@@ -139,13 +139,13 @@ namespace IBM.Watson.Assistant.V1.Model
         /// next available agent.
         /// </summary>
         [JsonProperty("agent_available", NullValueHandling = NullValueHandling.Ignore)]
-        public string AgentAvailable { get; protected set; }
+        public AgentAvailabilityMessage AgentAvailable { get; protected set; }
         /// <summary>
         /// An optional message to be displayed to the user to indicate that no online agent is available to take over
         /// the conversation.
         /// </summary>
         [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
-        public string AgentUnavailable { get; protected set; }
+        public AgentAvailabilityMessage AgentUnavailable { get; protected set; }
         /// <summary>
         /// Routing or other contextual information to be used by target service desk systems.
         /// </summary>

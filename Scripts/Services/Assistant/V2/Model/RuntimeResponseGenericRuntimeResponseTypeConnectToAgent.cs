@@ -51,7 +51,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// next available agent.
         /// </summary>
         [JsonProperty("agent_available", NullValueHandling = NullValueHandling.Ignore)]
-        public new string AgentAvailable
+        public new AgentAvailabilityMessage AgentAvailable
         {
             get { return base.AgentAvailable; }
             set { base.AgentAvailable = value; }
@@ -61,7 +61,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// the conversation.
         /// </summary>
         [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
-        public new string AgentUnavailable
+        public new AgentAvailabilityMessage AgentUnavailable
         {
             get { return base.AgentUnavailable; }
             set { base.AgentUnavailable = value; }
