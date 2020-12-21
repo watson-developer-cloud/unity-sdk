@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.0...v5.0.1) (2020-12-21)
+
+
+### Bug Fixes
+
+* **Assistant:** node dialog respose should have agent props ([e0ead99](https://github.com/watson-developer-cloud/unity-sdk/commit/e0ead9909b7144d074e1dddc57176ad7309a676a))
+
 # [5.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v4.8.0...v5.0.0) (2020-12-10)
 
 
