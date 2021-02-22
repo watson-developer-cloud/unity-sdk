@@ -15,7 +15,7 @@ on:
 jobs:
   deploy:
     name: Deploy and Publish
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
