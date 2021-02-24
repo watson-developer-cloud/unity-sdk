@@ -84,3 +84,4 @@ package-lock.json.meta
 
 .pre-commit-config.yaml
 .secrets.baseline
+/.idea
