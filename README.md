@@ -1,8 +1,11 @@
 # IBM Watson SDK for Unity
-[![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
+[![Deploy and Publish](https://github.com/watson-developer-cloud/unity-sdk/workflows/Deploy%20and%20Publish/badge.svg?branch=master)](https://github.com/watson-developer-cloud/unity-sdk/actions?query=workflow%3A%22Deploy+and+Publish%22)
 [![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![CLA assistant](https://cla-assistant.io/readme/badge/watson-developer-cloud/unity-sdk)](https://cla-assistant.io/watson-developer-cloud/unity-sdk)
+
+## Deprecated builds
+[![Build Status](https://travis-ci.org/watson-developer-cloud/unity-sdk.svg?branch=develop)](https://travis-ci.org/watson-developer-cloud/unity-sdk)
 
 Use this SDK to build Watson-powered applications in Unity.
 
