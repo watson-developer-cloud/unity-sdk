@@ -33,6 +33,10 @@ using UnityEngine.Networking;
 
 namespace IBM.Watson.CompareComply.V1
 {
+    [System.Obsolete("On 30 November 2021, Compare and Comply will no longer be available." +
+        "\nFor more information, see Compare and Comply Deprecation " +
+        "(https://github.com/watson-developer-cloud/unity-sdk/tree/master#compare-and-comply-deprecation).")]
+
     public partial class CompareComplyService : BaseService
     {
         private const string defaultServiceName = "compare_comply";
