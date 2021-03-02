@@ -36,7 +36,7 @@ jobs:
     - name: Publish to Git Releases and Tags
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npx semantic-release # --verbosity=DEBUG --dry-run
 
