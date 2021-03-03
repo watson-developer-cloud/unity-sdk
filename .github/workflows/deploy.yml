@@ -35,8 +35,8 @@ jobs:
         npm install -g @semantic-release/release-notes-generator
     - name: Publish to Git Releases and Tags
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GA_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npx semantic-release # --verbosity=DEBUG --dry-run
 
