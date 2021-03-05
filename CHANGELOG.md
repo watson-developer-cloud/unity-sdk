@@ -1,3 +1,11 @@
+## [5.0.2](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.1...v5.0.2) (2021-03-05)
+
+
+### Bug Fixes
+
+* deprecate compare and comply message ([f05490d](https://github.com/watson-developer-cloud/unity-sdk/commit/f05490db5d4e5d171e71eee66cb2ea927279654d))
+* test semantic release ([489fa33](https://github.com/watson-developer-cloud/unity-sdk/commit/489fa337f7f8a3b4377b78252582b2bd63a1c13f))
+
 ## [5.0.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.0...v5.0.1) (2020-12-21)
 
 
