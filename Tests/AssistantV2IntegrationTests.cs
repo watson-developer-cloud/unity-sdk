@@ -297,6 +297,42 @@ namespace IBM.Watson.Tests
                 yield return null;
         }
 
+        [UnityTest, Order(2)]
+        public IEnumerator TestRuntimeResponseGenericRuntimeResponseTypeChannelTransfer()
+        {
+            assistantId = Environment.GetEnvironmentVariable("ASSISTANT_ASSISTANT_ID");
+            MessageResponseStateless messageResponse = null;
+            string conversationId = null;
+
+            service.WithHeader("X-Watson-Test", "1");
+            MessageInputStateless input = new MessageInputStateless();
+
+            input.Text = "test sdk";
+            input.MessageType = MessageInputStateless.MessageTypeValue.TEXT;
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...test sdk");
+            service.MessageStateless(
+                callback: (DetailedResponse<MessageResponseStateless> response, IBMError error) =>
+                {
+                    messageResponse = response.Result;
+                    RuntimeResponseGenericRuntimeResponseTypeChannelTransfer 
+                      runtimeResponseGenericRuntimeResponseTypeChannelTransfer =
+                      (RuntimeResponseGenericRuntimeResponseTypeChannelTransfer) messageResponse.Output.Generic[0];
+                    
+                    ChannelTransferInfo channelTransferInfo =
+                      runtimeResponseGenericRuntimeResponseTypeChannelTransfer.TransferInfo;
+
+                    Assert.IsNotNull(channelTransferInfo);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                input: input
+            );
+
+            while (messageResponse == null)
+                yield return null;
+        }
+
         [TearDown]
         public void TestTearDown() { }
     }
