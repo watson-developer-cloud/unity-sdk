@@ -148,11 +148,6 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
         public AgentAvailabilityMessage AgentUnavailable { get; protected set; }
         /// <summary>
-        /// Routing or other contextual information to be used by target service desk systems.
-        /// </summary>
-        [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
-        public DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
-        /// <summary>
         /// A label identifying the topic of the conversation, derived from the **title** property of the relevant node
         /// or the **topic** property of the dialog node response.
         /// </summary>
