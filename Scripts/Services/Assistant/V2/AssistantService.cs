@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201221-120002
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-902c9336-20210513-140138
 */
  
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace IBM.Watson.Assistant.V2
         /// <summary>
         /// Gets and sets the version of the service.
         /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-        /// `2020-04-01`.
+        /// `2020-09-24`.
         /// </summary>
         public string Version
         {
@@ -68,14 +68,14 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2020-09-24`.</param>
         public AssistantService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2020-09-24`.</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
 
@@ -83,7 +83,7 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2020-09-24`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         public AssistantService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
 
@@ -91,7 +91,7 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2020-09-24`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
@@ -299,8 +299,16 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
         /// (optional)</param>
+        /// <param name="userId">A string value that identifies the user who is interacting with the assistant. The
+        /// client must provide a unique identifier for each individual end user who accesses the application. For
+        /// user-based plans, this user ID is used to identify unique users for billing purposes. This string cannot
+        /// contain carriage return, newline, or tab characters. If no value is specified in the input, **user_id** is
+        /// automatically set to the value of **context.global.session_id**.
+        ///
+        /// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id**
+        /// is specified in both locations, the value specified at the root is used. (optional)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageInput input = null, MessageContext context = null)
+        public bool Message(Callback<MessageResponse> callback, string assistantId, string sessionId, MessageInput input = null, MessageContext context = null, string userId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -342,6 +350,8 @@ namespace IBM.Watson.Assistant.V2
                 bodyObject["input"] = JToken.FromObject(input);
             if (context != null)
                 bodyObject["context"] = JToken.FromObject(context);
+            if (!string.IsNullOrEmpty(userId))
+                bodyObject["user_id"] = userId;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnMessageResponse;
@@ -396,8 +406,17 @@ namespace IBM.Watson.Assistant.V2
         /// maintain session state, include the context from the previous response.
         ///
         /// **Note:** The total size of the context data for a stateless session cannot exceed 250KB. (optional)</param>
+        /// <param name="userId">A string value that identifies the user who is interacting with the assistant. The
+        /// client must provide a unique identifier for each individual end user who accesses the application. For
+        /// user-based plans, this user ID is used to identify unique users for billing purposes. This string cannot
+        /// contain carriage return, newline, or tab characters. If no value is specified in the input, **user_id** is
+        /// automatically set to the value of **context.global.session_id**.
+        ///
+        /// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id**
+        /// is specified in both locations in a message request, the value specified at the root is used.
+        /// (optional)</param>
         /// <returns><see cref="MessageResponseStateless" />MessageResponseStateless</returns>
-        public bool MessageStateless(Callback<MessageResponseStateless> callback, string assistantId, MessageInputStateless input = null, MessageContextStateless context = null)
+        public bool MessageStateless(Callback<MessageResponseStateless> callback, string assistantId, MessageInputStateless input = null, MessageContextStateless context = null, string userId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `MessageStateless`");
@@ -437,6 +456,8 @@ namespace IBM.Watson.Assistant.V2
                 bodyObject["input"] = JToken.FromObject(input);
             if (context != null)
                 bodyObject["context"] = JToken.FromObject(context);
+            if (!string.IsNullOrEmpty(userId))
+                bodyObject["user_id"] = userId;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnMessageStatelessResponse;
@@ -479,7 +500,7 @@ namespace IBM.Watson.Assistant.V2
         /// and entities recognized in each input. This method is useful for testing and comparing the performance of
         /// different skills or skill versions.
         ///
-        /// This method is available only with Premium plans.
+        /// This method is available only with Enterprise with Data Isolation plans.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="skillId">Unique identifier of the skill. To find the skill ID in the Watson Assistant user
@@ -564,7 +585,7 @@ namespace IBM.Watson.Assistant.V2
         ///
         /// List the events from the log of an assistant.
         ///
-        /// This method is available only with Premium plans.
+        /// This method requires Manager access, and is available only with Enterprise plans.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="assistantId">Unique identifier of the assistant. To find the assistant ID in the Watson
@@ -674,7 +695,10 @@ namespace IBM.Watson.Assistant.V2
         /// data. For more information about personal data and customer IDs, see [Information
         /// security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
         ///
-        /// This operation is limited to 4 requests per minute. For more information, see **Rate limiting**.
+        /// **Note:** This operation is intended only for deleting data associated with a single specific customer, not
+        /// for deleting data associated with multiple customers or for any other purpose. For more information, see
+        /// [Labeling and deleting data in Watson
+        /// Assistant](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security-gdpr-wa).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>

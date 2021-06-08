@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An object that describes a response with response type `search`.
+    /// RuntimeResponseGenericRuntimeResponseTypeSearch.
     /// </summary>
     public class RuntimeResponseGenericRuntimeResponseTypeSearch : RuntimeResponseGeneric
     {
@@ -29,15 +29,12 @@ namespace IBM.Watson.Assistant.V2.Model
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
         /// </summary>
-        public class ResponseTypeValue
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ResponseType
         {
-            /// <summary>
-            /// Constant SEARCH for search
-            /// </summary>
-            public const string SEARCH = "search";
-            
+            get { return base.ResponseType; }
+            set { base.ResponseType = value; }
         }
-
         /// <summary>
         /// The title or introductory text to show before the response. This text is defined in the search skill
         /// configuration.
@@ -65,6 +62,16 @@ namespace IBM.Watson.Assistant.V2.Model
         {
             get { return base.AdditionalResults; }
             set { base.AdditionalResults = value; }
+        }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
+        /// response is intended for a built-in integration and should not be handled by an API client.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public new List<ResponseGenericChannel> Channels
+        {
+            get { return base.Channels; }
+            set { base.Channels = value; }
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,8 +31,10 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("transcript", NullValueHandling = NullValueHandling.Ignore)]
         public string Transcript { get; set; }
         /// <summary>
-        /// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. A confidence
-        /// score is returned only for the best alternative and only with results marked as final.
+        /// A score that indicates the service's confidence in the transcript in the range of 0.0 to 1.0. For speech
+        /// recognition with previous-generation models, a confidence score is returned only for the best alternative
+        /// and only with results marked as final. For speech recognition with next-generation models, a confidence
+        /// score is never returned.
         /// </summary>
         [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
         public double? Confidence { get; set; }

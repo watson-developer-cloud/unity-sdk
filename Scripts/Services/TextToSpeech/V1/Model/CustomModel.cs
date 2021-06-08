@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -67,10 +67,16 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// <summary>
         /// An array of `Word` objects that lists the words and their translations from the custom model. The words are
         /// listed in alphabetical order, with uppercase letters listed before lowercase letters. The array is empty if
-        /// the custom model contains no words. This field is returned only by the **Get a voice** method and only when
-        /// you specify the customization ID of a custom model.
+        /// no words are defined for the custom model. This field is returned only by the **Get a custom model** method.
         /// </summary>
         [JsonProperty("words", NullValueHandling = NullValueHandling.Ignore)]
         public List<Word> Words { get; set; }
+        /// <summary>
+        /// An array of `Prompt` objects that provides information about the prompts that are defined for the specified
+        /// custom model. The array is empty if no prompts are defined for the custom model. This field is returned only
+        /// by the **Get a custom model** method.
+        /// </summary>
+        [JsonProperty("prompts", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Prompt> Prompts { get; set; }
     }
 }

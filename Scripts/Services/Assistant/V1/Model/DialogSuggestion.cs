@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace IBM.Watson.Assistant.V1.Model
     {
         /// <summary>
         /// The user-facing label for the disambiguation option. This label is taken from the **title** or
-        /// **user_label** property of the corresponding dialog node, depending on the disambiguation options.
+        /// **user_label** property of the corresponding dialog node.
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; set; }
@@ -44,8 +44,8 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("output", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Output { get; set; }
         /// <summary>
-        /// The ID of the dialog node that the **label** property is taken from. The **label** property is populated
-        /// using the value of the dialog node's **user_label** property.
+        /// The unique ID of the dialog node that the **label** property is taken from. The **label** property is
+        /// populated using the value of the dialog node's **title** or **user_label** property.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; set; }

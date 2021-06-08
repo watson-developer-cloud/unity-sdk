@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -122,8 +122,9 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// <summary>
         /// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
         /// representing the phonetic string of a word either as an IPA or IBM SPR translation. The Arabic, Chinese,
-        /// Dutch, and Korean languages support only IPA. A sounds-like translation consists of one or more words that,
-        /// when combined, sound like the word. The maximum length of a translation is 499 characters.
+        /// Dutch, Australian English, and Korean languages support only IPA. A sounds-like translation consists of one
+        /// or more words that, when combined, sound like the word. The maximum length of a translation is 499
+        /// characters.
         /// </summary>
         [JsonProperty("translation", NullValueHandling = NullValueHandling.Ignore)]
         public string Translation { get; set; }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -39,5 +39,12 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// </summary>
         [JsonProperty("speaker_labels", NullValueHandling = NullValueHandling.Ignore)]
         public bool? SpeakerLabels { get; set; }
+        /// <summary>
+        /// Indicates whether the `low_latency` parameter can be used with a next-generation language model. The field
+        /// is returned only for next-generation models. Previous-generation models do not support the `low_latency`
+        /// parameter.
+        /// </summary>
+        [JsonProperty("low_latency", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? LowLatency { get; set; }
     }
 }

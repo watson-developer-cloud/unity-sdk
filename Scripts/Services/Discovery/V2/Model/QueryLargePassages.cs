@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,24 +31,24 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
         /// <summary>
-        /// When `true`, passages will be returned within their respective result.
+        /// Indicates whether to group passages with the document that they are extracted from in the query result.
         /// </summary>
         [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
         public bool? PerDocument { get; set; }
         /// <summary>
-        /// Maximum number of passages to return per result.
+        /// Maximum number of passages to return per document in the result. Ignored if `passages.per_document` is
+        /// `false`.
         /// </summary>
         [JsonProperty("max_per_document", NullValueHandling = NullValueHandling.Ignore)]
         public long? MaxPerDocument { get; set; }
         /// <summary>
-        /// A list of fields that passages are drawn from. If this parameter not specified, then all top-level fields
+        /// A list of fields to extract passages from. If this parameter is an empty list, then all root-level fields
         /// are included.
         /// </summary>
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Fields { get; set; }
         /// <summary>
-        /// The maximum number of passages to return. The search returns fewer passages if the requested total is not
-        /// found. The maximum is `100`.
+        /// The maximum number of passages to return. Ignored if `passages.per_document` is `true`.
         /// </summary>
         [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
         public long? Count { get; set; }
@@ -57,5 +57,28 @@ namespace IBM.Watson.Discovery.V2.Model
         /// </summary>
         [JsonProperty("characters", NullValueHandling = NullValueHandling.Ignore)]
         public long? Characters { get; set; }
+        /// <summary>
+        /// When true, `answer` objects are returned as part of each passage in the query results. The primary
+        /// difference between an `answer` and a `passage` is that the length of a passage is defined by the query,
+        /// where the length of an `answer` is calculated by Discovery based on how much text is needed to answer the
+        /// question./n/nThis parameter is ignored if passages are not enabled for the query, or no
+        /// **natural_language_query** is specified./n/nIf the **find_answers** parameter is set to `true` and
+        /// **per_document** parameter is also set to `true`, then the document search results and the passage search
+        /// results within each document are reordered using the answer confidences. The goal of this reordering is to
+        /// do as much as possible to make sure that the first answer of the first passage of the first document is the
+        /// best answer. Similarly, if the **find_answers** parameter is set to `true` and **per_document** parameter is
+        /// set to `false`, then the passage search results are reordered in decreasing order of the highest confidence
+        /// answer for each document and passage./n/nThe **find_answers** parameter is **beta** functionality available
+        /// only on managed instances and should not be used in a production environment. This parameter is not
+        /// available on installed instances of Discovery.
+        /// </summary>
+        [JsonProperty("find_answers", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? FindAnswers { get; set; }
+        /// <summary>
+        /// The number of `answer` objects to return per passage if the **find_answers** parmeter is specified as
+        /// `true`.
+        /// </summary>
+        [JsonProperty("max_answers_per_passage", NullValueHandling = NullValueHandling.Ignore)]
+        public long? MaxAnswersPerPassage { get; set; }
     }
 }

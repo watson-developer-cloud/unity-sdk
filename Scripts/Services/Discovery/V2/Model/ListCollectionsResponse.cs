@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Response object containing an array of collection details.
+    /// Response object that contains an array of collection details.
     /// </summary>
     public class ListCollectionsResponse
     {
         /// <summary>
-        /// An array containing information about each collection in the project.
+        /// An array that contains information about each collection in the project.
         /// </summary>
         [JsonProperty("collections", NullValueHandling = NullValueHandling.Ignore)]
         public List<Collection> Collections { get; set; }

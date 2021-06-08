@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace IBM.Watson.Assistant.V1.Model
     public class DialogNodeVisitedDetails
     {
         /// <summary>
-        /// A dialog node that was triggered during processing of the input message.
+        /// The unique ID of a dialog node that was triggered during processing of the input message.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; set; }

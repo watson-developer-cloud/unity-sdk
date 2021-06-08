@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,14 +30,18 @@ namespace IBM.Watson.Assistant.V1.Model
     /// - RuntimeResponseGenericRuntimeResponseTypeOption
     /// - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
     /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+    /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
+    /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeChannelTransfer), "channel_transfer")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeConnectToAgent), "connect_to_agent")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeImage), "image")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeOption), "option")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeSuggestion), "suggestion")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypePause), "pause")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeText), "text")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeUserDefined), "user_defined")]
     public class RuntimeResponseGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
@@ -48,21 +52,10 @@ namespace IBM.Watson.Assistant.V1.Model
         /// - RuntimeResponseGenericRuntimeResponseTypeOption
         /// - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
         /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+        /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
+        /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
         protected RuntimeResponseGeneric()
         {
-        }
-
-        /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// </summary>
-        public class ResponseTypeValue
-        {
-            /// <summary>
-            /// Constant TEXT for text
-            /// </summary>
-            public const string TEXT = "text";
-            
         }
 
         /// <summary>
@@ -82,23 +75,28 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// Constants for possible values can be found using RuntimeResponseGeneric.ResponseTypeValue
-        /// </summary>
-        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
-        public string ResponseType { get; set; }
-        /// <summary>
         /// The preferred type of control to display.
         /// Constants for possible values can be found using RuntimeResponseGeneric.PreferenceValue
         /// </summary>
         [JsonProperty("preference", NullValueHandling = NullValueHandling.Ignore)]
         public string Preference { get; set; }
         /// <summary>
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
+        /// </summary>
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string ResponseType { get; protected set; }
+        /// <summary>
         /// The text of the response.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; protected set; }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
+        /// response is intended for a built-in integration and should not be handled by an API client.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ResponseGenericChannel> Channels { get; protected set; }
         /// <summary>
         /// How long to pause, in milliseconds.
         /// </summary>
@@ -158,8 +156,8 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public string Topic { get; protected set; }
         /// <summary>
-        /// The ID of the dialog node that the **topic** property is taken from. The **topic** property is populated
-        /// using the value of the dialog node's **title** property.
+        /// The unique ID of the dialog node that the **topic** property is taken from. The **topic** property is
+        /// populated using the value of the dialog node's **title** property.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; protected set; }
@@ -168,5 +166,15 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; protected set; }
+        /// <summary>
+        /// The message to display to the user when initiating a channel transfer.
+        /// </summary>
+        [JsonProperty("message_to_user", NullValueHandling = NullValueHandling.Ignore)]
+        public string MessageToUser { get; protected set; }
+        /// <summary>
+        /// An object containing any properties for the user-defined response type.
+        /// </summary>
+        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> UserDefined { get; protected set; }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ namespace IBM.Watson.Assistant.V2.Model
         /// <summary>
         /// The unique identifier of the document in the Discovery service collection.
         ///
-        /// This property is included in responses from search skills, which are available only to Plus or Premium plan
-        /// users.
+        /// This property is included in responses from search skills, which are available only to Plus or Enterprise
+        /// plan users.
         /// </summary>
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }

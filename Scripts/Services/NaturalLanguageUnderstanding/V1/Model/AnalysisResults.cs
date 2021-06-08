@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -65,6 +65,11 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("categories", NullValueHandling = NullValueHandling.Ignore)]
         public List<CategoriesResult> Categories { get; set; }
+        /// <summary>
+        /// The classifications assigned to the analyzed text.
+        /// </summary>
+        [JsonProperty("classifications", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ClassificationsResult> Classifications { get; set; }
         /// <summary>
         /// The anger, disgust, fear, joy, or sadness conveyed by the content.
         /// </summary>

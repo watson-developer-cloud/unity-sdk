@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,30 +15,16 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// An object that describes a response with response type `search_skill`.
+    /// DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill.
     /// </summary>
     public class DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill : DialogNodeOutputGeneric
     {
-        /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        ///
-        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
-        /// </summary>
-        public class ResponseTypeValue
-        {
-            /// <summary>
-            /// Constant SEARCH_SKILL for search_skill
-            /// </summary>
-            public const string SEARCH_SKILL = "search_skill";
-            
-        }
-
         /// <summary>
         /// The type of the search query.
         /// </summary>
@@ -55,6 +41,18 @@ namespace IBM.Watson.Assistant.V1.Model
             
         }
 
+        /// <summary>
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
+        ///
+        /// **Note:** The **search_skill** response type is used only by the v2 runtime API.
+        /// </summary>
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ResponseType
+        {
+            get { return base.ResponseType; }
+            set { base.ResponseType = value; }
+        }
         /// <summary>
         /// The text of the search query. This can be either a natural-language query or a query that uses the Discovery
         /// query language syntax, depending on the value of the **query_type** property. For more information, see the
@@ -86,6 +84,15 @@ namespace IBM.Watson.Assistant.V1.Model
         {
             get { return base.DiscoveryVersion; }
             set { base.DiscoveryVersion = value; }
+        }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public new List<ResponseGenericChannel> Channels
+        {
+            get { return base.Channels; }
+            set { base.Channels = value; }
         }
     }
 }

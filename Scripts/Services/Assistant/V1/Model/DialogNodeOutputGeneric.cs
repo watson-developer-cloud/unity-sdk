@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,14 +30,18 @@ namespace IBM.Watson.Assistant.V1.Model
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeOption
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer), "channel_transfer")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent), "connect_to_agent")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeImage), "image")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeOption), "option")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypePause), "pause")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill), "search_skill")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeText), "text")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined), "user_defined")]
     public class DialogNodeOutputGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
@@ -48,21 +52,10 @@ namespace IBM.Watson.Assistant.V1.Model
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeOption
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined
         protected DialogNodeOutputGeneric()
         {
-        }
-
-        /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// </summary>
-        public class ResponseTypeValue
-        {
-            /// <summary>
-            /// Constant TEXT for text
-            /// </summary>
-            public const string TEXT = "text";
-            
         }
 
         /// <summary>
@@ -118,13 +111,6 @@ namespace IBM.Watson.Assistant.V1.Model
         }
 
         /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// Constants for possible values can be found using DialogNodeOutputGeneric.ResponseTypeValue
-        /// </summary>
-        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
-        public string ResponseType { get; set; }
-        /// <summary>
         /// How a response is selected from the list, if more than one response is specified.
         /// Constants for possible values can be found using DialogNodeOutputGeneric.SelectionPolicyValue
         /// </summary>
@@ -143,6 +129,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("query_type", NullValueHandling = NullValueHandling.Ignore)]
         public string QueryType { get; set; }
         /// <summary>
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
+        /// </summary>
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string ResponseType { get; protected set; }
+        /// <summary>
         /// A list of one or more objects defining text responses.
         /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
@@ -152,6 +144,11 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("delimiter", NullValueHandling = NullValueHandling.Ignore)]
         public string Delimiter { get; protected set; }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ResponseGenericChannel> Channels { get; protected set; }
         /// <summary>
         /// How long to pause, in milliseconds. The valid values are from 0 to 10000.
         /// </summary>
@@ -225,5 +222,16 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("discovery_version", NullValueHandling = NullValueHandling.Ignore)]
         public string DiscoveryVersion { get; protected set; }
+        /// <summary>
+        /// The message to display to the user when initiating a channel transfer.
+        /// </summary>
+        [JsonProperty("message_to_user", NullValueHandling = NullValueHandling.Ignore)]
+        public string MessageToUser { get; protected set; }
+        /// <summary>
+        /// An object containing any properties for the user-defined response type. The total size of this object cannot
+        /// exceed 5000 bytes.
+        /// </summary>
+        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> UserDefined { get; protected set; }
     }
 }
