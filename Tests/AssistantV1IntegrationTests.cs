@@ -1366,5 +1366,40 @@ namespace IBM.Watson.Tests
             while (deleteWorkspaceResponse == null)
                 yield return null;
         }
+
+        [UnityTest, Order(100)]
+        public IEnumerator TestRuntimeResponseGenericRuntimeResponseTypeChannelTransfer()
+        {
+            workspaceId = Environment.GetEnvironmentVariable("ASSISTANT_WORKSPACE_ID");
+            MessageResponse messageResponse = null;
+            string conversationId = null;
+
+            service.WithHeader("X-Watson-Test", "1");
+            MessageInput input = new MessageInput();
+
+            input.Add("text", "test sdk");
+
+            Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...test sdk");
+            service.Message(
+                callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
+                {
+                    messageResponse = response.Result;
+                    RuntimeResponseGenericRuntimeResponseTypeChannelTransfer 
+                      runtimeResponseGenericRuntimeResponseTypeChannelTransfer =
+                      (RuntimeResponseGenericRuntimeResponseTypeChannelTransfer) messageResponse.Output.Generic[0];
+                    
+                    ChannelTransferInfo channelTransferInfo =
+                      runtimeResponseGenericRuntimeResponseTypeChannelTransfer.TransferInfo;
+
+                    Assert.IsNotNull(channelTransferInfo);
+                    Assert.IsNull(error);
+                },
+                workspaceId: workspaceId,
+                input: input
+            );
+
+            while (messageResponse == null)
+                yield return null;
+        }
     }
 }
