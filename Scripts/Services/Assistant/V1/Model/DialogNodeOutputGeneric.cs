@@ -198,11 +198,6 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
         public AgentAvailabilityMessage AgentUnavailable { get; protected set; }
         /// <summary>
-        /// Routing or other contextual information to be used by target service desk systems.
-        /// </summary>
-        [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
-        public DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
-        /// <summary>
         /// The text of the search query. This can be either a natural-language query or a query that uses the Discovery
         /// query language syntax, depending on the value of the **query_type** property. For more information, see the
         /// [Discovery service

@@ -150,7 +150,7 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageInput input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, Context context = null, OutputData output = null, string userId = null, bool? nodesVisitedDetails = null)
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageInput input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, Context context = null, OutputData output = null, bool? nodesVisitedDetails = null, string userId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");

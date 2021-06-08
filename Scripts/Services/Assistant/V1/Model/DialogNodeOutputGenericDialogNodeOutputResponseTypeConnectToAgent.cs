@@ -68,11 +68,7 @@ namespace IBM.Watson.Assistant.V1.Model
         /// Routing or other contextual information to be used by target service desk systems.
         /// </summary>
         [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
-        public new DialogNodeOutputConnectToAgentTransferInfo TransferInfo
-        {
-            get { return base.TransferInfo; }
-            set { base.TransferInfo = value; }
-        }
+        public new DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
         /// <summary>
         /// An array of objects specifying channels for which the response is intended.
         /// </summary>
