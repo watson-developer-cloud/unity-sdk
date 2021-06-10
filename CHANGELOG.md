@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.2...v5.1.0) (2021-06-10)
+
+
+### Features
+
+* **generation:** generated using api def sdk-2021-05-11-rerelease and gen 3.31.0 ([44079dd](https://github.com/watson-developer-cloud/unity-sdk/commit/44079dd184f4bd0c5f24dc5dccba98eb655078c1))
+
 ## [5.0.2](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.1...v5.0.2) (2021-03-05)
 
 
