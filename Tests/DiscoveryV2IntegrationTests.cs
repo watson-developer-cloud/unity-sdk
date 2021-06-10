@@ -23,6 +23,7 @@ using System.Text;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Authentication;
 using IBM.Cloud.SDK.Authentication.Bearer;
+using IBM.Cloud.SDK.Authentication.Iam;
 using IBM.Cloud.SDK.Utilities;
 using IBM.Watson.Discovery.V2;
 using IBM.Watson.Discovery.V2.Model;
@@ -730,6 +731,126 @@ namespace IBM.Watson.Tests
             );
 
             while (!deleteProjectResponse)
+                yield return null;
+        }
+        #endregion
+
+        #region QueryCollectionNotices
+        //[UnityTest, Order(103)]
+        public IEnumerator TestQueryCollectionNotices()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to QueryCollectionNotices...");
+            bool queryCollectionNoticesResponse = false;
+
+            service.QueryCollectionNotices(
+                callback: (DetailedResponse<QueryNoticesResponse> response, IBMError error) =>
+                {
+                    Assert.IsNotNull(response.Result.Notices);
+                    Assert.IsNull(error);
+                    queryCollectionNoticesResponse = true;
+                },
+                projectId: projectId,
+                collectionId: collectionId,
+                naturalLanguageQuery: "warning"
+            );
+
+            while (!queryCollectionNoticesResponse)
+                yield return null;
+        }
+        #endregion
+
+        #region DeleteTrainingQuery
+        //[UnityTest, Order(103)]
+        public IEnumerator TestDeleteTrainingQuery()
+        {
+            Log.Debug("DiscoveryServiceV2IntegrationTests", "Attempting to DeleteTrainingQuery...");
+
+            DocumentAccepted addDocumentResponse = null;
+            string documentId = "";
+            string queryId = "";
+
+            using (FileStream fs = File.OpenRead(addDocumentFile))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fs.CopyTo(ms);
+                    service.AddDocument(
+                        callback: (DetailedResponse<DocumentAccepted> response, IBMError error) =>
+                        {
+                            Log.Debug("DiscoveryServiceV1IntegrationTests", "AddDocument result: {0}", response.Response);
+                            addDocumentResponse = response.Result;
+                            documentId = addDocumentResponse.DocumentId;
+                            Assert.IsNotNull(addDocumentResponse);
+                            Assert.IsNotNull(documentId);
+                            Assert.IsNull(error);
+                        },
+                        projectId: projectId,
+                        collectionId: collectionId,
+                        file: ms,
+                        fileContentType: Utility.GetMimeType(Path.GetExtension(addDocumentFile)),
+                        filename: Path.GetFileName(addDocumentFile)
+                    );
+
+                    while (addDocumentResponse == null)
+                        yield return null;
+                }
+            }
+
+            TrainingExample trainingExample = new TrainingExample()
+            {
+              CollectionId = collectionId,
+              DocumentId = documentId,
+              Relevance = 1L
+            };
+            TrainingQuery trainingQueryResponse = null;
+            service.CreateTrainingQuery(
+                callback: (DetailedResponse<TrainingQuery> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "CreateTrainingQuery result: {0}", response.Response);
+                    trainingQueryResponse = response.Result;
+                    queryId = trainingQueryResponse.QueryId;
+                    Assert.IsNotNull(trainingQueryResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                examples: new List<TrainingExample>() { trainingExample },
+                filter: "entities.text:IBM",
+                naturalLanguageQuery: "This is an example of a query"
+            );
+
+            while (trainingQueryResponse == null)
+                yield return null;
+
+            bool deleteTrainingQueryResponse = false;
+
+            service.DeleteTrainingQuery(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Assert.IsNull(error);
+                    deleteTrainingQueryResponse = true;
+                },
+                projectId: projectId,
+                queryId: queryId
+            );
+
+            while (!deleteTrainingQueryResponse)
+                yield return null;
+
+            DeleteDocumentResponse deleteDocumentResponse = null;
+            service.DeleteDocument(
+                callback: (DetailedResponse<DeleteDocumentResponse> response, IBMError error) =>
+                {
+                    Log.Debug("DiscoveryServiceV2IntegrationTests", "DeleteDocument result: {0}", response.Response);
+                    deleteDocumentResponse = response.Result;
+                    Assert.IsNotNull(deleteDocumentResponse);
+                    Assert.IsNull(error);
+                },
+                projectId: projectId,
+                collectionId: collectionId,
+                documentId: documentId
+            );
+
+            while (deleteDocumentResponse == null)
                 yield return null;
         }
         #endregion
