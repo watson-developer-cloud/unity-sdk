@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2020, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An object that describes a response with response type `text`.
+    /// RuntimeResponseGenericRuntimeResponseTypeText.
     /// </summary>
     public class RuntimeResponseGenericRuntimeResponseTypeText : RuntimeResponseGeneric
     {
@@ -28,15 +29,12 @@ namespace IBM.Watson.Assistant.V2.Model
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
         /// </summary>
-        public class ResponseTypeValue
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ResponseType
         {
-            /// <summary>
-            /// Constant TEXT for text
-            /// </summary>
-            public const string TEXT = "text";
-            
+            get { return base.ResponseType; }
+            set { base.ResponseType = value; }
         }
-
         /// <summary>
         /// The text of the response.
         /// </summary>
@@ -45,6 +43,16 @@ namespace IBM.Watson.Assistant.V2.Model
         {
             get { return base.Text; }
             set { base.Text = value; }
+        }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
+        /// response is intended for a built-in integration and should not be handled by an API client.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public new List<ResponseGenericChannel> Channels
+        {
+            get { return base.Channels; }
+            set { base.Channels = value; }
         }
     }
 }

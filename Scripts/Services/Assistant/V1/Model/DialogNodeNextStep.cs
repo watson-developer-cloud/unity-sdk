@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("selector", NullValueHandling = NullValueHandling.Ignore)]
         public string Selector { get; set; }
         /// <summary>
-        /// The ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
+        /// The unique ID of the dialog node to process next. This parameter is required if **behavior**=`jump_to`.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string DialogNode { get; set; }

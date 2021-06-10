@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2020, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// An object that describes a response with response type `connect_to_agent`.
+    /// RuntimeResponseGenericRuntimeResponseTypeConnectToAgent.
     /// </summary>
     public class RuntimeResponseGenericRuntimeResponseTypeConnectToAgent : RuntimeResponseGeneric
     {
@@ -28,15 +29,12 @@ namespace IBM.Watson.Assistant.V2.Model
         /// The type of response returned by the dialog node. The specified response type must be supported by the
         /// client application or channel.
         /// </summary>
-        public class ResponseTypeValue
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ResponseType
         {
-            /// <summary>
-            /// Constant CONNECT_TO_AGENT for connect_to_agent
-            /// </summary>
-            public const string CONNECT_TO_AGENT = "connect_to_agent";
-            
+            get { return base.ResponseType; }
+            set { base.ResponseType = value; }
         }
-
         /// <summary>
         /// A message to be sent to the human agent who will be taking over the conversation.
         /// </summary>
@@ -70,11 +68,7 @@ namespace IBM.Watson.Assistant.V2.Model
         /// Routing or other contextual information to be used by target service desk systems.
         /// </summary>
         [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
-        public new DialogNodeOutputConnectToAgentTransferInfo TransferInfo
-        {
-            get { return base.TransferInfo; }
-            set { base.TransferInfo = value; }
-        }
+        public new DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
         /// <summary>
         /// A label identifying the topic of the conversation, derived from the **title** property of the relevant node
         /// or the **topic** property of the dialog node response.
@@ -84,6 +78,16 @@ namespace IBM.Watson.Assistant.V2.Model
         {
             get { return base.Topic; }
             set { base.Topic = value; }
+        }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
+        /// response is intended for a built-in integration and should not be handled by an API client.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public new List<ResponseGenericChannel> Channels
+        {
+            get { return base.Channels; }
+            set { base.Channels = value; }
         }
     }
 }

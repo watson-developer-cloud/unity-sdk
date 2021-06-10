@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2020, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,23 +21,10 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// An object that describes a response with response type `option`.
+    /// DialogNodeOutputGenericDialogNodeOutputResponseTypeOption.
     /// </summary>
     public class DialogNodeOutputGenericDialogNodeOutputResponseTypeOption : DialogNodeOutputGeneric
     {
-        /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// </summary>
-        public class ResponseTypeValue
-        {
-            /// <summary>
-            /// Constant OPTION for option
-            /// </summary>
-            public const string OPTION = "option";
-            
-        }
-
         /// <summary>
         /// The preferred type of control to display, if supported by the channel.
         /// </summary>
@@ -54,6 +41,16 @@ namespace IBM.Watson.Assistant.V1.Model
             
         }
 
+        /// <summary>
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
+        /// </summary>
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ResponseType
+        {
+            get { return base.ResponseType; }
+            set { base.ResponseType = value; }
+        }
         /// <summary>
         /// An optional title to show before the response.
         /// </summary>
@@ -80,6 +77,15 @@ namespace IBM.Watson.Assistant.V1.Model
         {
             get { return base.Options; }
             set { base.Options = value; }
+        }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public new List<ResponseGenericChannel> Channels
+        {
+            get { return base.Channels; }
+            set { base.Channels = value; }
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -193,8 +193,10 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("digress_out_slots", NullValueHandling = NullValueHandling.Ignore)]
         public string DigressOutSlots { get; set; }
         /// <summary>
-        /// The dialog node ID. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other
+        /// dialog nodes and in the diagnostic information included with message responses.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// </summary>
         [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
         public string _DialogNode { get; set; }
@@ -210,13 +212,13 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
         public string Conditions { get; set; }
         /// <summary>
-        /// The ID of the parent dialog node. This property is omitted if the dialog node has no parent.
+        /// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
         /// </summary>
         [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
         public string Parent { get; set; }
         /// <summary>
-        /// The ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
-        /// sibling.
+        /// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no
+        /// previous sibling.
         /// </summary>
         [JsonProperty("previous_sibling", NullValueHandling = NullValueHandling.Ignore)]
         public string PreviousSibling { get; set; }
@@ -242,8 +244,12 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("next_step", NullValueHandling = NullValueHandling.Ignore)]
         public DialogNodeNextStep NextStep { get; set; }
         /// <summary>
-        /// The alias used to identify the dialog node. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to
+        /// populate the **label** property of the corresponding suggestion in the `suggestion` response type (unless it
+        /// is overridden by the **user_label** property). The title is also used to populate the **topic** property in
+        /// the `connect_to_agent` response type.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; set; }
@@ -258,7 +264,8 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogNodeAction> Actions { get; set; }
         /// <summary>
-        /// A label that can be displayed externally to describe the purpose of the node to users.
+        /// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is
+        /// used to identify the node in disambiguation responses (overriding the value of the **title** property).
         /// </summary>
         [JsonProperty("user_label", NullValueHandling = NullValueHandling.Ignore)]
         public string UserLabel { get; set; }

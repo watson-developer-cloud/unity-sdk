@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,6 +24,13 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     /// </summary>
     public class Features
     {
+        /// <summary>
+        /// Returns text classifications for the content.
+        ///
+        /// Supported languages: English only.
+        /// </summary>
+        [JsonProperty("classifications", NullValueHandling = NullValueHandling.Ignore)]
+        public ClassificationsOptions Classifications { get; set; }
         /// <summary>
         /// Returns high-level concepts in the content. For example, a research paper about deep learning might return
         /// the concept, "Artificial Intelligence" although the term is not mentioned.
@@ -92,6 +99,13 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
         /// </summary>
         [JsonProperty("sentiment", NullValueHandling = NullValueHandling.Ignore)]
         public SentimentOptions Sentiment { get; set; }
+        /// <summary>
+        /// (Experimental) Returns a summary of content.
+        ///
+        /// Supported languages: English only.
+        /// </summary>
+        [JsonProperty("summarization", NullValueHandling = NullValueHandling.Ignore)]
+        public SummarizationOptions Summarization { get; set; }
         /// <summary>
         /// Returns a five-level taxonomy of the content. The top three categories are returned.
         ///

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace IBM.Watson.Discovery.V2.Model
     public class ListFieldsResponse
     {
         /// <summary>
-        /// An array containing information about each field in the collections.
+        /// An array that contains information about each field in the collections.
         /// </summary>
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<Field> Fields { get; set; }

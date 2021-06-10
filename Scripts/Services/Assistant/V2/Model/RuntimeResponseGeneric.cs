@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,9 +30,12 @@ namespace IBM.Watson.Assistant.V2.Model
     /// - RuntimeResponseGenericRuntimeResponseTypeOption
     /// - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
     /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+    /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
     /// - RuntimeResponseGenericRuntimeResponseTypeSearch
+    /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeChannelTransfer), "channel_transfer")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeConnectToAgent), "connect_to_agent")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeImage), "image")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeOption), "option")]
@@ -40,6 +43,7 @@ namespace IBM.Watson.Assistant.V2.Model
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypePause), "pause")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeSearch), "search")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeText), "text")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeUserDefined), "user_defined")]
     public class RuntimeResponseGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
@@ -50,22 +54,11 @@ namespace IBM.Watson.Assistant.V2.Model
         /// - RuntimeResponseGenericRuntimeResponseTypeOption
         /// - RuntimeResponseGenericRuntimeResponseTypeConnectToAgent
         /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
+        /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
         /// - RuntimeResponseGenericRuntimeResponseTypeSearch
+        /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
         protected RuntimeResponseGeneric()
         {
-        }
-
-        /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// </summary>
-        public class ResponseTypeValue
-        {
-            /// <summary>
-            /// Constant TEXT for text
-            /// </summary>
-            public const string TEXT = "text";
-            
         }
 
         /// <summary>
@@ -85,23 +78,28 @@ namespace IBM.Watson.Assistant.V2.Model
         }
 
         /// <summary>
-        /// The type of response returned by the dialog node. The specified response type must be supported by the
-        /// client application or channel.
-        /// Constants for possible values can be found using RuntimeResponseGeneric.ResponseTypeValue
-        /// </summary>
-        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
-        public string ResponseType { get; set; }
-        /// <summary>
         /// The preferred type of control to display.
         /// Constants for possible values can be found using RuntimeResponseGeneric.PreferenceValue
         /// </summary>
         [JsonProperty("preference", NullValueHandling = NullValueHandling.Ignore)]
         public string Preference { get; set; }
         /// <summary>
+        /// The type of response returned by the dialog node. The specified response type must be supported by the
+        /// client application or channel.
+        /// </summary>
+        [JsonProperty("response_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string ResponseType { get; protected set; }
+        /// <summary>
         /// The text of the response.
         /// </summary>
         [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
         public string Text { get; protected set; }
+        /// <summary>
+        /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
+        /// response is intended for a built-in integration and should not be handled by an API client.
+        /// </summary>
+        [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ResponseGenericChannel> Channels { get; protected set; }
         /// <summary>
         /// How long to pause, in milliseconds.
         /// </summary>
@@ -150,11 +148,6 @@ namespace IBM.Watson.Assistant.V2.Model
         [JsonProperty("agent_unavailable", NullValueHandling = NullValueHandling.Ignore)]
         public AgentAvailabilityMessage AgentUnavailable { get; protected set; }
         /// <summary>
-        /// Routing or other contextual information to be used by target service desk systems.
-        /// </summary>
-        [JsonProperty("transfer_info", NullValueHandling = NullValueHandling.Ignore)]
-        public DialogNodeOutputConnectToAgentTransferInfo TransferInfo { get; protected set; }
-        /// <summary>
         /// A label identifying the topic of the conversation, derived from the **title** property of the relevant node
         /// or the **topic** property of the dialog node response.
         /// </summary>
@@ -165,6 +158,11 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("suggestions", NullValueHandling = NullValueHandling.Ignore)]
         public List<DialogSuggestion> Suggestions { get; protected set; }
+        /// <summary>
+        /// The message to display to the user when initiating a channel transfer.
+        /// </summary>
+        [JsonProperty("message_to_user", NullValueHandling = NullValueHandling.Ignore)]
+        public string MessageToUser { get; protected set; }
         /// <summary>
         /// The title or introductory text to show before the response. This text is defined in the search skill
         /// configuration.
@@ -181,5 +179,10 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("additional_results", NullValueHandling = NullValueHandling.Ignore)]
         public List<SearchResult> AdditionalResults { get; protected set; }
+        /// <summary>
+        /// An object containing any properties for the user-defined response type.
+        /// </summary>
+        [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object> UserDefined { get; protected set; }
     }
 }

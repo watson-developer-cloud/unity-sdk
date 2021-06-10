@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201221-120002
+* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-902c9336-20210513-140138
 */
  
 using System.Collections.Generic;
@@ -138,10 +138,19 @@ namespace IBM.Watson.Assistant.V1
         /// the previous response. (optional)</param>
         /// <param name="output">An output object that includes the response to the user, the dialog nodes that were
         /// triggered, and messages from the log. (optional)</param>
+        /// <param name="userId">A string value that identifies the user who is interacting with the workspace. The
+        /// client must provide a unique identifier for each individual end user who accesses the application. For
+        /// user-based plans, this user ID is used to identify unique users for billing purposes. This string cannot
+        /// contain carriage return, newline, or tab characters. If no value is specified in the input, **user_id** is
+        /// automatically set to the value of **context.conversation_id**.
+        ///
+        /// **Note:** This property is the same as the **user_id** property in the context metadata. If **user_id** is
+        /// specified in both locations in a message request, the value specified at the root is used.
+        /// (optional)</param>
         /// <param name="nodesVisitedDetails">Whether to include additional diagnostic information about the dialog
         /// nodes that were visited during processing of the message. (optional, default to false)</param>
         /// <returns><see cref="MessageResponse" />MessageResponse</returns>
-        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageInput input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, Context context = null, OutputData output = null, bool? nodesVisitedDetails = null)
+        public bool Message(Callback<MessageResponse> callback, string workspaceId, MessageInput input = null, List<RuntimeIntent> intents = null, List<RuntimeEntity> entities = null, bool? alternateIntents = null, Context context = null, OutputData output = null, bool? nodesVisitedDetails = null, string userId = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `Message`");
@@ -193,6 +202,8 @@ namespace IBM.Watson.Assistant.V1
                 bodyObject["context"] = JToken.FromObject(context);
             if (output != null)
                 bodyObject["output"] = JToken.FromObject(output);
+            if (!string.IsNullOrEmpty(userId))
+                bodyObject["user_id"] = userId;
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnMessageResponse;
@@ -235,7 +246,7 @@ namespace IBM.Watson.Assistant.V1
         /// entities recognized in each input. This method is useful for testing and comparing the performance of
         /// different workspaces.
         ///
-        /// This method is available only with Premium plans.
+        /// This method is available only with Enterprise with Data Isolation plans.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
@@ -3996,16 +4007,18 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="dialogNode">The dialog node ID. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.</param>
+        /// <param name="dialogNode">The unique ID of the dialog node. This is an internal identifier used to refer to
+        /// the dialog node from other dialog nodes and in the diagnostic information included with message responses.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.</param>
         /// <param name="description">The description of the dialog node. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="conditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters. (optional)</param>
-        /// <param name="parent">The ID of the parent dialog node. This property is omitted if the dialog node has no
-        /// parent. (optional)</param>
-        /// <param name="previousSibling">The ID of the previous sibling dialog node. This property is omitted if the
-        /// dialog node has no previous sibling. (optional)</param>
+        /// <param name="parent">The unique ID of the parent dialog node. This property is omitted if the dialog node
+        /// has no parent. (optional)</param>
+        /// <param name="previousSibling">The unique ID of the previous sibling dialog node. This property is omitted if
+        /// the dialog node has no previous sibling. (optional)</param>
         /// <param name="output">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
         /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
@@ -4013,9 +4026,12 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="context">The context for the dialog node. (optional)</param>
         /// <param name="metadata">The metadata for the dialog node. (optional)</param>
         /// <param name="nextStep">The next step to execute following this dialog node. (optional)</param>
-        /// <param name="title">The alias used to identify the dialog node. This string must conform to the following
-        /// restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// <param name="title">A human-readable name for the dialog node. If the node is included in disambiguation,
+        /// this title is used to populate the **label** property of the corresponding suggestion in the `suggestion`
+        /// response type (unless it is overridden by the **user_label** property). The title is also used to populate
+        /// the **topic** property in the `connect_to_agent` response type.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// (optional)</param>
         /// <param name="type">How the dialog node is processed. (optional)</param>
         /// <param name="eventName">How an `event_handler` node is processed. (optional)</param>
@@ -4027,7 +4043,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="digressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
         /// (optional)</param>
         /// <param name="userLabel">A label that can be displayed externally to describe the purpose of the node to
-        /// users. (optional)</param>
+        /// users. If set, this label is used to identify the node in disambiguation responses (overriding the value of
+        /// the **title** property). (optional)</param>
         /// <param name="disambiguationOptOut">Whether the dialog node should be excluded from disambiguation
         /// suggestions. Valid only when **type**=`standard` or `frame`. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
@@ -4155,7 +4172,7 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
+        /// <param name="dialogNode">The dialog node ID (for example, `node_1_1479323581900`).</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
         /// the response. (optional, default to false)</param>
         /// <returns><see cref="DialogNode" />DialogNode</returns>
@@ -4241,18 +4258,21 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
-        /// <param name="newDialogNode">The dialog node ID. This string must conform to the following restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// <param name="dialogNode">The dialog node ID (for example, `node_1_1479323581900`).</param>
+        /// <param name="newDialogNode">The unique ID of the dialog node. This is an internal identifier used to refer
+        /// to the dialog node from other dialog nodes and in the diagnostic information included with message
+        /// responses.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// (optional)</param>
         /// <param name="newDescription">The description of the dialog node. This string cannot contain carriage return,
         /// newline, or tab characters. (optional)</param>
         /// <param name="newConditions">The condition that will trigger the dialog node. This string cannot contain
         /// carriage return, newline, or tab characters. (optional)</param>
-        /// <param name="newParent">The ID of the parent dialog node. This property is omitted if the dialog node has no
-        /// parent. (optional)</param>
-        /// <param name="newPreviousSibling">The ID of the previous sibling dialog node. This property is omitted if the
-        /// dialog node has no previous sibling. (optional)</param>
+        /// <param name="newParent">The unique ID of the parent dialog node. This property is omitted if the dialog node
+        /// has no parent. (optional)</param>
+        /// <param name="newPreviousSibling">The unique ID of the previous sibling dialog node. This property is omitted
+        /// if the dialog node has no previous sibling. (optional)</param>
         /// <param name="newOutput">The output of the dialog node. For more information about how to specify dialog node
         /// output, see the
         /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
@@ -4260,9 +4280,12 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newContext">The context for the dialog node. (optional)</param>
         /// <param name="newMetadata">The metadata for the dialog node. (optional)</param>
         /// <param name="newNextStep">The next step to execute following this dialog node. (optional)</param>
-        /// <param name="newTitle">The alias used to identify the dialog node. This string must conform to the following
-        /// restrictions:
-        /// - It can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
+        /// <param name="newTitle">A human-readable name for the dialog node. If the node is included in disambiguation,
+        /// this title is used to populate the **label** property of the corresponding suggestion in the `suggestion`
+        /// response type (unless it is overridden by the **user_label** property). The title is also used to populate
+        /// the **topic** property in the `connect_to_agent` response type.
+        ///
+        /// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
         /// (optional)</param>
         /// <param name="newType">How the dialog node is processed. (optional)</param>
         /// <param name="newEventName">How an `event_handler` node is processed. (optional)</param>
@@ -4275,7 +4298,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="newDigressOutSlots">Whether the user can digress to top-level nodes while filling out slots.
         /// (optional)</param>
         /// <param name="newUserLabel">A label that can be displayed externally to describe the purpose of the node to
-        /// users. (optional)</param>
+        /// users. If set, this label is used to identify the node in disambiguation responses (overriding the value of
+        /// the **title** property). (optional)</param>
         /// <param name="newDisambiguationOptOut">Whether the dialog node should be excluded from disambiguation
         /// suggestions. Valid only when **type**=`standard` or `frame`. (optional, default to false)</param>
         /// <param name="includeAudit">Whether to include the audit properties (`created` and `updated` timestamps) in
@@ -4403,7 +4427,7 @@ namespace IBM.Watson.Assistant.V1
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
-        /// <param name="dialogNode">The dialog node ID (for example, `get_order`).</param>
+        /// <param name="dialogNode">The dialog node ID (for example, `node_1_1479323581900`).</param>
         /// <returns><see cref="object" />object</returns>
         public bool DeleteDialogNode(Callback<object> callback, string workspaceId, string dialogNode)
         {
@@ -4477,6 +4501,8 @@ namespace IBM.Watson.Assistant.V1
         /// List log events in a workspace.
         ///
         /// List the events from the log of a specific workspace.
+        ///
+        /// This method requires Manager access.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="workspaceId">Unique identifier of the workspace.</param>
@@ -4678,6 +4704,11 @@ namespace IBM.Watson.Assistant.V1
         /// You associate a customer ID with data by passing the `X-Watson-Metadata` header with a request that passes
         /// data. For more information about personal data and customer IDs, see [Information
         /// security](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security).
+        ///
+        /// **Note:** This operation is intended only for deleting data associated with a single specific customer, not
+        /// for deleting data associated with multiple customers or for any other purpose. For more information, see
+        /// [Labeling and deleting data in Watson
+        /// Assistant](https://cloud.ibm.com/docs/assistant?topic=assistant-information-security#information-security-gdpr-wa).
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customerId">The customer ID for which all data is to be deleted.</param>

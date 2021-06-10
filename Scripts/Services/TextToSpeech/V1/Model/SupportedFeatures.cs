@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         public bool? CustomPronunciation { get; set; }
         /// <summary>
         /// If `true`, the voice can be transformed by using the SSML &lt;voice-transformation&gt; element; if `false`,
-        /// the voice cannot be transformed.
+        /// the voice cannot be transformed. The feature was available only for the now-deprecated standard voices. You
+        /// cannot use the feature with neural voices.
         /// </summary>
         [JsonProperty("voice_transformation", NullValueHandling = NullValueHandling.Ignore)]
         public bool? VoiceTransformation { get; set; }

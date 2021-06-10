@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
         public string Match { get; set; }
         /// <summary>
-        /// Number of documents matching the filter.
+        /// Number of documents that match the filter.
         /// </summary>
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
