@@ -17,6 +17,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using IBM.Cloud.SDK;
 using IBM.Cloud.SDK.Authentication;
@@ -43,11 +44,13 @@ namespace IBM.Watson.Tests
         private string customizationId;
         private string customWord = "IBM";
         private string customWordTranslation = "eye bee m";
+        private string wavFilePath;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             LogSystem.InstallDefaultReactors();
+            wavFilePath = Application.dataPath + "/unity-sdk/Tests/TestData/TextToSpeechV1/tts_audio.wav";
         }
 
         [UnitySetUp]
@@ -465,5 +468,490 @@ namespace IBM.Watson.Tests
             }
         }
         #endregion
+        
+        #region Miscellaneous
+        [UnityTest, Order(100)]
+        public IEnumerator TestListCustomPrompts()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to ListCustomPrompts...");
+            CustomModel customModel = null;
+            string customizationId = "";
+
+            service.CreateCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateCustomModel result: {0}", response.Response);
+                    customModel = response.Result;
+                    Assert.IsNotNull(customModel);
+                    Assert.IsNull(error);
+                    customizationId = customModel.CustomizationId;
+                },
+                description: "testString",
+                name: "testString",
+                language: "en-US"
+            );
+
+            while (customModel == null)
+                yield return null;
+
+            Prompts prompts = null;
+
+            service.ListCustomPrompts(
+                callback: (DetailedResponse<Prompts> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListCustomPrompts result: {0}", response.Response);
+                    prompts = response.Result;
+                    Assert.IsNotNull(prompts);
+                    Assert.IsNotNull(prompts._Prompts);
+                    Assert.IsNull(error);
+                },
+                customizationId: customizationId
+            );
+
+            while (prompts == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteCustomModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                customizationId: customizationId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+
+        [UnityTest, Order(101)]
+        public IEnumerator TestAddCustomPrompts()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to AddCustomPrompts...");
+            CustomModel customModel = null;
+            string customizationId = "";
+
+            service.CreateCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateCustomModel result: {0}", response.Response);
+                    customModel = response.Result;
+                    Assert.IsNotNull(customModel);
+                    Assert.IsNull(error);
+                    customizationId = customModel.CustomizationId;
+                },
+                description: "testString",
+                name: "testString",
+                language: "en-US"
+            );
+
+            while (customModel == null)
+                yield return null;
+
+            PromptMetadata promptMetadata = new PromptMetadata()
+            {
+                PromptText = "promptText"
+            };
+
+            MemoryStream file = new MemoryStream();
+
+            Prompt prompt = null;
+
+            service.AddCustomPrompt(
+                callback: (DetailedResponse<Prompt> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddCustomPrompt result: {0}", response.Response);
+                    prompt = response.Result;
+                    Assert.IsNotNull(prompt);
+                    Assert.IsNotNull(prompt.Status);
+                    Assert.IsNull(error);
+                },
+                customizationId: customizationId,
+                promptId: "testId",
+                metadata: promptMetadata,
+                file: file
+            );
+
+            while (prompt == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteCustomModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                customizationId: customizationId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        
+        [UnityTest, Order(102)]
+        public IEnumerator TestGetCustomPrompts()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to GetCustomPrompts...");
+            CustomModel customModel = null;
+            string customizationId = "";
+
+            service.CreateCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateCustomModel result: {0}", response.Response);
+                    customModel = response.Result;
+                    Assert.IsNotNull(customModel);
+                    Assert.IsNull(error);
+                    customizationId = customModel.CustomizationId;
+                },
+                description: "testString",
+                name: "testString",
+                language: "en-US"
+            );
+
+            while (customModel == null)
+                yield return null;
+
+            PromptMetadata promptMetadata = new PromptMetadata()
+            {
+                PromptText = "promptText"
+            };
+
+            MemoryStream file = new MemoryStream();
+
+            Prompt prompt = null;
+
+            service.GetCustomPrompt(
+                callback: (DetailedResponse<Prompt> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetCustomPrompt result: {0}", response.Response);
+                    prompt = response.Result;
+                    Assert.IsNotNull(prompt);
+                    Assert.IsNotNull(prompt.Status);
+                    Assert.IsNull(error);
+                },
+                customizationId: customizationId,
+                promptId: "testId"
+            );
+
+            while (prompt == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteCustomModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                customizationId: customizationId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        
+        [UnityTest, Order(103)]
+        public IEnumerator TestDeleteCustomPrompts()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to TestDeleteCustomPrompts...");
+            CustomModel customModel = null;
+            string customizationId = "";
+
+            service.CreateCustomModel(
+                callback: (DetailedResponse<CustomModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateCustomModel result: {0}", response.Response);
+                    customModel = response.Result;
+                    Assert.IsNotNull(customModel);
+                    Assert.IsNull(error);
+                    customizationId = customModel.CustomizationId;
+                },
+                description: "testString",
+                name: "testString",
+                language: "en-US"
+            );
+
+            while (customModel == null)
+                yield return null;
+
+            PromptMetadata promptMetadata = new PromptMetadata()
+            {
+                PromptText = "promptText"
+            };
+
+            MemoryStream file = new MemoryStream();
+
+            Prompt prompt = null;
+
+            service.AddCustomPrompt(
+                callback: (DetailedResponse<Prompt> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddCustomPrompt result: {0}", response.Response);
+                    prompt = response.Result;
+                    Assert.IsNotNull(prompt);
+                    Assert.IsNotNull(prompt.Status);
+                    Assert.IsNull(error);
+                },
+                customizationId: customizationId,
+                promptId: "testId",
+                metadata: promptMetadata,
+                file: file
+            );
+
+            while (prompt == null)
+                yield return null;
+
+            bool deleteCustomPrompt = false;
+            service.DeleteCustomPrompt(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomPrompt result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    deleteCustomPrompt = true;
+                },
+                customizationId: customizationId,
+                promptId: prompt.PromptId
+            );
+
+            while (!deleteCustomPrompt)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteCustomModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteCustomModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                customizationId: customizationId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+        
+        [UnityTest, Order(104)]
+        public IEnumerator TestCreateSpeakerModel()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to TestCreateSpeakerModel...");
+            SpeakerModel speakerModel = null;
+            string speakerId = "";
+
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
+
+            fs.CopyTo(ms);
+            service.CreateSpeakerModel(
+                callback: (DetailedResponse<SpeakerModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateSpeakerModel result: {0}", response.Response);
+                    speakerModel = response.Result;
+                    Assert.IsNotNull(speakerModel);
+                    Assert.IsNotNull(speakerModel.SpeakerId);
+                    Assert.IsNull(error);
+                    speakerId = speakerModel.SpeakerId;
+                },
+                speakerName: "speakerNameUnity",
+                audio: ms
+            );
+
+            while (speakerModel == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteSpeakerModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteSpeakerModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                speakerId: speakerId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+
+        [UnityTest, Order(105)]
+        public IEnumerator TestListSpeakerModel()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to TestListSpeakerModel...");
+            SpeakerModel speakerModel = null;
+            string speakerId = "";
+
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
+
+            fs.CopyTo(ms);
+            service.CreateSpeakerModel(
+                callback: (DetailedResponse<SpeakerModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateSpeakerModel result: {0}", response.Response);
+                    speakerModel = response.Result;
+                    Assert.IsNotNull(speakerModel);
+                    Assert.IsNotNull(speakerModel.SpeakerId);
+                    Assert.IsNull(error);
+                    speakerId = speakerModel.SpeakerId;
+                },
+                speakerName: "speakerNameUnity",
+                audio: ms
+            );
+
+            while (speakerModel == null)
+                yield return null;
+
+            Speakers speakers = null;
+
+            service.ListSpeakerModels(
+                callback: (DetailedResponse<Speakers> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "ListSpeakerModels result: {0}", response.Response);
+                    speakers = response.Result;
+                    Assert.IsNotNull(speakers);
+                    Assert.IsNotNull(speakers._Speakers);
+                    Assert.IsTrue(speakers._Speakers.Count > 0);
+                    Assert.IsNull(error);
+                }
+            );
+
+            while (speakers == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteSpeakerModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteSpeakerModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                speakerId: speakerId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+
+        [UnityTest, Order(106)]
+        public IEnumerator TestGetSpeakerModel()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to TestGetSpeakerModel...");
+            SpeakerModel speakerModel = null;
+            string speakerId = "";
+
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
+
+            fs.CopyTo(ms);
+            service.CreateSpeakerModel(
+                callback: (DetailedResponse<SpeakerModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateSpeakerModel result: {0}", response.Response);
+                    speakerModel = response.Result;
+                    Assert.IsNotNull(speakerModel);
+                    Assert.IsNotNull(speakerModel.SpeakerId);
+                    Assert.IsNull(error);
+                    speakerId = speakerModel.SpeakerId;
+                },
+                speakerName: "speakerNameUnity",
+                audio: ms
+            );
+
+            while (speakerModel == null)
+                yield return null;
+
+            SpeakerCustomModels speakerCustomModels = null;
+
+            service.GetSpeakerModel(
+                callback: (DetailedResponse<SpeakerCustomModels> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetSpeakerModel result: {0}", response.Response);
+                    speakerCustomModels = response.Result;
+                    Assert.IsNotNull(speakerCustomModels);
+                    Assert.IsNotNull(speakerCustomModels.Customizations);
+                    Assert.IsNull(error);
+                },
+                speakerId: speakerId
+            );
+
+            while (speakerCustomModels == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteSpeakerModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteSpeakerModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                speakerId: speakerId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+
+        [UnityTest, Order(107)]
+        public IEnumerator TestDeleteSpeakerModel()
+        {
+            Log.Debug("TextToSpeechServiceV1IntegrationTests", "Attempting to TestDeleteSpeakerModel...");
+            SpeakerModel speakerModel = null;
+            string speakerId = "";
+
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
+
+            fs.CopyTo(ms);
+            service.CreateSpeakerModel(
+                callback: (DetailedResponse<SpeakerModel> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "CreateSpeakerModel result: {0}", response.Response);
+                    speakerModel = response.Result;
+                    Assert.IsNotNull(speakerModel);
+                    Assert.IsNotNull(speakerModel.SpeakerId);
+                    Assert.IsNull(error);
+                    speakerId = speakerModel.SpeakerId;
+                },
+                speakerName: "speakerNameUnity",
+                audio: ms
+            );
+
+            while (speakerModel == null)
+                yield return null;
+
+            bool isComplete = false;
+            service.DeleteSpeakerModel(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "DeleteSpeakerModel result: {0}", response.Response);
+                    Assert.IsTrue(response.StatusCode == 204);
+                    Assert.IsNull(error);
+                    isComplete = true;
+                },
+                speakerId: speakerId
+            );
+
+            while (!isComplete)
+                yield return null;
+        }
+
+        #endregion 
     }
 }
