@@ -30,6 +30,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
+using System.IO;
 
 namespace IBM.Watson.TextToSpeech.V1
 {
@@ -1635,6 +1636,12 @@ namespace IBM.Watson.TextToSpeech.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
+
+            if (metadata != null)
+            {
+                byte[] byteArray = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(metadata));
+                req.Forms["metadata"] = new RESTConnector.Form(new MemoryStream(byteArray), "" ,"application/json");
+            }
             if (file != null)
             {
                 req.Forms["file"] = new RESTConnector.Form(file, "filename", "audio/wav");
