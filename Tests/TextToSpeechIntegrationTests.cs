@@ -557,7 +557,9 @@ namespace IBM.Watson.Tests
             };
 
             MemoryStream file = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
 
+            fs.CopyTo(file);
             Prompt prompt = null;
 
             service.AddCustomPrompt(
@@ -624,23 +626,47 @@ namespace IBM.Watson.Tests
             };
 
             MemoryStream file = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
 
+            fs.CopyTo(file);
+            string promptId = "";
             Prompt prompt = null;
+
+            service.AddCustomPrompt(
+                callback: (DetailedResponse<Prompt> response, IBMError error) =>
+                {
+                    Log.Debug("TextToSpeechServiceV1IntegrationTests", "AddCustomPrompt result: {0}", response.Response);
+                    prompt = response.Result;
+                    Assert.IsNotNull(prompt);
+                    Assert.IsNotNull(prompt.Status);
+                    Assert.IsNull(error);
+                    promptId = prompt.PromptId;
+                },
+                customizationId: customizationId,
+                promptId: "testId",
+                metadata: promptMetadata,
+                file: file
+            );
+
+            while (prompt == null)
+                yield return null;
+
+            Prompt getPrompt = null;
 
             service.GetCustomPrompt(
                 callback: (DetailedResponse<Prompt> response, IBMError error) =>
                 {
                     Log.Debug("TextToSpeechServiceV1IntegrationTests", "GetCustomPrompt result: {0}", response.Response);
-                    prompt = response.Result;
-                    Assert.IsNotNull(prompt);
-                    Assert.IsNotNull(prompt.Status);
+                    getPrompt = response.Result;
+                    Assert.IsNotNull(getPrompt);
+                    Assert.IsNotNull(getPrompt.Status);
                     Assert.IsNull(error);
                 },
                 customizationId: customizationId,
-                promptId: "testId"
+                promptId: promptId
             );
 
-            while (prompt == null)
+            while (getPrompt == null)
                 yield return null;
 
             bool isComplete = false;
@@ -689,6 +715,9 @@ namespace IBM.Watson.Tests
             };
 
             MemoryStream file = new MemoryStream();
+            FileStream fs = File.OpenRead(wavFilePath);
+
+            fs.CopyTo(file);
 
             Prompt prompt = null;
 
