@@ -4653,11 +4653,11 @@ namespace IBM.Watson.Discovery.V1
             }
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4743,11 +4743,11 @@ namespace IBM.Watson.Discovery.V1
             }
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4832,11 +4832,11 @@ namespace IBM.Watson.Discovery.V1
             }
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (!string.IsNullOrEmpty(resultType))
             {
@@ -4922,11 +4922,11 @@ namespace IBM.Watson.Discovery.V1
             }
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime.Value.ToString("yyyy-MM-ddTHH:mm:ssZ");
             }
             if (!string.IsNullOrEmpty(resultType))
             {

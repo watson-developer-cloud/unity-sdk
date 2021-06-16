@@ -2202,6 +2202,11 @@ namespace IBM.Watson.Discovery.V2
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
+            if (enrichment != null)
+            {
+                byte[] byteArray = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(enrichment));
+                req.Forms["enrichment"] = new RESTConnector.Form(new System.IO.MemoryStream(byteArray), "" ,"application/json");
+            }
             if (file != null)
             {
                 req.Forms["file"] = new RESTConnector.Form(file, "filename", "application/octet-stream");

@@ -1682,11 +1682,11 @@ namespace IBM.Watson.VisualRecognition.V4
             }
             if (startTime != null)
             {
-                req.Parameters["start_time"] = startTime;
+                req.Parameters["start_time"] = startTime.Value.ToString("yyyy-MM-dd");
             }
             if (endTime != null)
             {
-                req.Parameters["end_time"] = endTime;
+                req.Parameters["end_time"] = endTime.Value.ToString("yyyy-MM-dd");
             }
 
             req.OnResponse = OnGetTrainingUsageResponse;

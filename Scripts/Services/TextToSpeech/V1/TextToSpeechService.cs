@@ -30,7 +30,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using UnityEngine.Networking;
-using System.IO;
 
 namespace IBM.Watson.TextToSpeech.V1
 {
@@ -1640,7 +1639,7 @@ namespace IBM.Watson.TextToSpeech.V1
             if (metadata != null)
             {
                 byte[] byteArray = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(metadata));
-                req.Forms["metadata"] = new RESTConnector.Form(new MemoryStream(byteArray), "" ,"application/json");
+                req.Forms["metadata"] = new RESTConnector.Form(new System.IO.MemoryStream(byteArray), "" ,"application/json");
             }
             if (file != null)
             {
