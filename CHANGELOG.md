@@ -1,3 +1,12 @@
+## [5.1.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.0...v5.1.1) (2021-06-16)
+
+
+### Bug Fixes
+
+* **discovery-v1:** add DateTime format ([f83b6ad](https://github.com/watson-developer-cloud/unity-sdk/commit/f83b6ad710510c6b07d3ef83522dfd094c390d9d))
+* **discovery-v2:** add enrichment to the form-data ([acfd7b5](https://github.com/watson-developer-cloud/unity-sdk/commit/acfd7b5e4307af3d600f3e928e0f1a18905bab97))
+* **visual-recognition-v4:** add DateTime format ([3ea83df](https://github.com/watson-developer-cloud/unity-sdk/commit/3ea83dfde0419a2a088f5f0048bf31b6bd6a6374))
+
 # [5.1.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.0.2...v5.1.0) (2021-06-10)
 
 
