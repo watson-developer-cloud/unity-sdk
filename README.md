@@ -68,7 +68,7 @@ The credentials for each service contain either a `username`, `password` and end
 **WARNING:** You are responsible for securing your own credentials. Any user with your service credentials can access your service instances!
 
 ## Watson Services
-To get started with the Watson Services in Unity, click on each service below to read through each of their `README.md`'s and their codes.
+To get started with a Watson Service in Unity, follow the link to see the code.
 * [Assistant V1](/Scripts/Services/Assistant/V1)
 * [Assistant V2](/Scripts/Services/Assistant/V2)
 * [Compare Comply V1](/Scripts/Services/CompareComply/V1)
