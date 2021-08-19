@@ -35,6 +35,11 @@ namespace IBM.Watson.NaturalLanguageClassifier.V1
 {
     public partial class NaturalLanguageClassifierService : BaseService
     {
+        [System.Obsolete("On 9 August 2021, IBM announced the deprecation of the Natural Language Classifier service." +
+        "\nThe service will no longer be available from 8 August 2022. As of 9 September 2021, you will not be able to create new instances." +
+        "\nExisting instances will be supported until 8 August 2022. Any instance that still exists on that date will be deleted." +
+        "\nFor more information, see https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-migrating")]
+
         private const string defaultServiceName = "natural_language_classifier";
         private const string defaultServiceUrl = "https://api.us-south.natural-language-classifier.watson.cloud.ibm.com";
 
