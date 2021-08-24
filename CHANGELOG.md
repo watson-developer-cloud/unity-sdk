@@ -1,3 +1,10 @@
+## [5.1.2](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.1...v5.1.2) (2021-08-24)
+
+
+### Bug Fixes
+
+* **nlc:** add deprecation warning ([b8f3355](https://github.com/watson-developer-cloud/unity-sdk/commit/b8f3355ebd20dd2ae822a207dfb63188e77e9b42)), closes [#9627](https://github.com/watson-developer-cloud/unity-sdk/issues/9627)
+
 ## [5.1.1](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.0...v5.1.1) (2021-06-16)
 
 
