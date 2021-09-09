@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -1424,18 +1424,18 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// List classifications models.
         ///
-        /// (Beta) Returns all custom classifications models associated with this service instance.
+        /// Returns all custom classifications models associated with this service instance.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ListClassificationsModelsResponse" />ListClassificationsModelsResponse</returns>
-        public bool ListClassificationsModels(Callback<ListClassificationsModelsResponse> callback)
+        /// <returns><see cref="ClassificationsModelList" />ClassificationsModelList</returns>
+        public bool ListClassificationsModels(Callback<ClassificationsModelList> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListClassificationsModels`");
             if (string.IsNullOrEmpty(Version))
                 throw new ArgumentNullException("`Version` is required");
 
-            RequestObject<ListClassificationsModelsResponse> req = new RequestObject<ListClassificationsModelsResponse>
+            RequestObject<ClassificationsModelList> req = new RequestObject<ClassificationsModelList>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -1469,7 +1469,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
         private void OnListClassificationsModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ListClassificationsModelsResponse> response = new DetailedResponse<ListClassificationsModelsResponse>();
+            DetailedResponse<ClassificationsModelList> response = new DetailedResponse<ClassificationsModelList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1479,7 +1479,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ListClassificationsModelsResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<ClassificationsModelList>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -1488,8 +1488,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<ListClassificationsModelsResponse>)req).Callback != null)
-                ((RequestObject<ListClassificationsModelsResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<ClassificationsModelList>)req).Callback != null)
+                ((RequestObject<ClassificationsModelList>)req).Callback(response, resp.Error);
         }
 
         /// <summary>
