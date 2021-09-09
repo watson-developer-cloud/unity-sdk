@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,13 @@ namespace IBM.Watson.Discovery.V2.Model
     public class ProjectDetails
     {
         /// <summary>
-        /// The project type of this project.
+        /// The type of project.
+        ///
+        /// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a
+        /// *Custom* project.
+        ///
+        /// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments
+        /// and installed deployments only.
         /// </summary>
         public class TypeValue
         {
@@ -34,13 +40,17 @@ namespace IBM.Watson.Discovery.V2.Model
             /// </summary>
             public const string DOCUMENT_RETRIEVAL = "document_retrieval";
             /// <summary>
-            /// Constant ANSWER_RETRIEVAL for answer_retrieval
+            /// Constant CONVERSATIONAL_SEARCH for conversational_search
             /// </summary>
-            public const string ANSWER_RETRIEVAL = "answer_retrieval";
+            public const string CONVERSATIONAL_SEARCH = "conversational_search";
             /// <summary>
             /// Constant CONTENT_MINING for content_mining
             /// </summary>
             public const string CONTENT_MINING = "content_mining";
+            /// <summary>
+            /// Constant CONTENT_INTELLIGENCE for content_intelligence
+            /// </summary>
+            public const string CONTENT_INTELLIGENCE = "content_intelligence";
             /// <summary>
             /// Constant OTHER for other
             /// </summary>
@@ -49,7 +59,13 @@ namespace IBM.Watson.Discovery.V2.Model
         }
 
         /// <summary>
-        /// The project type of this project.
+        /// The type of project.
+        ///
+        /// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a
+        /// *Custom* project.
+        ///
+        /// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments
+        /// and installed deployments only.
         /// Constants for possible values can be found using ProjectDetails.TypeValue
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
