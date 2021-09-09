@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V2.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The URL of the image.
+        /// The `https:` URL of the image.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -71,6 +71,15 @@ namespace IBM.Watson.Assistant.V2.Model
         {
             get { return base.Channels; }
             set { base.Channels = value; }
+        }
+        /// <summary>
+        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+        /// </summary>
+        [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
+        public new string AltText
+        {
+            get { return base.AltText; }
+            set { base.AltText = value; }
         }
     }
 }
