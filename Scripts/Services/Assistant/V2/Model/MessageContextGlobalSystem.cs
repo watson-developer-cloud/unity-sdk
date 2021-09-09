@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -136,12 +136,31 @@ namespace IBM.Watson.Assistant.V2.Model
         /// `tomorrow`. This can be useful for simulating past or future times for testing purposes, or when analyzing
         /// documents such as news articles.
         ///
-        /// This value must be a UTC time value formatted according to ISO 8601 (for example, `2019-06-26T12:00:00Z` for
-        /// noon on 26 June 2019.
+        /// This value must be a UTC time value formatted according to ISO 8601 (for example, `2021-06-26T12:00:00Z` for
+        /// noon UTC on 26 June 2021).
         ///
         /// This property is included only if the new system entities are enabled for the skill.
         /// </summary>
         [JsonProperty("reference_time", NullValueHandling = NullValueHandling.Ignore)]
         public string ReferenceTime { get; set; }
+        /// <summary>
+        /// The time at which the session started. With the stateful `message` method, the start time is always present,
+        /// and is set by the service based on the time the session was created. With the stateless `message` method,
+        /// the start time is set by the service in the response to the first message, and should be returned as part of
+        /// the context with each subsequent message in the session.
+        ///
+        /// This value is a UTC time value formatted according to ISO 8601 (for example, `2021-06-26T12:00:00Z` for noon
+        /// UTC on 26 June 2021).
+        /// </summary>
+        [JsonProperty("session_start_time", NullValueHandling = NullValueHandling.Ignore)]
+        public string SessionStartTime { get; set; }
+        /// <summary>
+        /// An encoded string that represents the configuration state of the assistant at the beginning of the
+        /// conversation. If you are using the stateless `message` method, save this value and then send it in the
+        /// context of the subsequent message request to avoid disruptions if there are configuration changes during the
+        /// conversation (such as a change to a skill the assistant uses).
+        /// </summary>
+        [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
+        public string State { get; set; }
     }
 }
