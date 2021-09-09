@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// An aggregation produced by  Discovery to analyze the input provided.
     /// </summary>
-    [JsonConverter(typeof(JsonSubtypes), "Type")]
+    [JsonConverter(typeof(JsonSubtypes), "type")]
     [JsonSubtypes.KnownSubType(typeof(Histogram), "histogram")]
     [JsonSubtypes.KnownSubType(typeof(Calculation), "max")]
     [JsonSubtypes.KnownSubType(typeof(Calculation), "min")]
