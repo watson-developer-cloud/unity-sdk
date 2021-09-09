@@ -745,45 +745,40 @@ namespace IBM.Watson.Tests
         public IEnumerator TestListClassificationsModels()
         {
             Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "Attempting to TestListClassificationsModels...");
-            ListClassificationsModelsResponse listClassificationsModelsResponse = null;
+            ClassificationsModelList listClassificationModelList = null;
             
             service.ListClassificationsModels(
-                callback: (DetailedResponse<ListClassificationsModelsResponse> response, IBMError error) =>
+                callback: (DetailedResponse<ClassificationsModelList> response, IBMError error) =>
                 {
-                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "ListClassificationsModelsResponse result: {0}", response.Response);
-                    listClassificationsModelsResponse = response.Result;
-                    Assert.IsNotNull(listClassificationsModelsResponse);
-                    Assert.IsNotNull(listClassificationsModelsResponse.Models);
+                    Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "listClassificationModelList result: {0}", response.Response);
+                    listClassificationModelList = response.Result;
+                    Assert.IsNotNull(listClassificationModelList);
+                    Assert.IsNotNull(listClassificationModelList.Models);
                     Assert.IsNull(error);
                 }
             );
 
-            while (listClassificationsModelsResponse == null)
+            while (listClassificationModelList == null)
                 yield return null;
-            foreach (ClassificationsModelList classificationsModelList in listClassificationsModelsResponse.Models)
+            foreach (ClassificationsModel classificationModel in listClassificationModelList.Models)
             {
-                if (classificationsModelList.Models == null) {
-                  continue;
-                }
-                foreach (ClassificationsModel classificationModel in classificationsModelList.Models)
-                {                       
-                    if (classificationModel.Name.Contains("testString") || classificationModel.Name.Contains("newString"))
-                    {
+                if (classificationModel.Name.Contains("testString") || classificationModel.Name.Contains("newString"))
+                {
 
-                        DeleteModelResults deleteModelResults = null;
-                        service.DeleteClassificationsModel(
-                          callback: (DetailedResponse<DeleteModelResults> response, IBMError error) =>
-                            {
-                                Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteCategoriesModel result: {0}", response.Response);
-                                deleteModelResults = response.Result;
-                                Assert.IsNull(error);
-                            },
-                            modelId: classificationModel.ModelId
-                        );
+                    DeleteModelResults deleteModelResults = null;
+                    service.DeleteClassificationsModel(
+                        callback: (DetailedResponse<DeleteModelResults> response, IBMError error) =>
+                        {
+                            Log.Debug("NaturalLanguageUnderstandingServiceV1IntegrationTests", "DeleteCategoriesModel result: {0}", response.Response);
+                            deleteModelResults = response.Result;
+                            Assert.IsNull(error);
+                        },
+                        modelId: classificationModel.ModelId
+                    );
 
-                        while (deleteModelResults == null)
-                            yield return null;
-                        }
+                    while (deleteModelResults == null) {
+                        yield return null;
+                    }
                 }
             }
         }
