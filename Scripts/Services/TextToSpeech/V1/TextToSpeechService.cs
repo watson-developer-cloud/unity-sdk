@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-902c9336-20210513-140138
+* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
 */
  
 using System.Collections.Generic;
@@ -87,8 +87,8 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// Lists all voices available for use with the service. The information includes the name, language, gender,
         /// and other details about the voice. The ordering of the list of voices can change from call to call; do not
-        /// rely on an alphabetized or static list of voices. To see information about a specific voice, use the **Get a
-        /// voice** method.
+        /// rely on an alphabetized or static list of voices. To see information about a specific voice, use the [Get a
+        /// voice](#getvoice).
         ///
         /// **See also:** [Listing all available
         /// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoices).
@@ -158,13 +158,13 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// Gets information about the specified voice. The information includes the name, language, gender, and other
         /// details about the voice. Specify a customization ID to obtain information for a custom model that is defined
-        /// for the language of the specified voice. To list information about all available voices, use the **List
-        /// voices** method.
+        /// for the language of the specified voice. To list information about all available voices, use the [List
+        /// voices](#listvoices) method.
         ///
         /// **See also:** [Listing a specific
         /// voice](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoice).
         ///
-        /// ### Important voice updates
+        /// ### Important voice updates for IBM Cloud
         ///
         ///  The service's voices underwent significant change on 2 December 2020.
         /// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -181,11 +181,14 @@ namespace IBM.Watson.TextToSpeech.V1
         /// future date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For
         /// more information about all voice updates, see the [2 December 2020 service
         /// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the
-        /// release notes.
+        /// release notes for IBM Cloud.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="voice">The voice for which information is to be returned. For more information about specifying
-        /// a voice, see **Important voice updates** in the method description.</param>
+        /// a voice, see **Important voice updates for IBM Cloud** in the method description.
+        ///
+        /// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported
+        /// only for IBM Cloud.</param>
         /// <param name="customizationId">The customization ID (GUID) of a custom model for which information is to be
         /// returned. You must make the request with credentials for the instance of the service that owns the custom
         /// model. Omit the parameter to see information about the specified voice with no customization.
@@ -303,10 +306,10 @@ namespace IBM.Watson.TextToSpeech.V1
         /// is 22,050 Hz.
         ///
         /// For more information about specifying an audio format, including additional details about some of the
-        /// formats, see [Audio
-        /// formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
+        /// formats, see [Using audio
+        /// formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audio-formats).
         ///
-        /// ### Important voice updates
+        /// ### Important voice updates for IBM Cloud
         ///
         ///  The service's voices underwent significant change on 2 December 2020.
         /// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -323,7 +326,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// future date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For
         /// more information about all voice updates, see the [2 December 2020 service
         /// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the
-        /// release notes.
+        /// release notes for IBM Cloud.
         ///
         /// ### Warning messages
         ///
@@ -340,7 +343,14 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **Audio formats (accept types)** in the method description. (optional, default to
         /// audio/ogg;codecs=opus)</param>
         /// <param name="voice">The voice to use for synthesis. For more information about specifying a voice, see
-        /// **Important voice updates** in the method description. (optional, default to en-US_MichaelV3Voice)</param>
+        /// **Important voice updates for IBM Cloud** in the method description.
+        ///
+        /// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported
+        /// only for IBM Cloud.
+        ///
+        /// **See also:** See also [Using languages and
+        /// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices). (optional, default to
+        /// en-US_MichaelV3Voice)</param>
         /// <param name="customizationId">The customization ID (GUID) of a custom model to use for the synthesis. If a
         /// custom model is specified, it works only if it matches the language of the indicated voice. You must make
         /// the request with credentials for the instance of the service that owns the custom model. Omit the parameter
@@ -426,7 +436,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **See also:** [Querying a word from a
         /// language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
         ///
-        /// ### Important voice updates
+        /// ### Important voice updates for IBM Cloud
         ///
         ///  The service's voices underwent significant change on 2 December 2020.
         /// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -443,14 +453,16 @@ namespace IBM.Watson.TextToSpeech.V1
         /// future date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For
         /// more information about all voice updates, see the [2 December 2020 service
         /// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the
-        /// release notes.
+        /// release notes for IBM Cloud.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="text">The word for which the pronunciation is requested.</param>
         /// <param name="voice">A voice that specifies the language in which the pronunciation is to be returned. All
         /// voices for the same language (for example, `en-US`) return the same translation. For more information about
-        /// specifying a voice, see **Important voice updates** in the method description. (optional, default to
-        /// en-US_MichaelV3Voice)</param>
+        /// specifying a voice, see **Important voice updates for IBM Cloud** in the method description.
+        ///
+        /// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported
+        /// only for IBM Cloud. (optional, default to en-US_MichaelV3Voice)</param>
         /// <param name="format">The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch,
         /// Australian English, and Korean languages support only IPA. Omit the parameter to obtain the pronunciation in
         /// the default format. (optional, default to ipa)</param>
@@ -547,7 +559,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// **See also:** [Creating a custom
         /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
         ///
-        /// ### Important voice updates
+        /// ### Important voice updates for IBM Cloud
         ///
         ///  The service's voices underwent significant change on 2 December 2020.
         /// * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -564,15 +576,17 @@ namespace IBM.Watson.TextToSpeech.V1
         /// future date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For
         /// more information about all voice updates, see the [2 December 2020 service
         /// update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the
-        /// release notes.
+        /// release notes for IBM Cloud.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="name">The name of the new custom model.</param>
         /// <param name="language">The language of the new custom model. You create a custom model for a specific
         /// language, not for a specific voice. A custom model can be used with any voice for its specified language.
         /// Omit the parameter to use the the default language, `en-US`. **Note:** The `ar-AR` language identifier
-        /// cannot be used to create a custom model. Use the `ar-MS` identifier instead. (optional, default to
-        /// en-US)</param>
+        /// cannot be used to create a custom model. Use the `ar-MS` identifier instead.
+        ///
+        /// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported
+        /// only for IBM Cloud. (optional, default to en-US)</param>
         /// <param name="description">A description of the new custom model. Specifying a description is recommended.
         /// (optional)</param>
         /// <returns><see cref="CustomModel" />CustomModel</returns>
@@ -652,8 +666,9 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// Lists metadata such as the name and description for all custom models that are owned by an instance of the
         /// service. Specify a language to list the custom models for that language only. To see the words and prompts
-        /// in addition to the metadata for a specific custom model, use the **Get a custom model** method. You must use
-        /// credentials for the instance of the service that owns a model to list information about it.
+        /// in addition to the metadata for a specific custom model, use the [Get a custom model](#getcustommodel)
+        /// method. You must use credentials for the instance of the service that owns a model to list information about
+        /// it.
         ///
         /// **See also:** [Querying all custom
         /// models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
@@ -839,7 +854,7 @@ namespace IBM.Watson.TextToSpeech.V1
         /// Gets all information about a specified custom model. In addition to metadata such as the name and
         /// description of the custom model, the output includes the words and their translations that are defined for
         /// the model, as well as any prompts that are defined for the model. To see just the metadata for a model, use
-        /// the **List custom models** method.
+        /// the [List custom models](#listcustommodels) method.
         ///
         /// **See also:** [Querying a custom
         /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
@@ -1011,12 +1026,12 @@ namespace IBM.Watson.TextToSpeech.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="customizationId">The customization ID (GUID) of the custom model. You must make the request
         /// with credentials for the instance of the service that owns the custom model.</param>
-        /// <param name="words">The **Add custom words** method accepts an array of `Word` objects. Each object provides
-        /// a word that is to be added or updated for the custom model and the word's translation.
+        /// <param name="words">The [Add custom words](#addwords) method accepts an array of `Word` objects. Each object
+        /// provides a word that is to be added or updated for the custom model and the word's translation.
         ///
-        /// The **List custom words** method returns an array of `Word` objects. Each object shows a word and its
-        /// translation from the custom model. The words are listed in alphabetical order, with uppercase letters listed
-        /// before lowercase letters. The array is empty if the custom model contains no words.</param>
+        /// The [List custom words](#listwords) method returns an array of `Word` objects. Each object shows a word and
+        /// its translation from the custom model. The words are listed in alphabetical order, with uppercase letters
+        /// listed before lowercase letters. The array is empty if the custom model contains no words.</param>
         /// <returns><see cref="object" />object</returns>
         public bool AddWords(Callback<object> callback, string customizationId, List<Word> words)
         {
@@ -1433,11 +1448,9 @@ namespace IBM.Watson.TextToSpeech.V1
         /// Lists information about all custom prompts that are defined for a custom model. The information includes the
         /// prompt ID, prompt text, status, and optional speaker ID for each prompt of the custom model. You must use
         /// credentials for the instance of the service that owns the custom model. The same information about all of
-        /// the prompts for a custom model is also provided by the **Get a custom model** method. That method provides
-        /// complete details about a specified custom model, including its language, owner, custom words, and more.
-        ///
-        /// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models
-        /// and voices.
+        /// the prompts for a custom model is also provided by the [Get a custom model](#getcustommodel) method. That
+        /// method provides complete details about a specified custom model, including its language, owner, custom
+        /// words, and more. Custom prompts are supported only for use with US English custom models and voices.
         ///
         /// **See also:** [Listing custom
         /// prompts](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-list).
@@ -1533,10 +1546,10 @@ namespace IBM.Watson.TextToSpeech.V1
         /// audio (for example, it takes 20 seconds to process a 20-second prompt).
         ///
         /// For shorter prompts, you can wait for a reasonable amount of time and then check the status of the prompt
-        /// with the **Get a custom prompt** method. For longer prompts, consider using that method to poll the service
-        /// every few seconds to determine when the prompt becomes available. No prompt can be used for speech synthesis
-        /// if it is in the `processing` or `failed` state. Only prompts that are in the `available` state can be used
-        /// for speech synthesis.
+        /// with the [Get a custom prompt](#getcustomprompt) method. For longer prompts, consider using that method to
+        /// poll the service every few seconds to determine when the prompt becomes available. No prompt can be used for
+        /// speech synthesis if it is in the `processing` or `failed` state. Only prompts that are in the `available`
+        /// state can be used for speech synthesis.
         ///
         /// When it processes a request, the service attempts to align the text and the audio that are provided for the
         /// prompt. The text that is passed with a prompt must match the spoken audio as closely as possible. Optimally,
@@ -1567,10 +1580,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// If a prompt that is created without a speaker ID does not adequately reflect the intended prosody, enrolling
         /// the speaker and providing a speaker ID for the prompt is one recommended means of potentially improving the
         /// quality of the prompt. This is especially important for shorter prompts such as "good-bye" or "thank you,"
-        /// where less audio data makes it more difficult to match the prosody of the speaker.
-        ///
-        /// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models
-        /// and voices.
+        /// where less audio data makes it more difficult to match the prosody of the speaker. Custom prompts are
+        /// supported only for use with US English custom models and voices.
         ///
         /// **See also:**
         /// * [Add a custom
@@ -1635,7 +1646,6 @@ namespace IBM.Watson.TextToSpeech.V1
             }
 
             req.Forms = new Dictionary<string, RESTConnector.Form>();
-
             if (metadata != null)
             {
                 byte[] byteArray = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(metadata));
@@ -1684,10 +1694,8 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// Gets information about a specified custom prompt for a specified custom model. The information includes the
         /// prompt ID, prompt text, status, and optional speaker ID for each prompt of the custom model. You must use
-        /// credentials for the instance of the service that owns the custom model.
-        ///
-        /// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models
-        /// and voices.
+        /// credentials for the instance of the service that owns the custom model. Custom prompts are supported only
+        /// for use with US English custom models and voices.
         ///
         /// **See also:** [Listing custom
         /// prompts](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-list).
@@ -1768,9 +1776,7 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// **Caution:** Deleting a custom prompt elicits a 400 response code from synthesis requests that attempt to
         /// use the prompt. Make sure that you do not attempt to use a deleted prompt in a production application.
-        ///
-        /// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models
-        /// and voices.
+        /// Custom prompts are supported only for use with US English custom models and voices.
         ///
         /// **See also:** [Deleting a custom
         /// prompt](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-delete).
@@ -1847,10 +1853,8 @@ namespace IBM.Watson.TextToSpeech.V1
         ///
         /// Lists information about all speaker models that are defined for a service instance. The information includes
         /// the speaker ID and speaker name of each defined speaker. You must use credentials for the instance of a
-        /// service to list its speakers.
-        ///
-        /// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is
-        /// supported only for use with US English custom models and voices.
+        /// service to list its speakers. Speaker models and the custom prompts with which they are used are supported
+        /// only for use with US English custom models and voices.
         ///
         /// **See also:** [Listing speaker
         /// models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-list).
@@ -1948,10 +1952,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// the call returns, the audio is fully processed and the speaker enrollment is complete.
         ///
         /// The service returns a speaker ID with the request. A speaker ID is globally unique identifier (GUID) that
-        /// you use to identify the speaker in subsequent requests to the service.
-        ///
-        /// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is
-        /// supported only for use with US English custom models and voices.
+        /// you use to identify the speaker in subsequent requests to the service. Speaker models and the custom prompts
+        /// with which they are used are supported only for use with US English custom models and voices.
         ///
         /// **See also:**
         /// * [Create a speaker
@@ -2048,10 +2050,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// owned by a service instance. The information is grouped by the customization IDs of the custom models. For
         /// each custom model, the information lists information about each prompt that is defined for that custom model
         /// by the speaker. You must use credentials for the instance of the service that owns a speaker model to list
-        /// its prompts.
-        ///
-        /// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is
-        /// supported only for use with US English custom models and voices.
+        /// its prompts. Speaker models and the custom prompts with which they are used are supported only for use with
+        /// US English custom models and voices.
         ///
         /// **See also:** [Listing the custom prompts for a speaker
         /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-list-prompts).
@@ -2130,10 +2130,8 @@ namespace IBM.Watson.TextToSpeech.V1
         /// Any prompts that are associated with the deleted speaker are not affected by the speaker's deletion. The
         /// prosodic data that defines the quality of a prompt is established when the prompt is created. A prompt is
         /// static and remains unaffected by deletion of its associated speaker. However, the prompt cannot be
-        /// resubmitted or updated with its original speaker once that speaker is deleted.
-        ///
-        /// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is
-        /// supported only for use with US English custom models and voices.
+        /// resubmitted or updated with its original speaker once that speaker is deleted. Speaker models and the custom
+        /// prompts with which they are used are supported only for use with US English custom models and voices.
         ///
         /// **See also:** [Deleting a speaker
         /// model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-delete).

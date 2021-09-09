@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
 */
  
 using System.Collections.Generic;
@@ -2725,7 +2725,7 @@ namespace IBM.Watson.Discovery.V1
         /// are biased towards higher field values. This parameter cannot be used in the same query as the **sort**
         /// parameter. (optional)</param>
         /// <param name="spellingSuggestions">When `true` and the **natural_language_query** parameter is used, the
-        /// **natural_languge_query** parameter is spell checked. The most likely correction is retunred in the
+        /// **natural_languge_query** parameter is spell checked. The most likely correction is returned in the
         /// **suggested_query** field of the response (if one exists).
         ///
         /// **Important:** this parameter is only valid when using the Cloud Pak version of Discovery. (optional,
@@ -3406,7 +3406,7 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="collectionId">The ID of the collection.</param>
         /// <param name="prefix">The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete
-        /// to `Hot`, `Housing`, or `How do I upgrade`. Possible completions are.</param>
+        /// to `hot`, `housing`, or `how`.</param>
         /// <param name="field">The field in the result documents that autocompletion suggestions are identified from.
         /// (optional)</param>
         /// <param name="count">The number of autocompletion suggestions to return. (optional)</param>

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// A restriction that alter the document set used for sub aggregations it precedes to nested documents found in the
-    /// field specified.
+    /// A restriction that alters the document set that is used for sub-aggregations it precedes to nested documents
+    /// found in the field specified.
     /// </summary>
     public class QueryNestedAggregation : QueryAggregation
     {
         /// <summary>
-        /// The path to the document field to scope sub aggregations to.
+        /// The path to the document field to scope sub-aggregations to.
         /// </summary>
         [JsonProperty("path", NullValueHandling = NullValueHandling.Ignore)]
         public string Path { get; set; }
@@ -37,7 +37,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// An array of sub aggregations.
+        /// An array of sub-aggregations.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }

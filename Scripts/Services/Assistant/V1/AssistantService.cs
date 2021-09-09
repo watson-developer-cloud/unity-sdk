@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-902c9336-20210513-140138
+* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
 */
  
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace IBM.Watson.Assistant.V1
         /// <summary>
         /// Gets and sets the version of the service.
         /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-        /// `2020-04-01`.
+        /// `2021-06-14`.
         /// </summary>
         public string Version
         {
@@ -68,14 +68,14 @@ namespace IBM.Watson.Assistant.V1
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2021-06-14`.</param>
         public AssistantService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2021-06-14`.</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
 
@@ -83,7 +83,7 @@ namespace IBM.Watson.Assistant.V1
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2021-06-14`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         public AssistantService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
 
@@ -91,7 +91,7 @@ namespace IBM.Watson.Assistant.V1
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2020-04-01`.</param>
+        /// The current version is `2021-06-14`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
@@ -4605,8 +4605,8 @@ namespace IBM.Watson.Assistant.V1
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="filter">A cacheable parameter that limits the results to those matching the specified filter.
         /// You must specify a filter query that includes a value for `language`, as well as a value for
-        /// `request.context.system.assistant_id`, `workspace_id`, or `request.context.metadata.deployment`. For more
-        /// information, see the
+        /// `request.context.system.assistant_id`, `workspace_id`, or `request.context.metadata.deployment`. These
+        /// required filters must be specified using the exact match (`::`) operator. For more information, see the
         /// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).</param>
         /// <param name="sort">How to sort the returned log events. You can sort by **request_timestamp**. To reverse
         /// the sort order, prefix the parameter value with a minus sign (`-`). (optional)</param>

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -68,10 +68,10 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
         public long? Duration { get; set; }
         /// <summary>
-        /// **For an archive-type resource,** the user-specified name of the resource.
+        /// _For an archive-type resource_, the user-specified name of the resource.
         ///
-        /// **For an audio-type resource,** the user-specified name of the resource or the name of the audio file that
-        /// the user added for the resource. The value depends on the method that is called.
+        /// _For an audio-type resource_, the user-specified name of the resource or the name of the audio file that the
+        /// user added for the resource. The value depends on the method that is called.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }

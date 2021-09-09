@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
     public class AudioListing
     {
         /// <summary>
-        /// **For an audio-type resource,** the status of the resource:
+        /// _For an audio-type resource_, the status of the resource:
         /// * `ok`: The service successfully analyzed the audio data. The data can be used to train the custom model.
         /// * `being_processed`: The service is still analyzing the audio data. The service cannot accept requests to
         /// add new audio resources or to train the custom model until its analysis is complete.
@@ -53,7 +53,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         }
 
         /// <summary>
-        /// **For an audio-type resource,** the status of the resource:
+        /// _For an audio-type resource_, the status of the resource:
         /// * `ok`: The service successfully analyzed the audio data. The data can be used to train the custom model.
         /// * `being_processed`: The service is still analyzing the audio data. The service cannot accept requests to
         /// add new audio resources or to train the custom model until its analysis is complete.
@@ -66,32 +66,31 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// **For an audio-type resource,**  the total seconds of audio in the resource. Omitted for an archive-type
+        /// _For an audio-type resource_, the total seconds of audio in the resource. Omitted for an archive-type
         /// resource.
         /// </summary>
         [JsonProperty("duration", NullValueHandling = NullValueHandling.Ignore)]
         public long? Duration { get; set; }
         /// <summary>
-        /// **For an audio-type resource,** the user-specified name of the resource. Omitted for an archive-type
-        /// resource.
+        /// _For an audio-type resource_, the user-specified name of the resource. Omitted for an archive-type resource.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
-        /// **For an audio-type resource,** an `AudioDetails` object that provides detailed information about the
+        /// _For an audio-type resource_, an `AudioDetails` object that provides detailed information about the
         /// resource. The object is empty until the service finishes processing the audio. Omitted for an archive-type
         /// resource.
         /// </summary>
         [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
         public AudioDetails Details { get; set; }
         /// <summary>
-        /// **For an archive-type resource,** an object of type `AudioResource` that provides information about the
+        /// _For an archive-type resource_, an object of type `AudioResource` that provides information about the
         /// resource. Omitted for an audio-type resource.
         /// </summary>
         [JsonProperty("container", NullValueHandling = NullValueHandling.Ignore)]
         public AudioResource Container { get; set; }
         /// <summary>
-        /// **For an archive-type resource,** an array of `AudioResource` objects that provides information about the
+        /// _For an archive-type resource_, an array of `AudioResource` objects that provides information about the
         /// audio-type resources that are contained in the resource. Omitted for an audio-type resource.
         /// </summary>
         [JsonProperty("audio", NullValueHandling = NullValueHandling.Ignore)]

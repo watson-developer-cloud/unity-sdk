@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// Calculation.
     /// </summary>
-    public class Calculation: QueryAggregation
+    public class Calculation : QueryAggregation
     {
         /// <summary>
         /// The field where the aggregation is located in the document.

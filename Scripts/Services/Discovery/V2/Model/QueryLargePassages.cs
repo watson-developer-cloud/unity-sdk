@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,7 +31,11 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
         /// <summary>
-        /// Indicates whether to group passages with the document that they are extracted from in the query result.
+        /// If `true`, ranks the documents by document quality, and then returns the highest-ranked passages per
+        /// document in a `document_passages` field for each document entry in the results list of the response.
+        ///
+        /// If `false`, ranks the passages from all of the documents by passage quality regardless of the document
+        /// quality and returns them in a separate `passages` field in the response.
         /// </summary>
         [JsonProperty("per_document", NullValueHandling = NullValueHandling.Ignore)]
         public bool? PerDocument { get; set; }
@@ -61,16 +65,19 @@ namespace IBM.Watson.Discovery.V2.Model
         /// When true, `answer` objects are returned as part of each passage in the query results. The primary
         /// difference between an `answer` and a `passage` is that the length of a passage is defined by the query,
         /// where the length of an `answer` is calculated by Discovery based on how much text is needed to answer the
-        /// question./n/nThis parameter is ignored if passages are not enabled for the query, or no
-        /// **natural_language_query** is specified./n/nIf the **find_answers** parameter is set to `true` and
-        /// **per_document** parameter is also set to `true`, then the document search results and the passage search
-        /// results within each document are reordered using the answer confidences. The goal of this reordering is to
-        /// do as much as possible to make sure that the first answer of the first passage of the first document is the
-        /// best answer. Similarly, if the **find_answers** parameter is set to `true` and **per_document** parameter is
-        /// set to `false`, then the passage search results are reordered in decreasing order of the highest confidence
-        /// answer for each document and passage./n/nThe **find_answers** parameter is **beta** functionality available
-        /// only on managed instances and should not be used in a production environment. This parameter is not
-        /// available on installed instances of Discovery.
+        /// question.
+        ///
+        /// This parameter is ignored if passages are not enabled for the query, or no **natural_language_query** is
+        /// specified.
+        ///
+        /// If the **find_answers** parameter is set to `true` and **per_document** parameter is also set to `true`,
+        /// then the document search results and the passage search results within each document are reordered using the
+        /// answer confidences. The goal of this reordering is to place the best answer as the first answer of the first
+        /// passage of the first document. Similarly, if the **find_answers** parameter is set to `true` and
+        /// **per_document** parameter is set to `false`, then the passage search results are reordered in decreasing
+        /// order of the highest confidence answer for each document and passage.
+        ///
+        /// The **find_answers** parameter is available only on managed instances of Discovery.
         /// </summary>
         [JsonProperty("find_answers", NullValueHandling = NullValueHandling.Ignore)]
         public bool? FindAnswers { get; set; }

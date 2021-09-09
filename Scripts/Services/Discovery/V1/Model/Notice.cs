@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ namespace IBM.Watson.Discovery.V1.Model
         /// `missing_model`, `unsupported_model`, `smart_document_understanding_failed_incompatible_field`,
         /// `smart_document_understanding_failed_internal_error`, `smart_document_understanding_failed_internal_error`,
         /// `smart_document_understanding_failed_warning`, `smart_document_understanding_page_error`,
-        /// `smart_document_understanding_page_warning`. **Note:** This is not a complete list, other values might be
+        /// `smart_document_understanding_page_warning`. **Note:** This is not a complete list; other values might be
         /// returned.
         /// </summary>
         [JsonProperty("notice_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -76,8 +76,8 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("query_id", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string QueryId { get; private set; }
         /// <summary>
-        /// Ingestion or training step in which the notice occurred. Typical step values include: `classify_elements`,
-        /// `smartDocumentUnderstanding`, `ingestion`, `indexing`, `convert`. **Note:** This is not a complete list,
+        /// Ingestion or training step in which the notice occurred. Typical step values include:
+        /// `smartDocumentUnderstanding`, `ingestion`, `indexing`, `convert`. **Note:** This is not a complete list;
         /// other values might be returned.
         /// </summary>
         [JsonProperty("step", NullValueHandling = NullValueHandling.Ignore)]

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ namespace IBM.Watson.Discovery.V2.Model
     /// <summary>
     /// Result document for the specified query.
     /// </summary>
-    public class QueryResult: DynamicModel<object>
+    public class QueryResult : DynamicModel<object>
     {
         /// <summary>
         /// The unique identifier of the document.
@@ -42,7 +42,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("result_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public QueryResultMetadata ResultMetadata { get; set; }
         /// <summary>
-        /// Passages returned by Discovery.
+        /// Passages from the document that best matches the query.
         /// </summary>
         [JsonProperty("document_passages", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryResultPassage> DocumentPassages { get; set; }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Object that contains suggested refinement settings.
+    /// Object that contains suggested refinement settings. Available with Premium plans only.
     /// </summary>
     public class DefaultQueryParamsSuggestedRefinements
     {
         /// <summary>
-        /// When `true`, a suggested refinements for the query are returned by default.
+        /// When `true`, suggested refinements for the query are returned by default.
         /// </summary>
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }

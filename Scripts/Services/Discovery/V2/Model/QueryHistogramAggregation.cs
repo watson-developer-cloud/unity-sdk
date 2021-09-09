@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("field", NullValueHandling = NullValueHandling.Ignore)]
         public string Field { get; set; }
         /// <summary>
-        /// The size of the sections the results are split into.
+        /// The size of the sections that the results are split into.
         /// </summary>
         [JsonProperty("interval", NullValueHandling = NullValueHandling.Ignore)]
         public long? Interval { get; set; }
