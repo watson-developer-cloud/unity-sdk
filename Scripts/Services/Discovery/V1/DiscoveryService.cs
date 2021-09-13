@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -5141,12 +5141,10 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
-        /// <param name="status">The current status of this set of credentials. `connected` indicates that the
-        /// credentials are available to use with the source configuration of a collection. `invalid` refers to the
-        /// credentials (for example, the password provided has expired) and must be corrected before they can be used
-        /// with a collection. (optional)</param>
+        /// <param name="status">Object that contains details about the status of the authentication process.
+        /// (optional)</param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null, string status = null)
+        public bool CreateCredentials(Callback<ModelCredentials> callback, string environmentId, string sourceType = null, CredentialDetails credentialDetails = null, StatusDetails status = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `CreateCredentials`");
@@ -5186,8 +5184,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["source_type"] = sourceType;
             if (credentialDetails != null)
                 bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
-            if (!string.IsNullOrEmpty(status))
-                bodyObject["status"] = status;
+            if (status != null)
+                bodyObject["status"] = JToken.FromObject(status);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnCreateCredentialsResponse;
@@ -5323,12 +5321,10 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="credentialDetails">Object containing details of the stored credentials.
         ///
         /// Obtain credentials for your source from the administrator of the source. (optional)</param>
-        /// <param name="status">The current status of this set of credentials. `connected` indicates that the
-        /// credentials are available to use with the source configuration of a collection. `invalid` refers to the
-        /// credentials (for example, the password provided has expired) and must be corrected before they can be used
-        /// with a collection. (optional)</param>
+        /// <param name="status">Object that contains details about the status of the authentication process.
+        /// (optional)</param>
         /// <returns><see cref="ModelCredentials" />ModelCredentials</returns>
-        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null, string status = null)
+        public bool UpdateCredentials(Callback<ModelCredentials> callback, string environmentId, string credentialId, string sourceType = null, CredentialDetails credentialDetails = null, StatusDetails status = null)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `UpdateCredentials`");
@@ -5370,8 +5366,8 @@ namespace IBM.Watson.Discovery.V1
                 bodyObject["source_type"] = sourceType;
             if (credentialDetails != null)
                 bodyObject["credential_details"] = JToken.FromObject(credentialDetails);
-            if (!string.IsNullOrEmpty(status))
-                bodyObject["status"] = status;
+            if (status != null)
+                bodyObject["status"] = JToken.FromObject(status);
             req.Send = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(bodyObject));
 
             req.OnResponse = OnUpdateCredentialsResponse;
