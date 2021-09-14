@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V2.Model
@@ -60,5 +61,14 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("highlight", NullValueHandling = NullValueHandling.Ignore)]
         public SearchResultHighlight Highlight { get; set; }
+        /// <summary>
+        /// An array specifying segments of text within the result that were identified as direct answers to the search
+        /// query. Currently, only the single answer with the highest confidence (if any) is returned.
+        ///
+        /// **Note:** This property uses the answer finding beta feature, and is available only if the search skill is
+        /// connected to a Discovery v2 service instance.
+        /// </summary>
+        [JsonProperty("answers", NullValueHandling = NullValueHandling.Ignore)]
+        public List<SearchResultAnswer> Answers { get; set; }
     }
 }
