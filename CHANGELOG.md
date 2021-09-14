@@ -1,3 +1,27 @@
+# [5.2.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.2...v5.2.0) (2021-09-14)
+
+
+### Bug Fixes
+
+* **assistant-v2:** add new property, answers for assistant v2 ([c1ac34a](https://github.com/watson-developer-cloud/unity-sdk/commit/c1ac34a3ae94ee726663c573a254a16515a2daa4))
+* **assistant-v2:** fix integration test for assistant v2 ([2ed2368](https://github.com/watson-developer-cloud/unity-sdk/commit/2ed236864640b4a8c547ff4d3e896cc4be875100))
+* **discovery-v1:** fix status details property. Change from authentication to authenticated ([7975bd1](https://github.com/watson-developer-cloud/unity-sdk/commit/7975bd12c6480362669a3c48811ca676551c8895))
+* **discovery-v1:** json type from Type to type ([0a3ed73](https://github.com/watson-developer-cloud/unity-sdk/commit/0a3ed73edeba57c97c46fc5a5008d6c98f0b605e))
+* **discovery-v1:** update status from string to StatusDetails ([2ee9531](https://github.com/watson-developer-cloud/unity-sdk/commit/2ee9531814e423d34096d6ffdd351377b11bfb5b))
+* **integration-test:** update integration test change for the NLU ([1163183](https://github.com/watson-developer-cloud/unity-sdk/commit/1163183dca11a6e40f47cd50e014b6ff5cfeb019))
+* **integration-testing:** fix intergration testing add deleteSessionRespondse ([076790a](https://github.com/watson-developer-cloud/unity-sdk/commit/076790a5e6d08fceecc6122fa3cb61a99352099b))
+* **nlu:** fix for listClassificationsModels through return type change and removal of unnecessary ([bda5e68](https://github.com/watson-developer-cloud/unity-sdk/commit/bda5e68288b93528fcc5a11409689c5705e4a937))
+* **services:** update comments and formatting changes ([d8c041d](https://github.com/watson-developer-cloud/unity-sdk/commit/d8c041d53cc7ed2542cd16aeb86b89587fe7ad44))
+
+
+### Features
+
+* **assistant-v1:** add enums for disambiguation ([521f9cb](https://github.com/watson-developer-cloud/unity-sdk/commit/521f9cb111cc8ed3b4a10625e4fc3b12085a049e))
+* **assistant-v1:** alt_text property added to Image response type ([1743425](https://github.com/watson-developer-cloud/unity-sdk/commit/17434256dd15348df422b3d09215c8de196bed2b))
+* **assistant-v2:** alt_text property added to Image response type ([cfb1ab8](https://github.com/watson-developer-cloud/unity-sdk/commit/cfb1ab81626f2cfd9ea2c81674005f3147b740a9))
+* **assistant-v2:** session_start_time and state properties added to MessageContextGlobalSystem ([4bb90ac](https://github.com/watson-developer-cloud/unity-sdk/commit/4bb90acb6383b30897fd502e61850ace31a0b358))
+* **discovery-v2:** enum update for CreateProjectConstants ([0b47643](https://github.com/watson-developer-cloud/unity-sdk/commit/0b4764350dcfae60075c36dfb000ef6ba1f60a11))
+
 ## [5.1.2](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.1...v5.1.2) (2021-08-24)
 
 
