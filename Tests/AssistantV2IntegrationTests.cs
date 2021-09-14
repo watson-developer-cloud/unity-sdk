@@ -308,7 +308,7 @@ namespace IBM.Watson.Tests
             assistantId = Environment.GetEnvironmentVariable("ASSISTANT_ASSISTANT_ID");
             
             string sessionId = null;
-            
+
             SessionResponse createSessionResponse = null;
             Log.Debug("AssistantV2IntegrationTests", "Attempting to CreateSession...");
             service.WithHeader("X-Watson-Test", "1");
@@ -357,6 +357,24 @@ namespace IBM.Watson.Tests
             );
 
             while (messageResponse == null)
+                yield return null;
+
+            object deleteSessionResponse = null;
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to DeleteSession...");
+            service.WithHeader("X-Watson-Test", "1");
+            service.DeleteSession(
+                callback: (DetailedResponse<object> response, IBMError error) =>
+                {
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
+                    deleteSessionResponse = response.Result;
+                    Assert.IsNotNull(response.Result);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId,
+                sessionId: sessionId
+            );
+
+            while (deleteSessionResponse == null)
                 yield return null;
         }
 
