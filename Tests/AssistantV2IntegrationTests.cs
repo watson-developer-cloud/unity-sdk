@@ -300,7 +300,34 @@ namespace IBM.Watson.Tests
         [UnityTest, Order(2)]
         public IEnumerator TestRuntimeResponseGenericRuntimeResponseTypeChannelTransfer()
         {
+            service = new AssistantService(versionDate);
+
+            while (!service.Authenticator.CanAuthenticate())
+                yield return null;
+
             assistantId = Environment.GetEnvironmentVariable("ASSISTANT_ASSISTANT_ID");
+            
+            string sessionId = null;
+            
+            SessionResponse createSessionResponse = null;
+            Log.Debug("AssistantV2IntegrationTests", "Attempting to CreateSession...");
+            service.WithHeader("X-Watson-Test", "1");
+            service.CreateSession(
+                callback: (DetailedResponse<SessionResponse> response, IBMError error) =>
+                {
+                    Log.Debug("AssistantV2IntegrationTests", "result: {0}", response.Response);
+                    createSessionResponse = response.Result;
+                    sessionId = createSessionResponse.SessionId;
+                    Assert.IsNotNull(createSessionResponse);
+                    Assert.IsNotNull(response.Result.SessionId);
+                    Assert.IsNull(error);
+                },
+                assistantId: assistantId
+            );
+
+            while (createSessionResponse == null)
+                yield return null;
+
             MessageResponseStateless messageResponse = null;
             string conversationId = null;
 
