@@ -27,10 +27,10 @@ namespace IBM.Watson.Discovery.V1.Model
         /// <summary>
         /// Indicates whether the credential is accepted by the target data source.
         /// </summary>
-        [JsonProperty("authentication", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Authentication { get; set; }
+        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Authenticated { get; set; }
         /// <summary>
-        /// If `authentication` is `false`, a message describes why the authentication was unsuccessful.
+        /// If `authenticated` is `false`, a message describes why the authentication was unsuccessful.
         /// </summary>
         [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
         public string ErrorMessage { get; set; }
