@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,20 +15,24 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBM.Watson.Discovery.V1.Model
+namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Filter.
+    /// An object specifing a segment of text that was identified as a direct answer to the search query.
     /// </summary>
-    public class Filter : QueryAggregation
+    public class SearchResultAnswer
     {
         /// <summary>
-        /// The match the aggregated results queried for.
+        /// The text of the answer.
         /// </summary>
-        [JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-        public string Match { get; set; }
+        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
+        public string Text { get; set; }
+        /// <summary>
+        /// The confidence score for the answer, as returned by the Discovery service.
+        /// </summary>
+        [JsonProperty("confidence", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Confidence { get; set; }
     }
 }

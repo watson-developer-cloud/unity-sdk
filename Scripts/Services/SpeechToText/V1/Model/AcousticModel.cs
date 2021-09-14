@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -80,8 +80,9 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// The customization ID (GUID) of the custom acoustic model. The **Create a custom acoustic model** method
-        /// returns only this field of the object; it does not return the other fields.
+        /// The customization ID (GUID) of the custom acoustic model. The [Create a custom acoustic
+        /// model](#createacousticmodel) method returns only this field of the object; it does not return the other
+        /// fields.
         /// </summary>
         [JsonProperty("customization_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CustomizationId { get; set; }

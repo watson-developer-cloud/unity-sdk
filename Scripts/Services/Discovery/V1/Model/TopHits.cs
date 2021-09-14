@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ namespace IBM.Watson.Discovery.V1.Model
     /// <summary>
     /// TopHits.
     /// </summary>
-    public class TopHits: QueryAggregation
+    public class TopHits : QueryAggregation
     {
         /// <summary>
         /// Number of top hits returned by the aggregation.

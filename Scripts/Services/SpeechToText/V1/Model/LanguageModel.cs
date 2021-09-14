@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -80,8 +80,9 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public string Status { get; set; }
         /// <summary>
-        /// The customization ID (GUID) of the custom language model. The **Create a custom language model** method
-        /// returns only this field of the object; it does not return the other fields.
+        /// The customization ID (GUID) of the custom language model. The [Create a custom language
+        /// model](#createlanguagemodel) method returns only this field of the object; it does not return the other
+        /// fields.
         /// </summary>
         [JsonProperty("customization_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CustomizationId { get; set; }
@@ -116,9 +117,14 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("dialect", NullValueHandling = NullValueHandling.Ignore)]
         public string Dialect { get; set; }
         /// <summary>
-        /// A list of the available versions of the custom language model. Each element of the array indicates a version
-        /// of the base model with which the custom model can be used. Multiple versions exist only if the custom model
-        /// has been upgraded; otherwise, only a single version is shown.
+        /// _For custom models that are based on previous-generation models_, a list of the available versions of the
+        /// custom language model. Each element of the array indicates a version of the base model with which the custom
+        /// model can be used. Multiple versions exist only if the custom model has been upgraded; otherwise, only a
+        /// single version is shown.
+        ///
+        /// _For custom models that are based on next-generation models_, a single version of the custom model. Only one
+        /// version of a custom model that is based on a next-generation model is ever available, and upgrading does not
+        /// apply.
         /// </summary>
         [JsonProperty("versions", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Versions { get; set; }

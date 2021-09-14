@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-a45d89ef-20201209-153452
+* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
 */
  
 using System.Collections.Generic;

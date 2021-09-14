@@ -53,7 +53,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("estimated_matching_documents", NullValueHandling = NullValueHandling.Ignore)]
         public long? EstimatedMatchingDocuments { get; set; }
         /// <summary>
-        /// An array of sub aggregations.
+        /// An array of sub-aggregations.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }

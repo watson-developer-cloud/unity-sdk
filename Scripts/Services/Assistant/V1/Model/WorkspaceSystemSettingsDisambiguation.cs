@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ namespace IBM.Watson.Assistant.V1.Model
     public class WorkspaceSystemSettingsDisambiguation
     {
         /// <summary>
-        /// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
-        /// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+        /// The sensitivity of the disambiguation feature to intent detection uncertainty. Higher sensitivity means that
+        /// the disambiguation feature is triggered more often and includes more choices.
         /// </summary>
         public class SensitivityValue
         {
@@ -38,12 +38,28 @@ namespace IBM.Watson.Assistant.V1.Model
             /// Constant HIGH for high
             /// </summary>
             public const string HIGH = "high";
+            /// <summary>
+            /// Constant MEDIUM_HIGH for medium_high
+            /// </summary>
+            public const string MEDIUM_HIGH = "medium_high";
+            /// <summary>
+            /// Constant MEDIUM for medium
+            /// </summary>
+            public const string MEDIUM = "medium";
+            /// <summary>
+            /// Constant MEDIUM_LOW for medium_low
+            /// </summary>
+            public const string MEDIUM_LOW = "medium_low";
+            /// <summary>
+            /// Constant LOW for low
+            /// </summary>
+            public const string LOW = "low";
             
         }
 
         /// <summary>
-        /// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
-        /// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+        /// The sensitivity of the disambiguation feature to intent detection uncertainty. Higher sensitivity means that
+        /// the disambiguation feature is triggered more often and includes more choices.
         /// Constants for possible values can be found using WorkspaceSystemSettingsDisambiguation.SensitivityValue
         /// </summary>
         [JsonProperty("sensitivity", NullValueHandling = NullValueHandling.Ignore)]

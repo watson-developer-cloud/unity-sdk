@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// Configuration for suggested refinements.
+    /// Configuration for suggested refinements. Available with Premium plans only.
     /// </summary>
     public class QueryLargeSuggestedRefinements
     {

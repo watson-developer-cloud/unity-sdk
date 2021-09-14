@@ -26,8 +26,8 @@ namespace IBM.Watson.TextToSpeech.V1.Model
     public class CustomModel
     {
         /// <summary>
-        /// The customization ID (GUID) of the custom model. The **Create a custom model** method returns only this
-        /// field. It does not not return the other fields of this object.
+        /// The customization ID (GUID) of the custom model. The [Create a custom model](#createcustommodel) method
+        /// returns only this field. It does not not return the other fields of this object.
         /// </summary>
         [JsonProperty("customization_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CustomizationId { get; set; }
@@ -67,14 +67,15 @@ namespace IBM.Watson.TextToSpeech.V1.Model
         /// <summary>
         /// An array of `Word` objects that lists the words and their translations from the custom model. The words are
         /// listed in alphabetical order, with uppercase letters listed before lowercase letters. The array is empty if
-        /// no words are defined for the custom model. This field is returned only by the **Get a custom model** method.
+        /// no words are defined for the custom model. This field is returned only by the [Get a custom
+        /// model](#getcustommodel) method.
         /// </summary>
         [JsonProperty("words", NullValueHandling = NullValueHandling.Ignore)]
         public List<Word> Words { get; set; }
         /// <summary>
         /// An array of `Prompt` objects that provides information about the prompts that are defined for the specified
         /// custom model. The array is empty if no prompts are defined for the custom model. This field is returned only
-        /// by the **Get a custom model** method.
+        /// by the [Get a custom model](#getcustommodel) method.
         /// </summary>
         [JsonProperty("prompts", NullValueHandling = NullValueHandling.Ignore)]
         public List<Prompt> Prompts { get; set; }

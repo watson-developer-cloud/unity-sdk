@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-902c9336-20210513-140138
+* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
 */
  
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// Gets and sets the version of the service.
         /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-        /// `2021-03-25`.
+        /// `2021-08-01`.
         /// </summary>
         public string Version
         {
@@ -68,14 +68,14 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-03-25`.</param>
+        /// The current version is `2021-08-01`.</param>
         public NaturalLanguageUnderstandingService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-03-25`.</param>
+        /// The current version is `2021-08-01`.</param>
         /// <param name="authenticator">The service authenticator.</param>
         public NaturalLanguageUnderstandingService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
 
@@ -83,7 +83,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-03-25`.</param>
+        /// The current version is `2021-08-01`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         public NaturalLanguageUnderstandingService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
 
@@ -91,7 +91,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// NaturalLanguageUnderstandingService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-03-25`.</param>
+        /// The current version is `2021-08-01`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         /// <param name="authenticator">The service authenticator.</param>
         public NaturalLanguageUnderstandingService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)
@@ -1308,8 +1308,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// Create classifications model.
         ///
-        /// (Beta) Creates a custom classifications model by uploading training data and associated metadata. The model
-        /// begins the training and deploying process and is ready to use when the `status` is `available`.
+        /// Creates a custom classifications model by uploading training data and associated metadata. The model begins
+        /// the training and deploying process and is ready to use when the `status` is `available`.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="language">The 2-letter language code of this model.</param>
@@ -1424,18 +1424,18 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// List classifications models.
         ///
-        /// (Beta) Returns all custom classifications models associated with this service instance.
+        /// Returns all custom classifications models associated with this service instance.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
-        /// <returns><see cref="ListClassificationsModelsResponse" />ListClassificationsModelsResponse</returns>
-        public bool ListClassificationsModels(Callback<ListClassificationsModelsResponse> callback)
+        /// <returns><see cref="ClassificationsModelList" />ClassificationsModelList</returns>
+        public bool ListClassificationsModels(Callback<ClassificationsModelList> callback)
         {
             if (callback == null)
                 throw new ArgumentNullException("`callback` is required for `ListClassificationsModels`");
             if (string.IsNullOrEmpty(Version))
                 throw new ArgumentNullException("`Version` is required");
 
-            RequestObject<ListClassificationsModelsResponse> req = new RequestObject<ListClassificationsModelsResponse>
+            RequestObject<ClassificationsModelList> req = new RequestObject<ClassificationsModelList>
             {
                 Callback = callback,
                 HttpMethod = UnityWebRequest.kHttpVerbGET,
@@ -1469,7 +1469,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
 
         private void OnListClassificationsModelsResponse(RESTConnector.Request req, RESTConnector.Response resp)
         {
-            DetailedResponse<ListClassificationsModelsResponse> response = new DetailedResponse<ListClassificationsModelsResponse>();
+            DetailedResponse<ClassificationsModelList> response = new DetailedResponse<ClassificationsModelList>();
             foreach (KeyValuePair<string, string> kvp in resp.Headers)
             {
                 response.Headers.Add(kvp.Key, kvp.Value);
@@ -1479,7 +1479,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
             try
             {
                 string json = Encoding.UTF8.GetString(resp.Data);
-                response.Result = JsonConvert.DeserializeObject<ListClassificationsModelsResponse>(json);
+                response.Result = JsonConvert.DeserializeObject<ClassificationsModelList>(json);
                 response.Response = json;
             }
             catch (Exception e)
@@ -1488,14 +1488,14 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
                 resp.Success = false;
             }
 
-            if (((RequestObject<ListClassificationsModelsResponse>)req).Callback != null)
-                ((RequestObject<ListClassificationsModelsResponse>)req).Callback(response, resp.Error);
+            if (((RequestObject<ClassificationsModelList>)req).Callback != null)
+                ((RequestObject<ClassificationsModelList>)req).Callback(response, resp.Error);
         }
 
         /// <summary>
         /// Get classifications model details.
         ///
-        /// (Beta) Returns the status of the classifications model with the given model ID.
+        /// Returns the status of the classifications model with the given model ID.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">ID of the model.</param>
@@ -1569,8 +1569,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// Update classifications model.
         ///
-        /// (Beta) Overwrites the training data associated with this custom classifications model and retrains the
-        /// model. The new model replaces the current deployment.
+        /// Overwrites the training data associated with this custom classifications model and retrains the model. The
+        /// new model replaces the current deployment.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">ID of the model.</param>
@@ -1688,8 +1688,8 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1
         /// <summary>
         /// Delete classifications model.
         ///
-        /// (Beta) Un-deploys the custom classifications model with the given model ID and deletes all associated
-        /// customer data, including any training data or binary artifacts.
+        /// Un-deploys the custom classifications model with the given model ID and deletes all associated customer
+        /// data, including any training data or binary artifacts.
         /// </summary>
         /// <param name="callback">The callback function that is invoked when the operation completes.</param>
         /// <param name="modelId">ID of the model.</param>

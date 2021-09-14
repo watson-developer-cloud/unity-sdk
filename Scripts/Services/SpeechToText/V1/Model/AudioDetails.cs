@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         }
 
         /// <summary>
-        /// **For an archive-type resource,** the format of the compressed archive:
+        /// _For an archive-type resource_, the format of the compressed archive:
         /// * `zip` for a **.zip** file
         /// * `gzip` for a **.tar.gz** file
         ///
@@ -79,7 +79,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
         /// <summary>
-        /// **For an archive-type resource,** the format of the compressed archive:
+        /// _For an archive-type resource_, the format of the compressed archive:
         /// * `zip` for a **.zip** file
         /// * `gzip` for a **.tar.gz** file
         ///
@@ -89,13 +89,12 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("compression", NullValueHandling = NullValueHandling.Ignore)]
         public string Compression { get; set; }
         /// <summary>
-        /// **For an audio-type resource,** the codec in which the audio is encoded. Omitted for an archive-type
-        /// resource.
+        /// _For an audio-type resource_, the codec in which the audio is encoded. Omitted for an archive-type resource.
         /// </summary>
         [JsonProperty("codec", NullValueHandling = NullValueHandling.Ignore)]
         public string Codec { get; set; }
         /// <summary>
-        /// **For an audio-type resource,** the sampling rate of the audio in Hertz (samples per second). Omitted for an
+        /// _For an audio-type resource_, the sampling rate of the audio in Hertz (samples per second). Omitted for an
         /// archive-type resource.
         /// </summary>
         [JsonProperty("frequency", NullValueHandling = NullValueHandling.Ignore)]

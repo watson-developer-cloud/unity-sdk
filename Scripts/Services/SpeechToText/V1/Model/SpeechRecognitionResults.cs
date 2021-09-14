@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         public List<SpeakerLabelsResult> SpeakerLabels { get; set; }
         /// <summary>
         /// If processing metrics are requested, information about the service's processing of the input audio.
-        /// Processing metrics are not available with the synchronous **Recognize audio** method.
+        /// Processing metrics are not available with the synchronous [Recognize audio](#recognize) method.
         /// </summary>
         [JsonProperty("processing_metrics", NullValueHandling = NullValueHandling.Ignore)]
         public ProcessingMetrics ProcessingMetrics { get; set; }

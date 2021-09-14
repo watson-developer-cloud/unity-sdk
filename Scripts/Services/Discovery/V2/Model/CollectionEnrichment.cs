@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020.
+* (C) Copyright IBM Corp. 2020, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,9 @@ namespace IBM.Watson.Discovery.V2.Model
         public string EnrichmentId { get; set; }
         /// <summary>
         /// An array of field names that the enrichment is applied to.
+        ///
+        /// If you apply an enrichment to a field from a JSON file, the data is converted to an array automatically,
+        /// even if the field contains a single value.
         /// </summary>
         [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Fields { get; set; }

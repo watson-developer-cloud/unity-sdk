@@ -46,7 +46,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("aggregation", NullValueHandling = NullValueHandling.Ignore)]
         public string Aggregation { get; set; }
         /// <summary>
-        /// Object that contains suggested refinement settings.
+        /// Object that contains suggested refinement settings. Available with Premium plans only.
         /// </summary>
         [JsonProperty("suggested_refinements", NullValueHandling = NullValueHandling.Ignore)]
         public DefaultQueryParamsSuggestedRefinements SuggestedRefinements { get; set; }

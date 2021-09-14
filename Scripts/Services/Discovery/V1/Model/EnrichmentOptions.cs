@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
         public NluEnrichmentFeatures Features { get; set; }
         /// <summary>
-        /// *For use with `elements` enrichments only.* The element extraction model to use. Models available are:
+        /// For use with `elements` enrichments only. The element extraction model to use. The only model available is
         /// `contract`.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]

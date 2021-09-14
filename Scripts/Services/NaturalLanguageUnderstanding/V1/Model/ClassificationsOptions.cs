@@ -27,7 +27,7 @@ namespace IBM.Watson.NaturalLanguageUnderstanding.V1.Model
     public class ClassificationsOptions
     {
         /// <summary>
-        /// (Beta) Enter a [custom
+        /// Enter a [custom
         /// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
         /// ID of the classification model to be used.
         /// </summary>

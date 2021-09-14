@@ -21,13 +21,13 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V2.Model
 {
     /// <summary>
-    /// A modifier that will narrow down the document set of the sub aggregations it precedes.
+    /// A modifier that narrows the document set of the sub-aggregations it precedes.
     /// </summary>
     public class QueryFilterAggregation : QueryAggregation
     {
         /// <summary>
-        /// The filter written in Discovery Query Language syntax applied to the documents before sub aggregations are
-        /// run.
+        /// The filter that is written in Discovery Query Language syntax and is applied to the documents before
+        /// sub-aggregations are run.
         /// </summary>
         [JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
         public string Match { get; set; }
@@ -37,7 +37,7 @@ namespace IBM.Watson.Discovery.V2.Model
         [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
         public long? MatchingResults { get; set; }
         /// <summary>
-        /// An array of sub aggregations.
+        /// An array of sub-aggregations.
         /// </summary>
         [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
         public List<QueryAggregation> Aggregations { get; set; }

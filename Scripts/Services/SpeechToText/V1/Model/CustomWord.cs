@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,17 +26,18 @@ namespace IBM.Watson.SpeechToText.V1.Model
     public class CustomWord
     {
         /// <summary>
-        /// For the **Add custom words** method, you must specify the custom word that is to be added to or updated in
-        /// the custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to connect the
-        /// tokens of compound words.
+        /// For the [Add custom words](#addwords) method, you must specify the custom word that is to be added to or
+        /// updated in the custom model. Do not include spaces in the word. Use a `-` (dash) or `_` (underscore) to
+        /// connect the tokens of compound words.
         ///
-        /// Omit this parameter for the **Add a custom word** method.
+        /// Omit this parameter for the [Add a custom word](#addword) method.
         /// </summary>
         [JsonProperty("word", NullValueHandling = NullValueHandling.Ignore)]
         public string Word { get; set; }
         /// <summary>
-        /// An array of sounds-like pronunciations for the custom word. Specify how words that are difficult to
-        /// pronounce, foreign words, acronyms, and so on can be pronounced by users.
+        /// _For a custom model that is based on a previous-generation model_, an array of sounds-like pronunciations
+        /// for the custom word. Specify how words that are difficult to pronounce, foreign words, acronyms, and so on
+        /// can be pronounced by users.
         /// * For a word that is not in the service's base vocabulary, omit the parameter to have the service
         /// automatically generate a sounds-like pronunciation for the word.
         /// * For a word that is in the service's base vocabulary, use the parameter to specify additional
@@ -45,6 +46,9 @@ namespace IBM.Watson.SpeechToText.V1.Model
         ///
         /// A word can have at most five sounds-like pronunciations. A pronunciation can include at most 40 characters
         /// not including spaces.
+        ///
+        /// _For a custom model that is based on a next-generation model_, omit this field. Custom models based on
+        /// next-generation models do not support the `sounds_like` field. The service ignores the field.
         /// </summary>
         [JsonProperty("sounds_like", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> SoundsLike { get; set; }

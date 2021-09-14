@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ namespace IBM.Watson.Discovery.V2.Model
         /// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
         /// results were returned using a relevancy trained model.
         ///
-        ///  **Note**: In the event of trained collections being queried, but the trained model is not used to return
-        /// results, the **document_retrieval_strategy** will be listed as `untrained`.
+        /// **Note**: In the event of trained collections being queried, but the trained model is not used to return
+        /// results, the **document_retrieval_strategy** is listed as `untrained`.
         /// </summary>
         public class DocumentRetrievalStrategyValue
         {
@@ -48,8 +48,8 @@ namespace IBM.Watson.Discovery.V2.Model
         /// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the
         /// results were returned using a relevancy trained model.
         ///
-        ///  **Note**: In the event of trained collections being queried, but the trained model is not used to return
-        /// results, the **document_retrieval_strategy** will be listed as `untrained`.
+        /// **Note**: In the event of trained collections being queried, but the trained model is not used to return
+        /// results, the **document_retrieval_strategy** is listed as `untrained`.
         /// Constants for possible values can be found using RetrievalDetails.DocumentRetrievalStrategyValue
         /// </summary>
         [JsonProperty("document_retrieval_strategy", NullValueHandling = NullValueHandling.Ignore)]

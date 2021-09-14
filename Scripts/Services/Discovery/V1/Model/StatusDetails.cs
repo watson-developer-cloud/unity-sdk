@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,20 +15,24 @@
 *
 */
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Filter.
+    /// Object that contains details about the status of the authentication process.
     /// </summary>
-    public class Filter : QueryAggregation
+    public class StatusDetails
     {
         /// <summary>
-        /// The match the aggregated results queried for.
+        /// Indicates whether the credential is accepted by the target data source.
         /// </summary>
-        [JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-        public string Match { get; set; }
+        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Authenticated { get; set; }
+        /// <summary>
+        /// If `authenticated` is `false`, a message describes why the authentication was unsuccessful.
+        /// </summary>
+        [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
+        public string ErrorMessage { get; set; }
     }
 }

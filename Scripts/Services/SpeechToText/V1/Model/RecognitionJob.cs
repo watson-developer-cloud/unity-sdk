@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2021.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -85,25 +85,26 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// <summary>
         /// The date and time in Coordinated Universal Time (UTC) at which the job was last updated by the service. The
         /// value is provided in full ISO 8601 format (`YYYY-MM-DDThh:mm:ss.sTZD`). This field is returned only by the
-        /// **Check jobs** and **Check a job** methods.
+        /// [Check jobs](#checkjobs) and [Check a job[(#checkjob) methods.
         /// </summary>
         [JsonProperty("updated", NullValueHandling = NullValueHandling.Ignore)]
         public string Updated { get; set; }
         /// <summary>
-        /// The URL to use to request information about the job with the **Check a job** method. This field is returned
-        /// only by the **Create a job** method.
+        /// The URL to use to request information about the job with the [Check a job](#checkjob) method. This field is
+        /// returned only by the [Create a job](#createjob) method.
         /// </summary>
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
         public string Url { get; set; }
         /// <summary>
         /// The user token associated with a job that was created with a callback URL and a user token. This field can
-        /// be returned only by the **Check jobs** method.
+        /// be returned only by the [Check jobs](#checkjobs) method.
         /// </summary>
         [JsonProperty("user_token", NullValueHandling = NullValueHandling.Ignore)]
         public string UserToken { get; set; }
         /// <summary>
         /// If the status is `completed`, the results of the recognition request as an array that includes a single
-        /// instance of a `SpeechRecognitionResults` object. This field is returned only by the **Check a job** method.
+        /// instance of a `SpeechRecognitionResults` object. This field is returned only by the [Check a job](#checkjob)
+        /// method.
         /// </summary>
         [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
         public List<SpeechRecognitionResults> Results { get; set; }
@@ -111,7 +112,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// An array of warning messages about invalid parameters included with the request. Each warning includes a
         /// descriptive message and a list of invalid argument strings, for example, `"unexpected query parameter
         /// 'user_token', query parameter 'callback_url' was not specified"`. The request succeeds despite the warnings.
-        /// This field can be returned only by the **Create a job** method.
+        /// This field can be returned only by the [Create a job](#createjob) method.
         /// </summary>
         [JsonProperty("warnings", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Warnings { get; set; }

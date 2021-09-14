@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The URL of the image.
+        /// The `https:` URL of the image.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -70,6 +70,15 @@ namespace IBM.Watson.Assistant.V1.Model
         {
             get { return base.Channels; }
             set { base.Channels = value; }
+        }
+        /// <summary>
+        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+        /// </summary>
+        [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
+        public new string AltText
+        {
+            get { return base.AltText; }
+            set { base.AltText = value; }
         }
     }
 }

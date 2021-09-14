@@ -161,7 +161,7 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("typing", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Typing { get; protected set; }
         /// <summary>
-        /// The URL of the image.
+        /// The `https:` URL of the image.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public string Source { get; protected set; }
@@ -175,6 +175,11 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; protected set; }
+        /// <summary>
+        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+        /// </summary>
+        [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
+        public string AltText { get; protected set; }
         /// <summary>
         /// An array of objects describing the options from which the user can choose. You can include up to 20 options.
         /// </summary>
