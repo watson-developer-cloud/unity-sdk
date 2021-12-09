@@ -7,7 +7,7 @@ name: Deploy and Publish
 
 on:
   push:
-    branches: [ master ]
+    branches: [ '**' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -41,6 +41,6 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: npx semantic-release # --verbosity=DEBUG --dry-run
+      run: npx semantic-release --dry-run --branches gha_9926
 
 
