@@ -1174,6 +1174,37 @@ namespace IBM.Watson.Tests
                 yield return null;
         }
 
+        [UnityTest, Order(37)]
+        public IEnumerator TestRuntimeResponseGeneric()
+        {
+            workspaceId = Environment.GetEnvironmentVariable("ASSISTANT_WORKSPACE_ID");
+            string[] inputStrings = { "audio", "iframe", "video" };
+
+            MessageResponse messageResponse = null;
+
+            foreach (string inputMessage in inputStrings)
+            {
+                MessageInput input = new MessageInput();
+                input.Text = inputMessage;
+
+                Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...test sdk");
+
+                service.Message(
+                    callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
+                    {
+                        messageResponse = response.Result;
+                        Assert.IsNotNull(messageResponse);
+                        Assert.IsTrue(messageResponse.Output.Generic[0].ResponseType.Contains(inputMessage));
+                    },
+                    workspaceId: workspaceId,
+                    input: input
+                );
+            }
+
+            while (messageResponse == null)
+                yield return null;
+        }
+
         [UnityTest, Order(91)]
         public IEnumerator TestDeleteUserData()
         {
