@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace IBM.Watson.SpeechToText.V1.Model
 {
     /// <summary>
-    /// Additional service features that are supported with the model.
+    /// Indicates whether select service features are supported with the model.
     /// </summary>
     public class SupportedFeatures
     {
@@ -31,17 +31,23 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("custom_language_model", NullValueHandling = NullValueHandling.Ignore)]
         public bool? CustomLanguageModel { get; set; }
         /// <summary>
+        /// Indicates whether the customization interface can be used to create a custom acoustic model based on the
+        /// language model.
+        /// </summary>
+        [JsonProperty("custom_acoustic_model", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? CustomAcousticModel { get; set; }
+        /// <summary>
         /// Indicates whether the `speaker_labels` parameter can be used with the language model.
         ///
-        /// **Note:** The field returns `true` for all models. However, speaker labels are supported as beta
-        /// functionality only for the following languages and models:
-        /// * For previous-generation models, the parameter can be used for Australian English, US English, German,
+        /// **Note:** The field returns `true` for all models. However, speaker labels are supported for use only with
+        /// the following languages and models:
+        /// * _For previous-generation models,_ the parameter can be used with Australian English, US English, German,
         /// Japanese, Korean, and Spanish (both broadband and narrowband models) and UK English (narrowband model)
         /// transcription only.
-        /// * For next-generation models, the parameter can be used for English (Australian, Indian, UK, and US),
-        /// German, Japanese, Korean, and Spanish transcription only.
+        /// * _For next-generation models,_ the parameter can be used with Czech, English (Australian, Indian, UK, and
+        /// US), German, Japanese, Korean, and Spanish transcription only.
         ///
-        /// Speaker labels are not supported for any other models.
+        /// Speaker labels are not supported for use with any other languages or models.
         /// </summary>
         [JsonProperty("speaker_labels", NullValueHandling = NullValueHandling.Ignore)]
         public bool? SpeakerLabels { get; set; }

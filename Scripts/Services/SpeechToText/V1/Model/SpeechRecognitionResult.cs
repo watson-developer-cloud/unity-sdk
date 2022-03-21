@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -68,9 +68,13 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("end_of_utterance", NullValueHandling = NullValueHandling.Ignore)]
         public string EndOfUtterance { get; set; }
         /// <summary>
-        /// An indication of whether the transcription results are final. If `true`, the results for this utterance are
-        /// not updated further; no additional results are sent for a `result_index` once its results are indicated as
-        /// final.
+        /// An indication of whether the transcription results are final:
+        /// * If `true`, the results for this utterance are final. They are guaranteed not to be updated further.
+        /// * If `false`, the results are interim. They can be updated with further interim results until final results
+        /// are eventually sent.
+        ///
+        /// **Note:** Because `final` is a reserved word in Java and Swift, the field is renamed `xFinal` in Java and is
+        /// escaped with back quotes in Swift.
         /// </summary>
         [JsonProperty("final", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Final { get; set; }

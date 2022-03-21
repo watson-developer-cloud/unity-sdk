@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         /// <summary>
         /// A list of the available versions of the custom acoustic model. Each element of the array indicates a version
         /// of the base model with which the custom model can be used. Multiple versions exist only if the custom model
-        /// has been upgraded; otherwise, only a single version is shown.
+        /// has been upgraded to a new version of its base model. Otherwise, only a single version is shown.
         /// </summary>
         [JsonProperty("versions", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Versions { get; set; }
