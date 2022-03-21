@@ -1,3 +1,23 @@
+# [6.0.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.2.0...v6.0.0) (2022-03-21)
+
+
+### Features
+
+* **assistant-v1:** generated using api-def: master & generator: 3.46.0 ([3cb486e](https://github.com/watson-developer-cloud/unity-sdk/commit/3cb486ec41f59e6a53b6d0f6824db00b19d2d51f))
+* **assistant-v2:** generated using api-def: master & generator: 3.46.0 ([03c3646](https://github.com/watson-developer-cloud/unity-sdk/commit/03c3646b85b9eac8da2ec44c0bead345fd71a2cf))
+* **discovery-v1:** document status & query aggregation update ([97a432e](https://github.com/watson-developer-cloud/unity-sdk/commit/97a432ea49f9e87a288df92a1e3d0bb662c63510))
+* **natural-language-understanding-v1:** metadata as a dictionary and comments updated ([34fd074](https://github.com/watson-developer-cloud/unity-sdk/commit/34fd074fea605cb264a3e777237d283b6b3e318e))
+* **speech-to-text-v1:** supportedFeatures: customAcousticModel property added & update comments ([c11e928](https://github.com/watson-developer-cloud/unity-sdk/commit/c11e92849861dd35b3fec2c2fb012019913aec2d))
+
+
+### BREAKING CHANGES
+
+* **discovery-v1:** QueryAggregation: BREAKING QueryAggregation subclasses changed.
+* **assistant-v2:** MessageOutputDebug: BREAKING nodesVisited type DialogNodesVisited changed to
+DialogNodeVisited, RuntimeEntity: BREAKING optional metadata property removed
+* **assistant-v1:** OutputData: BREAKING required text property removed, RuntimeEntity: BREAKING
+optional metadata property removed
+
 # [5.2.0](https://github.com/watson-developer-cloud/unity-sdk/compare/v5.1.2...v5.2.0) (2021-09-14)
 
 
