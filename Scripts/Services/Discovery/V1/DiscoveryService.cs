@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
+* IBM OpenAPI SDK Code Generator Version: 3.46.0-a4e29da0-20220224-210428
 */
  
 using System.Collections.Generic;
@@ -363,8 +363,8 @@ namespace IBM.Watson.Discovery.V1
         /// <param name="environmentId">The ID of the environment.</param>
         /// <param name="name">Name that identifies the environment. (optional, default to )</param>
         /// <param name="description">Description of the environment. (optional, default to )</param>
-        /// <param name="size">Size that the environment should be increased to. Environment size cannot be modified
-        /// when using a Lite plan. Environment size can only increased and not decreased. (optional)</param>
+        /// <param name="size">Size to change the environment to. **Note:** Lite plan users cannot change the
+        /// environment size. (optional)</param>
         /// <returns><see cref="ModelEnvironment" />ModelEnvironment</returns>
         public bool UpdateEnvironment(Callback<ModelEnvironment> callback, string environmentId, string name = null, string description = null, string size = null)
         {

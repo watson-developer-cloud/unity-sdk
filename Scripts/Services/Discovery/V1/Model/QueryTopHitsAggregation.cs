@@ -20,19 +20,24 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object that contains details about the status of the authentication process.
+    /// Returns the top documents ranked by the score of the query.
     /// </summary>
-    public class StatusDetails
+    public class QueryTopHitsAggregation : QueryAggregation
     {
         /// <summary>
-        /// Indicates whether the credential is accepted by the target data source.
+        /// The number of documents to return.
         /// </summary>
-        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Authenticated { get; set; }
+        [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Size { get; set; }
         /// <summary>
-        /// If `authenticated` is `false`, a message describes why authentication is unsuccessful.
+        /// Identifier specified in the query request of this aggregation.
         /// </summary>
-        [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
-        public string ErrorMessage { get; set; }
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
+        /// <summary>
+        /// Gets or Sets Hits
+        /// </summary>
+        [JsonProperty("hits", NullValueHandling = NullValueHandling.Ignore)]
+        public QueryTopHitsAggregationResult Hits { get; set; }
     }
 }

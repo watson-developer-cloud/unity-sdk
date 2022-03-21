@@ -15,24 +15,30 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object that contains details about the status of the authentication process.
+    /// Histogram numeric interval result.
     /// </summary>
-    public class StatusDetails
+    public class QueryHistogramAggregationResult
     {
         /// <summary>
-        /// Indicates whether the credential is accepted by the target data source.
+        /// The value of the upper bound for the numeric segment.
         /// </summary>
-        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Authenticated { get; set; }
+        [JsonProperty("key", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Key { get; set; }
         /// <summary>
-        /// If `authenticated` is `false`, a message describes why authentication is unsuccessful.
+        /// Number of documents with the specified key as the upper bound.
         /// </summary>
-        [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
-        public string ErrorMessage { get; set; }
+        [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
+        public long? MatchingResults { get; set; }
+        /// <summary>
+        /// An array of sub-aggregations.
+        /// </summary>
+        [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
+        public List<QueryAggregation> Aggregations { get; set; }
     }
 }

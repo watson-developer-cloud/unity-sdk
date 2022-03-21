@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Options which are specific to a particular enrichment.
+    /// Options that are specific to a particular enrichment.
+    ///
+    /// The `elements` enrichment type is deprecated. Use the [Create a
+    /// project](https://cloud.ibm.com/apidocs/discovery-data#createproject) method of the Discovery v2 API to create a
+    /// `content_intelligence` project type instead.
     /// </summary>
     public class EnrichmentOptions
     {
@@ -86,8 +90,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
         public NluEnrichmentFeatures Features { get; set; }
         /// <summary>
-        /// For use with `elements` enrichments only. The element extraction model to use. The only model available is
-        /// `contract`.
+        /// The element extraction model to use, which can be `contract` only. The `elements` enrichment is deprecated.
         /// </summary>
         [JsonProperty("model", NullValueHandling = NullValueHandling.Ignore)]
         public string Model { get; set; }

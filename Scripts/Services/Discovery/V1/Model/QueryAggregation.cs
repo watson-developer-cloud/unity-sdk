@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 *
 */
 
-using System.Collections.Generic;
 using JsonSubTypes;
 using Newtonsoft.Json;
 
@@ -25,17 +24,17 @@ namespace IBM.Watson.Discovery.V1.Model
     /// An aggregation produced by  Discovery to analyze the input provided.
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "type")]
-    [JsonSubtypes.KnownSubType(typeof(Histogram), "histogram")]
-    [JsonSubtypes.KnownSubType(typeof(Calculation), "max")]
-    [JsonSubtypes.KnownSubType(typeof(Calculation), "min")]
-    [JsonSubtypes.KnownSubType(typeof(Calculation), "average")]
-    [JsonSubtypes.KnownSubType(typeof(Calculation), "sum")]
-    [JsonSubtypes.KnownSubType(typeof(Calculation), "unique_count")]
-    [JsonSubtypes.KnownSubType(typeof(Term), "term")]
-    [JsonSubtypes.KnownSubType(typeof(Filter), "filter")]
-    [JsonSubtypes.KnownSubType(typeof(Nested), "nested")]
-    [JsonSubtypes.KnownSubType(typeof(Timeslice), "timeslice")]
-    [JsonSubtypes.KnownSubType(typeof(TopHits), "top_hits")]
+    [JsonSubtypes.KnownSubType(typeof(QueryHistogramAggregation), "histogram")]
+    [JsonSubtypes.KnownSubType(typeof(QueryCalculationAggregation), "max")]
+    [JsonSubtypes.KnownSubType(typeof(QueryCalculationAggregation), "min")]
+    [JsonSubtypes.KnownSubType(typeof(QueryCalculationAggregation), "average")]
+    [JsonSubtypes.KnownSubType(typeof(QueryCalculationAggregation), "sum")]
+    [JsonSubtypes.KnownSubType(typeof(QueryCalculationAggregation), "unique_count")]
+    [JsonSubtypes.KnownSubType(typeof(QueryTermAggregation), "term")]
+    [JsonSubtypes.KnownSubType(typeof(QueryFilterAggregation), "filter")]
+    [JsonSubtypes.KnownSubType(typeof(QueryNestedAggregation), "nested")]
+    [JsonSubtypes.KnownSubType(typeof(QueryTimesliceAggregation), "timeslice")]
+    [JsonSubtypes.KnownSubType(typeof(QueryTopHitsAggregation), "top_hits")]
     public class QueryAggregation
     {
         /// <summary>
@@ -43,20 +42,5 @@ namespace IBM.Watson.Discovery.V1.Model
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public string Type { get; set; }
-        /// <summary>
-        /// Array of aggregation results.
-        /// </summary>
-        [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
-        public List<AggregationResult> Results { get; set; }
-        /// <summary>
-        /// Number of matching results.
-        /// </summary>
-        [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
-        public long? MatchingResults { get; set; }
-        /// <summary>
-        /// Aggregations returned by Discovery.
-        /// </summary>
-        [JsonProperty("aggregations", NullValueHandling = NullValueHandling.Ignore)]
-        public List<QueryAggregation> Aggregations { get; set; }
     }
 }

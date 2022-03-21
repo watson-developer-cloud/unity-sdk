@@ -20,19 +20,20 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object that contains details about the status of the authentication process.
+    /// Returns a scalar calculation across all documents for the field specified. Possible calculations include min,
+    /// max, sum, average, and unique_count.
     /// </summary>
-    public class StatusDetails
+    public class QueryCalculationAggregation : QueryAggregation
     {
         /// <summary>
-        /// Indicates whether the credential is accepted by the target data source.
+        /// The field to perform the calculation on.
         /// </summary>
-        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Authenticated { get; set; }
+        [JsonProperty("field", NullValueHandling = NullValueHandling.Ignore)]
+        public string Field { get; set; }
         /// <summary>
-        /// If `authenticated` is `false`, a message describes why authentication is unsuccessful.
+        /// The value of the calculation.
         /// </summary>
-        [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
-        public string ErrorMessage { get; set; }
+        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
+        public double? Value { get; set; }
     }
 }

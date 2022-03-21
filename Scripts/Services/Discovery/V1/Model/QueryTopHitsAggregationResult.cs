@@ -15,24 +15,25 @@
 *
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Discovery.V1.Model
 {
     /// <summary>
-    /// Object that contains details about the status of the authentication process.
+    /// A query response that contains the matching documents for the preceding aggregations.
     /// </summary>
-    public class StatusDetails
+    public class QueryTopHitsAggregationResult
     {
         /// <summary>
-        /// Indicates whether the credential is accepted by the target data source.
+        /// Number of matching results.
         /// </summary>
-        [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Authenticated { get; set; }
+        [JsonProperty("matching_results", NullValueHandling = NullValueHandling.Ignore)]
+        public long? MatchingResults { get; set; }
         /// <summary>
-        /// If `authenticated` is `false`, a message describes why authentication is unsuccessful.
+        /// An array of the document results.
         /// </summary>
-        [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
-        public string ErrorMessage { get; set; }
+        [JsonProperty("hits", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Dictionary<string, object>> Hits { get; set; }
     }
 }
