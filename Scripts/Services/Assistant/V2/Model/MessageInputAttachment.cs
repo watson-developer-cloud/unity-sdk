@@ -20,19 +20,19 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Session context data that is shared by all skills used by the assistant.
+    /// A reference to a media file to be sent as an attachment with the message.
     /// </summary>
-    public class MessageContextGlobal
+    public class MessageInputAttachment
     {
         /// <summary>
-        /// Built-in system properties that apply to all skills used by the assistant.
+        /// The URL of the media file.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextGlobalSystem System { get; set; }
+        [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+        public string Url { get; set; }
         /// <summary>
-        /// The session ID.
+        /// The media content type (such as a MIME type) of the attachment.
         /// </summary>
-        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string SessionId { get; private set; }
+        [JsonProperty("media_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string MediaType { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -79,6 +79,14 @@ namespace IBM.Watson.Assistant.V2.Model
         /// </summary>
         [JsonProperty("suggestion_id", NullValueHandling = NullValueHandling.Ignore)]
         public string SuggestionId { get; set; }
+        /// <summary>
+        /// An array of multimedia attachments to be sent with the message.
+        ///
+        /// **Note:** Attachments are not processed by the assistant itself, but can be sent to external services by
+        /// webhooks.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<MessageInputAttachment> Attachments { get; set; }
         /// <summary>
         /// Optional properties that control how the assistant responds.
         /// </summary>

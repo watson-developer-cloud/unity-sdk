@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 */
 
 /**
-* IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
+* IBM OpenAPI SDK Code Generator Version: 3.46.0-a4e29da0-20220224-210428
 */
  
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace IBM.Watson.Assistant.V2
         /// <summary>
         /// Gets and sets the version of the service.
         /// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-        /// `2021-06-14`.
+        /// `2021-11-27`.
         /// </summary>
         public string Version
         {
@@ -68,14 +68,14 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-06-14`.</param>
+        /// The current version is `2021-11-27`.</param>
         public AssistantService(string version) : this(version, defaultServiceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(defaultServiceName)) {}
 
         /// <summary>
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-06-14`.</param>
+        /// The current version is `2021-11-27`.</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, Authenticator authenticator) : this(version, defaultServiceName, authenticator) {}
 
@@ -83,7 +83,7 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-06-14`.</param>
+        /// The current version is `2021-11-27`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         public AssistantService(string version, string serviceName) : this(version, serviceName, ConfigBasedAuthenticatorFactory.GetAuthenticator(serviceName)) {}
 
@@ -91,7 +91,7 @@ namespace IBM.Watson.Assistant.V2
         /// AssistantService constructor.
         /// </summary>
         /// <param name="version">Release date of the API version you want to use. Specify dates in YYYY-MM-DD format.
-        /// The current version is `2021-06-14`.</param>
+        /// The current version is `2021-11-27`.</param>
         /// <param name="serviceName">The service name to be used when configuring the client instance</param>
         /// <param name="authenticator">The service authenticator.</param>
         public AssistantService(string version, string serviceName, Authenticator authenticator) : base(authenticator, serviceName)

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ namespace IBM.Watson.Assistant.V2.Model
     public class MessageOutputDebug
     {
         /// <summary>
-        /// When `branch_exited` is set to `true` by the Assistant, the `branch_exited_reason` specifies whether the
+        /// When `branch_exited` is set to `true` by the assistant, the `branch_exited_reason` specifies whether the
         /// dialog completed by itself or got interrupted.
         /// </summary>
         public class BranchExitedReasonValue
@@ -43,18 +43,18 @@ namespace IBM.Watson.Assistant.V2.Model
         }
 
         /// <summary>
-        /// When `branch_exited` is set to `true` by the Assistant, the `branch_exited_reason` specifies whether the
+        /// When `branch_exited` is set to `true` by the assistant, the `branch_exited_reason` specifies whether the
         /// dialog completed by itself or got interrupted.
         /// Constants for possible values can be found using MessageOutputDebug.BranchExitedReasonValue
         /// </summary>
         [JsonProperty("branch_exited_reason", NullValueHandling = NullValueHandling.Ignore)]
         public string BranchExitedReason { get; set; }
         /// <summary>
-        /// An array of objects containing detailed diagnostic information about the nodes that were triggered during
+        /// An array of objects containing detailed diagnostic information about dialog nodes that were triggered during
         /// processing of the input message.
         /// </summary>
         [JsonProperty("nodes_visited", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DialogNodesVisited> NodesVisited { get; set; }
+        public List<DialogNodeVisited> NodesVisited { get; set; }
         /// <summary>
         /// An array of up to 50 messages logged with the request.
         /// </summary>

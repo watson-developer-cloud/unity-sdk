@@ -20,19 +20,25 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V2.Model
 {
     /// <summary>
-    /// Session context data that is shared by all skills used by the assistant.
+    /// An objects containing detailed diagnostic information about a dialog node that was triggered during processing
+    /// of the input message.
     /// </summary>
-    public class MessageContextGlobal
+    public class DialogNodeVisited
     {
         /// <summary>
-        /// Built-in system properties that apply to all skills used by the assistant.
+        /// A dialog node that was triggered during processing of the input message.
         /// </summary>
-        [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageContextGlobalSystem System { get; set; }
+        [JsonProperty("dialog_node", NullValueHandling = NullValueHandling.Ignore)]
+        public string DialogNode { get; set; }
         /// <summary>
-        /// The session ID.
+        /// The title of the dialog node.
         /// </summary>
-        [JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string SessionId { get; private set; }
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; set; }
+        /// <summary>
+        /// The conditions that trigger the dialog node.
+        /// </summary>
+        [JsonProperty("conditions", NullValueHandling = NullValueHandling.Ignore)]
+        public string Conditions { get; set; }
     }
 }
