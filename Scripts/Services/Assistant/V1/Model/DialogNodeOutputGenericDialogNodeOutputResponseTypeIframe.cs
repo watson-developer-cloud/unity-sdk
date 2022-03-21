@@ -21,9 +21,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// RuntimeResponseGenericRuntimeResponseTypeImage.
+    /// DialogNodeOutputGenericDialogNodeOutputResponseTypeIframe.
     /// </summary>
-    public class RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGeneric
+    public class DialogNodeOutputGenericDialogNodeOutputResponseTypeIframe : DialogNodeOutputGeneric
     {
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The `https:` URL of the image.
+        /// The `https:` URL of the embeddable content.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -45,7 +45,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Source = value; }
         }
         /// <summary>
-        /// The title or introductory text to show before the response.
+        /// An optional title to show before the response.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public new string Title
@@ -54,13 +54,22 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Title = value; }
         }
         /// <summary>
-        /// The description to show with the response.
+        /// An optional description to show with the response.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public new string Description
         {
             get { return base.Description; }
             set { base.Description = value; }
+        }
+        /// <summary>
+        /// The URL of an image that shows a preview of the embedded content.
+        /// </summary>
+        [JsonProperty("image_url", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ImageUrl
+        {
+            get { return base.ImageUrl; }
+            set { base.ImageUrl = value; }
         }
         /// <summary>
         /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
@@ -71,15 +80,6 @@ namespace IBM.Watson.Assistant.V1.Model
         {
             get { return base.Channels; }
             set { base.Channels = value; }
-        }
-        /// <summary>
-        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
-        /// </summary>
-        [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
-        public new string AltText
-        {
-            get { return base.AltText; }
-            set { base.AltText = value; }
         }
     }
 }

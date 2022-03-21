@@ -21,9 +21,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// RuntimeResponseGenericRuntimeResponseTypeImage.
+    /// DialogNodeOutputGenericDialogNodeOutputResponseTypeVideo.
     /// </summary>
-    public class RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGeneric
+    public class DialogNodeOutputGenericDialogNodeOutputResponseTypeVideo : DialogNodeOutputGeneric
     {
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The `https:` URL of the image.
+        /// The `https:` URL of the video.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -45,7 +45,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Source = value; }
         }
         /// <summary>
-        /// The title or introductory text to show before the response.
+        /// An optional title to show before the response.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public new string Title
@@ -54,7 +54,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Title = value; }
         }
         /// <summary>
-        /// The description to show with the response.
+        /// An optional description to show with the response.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public new string Description
@@ -73,7 +73,16 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Channels = value; }
         }
         /// <summary>
-        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("channel_options", NullValueHandling = NullValueHandling.Ignore)]
+        public new object ChannelOptions
+        {
+            get { return base.ChannelOptions; }
+            set { base.ChannelOptions = value; }
+        }
+        /// <summary>
+        /// Descriptive text that can be used for screen readers or other situations where the video cannot be seen.
         /// </summary>
         [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
         public new string AltText

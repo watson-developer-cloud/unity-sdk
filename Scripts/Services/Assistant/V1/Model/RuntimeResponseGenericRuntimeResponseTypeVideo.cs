@@ -21,9 +21,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// RuntimeResponseGenericRuntimeResponseTypeImage.
+    /// RuntimeResponseGenericRuntimeResponseTypeVideo.
     /// </summary>
-    public class RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGeneric
+    public class RuntimeResponseGenericRuntimeResponseTypeVideo : RuntimeResponseGeneric
     {
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The `https:` URL of the image.
+        /// The `https:` URL of the video.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -73,7 +73,16 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Channels = value; }
         }
         /// <summary>
-        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("channel_options", NullValueHandling = NullValueHandling.Ignore)]
+        public new object ChannelOptions
+        {
+            get { return base.ChannelOptions; }
+            set { base.ChannelOptions = value; }
+        }
+        /// <summary>
+        /// Descriptive text that can be used for screen readers or other situations where the video cannot be seen.
         /// </summary>
         [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
         public new string AltText

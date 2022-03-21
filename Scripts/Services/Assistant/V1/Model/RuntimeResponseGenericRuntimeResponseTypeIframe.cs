@@ -21,9 +21,9 @@ using Newtonsoft.Json;
 namespace IBM.Watson.Assistant.V1.Model
 {
     /// <summary>
-    /// RuntimeResponseGenericRuntimeResponseTypeImage.
+    /// RuntimeResponseGenericRuntimeResponseTypeIframe.
     /// </summary>
-    public class RuntimeResponseGenericRuntimeResponseTypeImage : RuntimeResponseGeneric
+    public class RuntimeResponseGenericRuntimeResponseTypeIframe : RuntimeResponseGeneric
     {
         /// <summary>
         /// The type of response returned by the dialog node. The specified response type must be supported by the
@@ -36,7 +36,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.ResponseType = value; }
         }
         /// <summary>
-        /// The `https:` URL of the image.
+        /// The `https:` URL of the embeddable content.
         /// </summary>
         [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
         public new string Source
@@ -63,6 +63,15 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Description = value; }
         }
         /// <summary>
+        /// The URL of an image that shows a preview of the embedded content.
+        /// </summary>
+        [JsonProperty("image_url", NullValueHandling = NullValueHandling.Ignore)]
+        public new string ImageUrl
+        {
+            get { return base.ImageUrl; }
+            set { base.ImageUrl = value; }
+        }
+        /// <summary>
         /// An array of objects specifying channels for which the response is intended. If **channels** is present, the
         /// response is intended for a built-in integration and should not be handled by an API client.
         /// </summary>
@@ -71,15 +80,6 @@ namespace IBM.Watson.Assistant.V1.Model
         {
             get { return base.Channels; }
             set { base.Channels = value; }
-        }
-        /// <summary>
-        /// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
-        /// </summary>
-        [JsonProperty("alt_text", NullValueHandling = NullValueHandling.Ignore)]
-        public new string AltText
-        {
-            get { return base.AltText; }
-            set { base.AltText = value; }
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2020.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -45,11 +45,6 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("log_messages", NullValueHandling = NullValueHandling.Ignore)]
         public List<LogMessage> LogMessages { get; set; }
-        /// <summary>
-        /// An array of responses to the user.
-        /// </summary>
-        [JsonProperty("text", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Text { get; set; }
         /// <summary>
         /// Output intended for any channel. It is the responsibility of the client application to implement the
         /// supported response types.

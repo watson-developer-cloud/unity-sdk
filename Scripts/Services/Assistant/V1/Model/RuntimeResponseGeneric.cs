@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,16 +32,22 @@ namespace IBM.Watson.Assistant.V1.Model
     /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
     /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
     /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
+    /// - RuntimeResponseGenericRuntimeResponseTypeVideo
+    /// - RuntimeResponseGenericRuntimeResponseTypeAudio
+    /// - RuntimeResponseGenericRuntimeResponseTypeIframe
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeAudio), "audio")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeChannelTransfer), "channel_transfer")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeConnectToAgent), "connect_to_agent")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeIframe), "iframe")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeImage), "image")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeOption), "option")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeSuggestion), "suggestion")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypePause), "pause")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeText), "text")]
     [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeUserDefined), "user_defined")]
+    [JsonSubtypes.KnownSubType(typeof(RuntimeResponseGenericRuntimeResponseTypeVideo), "video")]
     public class RuntimeResponseGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
@@ -54,6 +60,9 @@ namespace IBM.Watson.Assistant.V1.Model
         /// - RuntimeResponseGenericRuntimeResponseTypeSuggestion
         /// - RuntimeResponseGenericRuntimeResponseTypeChannelTransfer
         /// - RuntimeResponseGenericRuntimeResponseTypeUserDefined
+        /// - RuntimeResponseGenericRuntimeResponseTypeVideo
+        /// - RuntimeResponseGenericRuntimeResponseTypeAudio
+        /// - RuntimeResponseGenericRuntimeResponseTypeIframe
         protected RuntimeResponseGeneric()
         {
         }
@@ -118,7 +127,7 @@ namespace IBM.Watson.Assistant.V1.Model
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
         public string Title { get; protected set; }
         /// <summary>
-        /// The description to show with the the response.
+        /// The description to show with the response.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; protected set; }
@@ -176,5 +185,15 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> UserDefined { get; protected set; }
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("channel_options", NullValueHandling = NullValueHandling.Ignore)]
+        public object ChannelOptions { get; protected set; }
+        /// <summary>
+        /// The URL of an image that shows a preview of the embedded content.
+        /// </summary>
+        [JsonProperty("image_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string ImageUrl { get; protected set; }
     }
 }
