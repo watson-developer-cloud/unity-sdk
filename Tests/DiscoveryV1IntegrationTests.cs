@@ -1,5 +1,5 @@
 ﻿/**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2018, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -932,8 +932,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(queryResultTimeslice);
                     Assert.IsNull(error);
                     Assert.IsNotNull(queryResultTimeslice.Aggregations);
-                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Field == "product.sales");
-                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as Timeslice).Interval == "2d");
+                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as QueryTimesliceAggregation).Field == "product.sales");
+                    Assert.IsTrue((queryResultTimeslice.Aggregations[0] as QueryTimesliceAggregation).Interval == "2d");
                 },
                 environmentId: "system",
                 collectionId: "news-en",
@@ -950,8 +950,8 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(queryResultTerm);
                     Assert.IsNull(error);
                     Assert.IsNotNull(queryResultTerm.Aggregations);
-                    Assert.IsTrue((queryResultTerm.Aggregations[0] as Term).Field == "enriched_text.concepts.text");
-                    Assert.IsTrue((queryResultTerm.Aggregations[0] as Term).Count == 10);
+                    Assert.IsTrue((queryResultTerm.Aggregations[0] as QueryTermAggregation).Field == "enriched_text.concepts.text");
+                    Assert.IsTrue((queryResultTerm.Aggregations[0] as QueryTermAggregation).Count == 10);
                 },
                 environmentId: "system",
                 collectionId: "news-en",
@@ -968,7 +968,7 @@ namespace IBM.Watson.Tests
                     Assert.IsNotNull(queryResultFilter);
                     Assert.IsNull(error);
                     Assert.IsNotNull(queryResultFilter.Aggregations);
-                    Assert.IsTrue((queryResultFilter.Aggregations[0] as Filter).Match == "enriched_text.concepts.text:\"cloud computing\"");
+                    Assert.IsTrue((queryResultFilter.Aggregations[0] as QueryFilterAggregation).Match == "enriched_text.concepts.text:\"cloud computing\"");
                 },
                 environmentId: "system",
                 collectionId: "news-en",

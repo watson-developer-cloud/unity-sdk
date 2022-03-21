@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2021.
+* (C) Copyright IBM Corp. 2021, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("authenticated", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Authenticated { get; set; }
         /// <summary>
-        /// If `authenticated` is `false`, a message describes why the authentication was unsuccessful.
+        /// If `authenticated` is `false`, a message describes why authentication is unsuccessful.
         /// </summary>
         [JsonProperty("error_message", NullValueHandling = NullValueHandling.Ignore)]
         public string ErrorMessage { get; set; }

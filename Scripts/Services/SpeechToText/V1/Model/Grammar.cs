@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -68,7 +68,11 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
-        /// The number of OOV words in the grammar. The value is `0` while the grammar is being processed.
+        /// _For custom models that are based on previous-generation models_, the number of OOV words extracted from the
+        /// grammar. The value is `0` while the grammar is being processed.
+        ///
+        /// _For custom models that are based on next-generation models_, no OOV words are extracted from grammars, so
+        /// the value is always `0`.
         /// </summary>
         [JsonProperty("out_of_vocabulary_words", NullValueHandling = NullValueHandling.Ignore)]
         public long? OutOfVocabularyWords { get; set; }

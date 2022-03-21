@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2019, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,16 +32,22 @@ namespace IBM.Watson.Assistant.V1.Model
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer
     /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeVideo
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeAudio
+    /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeIframe
     /// </summary>
     [JsonConverter(typeof(JsonSubtypes), "response_type")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeAudio), "audio")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer), "channel_transfer")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent), "connect_to_agent")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeIframe), "iframe")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeImage), "image")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeOption), "option")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypePause), "pause")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill), "search_skill")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeText), "text")]
     [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined), "user_defined")]
+    [JsonSubtypes.KnownSubType(typeof(DialogNodeOutputGenericDialogNodeOutputResponseTypeVideo), "video")]
     public class DialogNodeOutputGeneric
     {
         /// This ctor is protected to prevent instantiation of this base class.
@@ -54,6 +60,9 @@ namespace IBM.Watson.Assistant.V1.Model
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer
         /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeVideo
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeAudio
+        /// - DialogNodeOutputGenericDialogNodeOutputResponseTypeIframe
         protected DialogNodeOutputGeneric()
         {
         }
@@ -233,5 +242,15 @@ namespace IBM.Watson.Assistant.V1.Model
         /// </summary>
         [JsonProperty("user_defined", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> UserDefined { get; protected set; }
+        /// <summary>
+        /// For internal use only.
+        /// </summary>
+        [JsonProperty("channel_options", NullValueHandling = NullValueHandling.Ignore)]
+        public object ChannelOptions { get; protected set; }
+        /// <summary>
+        /// The URL of an image that shows a preview of the embedded content.
+        /// </summary>
+        [JsonProperty("image_url", NullValueHandling = NullValueHandling.Ignore)]
+        public string ImageUrl { get; protected set; }
     }
 }

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2021.
+* (C) Copyright IBM Corp. 2018, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -1171,6 +1171,37 @@ namespace IBM.Watson.Tests
                 input: bulkClassifyUtterances
             );
             while (bulkClassifyResponse == null)
+                yield return null;
+        }
+
+        [UnityTest, Order(37)]
+        public IEnumerator TestRuntimeResponseGeneric()
+        {
+            workspaceId = Environment.GetEnvironmentVariable("ASSISTANT_WORKSPACE_ID");
+            string[] inputStrings = { "audio", "iframe", "video" };
+
+            MessageResponse messageResponse = null;
+
+            foreach (string inputMessage in inputStrings)
+            {
+                MessageInput input = new MessageInput();
+                input.Text = inputMessage;
+
+                Log.Debug("AssistantV1IntegrationTests", "Attempting to Message...test sdk");
+
+                service.Message(
+                    callback: (DetailedResponse<MessageResponse> response, IBMError error) =>
+                    {
+                        messageResponse = response.Result;
+                        Assert.IsNotNull(messageResponse);
+                        Assert.IsTrue(messageResponse.Output.Generic[0].ResponseType.Contains(inputMessage));
+                    },
+                    workspaceId: workspaceId,
+                    input: input
+                );
+            }
+
+            while (messageResponse == null)
                 yield return null;
         }
 

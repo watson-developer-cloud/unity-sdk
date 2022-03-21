@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2020, 2021.
+* (C) Copyright IBM Corp. 2020, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ namespace IBM.Watson.Assistant.V1.Model
             set { base.Title = value; }
         }
         /// <summary>
-        /// The description to show with the the response.
+        /// The description to show with the response.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public new string Description

@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2019, 2021.
+* (C) Copyright IBM Corp. 2019, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -51,15 +51,10 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("overwrite", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Overwrite { get; set; }
         /// <summary>
-        /// Name of the enrichment service to call. Current options are `natural_language_understanding` and `elements`.
+        /// Name of the enrichment service to call. The only supported option is `natural_language_understanding`. The
+        /// `elements` option is deprecated and support ended on 10 July 2020.
         ///
-        ///  When using `natual_language_understanding`, the **options** object must contain Natural Language
-        /// Understanding options.
-        ///
-        /// When using `elements` the **options** object must contain Element Classification options. Additionally, when
-        /// using the `elements` enrichment the configuration specified and files ingested must meet all the criteria
-        /// specified in [the
-        /// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-element-classification#element-classification).
+        ///  The **options** object must contain Natural Language Understanding options.
         /// </summary>
         [JsonProperty("enrichment", NullValueHandling = NullValueHandling.Ignore)]
         public string _Enrichment { get; set; }
@@ -70,7 +65,11 @@ namespace IBM.Watson.Discovery.V1.Model
         [JsonProperty("ignore_downstream_errors", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IgnoreDownstreamErrors { get; set; }
         /// <summary>
-        /// Options which are specific to a particular enrichment.
+        /// Options that are specific to a particular enrichment.
+        ///
+        /// The `elements` enrichment type is deprecated. Use the [Create a
+        /// project](https://cloud.ibm.com/apidocs/discovery-data#createproject) method of the Discovery v2 API to
+        /// create a `content_intelligence` project type instead.
         /// </summary>
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public EnrichmentOptions Options { get; set; }

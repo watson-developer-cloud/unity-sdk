@@ -1,5 +1,5 @@
 /**
-* (C) Copyright IBM Corp. 2018, 2020.
+* (C) Copyright IBM Corp. 2019, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 */
 
 using System.Collections.Generic;
+using IBM.Cloud.SDK.Model;
 using Newtonsoft.Json;
 
 namespace IBM.Watson.Assistant.V1.Model
@@ -23,7 +24,7 @@ namespace IBM.Watson.Assistant.V1.Model
     /// <summary>
     /// Global settings for the workspace.
     /// </summary>
-    public class WorkspaceSystemSettings
+    public class WorkspaceSystemSettings : DynamicModel<object>
     {
         /// <summary>
         /// Workspace settings related to the Watson Assistant user interface.

@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, 2019 IBM Corp. All Rights Reserved.
+* (C) Copyright IBM Corp. 2019, 2022.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ namespace IBM.Watson.SpeechToText.V1.Model
         [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
         public string Url { get; set; }
         /// <summary>
-        /// Additional service features that are supported with the model.
+        /// Indicates whether select service features are supported with the model.
         /// </summary>
         [JsonProperty("supported_features", NullValueHandling = NullValueHandling.Ignore)]
         public SupportedFeatures SupportedFeatures { get; set; }
